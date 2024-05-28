@@ -1,3 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  color: #333;
+  font-size: 16px;
+  font-family: "Encode Sans", sans-serif;
+  font-weight: 400;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  background: #fff;
+}
+
+ccc-connector {
+  z-index: 9;
+}
+
+.colorful {
+  -webkit-text-fill-color: transparent;
+}
+
+.SelectTrigger {
+  @apply flex;
+  outline: none;
+}
+
+.SelectContent {
+  @apply bg-white rounded-lg shadow-md py-1;
+}
+
+.SelectItem {
+  @apply pl-6 pr-4 py-3 text-sm cursor-pointer flex items-center flex-row;
+  outline: none;
+}
+
+.SelectItem[data-highlighted] {
+  @apply bg-gray-100;
+}
+
+
