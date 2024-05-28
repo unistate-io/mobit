@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import {ccc} from "@ckb-ccc/connector-react";
 import CKBProvider from "@/providers/CKBProvider/CKBProvider";
 import LangProvider from "@/providers/LangProvider/LangProvider";
+import ToastProvider from "@/providers/ToastProvider/ToastProvider";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -16,7 +17,9 @@ root.render(
         <LangProvider>
             <ccc.Provider>
                 <CKBProvider>
-                    <RouterProvider router={router}/>
+                    <ToastProvider>
+                        <RouterProvider router={router}/>
+                    </ToastProvider>
                 </CKBProvider>
             </ccc.Provider>
         </LangProvider>

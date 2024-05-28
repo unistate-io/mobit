@@ -23,14 +23,17 @@ function UserProvider(props: { children: any, address: string }) {
     const [isOwner, setIsOwner] = useState(props.address === connectedAddress)
 
     useEffect(() => {
+        setTheme(getTheme(props.address))
+        setAddress(props.address)
+    }, [props.address])
+
+    useEffect(() => {
         if (!!connectedAddress) {
-            setTheme(getTheme(connectedAddress))
             setIsOwner(props.address === connectedAddress)
         } else {
-            setTheme(defaultTheme)
             setIsOwner(false)
         }
-    }, [connectedAddress])
+    }, [connectedAddress, props.address])
 
     return (<UserContext.Provider value={{address, theme, isOwner}}
     >{props.children}

@@ -1,4 +1,4 @@
-import { ccc  } from "@ckb-ccc/connector-react";
+import {ccc} from "@ckb-ccc/connector-react";
 import {createContext, useEffect, useState} from "react";
 import {Signer} from "@ckb-ccc/core/dist/signer/signer";
 import {ConnectorStatus} from "@ckb-ccc/connector";
@@ -14,12 +14,14 @@ export interface CKBContextType {
 }
 
 export const CKBContext = createContext<CKBContextType>({
-    open: () => {},
-    disconnect: () => {},
+    open: () => {
+    },
+    disconnect: () => {
+    },
     status: ConnectorStatus.SelectingSigner
 })
 
-export default function CKBProvider({children}: {children: any}) {
+export default function CKBProvider({children}: { children: any }) {
     const {open, disconnect, wallet, status} = ccc.useCcc()
     const signer = ccc.useSigner();
 

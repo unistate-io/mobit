@@ -61,7 +61,7 @@ function Header() {
 
                 {!!address &&
                     <NavLink className={({isActive}) => {
-                        return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 ${isActive && address === addressParams ? 'text-[#6CD7B2]' : ''}`
+                        return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive && address === addressParams ? 'text-[#6CD7B2]' : ''}`
                     }}
                              to={`/address/${address}`}>
                         {lang['Profile']}
@@ -69,10 +69,10 @@ function Header() {
                 }
 
                 <NavLink className={({isActive}) => {
-                    return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 ${isActive ? 'text-[#6CD7B2]' : ''}`
+                    return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive ? 'text-[#6CD7B2]' : ''}`
                 }} to={`/market`}>{lang['Market']}</NavLink>
                 <NavLink className={({isActive}) => {
-                    return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 ${isActive ? 'text-[#6CD7B2]' : ''}`
+                    return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive ? 'text-[#6CD7B2]' : ''}`
                 }} to={`/apps`}>{lang['Apps']}</NavLink>
             </div>
 
