@@ -7,9 +7,7 @@ export const graphUrl = process.env.REACT_APP_GRAPH_URL!
 export const gqls = _gqls
 
 export const query = async (query: string, variables?: any) => {
-    return await request(graphUrl, query, variables, {
-        "x-hasura-admin-secret": 'XeABHDmqLWKfr6kADKDYCjpT'
-    })
+    return await request(graphUrl, query, variables)
 }
 
 
