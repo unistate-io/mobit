@@ -1,15 +1,36 @@
 import {UserContext} from '@/providers/UserProvider/UserProvider'
-import {useContext} from "react";
+import {useContext, useEffect, useState} from "react";
 import Background from "@/components/Background/Background";
 import Avatar from "@/components/Avatar/Avatar";
 import AddressCapsule, {showAddress} from "@/components/AddressCapsule/AddressCapsule";
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider";
 import * as Tabs from '@radix-ui/react-tabs';
-import ListToken from "@/components/ListToken/ListToken";
+import ListToken, {TokenBalance} from "@/components/ListToken/ListToken";
+import useXudtBalance from "@/serves/useXudtBalance";
+import useCkbBalance from "@/serves/useCkbBalance";
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
     const {internalAddress} = useContext(CKBContext)
+    const {data: xudtData, status: xudtDataStatus, error:xudtDataErr} = useXudtBalance(address!)
+    const {data: ckbData, status: ckbDataStatus, error:ckbDataErr} = useCkbBalance(address!)
+
+    const [tokens, setTokens] = useState<TokenBalance[]>([])
+    const [tokensStatus, setTokensStatus] = useState<string>('loading')
+
+    useEffect(() => {
+        console.log('ckbData', ckbData)
+        console.log('ckbDataStatus', ckbDataStatus)
+        console.log('ckbDataErr', ckbDataErr)
+        if (xudtDataStatus === 'complete' && ckbDataStatus === 'complete' && ckbData) {
+            setTokens([ckbData, ...xudtData])
+            setTokensStatus('complete')
+        } if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading') {
+            setTokensStatus('loading')
+        } else if (xudtDataStatus === 'error' || ckbDataStatus === 'error') {
+            setTokensStatus('error')
+        }
+    }, [xudtData, xudtDataStatus, ckbData, ckbDataStatus])
 
     return <div className="h-[3000px]">
         <Background gradient={theme.bg}/>
@@ -75,31 +96,31 @@ export default function Profile() {
 
 
                         <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none focus:shadow-[0_0_0_2px] focus:shadow-black"
+                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value="All"
                         >
-                            <ListToken />
+                            <ListToken data={tokens} status={tokensStatus} />
                         </Tabs.Content>
                         <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none focus:shadow-[0_0_0_2px] focus:shadow-black"
+                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value="BTC"
                         >
                             BTC
                         </Tabs.Content>
                         <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none focus:shadow-[0_0_0_2px] focus:shadow-black"
+                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value="DOBs"
                         >
                             DOBs
                         </Tabs.Content>
                         <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none focus:shadow-[0_0_0_2px] focus:shadow-black"
+                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value="Coins"
                         >
                             Coins
                         </Tabs.Content>
                         <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none focus:shadow-[0_0_0_2px] focus:shadow-black"
+                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value=".bit"
                         >
                             .bit

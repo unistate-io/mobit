@@ -187,6 +187,9 @@ module.exports = function (webpackEnv) {
   };
 
   return {
+    externals: {
+      fs: require('fs')
+    },
     target: ['browserslist'],
     // Webpack noise constrained to errors and warnings
     stats: 'errors-warnings',
@@ -319,7 +322,8 @@ module.exports = function (webpackEnv) {
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
         ...(modules.webpackAliases || {}),
-        "@": paths.appSrc
+        "@": paths.appSrc,
+        "process": "process/browser"
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -336,6 +340,12 @@ module.exports = function (webpackEnv) {
           babelRuntimeRegenerator,
         ]),
       ],
+      fallback: {
+        "crypto": require.resolve("crypto-browserify"),
+        "path": require.resolve("path-browserify"),
+        "stream": require.resolve("stream-browserify"),
+        buffer: require.resolve('buffer/'),
+      }
     },
     module: {
       strictExportPresence: true,
@@ -565,6 +575,10 @@ module.exports = function (webpackEnv) {
     },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+        Buffer: ['buffer', 'Buffer'],
+      }),
       new HtmlWebpackPlugin(
         Object.assign(
           {},

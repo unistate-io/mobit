@@ -1,8 +1,6 @@
 import {createContext, useContext, useEffect, useState} from 'react'
 import {defaultTheme, getTheme, UserTheme} from "@/providers/UserProvider/themes";
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider";
-import {balance} from "@/serves/Xudt_Balance/index";
-
 
 export interface UserContextType {
     address?: string
@@ -27,10 +25,6 @@ function UserProvider(props: { children: any, address: string }) {
     useEffect(() => {
         setTheme(getTheme(props.address))
         setAddress(props.address);
-
-        (async () => {
-           await balance(props.address)
-        })()
     }, [props.address])
 
     useEffect(() => {

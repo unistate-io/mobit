@@ -10,8 +10,6 @@ export const query = async (query: string, variables?: any) => {
     return await request(graphUrl, query, variables)
 }
 
-
-
 export const queryXudtCell = async (address: string) => {
     const doc = gql('xudt_cell', `where:{lock_id: {_eq: "${address}"}}`)
     const res: any = await query(doc)

@@ -1,24 +1,47 @@
-import {tokens, chains} from '../ListToken/TokenConfig'
+import {TokenIcons, ChainIcons} from "@/components/TokenIcon/icons";
+import Identicon from 'identicon.js'
+import {keccak_256} from "js-sha3";
+import {Buffer} from "buffer";
 
+function getStrHash(name: string) {
+    let node = "0000000000000000000000000000000000000000000000000000000000000000";
 
-export default function TokenIcon(props: {symbol: string, size: number}) {
-    const token = tokens.find(token => token.symbol === props.symbol)
+    if (name) {
+        let labels = name.split(".");
 
-    if (!token) {
-        throw new Error('token not found')
+        for (let i = labels.length - 1; i >= 0; i--) {
+            let labelSha = keccak_256(labels[i]);
+            node = keccak_256(Buffer.from(node + labelSha, "hex"));
+        }
     }
 
-    const chain = chains.find(chain => chain.name === token.chain)
+    return "0x" + node;
+}
 
-    if (!chain) {
+
+export default function TokenIcon({symbol, size, chain} : {symbol: string, size: number, chain: string}) {
+    const options = {
+        foreground: [216, 140, 173, 255] ,
+        background: [255, 255, 255, 255] ,
+        margin: 0,
+        size: size,
+        format: 'svg'
+    }
+
+
+
+    const tokenIcon = TokenIcons[symbol] || 'data:image/svg+xml;base64,' + new Identicon(getStrHash(symbol), (options as any)).toString()
+    const chainIcon = ChainIcons[chain]
+
+    if (!chainIcon) {
         throw new Error('chain not found')
     }
 
-    return <div className={`relative mr-3`} style={{width: props.size + 'px', height: props.size + 'px'}}>
-        <img src={token.icon} className="rounded-full" alt="icon" width={props.size} height={props.size}/>
-        <img src={chain.icon}
+    return <div className={`relative mr-3`} style={{width: size + 'px', height: size + 'px'}}>
+        <img src={tokenIcon} className="rounded-full" alt="icon" width={size} height={size}/>
+        <img src={chainIcon}
              className="rounded-full absolute right-0 top-0 border border-white shadow block"
-             style={{marginRight: (props.size/ 8 * -3) + 'px'}}
-             width={props.size/4 * 3} height={props.size/4 * 3} alt=""/>
+             style={{marginRight: (size/ 8 * -3) + 'px'}}
+             width={size/4 * 3} height={size/4 * 3} alt=""/>
     </div>
 }
