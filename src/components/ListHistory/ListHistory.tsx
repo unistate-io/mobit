@@ -30,7 +30,7 @@ export default function ListHistory({
                 data.length === 0 && status !== 'loading' &&
                 <div
                     className="h-[120px] flex flex-row justify-center items-center bg-gray-100 text-gray-300 rounded-xl">
-                    No assets found
+                    No transaction found
                 </div>
             }
 
