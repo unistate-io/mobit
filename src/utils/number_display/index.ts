@@ -20,3 +20,7 @@ export function toDisplay (numStr: string, decimal: number, split?: boolean): st
         return (num / d).toString()
     }
 }
+
+export function shortTransactionHash (hash: string): string {
+    return hash.slice(0, 6) + '...' + hash.slice(hash.length - 4)
+}

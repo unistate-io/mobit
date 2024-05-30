@@ -2,22 +2,26 @@ import {UserContext} from '@/providers/UserProvider/UserProvider'
 import {useContext, useEffect, useState} from "react";
 import Background from "@/components/Background/Background";
 import Avatar from "@/components/Avatar/Avatar";
-import AddressCapsule, {showAddress} from "@/components/AddressCapsule/AddressCapsule";
+import AddressCapsule from "@/components/AddressCapsule/AddressCapsule";
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider";
 import * as Tabs from '@radix-ui/react-tabs';
 import ListToken, {TokenBalance} from "@/components/ListToken/ListToken";
 import useXudtBalance from "@/serves/useXudtBalance";
 import useCkbBalance from "@/serves/useCkbBalance";
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider";
+import useTransactions from "@/serves/useTransactionsHistory";
+import ListHistory from "@/components/ListHistory/ListHistory";
 
 const tabs = ['All', 'Coins', 'DOBs', '.bit']
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
     const {internalAddress} = useContext(CKBContext)
+    const {showToast} = useContext(ToastContext)
+
     const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useXudtBalance(address!)
     const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(address!)
-    const {showToast} = useContext(ToastContext)
+    const {data: historyData, status: historyDataStatus, error: historyDataErr, page, setPage} = useTransactions(address!)
 
     const [tokens, setTokens] = useState<TokenBalance[]>([])
     const [tokensStatus, setTokensStatus] = useState<string>('loading')
@@ -45,8 +49,11 @@ export default function Profile() {
             console.error(ckbDataErr)
             showToast(ckbDataErr.message, ToastType.error)
         }
-    }, [
-        xudtDataErr, ckbDataErr])
+    }, [xudtDataErr, ckbDataErr])
+
+    useEffect(() => {
+        console.log('historyData', historyData)
+    }, [historyData])
 
     return <div className="h-[3000px]">
         <Background gradient={theme.bg}/>
@@ -67,7 +74,7 @@ export default function Profile() {
                 }
             </div>
 
-            <div className="flex mt-3 md:mt-9">
+            <div className="flex mt-3 md:mt-9 justify-between">
                 <div className="max-w-[624px] flex-1 overflow-auto">
                     <Tabs.Root
                         className="flex flex-col overflow-auto"
@@ -112,6 +119,10 @@ export default function Profile() {
                             .bit
                         </Tabs.Content>
                     </Tabs.Root>
+                </div>
+
+                <div className="max-w-[380px] flex-1 ml-4 md:pt-[56px]">
+                    <ListHistory data={historyData} status={historyDataStatus} />
                 </div>
             </div>
         </div>

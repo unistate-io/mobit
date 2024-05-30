@@ -6,7 +6,7 @@ import {TokenBalance} from "@/components/ListToken/ListToken";
 
 export const balance = async (address: string): Promise<TokenBalance[]> => {
     const cells = await queryXudtCell(address)
-    console.log('cells', cells)
+    // console.log('cells', cells)
 
     if (cells.length === 0) {
         console.log('enpty')
@@ -19,10 +19,10 @@ export const balance = async (address: string): Promise<TokenBalance[]> => {
             typed_ids.push(c.type_id)
         }
     })
-    console.log('typed_ids', typed_ids)
+    // console.log('typed_ids', typed_ids)
 
     const tokensInfo = await queryTokenInfo(typed_ids)
-    console.log('tokenInfo', tokensInfo)
+    // console.log('tokenInfo', tokensInfo)
 
     let gqlOpt = [] as any[]
     cells.forEach((c, index) => {
@@ -37,12 +37,12 @@ export const balance = async (address: string): Promise<TokenBalance[]> => {
 
     const status_cell_doc = gqls(gqlOpt)
     const status_cells: any = await query(status_cell_doc)
-    console.log('status_cells', status_cells)
+    // console.log('status_cells', status_cells)
 
     const valid_cell = cells.filter(((c, index) => {
         return !status_cells['c' + index].length
     }))
-    console.log('valid_cell', valid_cell)
+    // console.log('valid_cell', valid_cell)
 
     const res = typed_ids.map(t => {
         const target_cells = valid_cell.filter(vc => {
@@ -67,7 +67,7 @@ export const balance = async (address: string): Promise<TokenBalance[]> => {
         }
     })
 
-    console.log('res', res)
+    // console.log('res', res)
     return res
 }
 

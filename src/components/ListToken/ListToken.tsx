@@ -1,6 +1,6 @@
 import TokenIcon from '../TokenIcon/TokenIcon'
 import {useState} from "react"
-import {toDisplay} from "@/utils/price";
+import {toDisplay} from "@/utils/number_display";
 
 export interface TokenBalance {
     name: string,
