@@ -74,8 +74,8 @@ export default function Profile() {
                 }
             </div>
 
-            <div className="flex mt-3 md:mt-9 justify-between">
-                <div className="max-w-[624px] flex-1 overflow-auto">
+            <div className="flex mt-3 lg:mt-9 justify-between flex-col lg:flex-row">
+                <div className="flex-1 overflow-auto lg:max-w-[624px]">
                     <Tabs.Root
                         className="flex flex-col overflow-auto"
                         defaultValue="All">
@@ -121,7 +121,7 @@ export default function Profile() {
                     </Tabs.Root>
                 </div>
 
-                <div className="max-w-[380px] flex-1 ml-4 md:pt-[56px]">
+                <div className="lg:max-w-[380px] flex-1 lg:ml-4 lg:pt-[56px]">
                     <ListHistory data={historyData} status={historyDataStatus} />
                 </div>
             </div>

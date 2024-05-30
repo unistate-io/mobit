@@ -12,7 +12,23 @@ export default function ListHistory({data, status}: {data: TransactionHistory[],
         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
             <div className="text-xl font-semibold">Activity</div>
         </div>
-        <div className="flex flex-col  px-3">
+        <div className="flex flex-col px-3">
+            { status === 'loading' &&
+                <div className="mx-4 my-2">
+                    <div className="loading-bg rounded-lg h-[30px] my-2" />
+                    <div className="loading-bg rounded-lg h-[30px] my-2" />
+                    <div className="loading-bg rounded-lg h-[30px] my-2" />
+                </div>
+            }
+
+            {
+                data.length === 0 && status !== 'loading' &&
+                <div
+                    className="mx-4 h-[120px] flex flex-row justify-center items-center bg-gray-100 text-gray-300 rounded-xl">
+                    No assets found
+                </div>
+            }
+
             {
                 data.map((item, index) => {
                     return <Link

@@ -11,7 +11,7 @@ function Header() {
     const {address : addressParams} = useParams()
 
 
-    return <header className={'sticky w-full bg-white shadow h-[60px] top-0'}>
+    return <header className={'sticky w-full bg-white shadow h-[60px] top-0 z-20'}>
         <div className={'max-w-[1044px] mx-auto h-[60px] flex items-center px-3 box-border justify-between'}>
             <div className="flex flex-row items-center">
                 <Link to="/">

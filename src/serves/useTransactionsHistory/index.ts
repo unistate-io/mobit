@@ -17,7 +17,7 @@ export default function useTransactions(address: string) {
             method: 'GET',
             headers: {
                 "Accept": 'application/vnd.api+json',
-                "Content-Type": 'application/vnd.api+json'
+                "Content-Type": 'application/vnd.api+json',
             }
         }).then(async (res) => {
             const json = await res.json()
