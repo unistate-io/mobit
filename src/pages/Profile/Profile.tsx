@@ -21,7 +21,7 @@ export default function Profile() {
 
     const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useXudtBalance(address!)
     const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(address!)
-    const {data: historyData, status: historyDataStatus, error: historyDataErr, page, setPage} = useTransactions(address!)
+    const {data: historyData, status: historyDataStatus } = useTransactions(address!)
 
     const [tokens, setTokens] = useState<TokenBalance[]>([])
     const [tokensStatus, setTokensStatus] = useState<string>('loading')
@@ -51,9 +51,6 @@ export default function Profile() {
         }
     }, [xudtDataErr, ckbDataErr])
 
-    useEffect(() => {
-        console.log('historyData', historyData)
-    }, [historyData])
 
     return <div className="h-[3000px]">
         <Background gradient={theme.bg}/>

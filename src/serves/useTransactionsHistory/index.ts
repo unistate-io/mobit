@@ -22,8 +22,14 @@ export default function useTransactions(address: string) {
         }).then(async (res) => {
             const json = await res.json()
             console.log('json', json)
-            setData(json.data)
-            setStatus('complete')
+            if (json.data) {
+                console.log('here')
+                setData(json.data)
+                setStatus('complete')
+            } else {
+                setData([])
+                setStatus('complete')
+            }
         }).catch((e: any) => {
             console.error(e)
             setData([])
