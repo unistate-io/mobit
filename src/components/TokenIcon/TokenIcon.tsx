@@ -19,7 +19,7 @@ function getStrHash(name: string) {
 }
 
 
-export default function TokenIcon({symbol, size, chain} : {symbol: string, size: number, chain: string}) {
+export default function TokenIcon({symbol, size, chain} : {symbol: string, size: number, chain?: string}) {
     const options = {
         foreground: [216, 140, 173, 255] ,
         background: [255, 255, 255, 255] ,
@@ -31,17 +31,17 @@ export default function TokenIcon({symbol, size, chain} : {symbol: string, size:
 
 
     const tokenIcon = TokenIcons[symbol] || 'data:image/svg+xml;base64,' + new Identicon(getStrHash(symbol), (options as any)).toString()
-    const chainIcon = ChainIcons[chain]
+    const chainIcon = chain ? ChainIcons[chain]: undefined
 
-    if (!chainIcon) {
-        throw new Error('chain not found')
-    }
 
     return <div className={`relative mr-3`} style={{width: size + 'px', height: size + 'px'}}>
         <img src={tokenIcon} className="rounded-full" alt="icon" width={size} height={size}/>
-        <img src={chainIcon}
-             className="rounded-full absolute right-0 top-0 border border-white shadow block"
-             style={{marginRight: (size/ 8 * -3) + 'px'}}
-             width={size/4 * 3} height={size/4 * 3} alt=""/>
+        {
+            chainIcon &&
+            <img src={chainIcon}
+                 className="rounded-full absolute right-0 top-0 border border-white shadow block"
+                 style={{marginRight: (size/ 8 * -3) + 'px'}}
+                 width={size/4 * 3} height={size/4 * 3} alt=""/>
+        }
     </div>
 }
