@@ -8,29 +8,45 @@ import * as Tabs from '@radix-ui/react-tabs';
 import ListToken, {TokenBalance} from "@/components/ListToken/ListToken";
 import useXudtBalance from "@/serves/useXudtBalance";
 import useCkbBalance from "@/serves/useCkbBalance";
+import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider";
+
+const tabs = ['All', 'Coins', 'DOBs', '.bit']
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
     const {internalAddress} = useContext(CKBContext)
-    const {data: xudtData, status: xudtDataStatus, error:xudtDataErr} = useXudtBalance(address!)
-    const {data: ckbData, status: ckbDataStatus, error:ckbDataErr} = useCkbBalance(address!)
+    const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useXudtBalance(address!)
+    const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(address!)
+    const {showToast} = useContext(ToastContext)
 
     const [tokens, setTokens] = useState<TokenBalance[]>([])
     const [tokensStatus, setTokensStatus] = useState<string>('loading')
 
     useEffect(() => {
-        console.log('ckbData', ckbData)
-        console.log('ckbDataStatus', ckbDataStatus)
-        console.log('ckbDataErr', ckbDataErr)
-        if (xudtDataStatus === 'complete' && ckbDataStatus === 'complete' && ckbData) {
-            setTokens([ckbData, ...xudtData])
-            setTokensStatus('complete')
-        } if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading') {
+        if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading') {
+            setTokens([])
             setTokensStatus('loading')
         } else if (xudtDataStatus === 'error' || ckbDataStatus === 'error') {
             setTokensStatus('error')
+            setTokens([])
+        } else if (xudtDataStatus === 'complete' && ckbDataStatus === 'complete' && ckbData) {
+            setTokens([ckbData, ...xudtData])
+            setTokensStatus('complete')
         }
     }, [xudtData, xudtDataStatus, ckbData, ckbDataStatus])
+
+    useEffect(() => {
+        if (xudtDataErr) {
+            console.error(xudtDataErr)
+            showToast(xudtDataErr.message, ToastType.error)
+        }
+
+        if (ckbDataErr) {
+            console.error(ckbDataErr)
+            showToast(ckbDataErr.message, ToastType.error)
+        }
+    }, [
+        xudtDataErr, ckbDataErr])
 
     return <div className="h-[3000px]">
         <Background gradient={theme.bg}/>
@@ -44,11 +60,6 @@ export default function Profile() {
                 <Avatar size={128} name={address || 'default'} colors={theme.colors}/>
             </div>
             <div className="mt-4 flex flex-col items-center md:flex-row">
-                <div className="colorful text-4xl font-bold md:mr-5 mb-4 !bg-clip-text"
-                     style={{background: theme.text}}>
-                    {showAddress(address!)}
-                </div>
-
                 <div className="mb-4"><AddressCapsule address={address!} label={'CKT'}/></div>
 
                 {isOwner && internalAddress &&
@@ -60,38 +71,13 @@ export default function Profile() {
                 <div className="max-w-[624px] flex-1 overflow-auto">
                     <Tabs.Root
                         className="flex flex-col overflow-auto"
-                        defaultValue="All" >
+                        defaultValue="All">
                         <Tabs.List className="shrink-0 flex flex-row overflow-auto" aria-label="Assets">
-                            <Tabs.Trigger
-                                className="h-10 mr-4 font-bold outline-none cursor-pointer py-2 px-4 rounded-lg data-[state=active]:text-white data-[state=active]:bg-black"
-                                value="All"
-                            >
-                                All
-                            </Tabs.Trigger>
-                            <Tabs.Trigger
-                                className="h-10 mr-4 font-bold outline-none cursor-pointer py-2 px-4 rounded-lg data-[state=active]:text-white data-[state=active]:bg-black"
-                                value="BTC"
-                            >
-                                BTC
-                            </Tabs.Trigger>
-                            <Tabs.Trigger
-                                className="h-10 mr-4 font-bold outline-none cursor-pointer py-2 px-4 rounded-lg data-[state=active]:text-white data-[state=active]:bg-black"
-                                value="DOBs"
-                            >
-                                DOBs
-                            </Tabs.Trigger>
-                            <Tabs.Trigger
-                                className="h-10 mr-4 font-bold outline-none cursor-pointer py-2 px-4 rounded-lg data-[state=active]:text-white data-[state=active]:bg-black"
-                                value="Coins"
-                            >
-                                Coins
-                            </Tabs.Trigger>
-                            <Tabs.Trigger
-                                className="h-10 mr-4 font-bold outline-none cursor-pointer py-2 px-4 rounded-lg data-[state=active]:text-white data-[state=active]:bg-black"
-                                value=".bit"
-                            >
-                                .bit
-                            </Tabs.Trigger>
+                            {
+                                tabs.map((tab) => <Tabs.Trigger key={tab}
+                                                                className="h-10 mr-4 font-bold outline-none cursor-pointer py-2 px-4 rounded-lg data-[state=active]:text-white data-[state=active]:bg-black"
+                                                                value={tab}>{tab}</Tabs.Trigger>)
+                            }
                         </Tabs.List>
 
 
@@ -99,7 +85,7 @@ export default function Profile() {
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value="All"
                         >
-                            <ListToken data={tokens} status={tokensStatus} />
+                            <ListToken data={tokens} status={tokensStatus}/>
                         </Tabs.Content>
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"

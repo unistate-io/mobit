@@ -77,6 +77,8 @@ export default function useXudtBalance(address: string) {
     const [error, setError] = useState<undefined | any>(undefined)
 
     useEffect(() => {
+        setStatus('loading')
+        setData([])
         balance(address)
             .then(res => {
                 setData(res)

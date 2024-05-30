@@ -26,6 +26,8 @@ export default function useCkbBalance(address: string) {
     const [error, setError] = useState<undefined | any>(undefined)
 
     useEffect(() => {
+        setStatus('loading')
+        setData(undefined)
         getCapacities(address)
             .then(res => {
                 setData({
