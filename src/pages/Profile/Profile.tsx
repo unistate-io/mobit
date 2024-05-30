@@ -122,7 +122,7 @@ export default function Profile() {
                 </div>
 
                 <div className="lg:max-w-[380px] flex-1 lg:ml-4 lg:pt-[56px]">
-                    <ListHistory data={historyData} status={historyDataStatus} />
+                    <ListHistory address={address!} data={historyData} status={historyDataStatus} />
                 </div>
             </div>
         </div>
