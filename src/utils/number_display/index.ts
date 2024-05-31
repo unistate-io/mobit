@@ -1,26 +1,29 @@
+import BigNumber from 'bignumber.js'
 
-export function toValue (numStr: string, decimal: number, split?: boolean): string {
-    const num = BigInt(numStr)
-    const d = BigInt(10 ** decimal)
+function toValue(numStr: string, decimal: number, split?: boolean): string {
+    const num = BigNumber(numStr)
+    const d = BigNumber(10 ** decimal + '')
 
     if (split) {
-        return (num * d).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        return num.multipliedBy(d).toFormat(4)
     } else {
-        return (num * d).toString()
+        return num.multipliedBy(d).toFixed(4)
     }
 }
 
-export function toDisplay (numStr: string, decimal: number, split?: boolean): string {
-    const num = BigInt(numStr)
-    const d = BigInt(10 ** decimal)
+export function toDisplay(numStr: string, decimal: number, split?: boolean): string {
+    const num = BigNumber(numStr)
+    const d = BigNumber(10 ** decimal + '')
 
     if (split) {
-        return (num / d).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        return num.dividedBy(d).toFormat(4)
     } else {
-        return (num / d).toString()
+        return num.dividedBy(d).toFixed(4)
     }
 }
 
-export function shortTransactionHash (hash: string): string {
+export function shortTransactionHash(hash: string): string {
     return hash.slice(0, 6) + '...' + hash.slice(hash.length - 4)
 }
+
+console.log('ookk', toDisplay('100', 3))
