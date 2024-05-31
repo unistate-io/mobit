@@ -21,7 +21,7 @@ export default function ListToken({data, status, previewSize = 5}: { data: Token
 
     return <div className="shadow rounded-lg bg-white py-4">
         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
-            <div className="text-xl font-semibold">Token</div>
+            <div className="text-xl font-semibold">Tokens</div>
         </div>
         <div className="flex flex-col">
 

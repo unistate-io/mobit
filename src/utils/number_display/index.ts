@@ -26,4 +26,3 @@ export function shortTransactionHash(hash: string): string {
     return hash.slice(0, 6) + '...' + hash.slice(hash.length - 4)
 }
 
-console.log('ookk', toDisplay('100', 3))

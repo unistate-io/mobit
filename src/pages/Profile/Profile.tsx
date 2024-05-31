@@ -11,8 +11,10 @@ import useCkbBalance from "@/serves/useCkbBalance";
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider";
 import useTransactions from "@/serves/useTransactionsHistory";
 import ListHistory from "@/components/ListHistory/ListHistory";
+import useSpores from "@/serves/useSpores";
+import ListDOBs from "@/components/ListDOBs/ListDOBs";
 
-const tabs = ['All', 'Coins', 'DOBs', '.bit']
+const tabs = ['All', 'Tokens', 'DOBs']
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -21,7 +23,13 @@ export default function Profile() {
 
     const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useXudtBalance(address!)
     const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(address!)
-    const {data: historyData, status: historyDataStatus } = useTransactions(address!)
+    const {data: historyData, status: historyDataStatus} = useTransactions(address!)
+    const {
+        data: sporesData,
+        status: sporesDataStatus,
+        loaded: sporesDataLoaded,
+        setPage: setSporesDataPage
+    } = useSpores(address!)
 
     const [tokens, setTokens] = useState<TokenBalance[]>([])
     const [tokensStatus, setTokensStatus] = useState<string>('loading')
@@ -87,42 +95,44 @@ export default function Profile() {
 
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
-                            value="All"
+                            value="All" >
+                            <ListToken data={tokens} status={tokensStatus}/>
+                            <div className="mt-6">
+                                <ListDOBs
+                                    data={sporesData}
+                                    status={sporesDataStatus}
+                                    loaded={sporesDataLoaded}
+                                    onChangePage={(page) => {
+                                        setSporesDataPage(page)
+                                    }}/>
+                            </div>
+                        </Tabs.Content>
+                        <Tabs.Content
+                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
+                            value="Tokens"
                         >
                             <ListToken data={tokens} status={tokensStatus}/>
                         </Tabs.Content>
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
-                            value="BTC"
-                        >
-                            BTC
-                        </Tabs.Content>
-                        <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value="DOBs"
                         >
-                            DOBs
+                            <ListDOBs
+                                data={sporesData}
+                                status={sporesDataStatus}
+                                loaded={sporesDataLoaded}
+                                onChangePage={(page) => {
+                                    setSporesDataPage(page)
+                                }}/>
                         </Tabs.Content>
-                        <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
-                            value="Coins"
-                        >
-                            Coins
-                        </Tabs.Content>
-                        <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
-                            value=".bit"
-                        >
-                            .bit
-                        </Tabs.Content>
+
                     </Tabs.Root>
                 </div>
 
                 <div className="lg:max-w-[380px] flex-1 lg:ml-4 lg:pt-[56px]">
-                    <ListHistory address={address!} data={historyData} status={historyDataStatus} />
+                    <ListHistory address={address!} data={historyData} status={historyDataStatus}/>
                 </div>
             </div>
         </div>
-
     </div>
 }

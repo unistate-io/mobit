@@ -26,3 +26,14 @@ export interface XudtStatusCell {
     transaction_index: string
 }
 
+export interface Spores {
+    id: string
+    content: string
+    cluster_id: string
+    is_burned: boolean
+    owner_address: string
+    content_type: string
+    created_at: string
+    updated_at: string
+}
+

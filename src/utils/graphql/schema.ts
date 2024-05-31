@@ -26,11 +26,23 @@ const xudt_status_cell = `xudt_status_cell(){
         transaction_index
       }`
 
+const spores = `spores(){
+         id
+         content
+         cluster_id
+         is_burned
+         owner_address
+         content_type
+         created_at
+         updated_at
+      }`
+
 
 const schema = {
     xudt_cell,
     token_info,
-    xudt_status_cell
+    xudt_status_cell,
+    spores
 }
 
 export const gql = (type: keyof typeof schema, opt?: string) => {

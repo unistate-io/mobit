@@ -12,7 +12,6 @@ export default function ListHistory({
                                         status,
                                         address
                                     }: { data: TransactionHistory[], status: string, address: string }) {
-    console.trace('data', data)
     return <div className="shadow rounded-lg bg-white py-4">
         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
             <div className="text-xl font-semibold">Activity</div>
