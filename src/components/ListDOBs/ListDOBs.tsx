@@ -3,6 +3,7 @@ import {useEffect, useState} from "react"
 import {bufferToRawString} from '@spore-sdk/core'
 import {shortTransactionHash} from "@/utils/number_display"
 import {Link} from "react-router-dom"
+import {queryClustersByIds} from "@/utils/graphql";
 
 export default function ListDOBs({
                                      data,
@@ -44,7 +45,6 @@ export default function ListDOBs({
             </div>
 
 
-
             {!loaded &&
                 <div
                     onClick={() => {
@@ -70,20 +70,21 @@ function DOBItem({item}: { item: Spores }) {
         if (item.content_type === 'application/json') {
             try {
                 const json = JSON.parse(bufferToRawString(item.content.replace('\\', '0')))
+                console.log('application/json', json)
                 if (json.name) {
                     setName(json.name)
                 }
 
-                if (json.source?.type.includes('image')) {
+                if (json.resource?.type.includes('image')) {
                     const img = new Image()
-                    img.src = json.source.url
+                    img.src = json.resource.url
                     img.onload = () => {
-                        setImage(json.source.url)
+                        setImage(json.resource.url)
                     }
                 }
 
-                if (json.source?.type.includes('video')) {
-                    setVideo(json.source.url)
+                if (json.resource?.type.includes('video')) {
+                    setVideo(json.resource.url)
                 }
             } catch (e: any) {
                 console.error(e)
@@ -94,16 +95,27 @@ function DOBItem({item}: { item: Spores }) {
             setPlantText(bufferToRawString(item.content.replace('\\', '0')))
         }
 
+        if (item.content_type.includes('dob/0')) {
+            console.log('dob/0', bufferToRawString(item.content.replace('\\', '0')))
+            queryClustersByIds(item.cluster_id).then((clusters) => {
+                if (clusters) {
+                    setName(clusters.cluster_name)
+                }
+            })
+        }
+
         console.log('item', item)
     }, [item])
 
 
-    return <Link to={`https://explorer.nervos.org/nft-collections/${item.id.replace('\\', '0')}`} target="_blank" className="shrink-0 grow-0 max-w-[50%] basis-1/2 md:basis-1/3 md:max-w-[33.3%] box-border p-2">
-        <div className="w-full h-[180px] overflow-hidden rounded-sm relative border border-1">
+    return <Link to={`#`} target="_blank"
+                 className="shrink-0 grow-0 max-w-[50%] basis-1/2 md:basis-1/3 md:max-w-[33.3%] box-border p-2">
+        <div className="w-full h-[140px]  sm:h-[200px] md:h-[250px] lg:h-[180px]  overflow-hidden rounded-sm relative border border-1">
             <img className="object-cover w-full h-full"
                  src={image || "https://explorer.nervos.org/images/spore_placeholder.svg"} alt=""/>
         </div>
-        <div className="mt-1 text-base font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis h-[24px]">{name || plantText}</div>
+        <div
+            className="mt-1 text-base font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis h-[24px]">{name || plantText}</div>
         <div className="text-xs">{shortTransactionHash(item.id.replace('\\', '0'))}</div>
     </Link>
 }

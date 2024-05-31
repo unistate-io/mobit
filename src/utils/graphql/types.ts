@@ -37,3 +37,14 @@ export interface Spores {
     updated_at: string
 }
 
+export interface Clusters {
+    cluster_description: string
+    cluster_name: string
+    created_at: string
+    id:string
+    is_burned: boolean
+    mutant_id: string
+    owner_address: string
+    updated_at: string
+}
+

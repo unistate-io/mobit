@@ -38,11 +38,24 @@ const spores = `spores(){
       }`
 
 
+const clusters = `clusters(){
+        cluster_description
+        cluster_name
+        created_at
+        id
+        is_burned
+        mutant_id
+        owner_address
+        updated_at
+      }`
+
+
 const schema = {
     xudt_cell,
     token_info,
     xudt_status_cell,
-    spores
+    spores,
+    clusters
 }
 
 export const gql = (type: keyof typeof schema, opt?: string) => {

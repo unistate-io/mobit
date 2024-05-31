@@ -10,6 +10,12 @@ export default function useSpores(address: string) {
     const [loaded, setLoaded] = useState(false)
     const pageSize = 3
 
+    const handleNextPage = (page: number) => {
+        if (status !== 'loading') {
+            setPage(page)
+        }
+    }
+
     useEffect(() => {
         setPage(1)
     }, [address])
@@ -35,7 +41,7 @@ export default function useSpores(address: string) {
     }, [page])
 
     return {
-        setPage,
+        setPage: handleNextPage,
         page,
         data,
         status,
