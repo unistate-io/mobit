@@ -4,6 +4,7 @@ import {bufferToRawString} from '@spore-sdk/core'
 import {shortTransactionHash} from "@/utils/number_display"
 import {Link} from "react-router-dom"
 import {queryClustersByIds} from "@/utils/graphql";
+import {renderByTokenKey, svgToBase64} from '@nervina-labs/dob-render'
 
 export default function ListDOBs({
                                      data,
@@ -60,7 +61,7 @@ export default function ListDOBs({
 }
 
 function DOBItem({item}: { item: Spores }) {
-    const [image, setImage] = useState(null)
+    const [image, setImage] = useState<string | null>(null)
     const [video, setVideo] = useState(null)
     const [name, setName] = useState('')
     const [plantText, setPlantText] = useState('')
@@ -96,21 +97,28 @@ function DOBItem({item}: { item: Spores }) {
         }
 
         if (item.content_type.includes('dob/0')) {
-            console.log('dob/0', bufferToRawString(item.content.replace('\\', '0')))
             queryClustersByIds(item.cluster_id).then((clusters) => {
                 if (clusters) {
                     setName(clusters.cluster_name)
                 }
             })
-        }
 
+            renderByTokenKey(item.id.replace('\\', '').replace('x', ''))
+                .then(async (res) => {
+                    setImage(await svgToBase64(res))
+                })
+                .catch((e: any) => {
+                    console.warn(e)
+                })
+        }
         console.log('item', item)
     }, [item])
 
 
     return <Link to={`#`} target="_blank"
                  className="shrink-0 grow-0 max-w-[50%] basis-1/2 md:basis-1/3 md:max-w-[33.3%] box-border p-2">
-        <div className="w-full h-[140px]  sm:h-[200px] md:h-[250px] lg:h-[180px]  overflow-hidden rounded-sm relative border border-1">
+        <div
+            className="w-full h-[140px] sm:h-[200px] md:h-[250px] lg:h-[180px]  overflow-hidden rounded-sm relative border border-1">
             <img className="object-cover w-full h-full"
                  src={image || "https://explorer.nervos.org/images/spore_placeholder.svg"} alt=""/>
         </div>

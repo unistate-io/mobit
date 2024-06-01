@@ -351,6 +351,12 @@ module.exports = function (webpackEnv) {
       strictExportPresence: true,
       rules: [
         // Handle node_modules packages that contain sourcemaps
+        {
+          test: /\.m?js$/,
+          resolve: {
+            fullySpecified: false
+          },
+        },
         shouldUseSourceMap && {
           enforce: 'pre',
           exclude: /@babel(?:\/|\\{1,2})runtime/,

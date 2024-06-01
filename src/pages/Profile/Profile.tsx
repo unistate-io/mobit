@@ -60,7 +60,7 @@ export default function Profile() {
     }, [xudtDataErr, ckbDataErr])
 
 
-    return <div className="h-[3000px]">
+    return <div>
         <Background gradient={theme.bg}/>
         <div className="max-w-[1044px] mx-auto px-3">
             <div
