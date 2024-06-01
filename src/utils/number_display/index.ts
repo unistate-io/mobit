@@ -1,24 +1,24 @@
 import BigNumber from 'bignumber.js'
 
-function toValue(numStr: string, decimal: number, split?: boolean): string {
+function toValue(numStr: string, decimal: number, split?: boolean, isInt?: boolean): string {
     const num = BigNumber(numStr)
     const d = BigNumber(10 ** decimal + '')
 
     if (split) {
-        return num.multipliedBy(d).toFormat(4)
+        return num.multipliedBy(d).toFormat(isInt? 0 : 4)
     } else {
-        return num.multipliedBy(d).toFixed(4)
+        return num.multipliedBy(d).toFixed(isInt? 0 : 4)
     }
 }
 
-export function toDisplay(numStr: string, decimal: number, split?: boolean): string {
+export function toDisplay(numStr: string, decimal: number, split?: boolean, isInt?: boolean): string {
     const num = BigNumber(numStr)
     const d = BigNumber(10 ** decimal + '')
 
     if (split) {
-        return num.dividedBy(d).toFormat(4)
+        return num.dividedBy(d).toFormat(isInt? 0 : 4)
     } else {
-        return num.dividedBy(d).toFixed(4)
+        return num.dividedBy(d).toFixed(isInt? 0 : 4)
     }
 }
 

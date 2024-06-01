@@ -27,7 +27,7 @@ export default function useMarket() {
             })
             .then(res => {
                 setData(res.data.sort((a: TokenMarket, b: TokenMarket) => {
-                    return a.symbol < b.symbol
+                    return a.symbol < b.symbol ? -1 : 1
                 }))
                 setStatus('complete')
             })

@@ -5,18 +5,22 @@ import {toDisplay} from "@/utils/number_display";
 export default function MarketPage() {
     const {data, status} = useMarket()
 
-    return <div className="max-w-[624px] mx-auto px-3 mt-10">
+    return <div className="max-w-[624px] mx-auto px-3 mt-4 md:mt-10">
         { status=== 'loading' &&
             <>
-                <div className="loading-bg h-[100px] mb-3 rounded-lg" />
-                <div className="loading-bg h-[100px] mb-3 rounded-lg" />
-                <div className="loading-bg h-[100px] mb-3 rounded-lg" />
+                <div className="loading-bg h-[50px] mb-3 rounded-lg" />
+                <div className="loading-bg h-[50px] mb-3 rounded-lg w-[80%]" />
+                <div className="loading-bg h-[50px] mb-3 rounded-lg" />
+                <div className="loading-bg h-[50px] mb-3 rounded-lg w-[80%]" />
+                <div className="loading-bg h-[50px] mb-3 rounded-lg" />
+                <div className="loading-bg h-[50px] mb-3 rounded-lg w-[80%]" />
+                <div className="loading-bg h-[50px] mb-3 rounded-lg" />
             </>
         }
 
         { data.length !== 0 && status !== 'loading' &&
             data?.map((item, index) => {
-                return <div className="flex flex-col p-4 shadow rounded-lg bg-white mb-3">
+                return <div className="flex flex-col p-4 shadow rounded-lg bg-white mb-3" key={index}>
                     <div className="flex flex-row items-center mb-5">
                         <TokenIcon symbol={item.symbol} size={20} />
                         <div className="text-xl font-semibold">{item.symbol}</div>
@@ -29,7 +33,7 @@ export default function MarketPage() {
 
                         <div>
                             <div className="text-sm">Market Cap</div>
-                            <div className="text-lg font-semibold">${toDisplay(item.market_cap + '', 0, true)}</div>
+                            <div className="text-lg font-semibold">${toDisplay(item.market_cap + '', 0, true, true)}</div>
                         </div>
                     </div>
                     <div className="flex flex-row items-center">
