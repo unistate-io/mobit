@@ -27,9 +27,6 @@ export const CKBContext = createContext<CKBContextType>({
 
 export default function CKBProvider({children}: { children: any }) {
     const {open, disconnect, wallet, status, setClient} = cccLib.useCcc()
-
-    const a = cccLib.useCcc()
-
     const signer = ccc.useSigner();
 
     const [internalAddress, setInternalAddress] = useState<undefined | string>(undefined)

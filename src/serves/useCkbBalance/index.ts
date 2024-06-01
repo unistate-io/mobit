@@ -5,7 +5,7 @@ import {TokenBalance} from "@/components/ListToken/ListToken";
 const CKB_RPC_URL = process.env.REACT_APP_CKB_RPC_URL!
 const CKB_INDEXER_URL = process.env.REACT_APP_CKB_INDEXER_URL!
 
-const indexer = new Indexer('https://mainnet.ckbapp.dev/indexer', 'https://mainnet.ckbapp.dev');
+const indexer = new Indexer(CKB_INDEXER_URL, CKB_RPC_URL);
 
 export async function getCapacities(address: string): Promise<string> {
     const collector = indexer.collector({
