@@ -1,14 +1,22 @@
 import Avatar from "@/components/Avatar/Avatar";
 import {getTheme} from "@/providers/UserProvider/themes";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider";
 import {Link} from "react-router-dom";
 import Select from "@/components/Select/Select";
 import {LangContext} from "@/providers/LangProvider/LangProvider";
+import {useNavigate} from "react-router-dom";
 
 export default function HeaderMenu() {
     const {open, address} = useContext(CKBContext);
     const {lang, langType, switchLang} = useContext(LangContext)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!!address) {
+            navigate(`address/${address}`)
+        }
+    }, [address])
 
     return <div className="flex flex-row flex-nowrap items-center">
         <Link to={'search'} className="text-sm"><i className="uil-search"/></Link>

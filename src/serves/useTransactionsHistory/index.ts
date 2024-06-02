@@ -31,7 +31,7 @@ export default function useTransactions(address: string) {
                 setStatus('complete')
             }
         }).catch((e: any) => {
-            console.error(e)
+            console.warn(e)
             setData([])
             setStatus('error')
             setError(e)

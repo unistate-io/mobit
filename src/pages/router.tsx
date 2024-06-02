@@ -1,7 +1,8 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom"
 import Layout from "@/components/Layout/Layout"
-import ProfilePage from "@/pages/Profile";
-import MarketPage from "@/pages/Market";
+import ProfilePage from "@/pages/Profile"
+import MarketPage from "@/pages/Market"
+import Apps from '@/pages/Apps'
 
 const router = createBrowserRouter([
     {
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
             { path: "/", element: <MarketPage /> },
             { path: "/address/:address", element: <ProfilePage /> },
             { path: "/market", element: <MarketPage /> },
+            { path: "/apps", element: <Apps /> },
         ]
     },
 ]);
