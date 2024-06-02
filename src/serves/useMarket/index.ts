@@ -19,7 +19,7 @@ export default function useMarket() {
 
     useEffect(() => {
         setStatus('loading')
-        fetch('http://bitspace.unistate.io/api/prices/latest')
+        fetch('https://api.unistate.io/api/prices/latest')
             .then(res => res.json())
             .catch((e: any) => {
                 setError(e)
