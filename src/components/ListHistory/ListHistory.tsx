@@ -45,7 +45,7 @@ export default function ListHistory({
                             <div className="text-neutral-500">{dayjs(item.attributes.created_at).fromNow()}</div>
                         </div>
                         {
-                            calculateTotalAmount(item).map((res) => {
+                            calculateTotalAmount(item, address).map((res) => {
                                 const color = res.delta.includes('+') ?
                                     'text-green-500'
                                     : res.delta.includes('-') ?
@@ -81,8 +81,7 @@ export default function ListHistory({
     </div>
 }
 
-function calculateTotalAmount(data: TransactionHistory) {
-    const address = data.attributes.display_inputs[0].address_hash
+function calculateTotalAmount(data: TransactionHistory, address: string) {
     const inputs = data.attributes.display_inputs.filter((input) => input.address_hash === address)
     const outputs = data.attributes.display_outputs.filter((output) => output.address_hash === address)
 

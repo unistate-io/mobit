@@ -19,23 +19,25 @@ export default function useTransactions(address: string) {
                 "Accept": 'application/vnd.api+json',
                 "Content-Type": 'application/vnd.api+json',
             }
-        }).then(async (res) => {
-            const json = await res.json()
-            console.log('json', json)
-            if (json.data) {
-                console.log('here')
-                setData(json.data)
-                setStatus('complete')
-            } else {
-                setData([])
-                setStatus('complete')
-            }
-        }).catch((e: any) => {
-            console.warn(e)
-            setData([])
-            setStatus('error')
-            setError(e)
         })
+            .then(async (res) => {
+                const json = await res.json()
+                console.log('json', json)
+                if (json.data) {
+                    console.log('here')
+                    setData(json.data)
+                    setStatus('complete')
+                } else {
+                    setData([])
+                    setStatus('complete')
+                }
+            })
+            .catch((e: any) => {
+                console.warn(e)
+                setData([])
+                setStatus('error')
+                setError(e)
+            })
     }, [address, page])
 
 

@@ -1,5 +1,5 @@
 import {BI, helpers, Indexer } from '@ckb-lumos/lumos'
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {TokenBalance} from "@/components/ListToken/ListToken";
 
 const CKB_RPC_URL = process.env.REACT_APP_CKB_RPC_URL!
@@ -20,36 +20,42 @@ export async function getCapacities(address: string): Promise<string> {
     return capacities.toString();
 }
 
+
 export default function useCkbBalance(address: string) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
 
+
+    const refresh = useCallback(async ()=>{
+        try {
+            const balance = await getCapacities(address)
+            setData({
+                name: 'Nervos CKB',
+                symbol: 'CKB',
+                decimal: 8,
+                type_id: '',
+                type: 'ckb',
+                amount: balance
+            })
+            setStatus('complete')
+        } catch (e: any) {
+            setError(e)
+            setStatus('error')
+        }
+    }, [address])
+
     useEffect(() => {
         setStatus('loading')
         setData(undefined)
-        getCapacities(address)
-            .then(res => {
-                setData({
-                    name: 'Nervos CKB',
-                    symbol: 'CKB',
-                    decimal: 8,
-                    type_id: '',
-                    type: 'ckb',
-                    amount: res
-                })
-                setStatus('complete')
-            })
-            .catch((e: any) => {
-                setError(e)
-                setStatus('error')
-            })
-    }, [address])
+        refresh()
+    }, [refresh, address])
 
 
     return {
         data,
         status,
-        error
+        error,
+        refresh
     }
 }

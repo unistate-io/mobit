@@ -13,12 +13,13 @@ import useTransactions from "@/serves/useTransactionsHistory";
 import ListHistory from "@/components/ListHistory/ListHistory";
 import useSpores from "@/serves/useSpores";
 import ListDOBs from "@/components/ListDOBs/ListDOBs";
+import DialogCkbTransfer from "@/components/Dialogs/DialogCkbTransfer/DialogCkbTransfer";
 
 const tabs = ['All', 'Tokens', 'DOBs']
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
-    const {internalAddress} = useContext(CKBContext)
+    const {internalAddress, signer} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
 
     const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useXudtBalance(address!)
@@ -72,7 +73,7 @@ export default function Profile() {
                 <Avatar size={128} name={address || 'default'} colors={theme.colors}/>
             </div>
             <div className="mt-4 flex flex-col items-center md:flex-row">
-                <div className="mb-4"><AddressCapsule address={address!} label={'CKT'}/></div>
+                <div className="mb-4"><AddressCapsule address={address!} /></div>
 
                 {isOwner && internalAddress &&
                     <div className="mb-4"><AddressCapsule address={internalAddress}/></div>
@@ -96,7 +97,7 @@ export default function Profile() {
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value="All" >
-                            <ListToken data={tokens} status={tokensStatus}/>
+                            <ListToken data={tokens} status={tokensStatus} address={signer ? address : undefined} />
                             <div className="mt-6">
                                 <ListDOBs
                                     data={sporesData}
@@ -111,7 +112,7 @@ export default function Profile() {
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value="Tokens"
                         >
-                            <ListToken data={tokens} status={tokensStatus}/>
+                            <ListToken data={tokens} status={tokensStatus} address={signer ? address : undefined}/>
                         </Tabs.Content>
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"

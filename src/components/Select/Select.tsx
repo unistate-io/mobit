@@ -2,7 +2,7 @@ import * as RadixSelect from '@radix-ui/react-select';
 import {forwardRef, LegacyRef, RefAttributes} from 'react';
 import * as React from "react";
 import {SelectItemProps, SelectProps} from "@radix-ui/react-select";
-import { CheckIcon } from '@radix-ui/react-icons';
+
 
 export interface SelectOption {
     id: string;
@@ -22,7 +22,7 @@ const SelectItem = forwardRef(({children, className, ...props} : SelectItemProps
         <RadixSelect.Item className={`SelectItem ${className || ''}`} {...props} ref={ref}>
             <RadixSelect.ItemText>{children}</RadixSelect.ItemText>
             <RadixSelect.ItemIndicator className="absolute left-0 w-[25px] inline-flex items-center justify-center">
-                <CheckIcon />
+                <i className="uil-check text-xl" />
             </RadixSelect.ItemIndicator>
         </RadixSelect.Item>
     );
@@ -30,18 +30,18 @@ const SelectItem = forwardRef(({children, className, ...props} : SelectItemProps
 
 export default function Select ({options, placeholder, className='', hideDropIcon=false, ...props}: SelectOptionProps) {
     return <RadixSelect.Root {...props}>
-        <RadixSelect.Trigger className={`SelectTrigger ${className}`} aria-label={props.name || 'Select'}>
+        <RadixSelect.Trigger className={`SelectTrigger flex flex-row items-center justify-between w-full ${className}`} aria-label={props.name || 'Select'}>
             <RadixSelect.Value placeholder={placeholder || 'Select ...'} />
             { !hideDropIcon &&
                 <RadixSelect.Icon className="SelectIcon">
-                    <div>ChevronDownIcon</div>
+                    <i className="uil-angle-down text-2xl" />
                 </RadixSelect.Icon>
             }
         </RadixSelect.Trigger>
         <RadixSelect.Portal>
-            <RadixSelect.Content className="SelectContent" position={'popper'}>
+            <RadixSelect.Content className="SelectContent z-[999]" position={'popper'}>
                 <RadixSelect.ScrollUpButton className="SelectScrollButton">
-                    <div>ChevronUpIcon</div>
+                    <i className="uil-angle-up text-2xl" />
                 </RadixSelect.ScrollUpButton>
                 <RadixSelect.Viewport className="SelectViewport">
                     <RadixSelect.Group>
@@ -53,7 +53,7 @@ export default function Select ({options, placeholder, className='', hideDropIco
                     </RadixSelect.Group>
                 </RadixSelect.Viewport>
                 <RadixSelect.ScrollDownButton className="SelectScrollButton">
-                    <div>ChevronDownIcon</div>
+                    <i className="uil-angle-down text-2xl" />
                 </RadixSelect.ScrollDownButton>
             </RadixSelect.Content>
         </RadixSelect.Portal>

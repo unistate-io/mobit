@@ -11,14 +11,14 @@ function toValue(numStr: string, decimal: number, split?: boolean, isInt?: boole
     }
 }
 
-export function toDisplay(numStr: string, decimal: number, split?: boolean, isInt?: boolean): string {
+export function toDisplay(numStr: string, decimal: number, split?: boolean, fixed?: number): string {
     const num = BigNumber(numStr)
     const d = BigNumber(10 ** decimal + '')
 
     if (split) {
-        return num.dividedBy(d).toFormat(isInt? 0 : 4)
+        return num.dividedBy(d).toFormat(fixed !== undefined ? fixed : 4)
     } else {
-        return num.dividedBy(d).toFixed(isInt? 0 : 4)
+        return num.dividedBy(d).toFixed(fixed !== undefined ? fixed : 4)
     }
 }
 

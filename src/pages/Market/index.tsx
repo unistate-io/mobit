@@ -33,7 +33,7 @@ export default function MarketPage() {
 
                         <div>
                             <div className="text-sm">Market Cap</div>
-                            <div className="text-lg font-semibold">${toDisplay(item.market_cap + '', 0, true, true)}</div>
+                            <div className="text-lg font-semibold">${toDisplay(item.market_cap + '', 0, true, 0)}</div>
                         </div>
                     </div>
                     <div className="flex flex-row items-center">
