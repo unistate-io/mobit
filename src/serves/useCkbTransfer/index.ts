@@ -1,5 +1,5 @@
 import {commons, helpers, Indexer} from '@ckb-lumos/lumos'
-import {useContext, useState} from "react"
+import {useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 
@@ -16,8 +16,9 @@ export default function useCkbTransfer(address: string) {
                              from,
                              to,
                              amount,
+                             payeeAddress,
                              feeRate
-                         }: { from: string, to: string, amount: string, feeRate?: number }) => {
+                         }: { from: string, to: string, amount: string, payeeAddress: string, feeRate: number }) => {
         const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
         const txSkeleton = await commons.common.transfer(
             _txSkeleton,
@@ -26,17 +27,17 @@ export default function useCkbTransfer(address: string) {
             BigInt(amount),
         )
 
-        return feeRate ? await commons.common.payFeeByFeeRate(
+        return await commons.common.payFeeByFeeRate(
             txSkeleton,
-            [from],
+            [payeeAddress],
             feeRate,
-        ) : txSkeleton
+        )
     }
 
-    const calculateFee = async (feeRate: number, tx: helpers.TransactionSkeletonType) => {
+    const calculateFee = async (feeRate: number, tx: helpers.TransactionSkeletonType, payeeAddress: string) => {
         const newTxSkeleton = await commons.common.payFeeByFeeRate(
             tx,
-            [address],
+            [payeeAddress],
             feeRate)
 
         const txSize = await commons.common.__tests__.getTransactionSize(newTxSkeleton!)
@@ -50,14 +51,20 @@ export default function useCkbTransfer(address: string) {
         return size.toString()
     }
 
-    const signAndSend = async ({to, amount, feeRate}: { to: string, amount: string, feeRate: number }) => {
+    const signAndSend = async ({
+                                   to,
+                                   amount,
+                                   feeRate,
+                                   sendAll
+                               }: { to: string, amount: string, feeRate: number, sendAll?: boolean }) => {
         if (!signer) {
             throw new Error('Please connect wallet first')
         }
 
 
-        console.log('ccc', ccc)
-        console.log('signer.client.getUrl()', signer.client.getUrl())
+        if (sendAll) {
+            console.log('signAndSend send all')
+        }
 
         const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
         let txSkeleton = await commons.common.transfer(
@@ -69,7 +76,7 @@ export default function useCkbTransfer(address: string) {
 
         txSkeleton = await commons.common.payFeeByFeeRate(
             txSkeleton,
-            [await signer.getRecommendedAddress()],
+            [sendAll ? to : await signer.getRecommendedAddress()],
             feeRate,
         )
 

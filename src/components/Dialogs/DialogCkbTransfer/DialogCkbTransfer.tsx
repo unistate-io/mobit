@@ -12,6 +12,7 @@ import Select from "@/components/Select/Select"
 import CopyText from "@/components/CopyText/CopyText";
 
 import * as dayjsLib from "dayjs"
+import {helpers} from "@ckb-lumos/lumos";
 const dayjs: any = dayjsLib
 
 export interface XudtTransferProps {
@@ -21,7 +22,7 @@ export interface XudtTransferProps {
 }
 
 export default function DialogCkbTransfer({children, from}: { children: React.ReactNode, from: string }) {
-    const {build, calculateSize, signAndSend} = useCkbTransfer(from)
+    const {build, calculateSize, signAndSend, calculateFee} = useCkbTransfer(from)
     const {data: CkbBalance, status, refresh} = useCkbBalance(from)
 
 
@@ -34,12 +35,13 @@ export default function DialogCkbTransfer({children, from}: { children: React.Re
 
     const [step, setStep] = React.useState<1 | 2 | 3>(1)
     const [feeRate, setFeeRate] = React.useState<1000 | 2000 | 3000>(1000)
-    const [txSize, setTxSize] = React.useState<string>('0')
     const [sending, setSending] = React.useState(false)
     const [txHash, setTxHash] = React.useState<null | string>(null)
+    const [fee1000, setFee1000] = React.useState<string>('0')
+
 
     const fee = (feeRate: number) =>{
-        return BigNumber(txSize).plus(4).multipliedBy(feeRate).dividedBy(10 ** 10).toString()
+        return BigNumber(fee1000).multipliedBy(feeRate / 1000).dividedBy(10**8).toString()
     }
 
 
@@ -79,15 +81,19 @@ export default function DialogCkbTransfer({children, from}: { children: React.Re
         const amount = BigNumber(BigNumber(formData.amount)).multipliedBy(10 ** 8)
         const balance = BigNumber(CkbBalance ? CkbBalance.amount : 0)
 
+        let tx:helpers.TransactionSkeletonType | null = null
         if (!hasError) {
             if (amount.eq(balance)) {
-                // max amount
                 try {
-                    await build({
+                  tx =  await build({
                         from,
                         to: formData.to,
                         amount: amount.toString(),
+                        payeeAddress: formData.to,
+                        feeRate: 1000,
+
                     })
+                    console.log('max amount tx', tx)
                     setAmountError('')
                 } catch (e: any) {
                     console.error(e)
@@ -96,10 +102,12 @@ export default function DialogCkbTransfer({children, from}: { children: React.Re
                 }
             } else {
                 try {
-                   await build({
+                 tx = await build({
                         from,
                         to: formData.to,
                         amount: amount.toString(),
+                        payeeAddress: from,
+                        feeRate: 1000,
                     })
                     setAmountError('')
                 } catch (e: any) {
@@ -110,11 +118,7 @@ export default function DialogCkbTransfer({children, from}: { children: React.Re
             }
         }
 
-        return !hasError ? await build({
-            from,
-            to: formData.to,
-            amount: amount.toString(),
-        }) : null
+        return !hasError ? tx : null
     }
 
     const setMaxAmount = () => {
@@ -127,8 +131,15 @@ export default function DialogCkbTransfer({children, from}: { children: React.Re
     const handleTransfer = async () => {
         const tx = await checkErrorsAndBuild()
         if (!!tx) {
-            setTxSize(await calculateSize(tx))
-            setStep(2)
+            try {
+                const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+                const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+                const fee = inputCap - outCap
+                setFee1000(fee.toString())
+                setStep(2)
+            } catch (e) {
+                console.error(e)
+            }
         }
     }
 
@@ -136,10 +147,12 @@ export default function DialogCkbTransfer({children, from}: { children: React.Re
         setSending(true)
         setTransactionError('')
         try {
+            const amount = BigNumber(BigNumber(formData.amount)).multipliedBy(10 ** 8)
             const txHash = await signAndSend({
                 to: formData.to,
-                amount: BigNumber(BigNumber(formData.amount)).multipliedBy(10 ** 8).toString(),
-                feeRate
+                amount: amount.toString(),
+                feeRate,
+                sendAll:amount.eq(CkbBalance ? CkbBalance.amount : 0)
             })
             console.log(txHash, txHash)
             setTxHash(txHash)
@@ -359,7 +372,11 @@ export default function DialogCkbTransfer({children, from}: { children: React.Re
 
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                     <div className="text-gray-500">Total amount</div>
-                                    <div className="font-semibold">{Number(fee(feeRate)) + Number(formData.amount)} CKB</div>
+                                    <div className="font-semibold">{
+                                        BigNumber(BigNumber(formData.amount)).multipliedBy(10 ** 8).eq(CkbBalance ? CkbBalance.amount : 0) ?
+                                            Number(formData.amount):
+                                            Number(fee(feeRate)) + Number(formData.amount)
+                                    } CKB</div>
                                 </div>
 
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
@@ -391,8 +408,6 @@ export default function DialogCkbTransfer({children, from}: { children: React.Re
                            </div>
                         </>
                     }
-
-
                 </Dialog.Content>
             </Dialog.Portal>
         </Dialog.Root>
