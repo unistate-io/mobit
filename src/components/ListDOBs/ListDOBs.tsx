@@ -66,24 +66,7 @@ function DOBItem({item}: { item: Spores }) {
     const [name, setName] = useState('')
     const [plantText, setPlantText] = useState('')
 
-    // useEffect(() => {
-    //     fetch(`https://api.joy.id/api/v1/wallet/tokens/${item.id.replace('\\', '').replace('x', '')}`)
-    //         .then(res => {
-    //             return res.json()
-    //         })
-    //         .catch((e: any) => {
-    //             console.warn(e)
-    //         })
-    //         .then((res) => {
-    //             console.log('resresres', res)
-    //         })
-    //         .catch((e: any) => {
-    //             console.warn(e)
-    //         })
-    //         .finally(() => {
-    //             setLoading(false)
-    //         })
-    // }, [item])
+
 
 
     useEffect(() => {
@@ -134,7 +117,7 @@ function DOBItem({item}: { item: Spores }) {
     }, [item])
 
 
-    return <div  className="shrink-0 grow-0 max-w-[50%] basis-1/2 md:basis-1/3 md:max-w-[33.3%] box-border p-2">
+    return <Link to={`/dob/${item.id.replace('\\', '').replace('x', '')}`} className="shrink-0 grow-0 max-w-[50%] basis-1/2 md:basis-1/3 md:max-w-[33.3%] box-border p-2">
         <div
             className="w-full h-[140px] sm:h-[200px] md:h-[250px] lg:h-[180px]  overflow-hidden rounded-sm relative border border-1">
             <img className="object-cover w-full h-full"
@@ -143,5 +126,5 @@ function DOBItem({item}: { item: Spores }) {
         <div
             className="mt-1 text-base font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis h-[24px]">{name || plantText}</div>
         <div className="text-xs">{shortTransactionHash(item.id.replace('\\', '0'))}</div>
-    </div>
+    </Link>
 }

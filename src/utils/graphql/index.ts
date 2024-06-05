@@ -30,8 +30,16 @@ export const querySporesByAddress = async (address: string, page: number, pageSi
     return res.spores as Spores[]
 }
 
+export const querySporesById = async (id: string) => {
+    const condition = `where: {id: {_eq: "${id}"}}`
+    const doc = gql('spores', condition)
+    const res: any = await query(doc)
+    return res.spores[0] as Spores || null
+}
+
 export const queryClustersByIds = async (id: string) => {
     const doc = gql('clusters', `where: {id: {_eq: "${'\\' + id}"}}`)
     const res: {clusters: Clusters[]} = await query(doc)
     return res.clusters[0] || null
 }
+
