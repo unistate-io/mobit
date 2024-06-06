@@ -30,7 +30,7 @@ export default function ListTokenHistory({
             {
                 data.length === 0 && status !== 'loading' &&
                 <div
-                    className="h-[120px] flex flex-row justify-center items-center bg-gray-100 text-gray-300 rounded-xl">
+                    className="h-[202px] flex flex-row justify-center items-center bg-gray-100 text-gray-300 rounded-xl">
                     No transaction found
                 </div>
             }
