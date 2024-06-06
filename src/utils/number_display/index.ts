@@ -22,7 +22,8 @@ export function toDisplay(numStr: string, decimal: number, split?: boolean, fixe
     }
 }
 
-export function shortTransactionHash(hash: string): string {
-    return hash.slice(0, 6) + '...' + hash.slice(hash.length - 4)
+export function shortTransactionHash(hash: string, keep?: number): string {
+    const length = keep || 6
+    return hash.slice(0, length) + '...' + hash.slice(hash.length - length)
 }
 

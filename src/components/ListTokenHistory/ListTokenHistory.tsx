@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom"
-import {shortTransactionHash} from "@/utils/number_display"
+import {shortTransactionHash, toDisplay} from "@/utils/number_display"
 import * as dayjsLib from "dayjs"
-import TokenIcon from "@/components/TokenIcon/TokenIcon";
+import CopyText from "@/components/CopyText/CopyText";
 
 const dayjs: any = dayjsLib
 const relativeTime = require('dayjs/plugin/relativeTime')
@@ -41,27 +41,76 @@ export default function ListTokenHistory({
                         target="blank"
                         to={`https://explorer.nervos.org/transaction/${item.attributes.transaction_hash}`} key={item.id}
                         className="bg-stone-50 rounded p-4 mt-3">
-                        <div className="flex  flex-row text-xs">
+                        <div className="flex flex-row text-sm mb-4 justify-between">
                             <div
-                                className="text-[#6CD7B2] mr-2">{shortTransactionHash(item.attributes.transaction_hash)}</div>
+                                className="text-[#6CD7B2] mr-2">
+                                <CopyText copyText={item.attributes.transaction_hash}>
+                                    {shortTransactionHash(item.attributes.transaction_hash, 10)}
+                                </CopyText>
+                            </div>
                             <div className="text-neutral-500">{dayjs(item.attributes.created_at).fromNow()}</div>
                         </div>
-                        {
-                            calculateTotalAmount(item, address).map((res) => {
-                                const color = res.delta.includes('+') ?
-                                    'text-green-500'
-                                    : res.delta.includes('-') ?
-                                        'text-red-500' :
-                                        'text-neutral-500'
-                                return <div key={res.symbol} className="flex flex-row justify-between mt-1 text-xs">
-                                    <div className="flex-row flex items-center">
-                                        <TokenIcon symbol={res.symbol} size={18}/>
-                                        {res.symbol}
-                                    </div>
-                                    <div className={color}>{res.delta}</div>
-                                </div>
-                            })
-                        }
+                        <div className="flex flex-row flex-col sm:flex-row sm:items-start items-center">
+                            <div className="sm:flex-1 w-full">
+                                {
+                                    item.attributes.display_inputs.map((input) => {
+                                        if (!input.xudt_info) {
+                                            return <div key={input.id} className="flex flex-row text-xs justify-between mb-2">
+                                                    <div className="text-[#6CD7B2]">
+                                                        <CopyText copyText={input.address_hash}>
+                                                            {shortTransactionHash(input.address_hash, 4)}
+                                                        </CopyText>
+                                                    </div>
+                                                    <div className="flex flex-row items-center font-semibold">
+                                                        {toDisplay(input.capacity, 8)} CKB
+                                                    </div>
+                                            </div>
+                                        } else {
+                                            return <div key={input.id} className="flex flex-row text-xs justify-between mb-2">
+                                                <div className="text-[#6CD7B2]">
+                                                    <CopyText copyText={input.address_hash}>
+                                                        {shortTransactionHash(input.address_hash, 4)}
+                                                    </CopyText>
+                                                </div>
+                                                <div className="flex flex-row items-center font-semibold">
+                                                    {toDisplay(input.capacity, 8)} {input.xudt_info.symbol}
+                                                </div>
+                                            </div>
+                                        }
+                                    })
+                                }
+                            </div>
+                            <div className="w-[50px] text-center text-2xl rotate-90 sm:rotate-0"><i className="uil-arrow-right" /></div>
+                            <div className="sm:flex-1 w-full">
+                                {
+                                    item.attributes.display_outputs.map((input) => {
+                                        if (!input.xudt_info) {
+                                            return <div key={input.id} className="flex flex-row text-xs justify-between mb-2">
+                                                <div className="text-[#6CD7B2]">
+                                                    <CopyText copyText={input.address_hash}>
+                                                        {shortTransactionHash(input.address_hash, 4)}
+                                                    </CopyText>
+                                                </div>
+                                                <div className="flex flex-row items-center font-semibold">
+                                                    {toDisplay(input.capacity, 8)} CKB
+                                                </div>
+                                            </div>
+                                        } else {
+                                            return <div key={input.id} className="flex flex-row text-xs justify-between mb-2">
+                                                <div className="text-[#6CD7B2]">
+                                                    <CopyText copyText={input.address_hash}>
+                                                        {shortTransactionHash(input.address_hash, 4)}
+                                                    </CopyText>
+                                                </div>
+                                                <div className="flex flex-row items-center font-semibold">
+                                                    {toDisplay(input.capacity, 8)} {input.xudt_info.symbol}
+                                                </div>
+                                            </div>
+                                        }
+                                    })
+                                }
+                            </div>
+                        </div>
                     </Link>
                 })
             }
@@ -81,70 +130,6 @@ export default function ListTokenHistory({
             </Link>
         }
     </div>
-}
-
-function calculateTotalAmount(data: TransactionHistory, address: string) {
-    const inputs = data.attributes.display_inputs.filter((input) => input.address_hash === address)
-    const outputs = data.attributes.display_outputs.filter((output) => output.address_hash === address)
-
-    let tokens: { symbol: string, decimal: string }[] = []
-    inputs.forEach((input) => {
-        if (input.xudt_info && !tokens.some((token) => token.symbol === input.xudt_info!.symbol)) {
-            tokens.push({
-                symbol: input.xudt_info!.symbol,
-                decimal: input.xudt_info!.decimal
-            })
-        }
-    })
-
-    const inputCkbAmount = inputs.reduce((acc, input) => {
-        if (!input.xudt_info) {
-            return acc + Number(input.capacity)
-        } else {
-            return acc
-        }
-    }, 0)
-
-    const outputCkbAmount = outputs.reduce((acc, output) => {
-        if (!output.xudt_info) {
-            return acc + Number(output.capacity)
-        } else {
-            return acc
-        }
-    }, 0)
-
-    const ckbDelta = (outputCkbAmount - inputCkbAmount) / 10 ** 8
-    let res = [{
-        symbol: 'CKB',
-        delta: ckbDelta > 0 ? '+' + ckbDelta.toString() : ckbDelta.toString(),
-    }] as { symbol: string, delta: string }[]
-
-    tokens.map((token) => {
-        const inputAmount = inputs.reduce((acc, input) => {
-            if (input.xudt_info && input.xudt_info.symbol === token.symbol) {
-                return acc + Number(input.xudt_info.amount)
-            } else {
-                return acc
-            }
-        }, 0)
-
-        const outputAmount = outputs.reduce((acc, output) => {
-            if (output.xudt_info && output.xudt_info.symbol === token.symbol) {
-                return acc + Number(output.xudt_info.amount)
-            } else {
-                return acc
-            }
-        }, 0)
-
-        const delta = (outputAmount - inputAmount) / 10 ** Number(token.decimal)
-
-        res.push({
-            symbol: token.symbol,
-            delta: delta > 0 ? '+' + delta.toString() : delta.toString(),
-        })
-    })
-
-    return res
 }
 
 export interface TransactionHistory {
