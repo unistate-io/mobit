@@ -13,7 +13,6 @@ import useTransactions from "@/serves/useTransactionsHistory";
 import ListHistory from "@/components/ListHistory/ListHistory";
 import useSpores from "@/serves/useSpores";
 import ListDOBs from "@/components/ListDOBs/ListDOBs";
-import DialogCkbTransfer from "@/components/Dialogs/DialogCkbTransfer/DialogCkbTransfer";
 
 const tabs = ['All', 'Tokens', 'DOBs']
 

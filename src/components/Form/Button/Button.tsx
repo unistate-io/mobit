@@ -22,7 +22,7 @@ export default function Button({children, loading, ...props}: ButtonProps) {
     return <button
         {...props}
         data-loading={loading ? 'true' : 'false'}
-        className={`data-[loading=true]:pointer-events-none data-[loading=true]:opacity-50 disabled:opacity-50 font-semibold w-full px-4 py-3 rounded-lg flex flex-row flex-nowrap items-center justify-center ${bgColor} ${props.className}`}>
+        className={`${bgColor} data-[loading=true]:pointer-events-none data-[loading=true]:opacity-50 disabled:opacity-50 font-semibold w-full px-4 py-3 rounded-lg flex flex-row flex-nowrap items-center justify-center  ${props.className}`}>
         {
             loading &&
             <div className="mr-2">

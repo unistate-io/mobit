@@ -21,8 +21,8 @@ export interface XudtTransferProps {
     to: string,
 }
 
-export default function DialogCkbTransfer({children, from}: { children: React.ReactNode, from: string }) {
-    const {build, calculateSize, signAndSend, calculateFee} = useCkbTransfer(from)
+export default function DialogCkbTransfer({children, from, className}: { children: React.ReactNode, from: string, className?: string }) {
+    const {build, signAndSend} = useCkbTransfer(from)
     const {data: CkbBalance, status, refresh} = useCkbBalance(from)
 
 
@@ -178,7 +178,7 @@ export default function DialogCkbTransfer({children, from}: { children: React.Re
 
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
-            <Dialog.Trigger>
+            <Dialog.Trigger className={className}>
                 {children}
             </Dialog.Trigger>
             <Dialog.Portal>

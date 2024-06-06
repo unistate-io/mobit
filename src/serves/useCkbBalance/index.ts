@@ -21,13 +21,15 @@ export async function getCapacities(address: string): Promise<string> {
 }
 
 
-export default function useCkbBalance(address: string) {
+export default function useCkbBalance(address?: string) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
 
 
     const refresh = useCallback(async ()=>{
+       if (!address) return
+
         try {
             const balance = await getCapacities(address)
             setData({
@@ -46,9 +48,11 @@ export default function useCkbBalance(address: string) {
     }, [address])
 
     useEffect(() => {
-        setStatus('loading')
-        setData(undefined)
-        refresh()
+       if (!!address) {
+           setStatus('loading')
+           setData(undefined)
+           refresh()
+       }
     }, [refresh, address])
 
 

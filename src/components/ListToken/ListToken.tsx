@@ -1,8 +1,9 @@
 import TokenIcon from '../TokenIcon/TokenIcon'
 import {useState} from "react"
-import {toDisplay} from "@/utils/number_display";
+import {toDisplay} from "@/utils/number_display"
 import DialogXudtReceive from "@/components/Dialogs/DialogXudtReceive/DialogXudtReceive"
 import DialogCkbTransfer from "@/components/Dialogs/DialogCkbTransfer/DialogCkbTransfer"
+import {Link} from "react-router-dom";
 
 export interface TokenBalance {
     name: string,
@@ -63,7 +64,7 @@ export default function ListToken({
 
             {status !== 'loading' &&
                 list.map((item, index) => {
-                    return <div key={index} className="flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border">
+                    return <Link to={'/token'} key={index} className="flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100">
                         <div className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center">
                             <TokenIcon symbol={item.symbol} size={24} chain={'ckb'}/>{item.symbol}
                         </div>
@@ -92,7 +93,7 @@ export default function ListToken({
                             </> :  <div
                                 className="shrink-0 flex-1 flex-row flex items-center justify-end">{toDisplay(item.amount, item.decimal, true)}</div>
                         }
-                    </div>
+                    </Link>
                 })
             }
         </div>

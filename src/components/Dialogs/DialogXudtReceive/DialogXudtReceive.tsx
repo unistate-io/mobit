@@ -3,7 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import QRCode from 'qrcode'
 import AddressCapsule from "@/components/AddressCapsule/AddressCapsule";
 
-export default function DialogXudtReceive(props: { children: React.ReactNode, address: string }) {
+export default function DialogXudtReceive(props: { children: React.ReactNode, address: string, className?: string }) {
     const [open, setOpen] = React.useState(false)
     const [qrcodeUrl, setQrcodeUrl] = React.useState<string>("")
 
@@ -15,7 +15,7 @@ export default function DialogXudtReceive(props: { children: React.ReactNode, ad
 
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
-            <Dialog.Trigger>
+            <Dialog.Trigger className={props.className}>
                 {props.children}
             </Dialog.Trigger>
             <Dialog.Portal>
