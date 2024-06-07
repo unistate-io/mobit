@@ -1,18 +1,19 @@
 import {UserContext} from '@/providers/UserProvider/UserProvider'
-import {useContext, useEffect, useState} from "react";
-import Background from "@/components/Background/Background";
-import Avatar from "@/components/Avatar/Avatar";
-import AddressCapsule from "@/components/AddressCapsule/AddressCapsule";
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider";
-import * as Tabs from '@radix-ui/react-tabs';
-import ListToken, {TokenBalance} from "@/components/ListToken/ListToken";
-import useXudtBalance from "@/serves/useXudtBalance";
-import useCkbBalance from "@/serves/useCkbBalance";
-import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider";
-import useTransactions from "@/serves/useTransactionsHistory";
-import ListHistory from "@/components/ListHistory/ListHistory";
-import useSpores from "@/serves/useSpores";
-import ListDOBs from "@/components/ListDOBs/ListDOBs";
+import {useContext, useEffect, useState} from "react"
+import Background from "@/components/Background/Background"
+import Avatar from "@/components/Avatar/Avatar"
+import AddressCapsule from "@/components/AddressCapsule/AddressCapsule"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import * as Tabs from '@radix-ui/react-tabs'
+import ListToken, {TokenBalance} from "@/components/ListToken/ListToken"
+import useXudtBalance from "@/serves/useXudtBalance"
+import useCkbBalance from "@/serves/useCkbBalance"
+import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
+import useTransactions from "@/serves/useTransactionsHistory"
+import ListHistory from "@/components/ListHistory/ListHistory"
+import useSpores from "@/serves/useSpores"
+import ListDOBs from "@/components/ListDOBs/ListDOBs"
+import useDotbit from "@/serves/useDotbit";
 
 const tabs = ['All', 'Tokens', 'DOBs']
 
@@ -31,8 +32,14 @@ export default function Profile() {
         setPage: setSporesDataPage
     } = useSpores(address!)
 
+    const {data: DotbitData, status: DotbotDataStatue, error:DotBitDataErr} = useDotbit(address!)
+
     const [tokens, setTokens] = useState<TokenBalance[]>([])
     const [tokensStatus, setTokensStatus] = useState<string>('loading')
+
+    useEffect(() => {
+        console.log('DotbitData', DotbitData)
+    }, [DotbitData])
 
     useEffect(() => {
         if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading') {
