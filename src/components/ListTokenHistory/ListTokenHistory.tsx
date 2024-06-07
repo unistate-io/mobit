@@ -117,7 +117,7 @@ export default function ListTokenHistory({
         </div>
 
         {
-            status === 'complete' &&
+            status === 'complete' && !!address &&
             <Link
                 to={`https://explorer.nervos.org/address/${address}`}
                 className="cursor-pointer hover:bg-gray-300 bg-gray-200 h-[40px] rounded-lg flex flex-row items-center justify-center mt-2 text-xs">
