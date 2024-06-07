@@ -40,7 +40,7 @@ export default function TokenPage() {
             {!signer &&
                 <div className="flex flex-row justify-between text-sm">
                     <Button className="mr-2" onClick={open}>Send</Button>
-                    <Button className="text-white bg-[#000] hover:opacity-80 hover:bg-[#000]"
+                    <Button className="text-white !bg-[#000] hover:opacity-80 hover:bg-[#000]"
                             onClick={open}>Receive</Button>
                 </div>
             }
@@ -64,7 +64,7 @@ export default function TokenPage() {
                             <Button onClick={open}>Send</Button>
                         </DialogCkbTransfer>
                         <DialogXudtReceive address={address!} className="flex-1">
-                            <Button className="text-white bg-[#000] hover:opacity-80 hover:bg-[#000]"
+                            <Button className="text-white !bg-[#000] hover:opacity-80 hover:bg-[#000]"
                                     onClick={open}>Receive</Button>
                         </DialogXudtReceive>
                     </div>

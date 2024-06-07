@@ -39,6 +39,7 @@ export default function HeaderMenu() {
                 showSearchInput &&
                 <div className="absolute right-0">
                     <Input
+                        onBlur={() => setShowSearchInput(false)}
                         onKeyUp={(e) => {
                             if (e.key === 'Enter') {
                                 if (checksumCkbAddress(e.currentTarget.value)) {
@@ -59,7 +60,6 @@ export default function HeaderMenu() {
                         endIcon={<img src={'/images/icon_esc.svg'} alt={""} />}
                         className={'h-30 w-[250px] !py-2'}
                         placeholder="Search..."
-                        onBlur={() => setShowSearchInput(false)}
                     />
                 </div>
             }
