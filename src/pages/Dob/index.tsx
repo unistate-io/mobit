@@ -21,7 +21,6 @@ export default function DobPage() {
     useEffect(() => {
         if (!data) return
 
-        console.log('spore data', data)
         if (data?.dob0) {
             renderByTokenKey(`${tokenid}`)
                 .then(async (res) => {

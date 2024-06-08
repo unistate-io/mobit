@@ -27,9 +27,7 @@ export default function useTransactions(address?: string, pageSize?: number) {
             })
                 .then(async (res) => {
                     const json = await res.json()
-                    console.log('json', json)
                     if (json.data) {
-                        console.log('here')
                         setData(json.data)
                         setStatus('complete')
                     } else {

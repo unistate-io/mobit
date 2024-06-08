@@ -28,7 +28,7 @@ export default function useDotbit(owner: string) {
                 console.log(res)
             })
             .catch((e: any) => {
-                console.log(e)
+                console.warn(e)
                 setStatus("error")
                 setError(e)
             })

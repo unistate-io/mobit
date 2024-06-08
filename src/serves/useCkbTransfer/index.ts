@@ -61,11 +61,6 @@ export default function useCkbTransfer(address: string) {
             throw new Error('Please connect wallet first')
         }
 
-
-        if (sendAll) {
-            console.log('signAndSend send all')
-        }
-
         const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
         let txSkeleton = await commons.common.transfer(
             _txSkeleton,
@@ -80,11 +75,8 @@ export default function useCkbTransfer(address: string) {
             feeRate,
         )
 
-        console.log('txSkeleton', txSkeleton)
-
         const cccLib = ccc as any
         const tx = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
-        console.log('fromLumosSkeleton', tx)
 
         const hash = await signer.sendTransaction(tx)
         return hash

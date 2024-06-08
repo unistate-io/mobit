@@ -24,7 +24,6 @@ export const themes: UserTheme[] = [
 
 export const getTheme = (address: string) => {
     const index = (address[address.length -1].charCodeAt(0) + address[address.length -2].charCodeAt(0) + + address[address.length - 3].charCodeAt(0)) % themes.length
-    console.log('index', index, address[address.length -1].charCodeAt(0) , address[address.length -2].charCodeAt(0))
     return themes[index]
 }
 

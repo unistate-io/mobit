@@ -50,7 +50,6 @@ export default function useSporeDetail(tokenid: string) {
     useEffect(() => {
         (async () => {
             const spore = await querySporesById(`\\\\x${tokenid}`)
-            console.log('spore', spore)
             if (!spore) {
                 setStatus("complete")
             } else {
@@ -64,7 +63,6 @@ export default function useSporeDetail(tokenid: string) {
 
                 if (spore.content_type === 'dob/0') {
                     const decode:any = await decodeBob0(tokenid.replace('0x', ''))
-                    console.log('decode', decode)
                     res = {
                         ...spore,
                         dob0: {

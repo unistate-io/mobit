@@ -113,7 +113,6 @@ function DOBItem({item}: { item: Spores }) {
                     console.warn(e)
                 })
         }
-        console.log('item', item)
     }, [item])
 
 
