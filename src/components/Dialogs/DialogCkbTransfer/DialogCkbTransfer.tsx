@@ -29,7 +29,7 @@ export default function DialogCkbTransfer({children, from, className}: { childre
     const [open, setOpen] = React.useState(false);
     const [formData, setFormData] = React.useState<XudtTransferProps>({
         form: "",
-        amount: "0",
+        amount: "",
         to: "",
     });
 
@@ -219,7 +219,7 @@ export default function DialogCkbTransfer({children, from, className}: { childre
                                 <Input startIcon={<img width={32} height={32}
                                                        src={TokenIcons['CKB']}
                                                        alt="CKB"/>}
-                                       value={'BTC'}
+                                       value={'CKB'}
                                        type={"text"}
                                        disabled/>
                             </div>
