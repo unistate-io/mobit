@@ -73,7 +73,7 @@ export default function ListTokenHistory({
                                                     </CopyText>
                                                 </div>
                                                 <div className="flex flex-row items-center font-semibold">
-                                                    {toDisplay(input.capacity, 8)} {input.xudt_info.symbol}
+                                                    {toDisplay(input.xudt_info.amount, 8)} {input.xudt_info.symbol}
                                                 </div>
                                             </div>
                                         }
@@ -103,7 +103,7 @@ export default function ListTokenHistory({
                                                     </CopyText>
                                                 </div>
                                                 <div className="flex flex-row items-center font-semibold">
-                                                    {toDisplay(input.capacity, 8)} {input.xudt_info.symbol}
+                                                    {toDisplay(input.xudt_info.amount, 8)} {input.xudt_info.symbol}
                                                 </div>
                                             </div>
                                         }

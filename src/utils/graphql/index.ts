@@ -11,7 +11,7 @@ export const query = async (query: string, variables?: any) => {
 }
 
 export const queryXudtCell = async (address: string) => {
-    const doc = gql('xudt_cell', `where:{lock_id: {_eq: "${address}"}}`)
+    const doc = gql('xudt_cell', `where:{lock_id: {_eq: "${address}"},  is_consumed: {_eq: false}}`)
     const res: any = await query(doc)
     return res.xudt_cell as XudtCell[]
 }

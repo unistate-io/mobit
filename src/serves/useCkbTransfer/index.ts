@@ -69,6 +69,8 @@ export default function useCkbTransfer(address: string) {
             BigInt(amount)
         )
 
+        console.log('transfer tx before', txSkeleton)
+
         txSkeleton = await commons.common.payFeeByFeeRate(
             txSkeleton,
             [sendAll ? to : await signer.getRecommendedAddress()],
@@ -76,8 +78,10 @@ export default function useCkbTransfer(address: string) {
         )
 
         const cccLib = ccc as any
-        const tx = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
+        const tx = cccLib.Transaction.fromLumosSkeleton(txSkeleton);
 
+
+        console.log('cccLib.Transaction', cccLib.Transaction)
         const hash = await signer.sendTransaction(tx)
         return hash
     }

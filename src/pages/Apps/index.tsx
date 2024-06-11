@@ -13,11 +13,11 @@ export default function AppsPage() {
                        <Link to={item.url} target="_blank" className="shadow p-4 md:p-6 rounded-xl block">
                            <div className="flex flex-row items-center">
                                <div className="w-16 h-16 rounded border border-[#F1F1F1] shrink-0">
-                                   <img className="w-full h-full object-cover" src={item.logo} alt="" />
+                                   <img className="w-full h-full rounded object-cover" src={item.logo} alt="" />
                                </div>
                                <div className="ml-6 text-xl font-semibold overflow-hidden line-clamp-2 line-clamp-ellipsis">{item.name}</div>
                            </div>
-                           <div className="my-2 overflow-hidden line-clamp-2 line-clamp-ellipsis text-xs text-gray-400">{item.description}</div>
+                           <div className="my-2 h-8 overflow-hidden line-clamp-2 line-clamp-ellipsis text-xs text-gray-400">{item.description}</div>
                            <div className="hover:bg-gray-200 font-semibold h-10 text-sm flex flex-row justify-center items-center rounded-lg bg-gray-100">
                                View the product
                            </div>

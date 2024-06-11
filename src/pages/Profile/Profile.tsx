@@ -6,14 +6,13 @@ import AddressCapsule from "@/components/AddressCapsule/AddressCapsule"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import * as Tabs from '@radix-ui/react-tabs'
 import ListToken, {TokenBalance} from "@/components/ListToken/ListToken"
-import useXudtBalance from "@/serves/useXudtBalance"
+import useAllXudtBalance from "@/serves/useAllXudtBalance"
 import useCkbBalance from "@/serves/useCkbBalance"
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
 import useTransactions from "@/serves/useTransactionsHistory"
 import ListHistory from "@/components/ListHistory/ListHistory"
 import useSpores from "@/serves/useSpores"
 import ListDOBs from "@/components/ListDOBs/ListDOBs"
-import useDotbit from "@/serves/useDotbit";
 
 const tabs = ['All', 'Tokens', 'DOBs']
 
@@ -22,24 +21,14 @@ export default function Profile() {
     const {internalAddress, signer} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
 
-    const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useXudtBalance(address!)
+    const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useAllXudtBalance(address!)
     const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(address!)
     const {data: historyData, status: historyDataStatus} = useTransactions(address!)
-    const {
-        data: sporesData,
-        status: sporesDataStatus,
-        loaded: sporesDataLoaded,
-        setPage: setSporesDataPage
-    } = useSpores(address!)
+    const {data: sporesData, status: sporesDataStatus, loaded: sporesDataLoaded, setPage: setSporesDataPage } = useSpores(address!)
 
-    const {data: DotbitData, status: DotbotDataStatue, error:DotBitDataErr} = useDotbit(address!)
 
     const [tokens, setTokens] = useState<TokenBalance[]>([])
     const [tokensStatus, setTokensStatus] = useState<string>('loading')
-
-    useEffect(() => {
-        console.log('DotbitData', DotbitData)
-    }, [DotbitData])
 
     useEffect(() => {
         if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading') {
@@ -79,12 +68,13 @@ export default function Profile() {
                 <Avatar size={128} name={address || 'default'} colors={theme.colors}/>
             </div>
             <div className="mt-4 flex flex-col items-center md:flex-row">
-                <div className="mb-4"><AddressCapsule address={address!} /></div>
+                <div className="mb-4"><AddressCapsule address={address!}/></div>
 
                 {isOwner && internalAddress &&
                     <div className="mb-4"><AddressCapsule address={internalAddress}/></div>
                 }
             </div>
+
 
             <div className="flex mt-3 lg:mt-9 justify-between flex-col lg:flex-row">
                 <div className="flex-1 overflow-auto lg:max-w-[624px]">
@@ -102,8 +92,8 @@ export default function Profile() {
 
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
-                            value="All" >
-                            <ListToken data={tokens} status={tokensStatus} address={signer ? address : undefined} />
+                            value="All">
+                            <ListToken data={tokens} status={tokensStatus} address={signer ? address : undefined}/>
                             <div className="mt-6">
                                 <ListDOBs
                                     data={sporesData}
