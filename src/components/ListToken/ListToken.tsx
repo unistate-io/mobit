@@ -3,13 +3,11 @@ import {useState} from "react"
 import {toDisplay} from "@/utils/number_display"
 import DialogXudtReceive from "@/components/Dialogs/DialogXudtReceive/DialogXudtReceive"
 import DialogCkbTransfer from "@/components/Dialogs/DialogCkbTransfer/DialogCkbTransfer"
-import {Link} from "react-router-dom";
+import {Link} from "react-router-dom"
+import {TokenInfo} from "@/utils/graphql/types"
+import DialogXudtTransfer from "@/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer"
 
-export interface TokenBalance {
-    name: string,
-    symbol: string,
-    decimal: number,
-    type_id: string,
+export interface TokenBalance extends TokenInfo  {
     amount: string,
     type: string,
 }
@@ -64,24 +62,39 @@ export default function ListToken({
 
             {status !== 'loading' &&
                 list.map((item, index) => {
-                    return <Link to={'/token'} key={index} className="flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100">
+                    return <Link to={item.symbol ==='CKB' ? '/token' : `/token/${item.type_id}`} key={index} className="flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100">
                         <div className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center">
-                            <TokenIcon symbol={item.symbol} size={24} chain={'ckb'}/>{item.symbol}
+                            <TokenIcon symbol={item.symbol!} size={24} chain={'ckb'}/>{item.symbol!}
                         </div>
 
 
                         {!!address ?
                             <>
                                 <div
-                                    className="shrink-0 flex-1 flex-row flex items-center">{toDisplay(item.amount, item.decimal, true)}</div>
+                                    className="shrink-0 flex-1 flex-row flex items-center">{toDisplay(item.amount, item.decimal!, true)}</div>
                                 <div
+                                    onClick={e => {e.preventDefault()}}
                                     className="shrink-0 basis-1/3 md:basis-1/4 text-right flex-row items-center flex flex-nowrap justify-end">
-                                    <DialogCkbTransfer from={address}>
-                                        <div
-                                            className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
-                                            Send
-                                        </div>
-                                    </DialogCkbTransfer>
+
+                                   {
+                                       item.symbol === 'CKB' &&
+                                       <DialogCkbTransfer from={address}>
+                                           <div
+                                               className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                               Send
+                                           </div>
+                                       </DialogCkbTransfer>
+                                   }
+
+                                    {
+                                        item.symbol !== 'CKB' &&
+                                        <DialogXudtTransfer from={address} token={item}>
+                                            <div
+                                                className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                Send
+                                            </div>
+                                        </DialogXudtTransfer>
+                                    }
 
                                     <DialogXudtReceive address={address}>
                                         <div
@@ -89,9 +102,11 @@ export default function ListToken({
                                             Receive
                                         </div>
                                     </DialogXudtReceive>
+
+
                                 </div>
                             </> :  <div
-                                className="shrink-0 flex-1 flex-row flex items-center justify-end">{toDisplay(item.amount, item.decimal, true)}</div>
+                                className="shrink-0 flex-1 flex-row flex items-center justify-end">{toDisplay(item.amount, item.decimal!, true)}</div>
                         }
                     </Link>
                 })

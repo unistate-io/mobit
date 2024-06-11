@@ -1,99 +1,95 @@
-import {gqls, query, queryTokenInfo, queryXudtCell} from "@/utils/graphql";
 // @ts-ignore
-import BigNumber from "bignumber.js";
+
 import {useEffect, useState} from "react";
 import {TokenBalance} from "@/components/ListToken/ListToken";
+import {TokenInfo} from "@/utils/graphql/types";
 
-export const balance = async (address: string): Promise<TokenBalance[]> => {
-    const cells = await queryXudtCell(address)
-    // console.log('cells', cells)
+import { Collector } from '@/libs/rgnpp_collector';
+import {  leToU128 } from '@rgbpp-sdk/ckb';
+import { addressToScript} from '@nervosnetwork/ckb-sdk-utils';
 
-    if (cells.length === 0) {
-        console.log('enpty')
-        return []
-    }
+export const collector = new Collector({
+    ckbNodeUrl: process.env.REACT_APP_CKB_RPC_URL!,
+    ckbIndexerUrl: process.env.REACT_APP_CKB_INDEXER_URL!,
+});
 
-    let typed_ids: string[] = []
-    cells.forEach(c => {
-        if (!typed_ids.includes(c.type_id)) {
-            typed_ids.push(c.type_id)
-        }
-    })
-    // console.log('typed_ids', typed_ids)
-
-    const tokensInfo = await queryTokenInfo(typed_ids)
-    // console.log('tokenInfo', tokensInfo)
-
-    let gqlOpt = [] as any[]
-    cells.forEach((c, index) => {
-        gqlOpt.push(
-            {
-                type: 'xudt_status_cell',
-                key: 'c' + index,
-                opt: `where: {transaction_hash: {_eq: "${'\\' + c.transaction_hash}"}, transaction_index: {_eq: "${c.transaction_index}"}}`
-            }
-        )
-    })
-
-    const status_cell_doc = gqls(gqlOpt)
-    const status_cells: any = await query(status_cell_doc)
-    // console.log('status_cells', status_cells)
-
-    const valid_cell = cells.filter(((c, index) => {
-        return !status_cells['c' + index].length
-    }))
-    // console.log('valid_cell', valid_cell)
-
-    const res = typed_ids.map(t => {
-        const target_cells = valid_cell.filter(vc => {
-            return vc.type_id === t
-        })
-
-        const target_token = tokensInfo.find(token => {
-            return token.type_id === t
-        })
-
-        const sum = target_cells.reduce((prev, cur, index,) => {
-            return prev.plus(BigNumber(cur.amount))
-        }, BigNumber(0))
-
-        return {
-            name: target_token ? target_token.name : 'Unknown Token',
-            symbol: target_token ? target_token.symbol : '',
-            decimal: target_token ? target_token.decimal : 0,
-            type_id: t,
-            amount: sum.toString(),
-            type: 'xudt'
-        }
-    })
-
-    // console.log('res', res)
-    return res
+const emptyToken: TokenInfo = {
+    decimal: 0,
+    name: '',
+    symbol: '--',
+    type_id: '',
 }
 
-export default function useXudtBalance(address: string) {
+
+const getXudtBalance = async (address: string, tokenType: CKBComponents.Script) => {
+    const fromLock = addressToScript(address);
+
+    const xudtCells = await collector.getCells({
+        lock: fromLock,
+        type: tokenType,
+    });
+
+    const sum = xudtCells.reduce((prev, current) => {
+        return prev + leToU128(current.outputData)
+    }, BigInt(0))
+
+    return sum.toString()
+}
+
+export default function useXudtBalance(address: string, token?: TokenInfo) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
-    const [data, setData] = useState<TokenBalance[]>([])
+    const [data, setData] = useState<TokenBalance>({...emptyToken, amount: '0', type: 'xudt'})
     const [error, setError] = useState<undefined | any>(undefined)
 
     useEffect(() => {
+        if (!address || !token) {
+            setStatus('complete')
+            setData({...emptyToken, amount: '0', type: 'xudt'})
+            return
+        }
+
+        (async () => {
+            setStatus('loading')
+            const balance = await getXudtBalance(address, {
+                codeHash: '0x50bd8d6680b8b9cf98b73f3c08faf8b2a21914311954118ad6609be6e78a1b95',
+                hashType: 'data1',
+                args: '0x6b33c69bdb25fac3d73e3c9e55f88785de27a54d722b4ab3455212f9a1b1645c'
+            })
+            setData({
+                ...token,
+                amount: balance,
+                type: 'xudt'
+            })
+            setStatus('complete')
+        })()
+    }, [address, token])
+
+
+    const refresh = async () => {
+        if (!address || !token) {
+            setStatus('complete')
+            setData({...emptyToken, amount: '0', type: 'xudt'})
+            return
+        }
+
         setStatus('loading')
-        setData([])
-        balance(address)
-            .then(res => {
-                setData(res)
-                setStatus('complete')
-            })
-            .catch((e: any) => {
-                console.error(e)
-                setStatus('error')
-                setError(e)
-            })
-    }, [address])
+        const balance = await getXudtBalance(address, {
+            codeHash: '0x50bd8d6680b8b9cf98b73f3c08faf8b2a21914311954118ad6609be6e78a1b95',
+            hashType: 'data1',
+            args: '0x6b33c69bdb25fac3d73e3c9e55f88785de27a54d722b4ab3455212f9a1b1645c'
+        })
+        setData({
+            ...token,
+            amount: balance,
+            type: 'xudt'
+        })
+        setStatus('complete')
+    }
 
     return {
         status,
         data,
-        error
+        error,
+        refresh
     }
 }

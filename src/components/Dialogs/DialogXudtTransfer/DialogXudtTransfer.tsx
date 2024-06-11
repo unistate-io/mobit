@@ -2,17 +2,19 @@ import React, {useEffect} from 'react'
 import Input from "@/components/Form/Input/Input"
 import * as Dialog from '@radix-ui/react-dialog'
 import Button from "@/components/Form/Button/Button"
-import useCkbBalance from "@/serves/useCkbBalance"
+import useXudtBalance from "@/serves/useXudtBalance"
 import {checksumCkbAddress, shortTransactionHash} from "@/utils/common"
 import BigNumber from "bignumber.js"
 import {toDisplay} from "@/utils/number_display"
-import useCkbTransfer from "@/serves/useCkbTransfer"
-import {TokenIcons} from "@/components/TokenIcon/icons"
 import Select from "@/components/Select/Select"
-import CopyText from "@/components/CopyText/CopyText";
+import CopyText from "@/components/CopyText/CopyText"
+import useXudtTransfer from "@/serves/useXudtTransfer"
+import TokenIcon from "@/components/TokenIcon/TokenIcon"
+
 
 import * as dayjsLib from "dayjs"
-import {helpers} from "@ckb-lumos/lumos";
+import {helpers} from "@ckb-lumos/lumos"
+import {TokenInfo} from "@/utils/graphql/types"
 const dayjs: any = dayjsLib
 
 export interface XudtTransferProps {
@@ -21,15 +23,15 @@ export interface XudtTransferProps {
     to: string,
 }
 
-export default function DialogCkbTransfer({children, from, className}: { children: React.ReactNode, from: string, className?: string }) {
-    const {build, signAndSend} = useCkbTransfer(from)
-    const {data: CkbBalance, status, refresh} = useCkbBalance(from)
+export default function DialogXudtTransfer({children, from, className, token}: { children: React.ReactNode, from: string, token: TokenInfo,  className?: string }) {
+    const {build, signAndSend} = useXudtTransfer()
+    const {data: xudtBalance, status, refresh} = useXudtBalance(from, token)
 
 
     const [open, setOpen] = React.useState(false);
     const [formData, setFormData] = React.useState<XudtTransferProps>({
         form: "",
-        amount: "",
+        amount: "0",
         to: "",
     });
 
@@ -53,7 +55,6 @@ export default function DialogCkbTransfer({children, from, className}: { childre
     const checkErrorsAndBuild = async () => {
         let hasError = false
 
-
         if (formData.to === '') {
             setToError('Please enter a valid address')
             hasError = true
@@ -67,54 +68,33 @@ export default function DialogCkbTransfer({children, from, className}: { childre
         if (formData.amount === '') {
             setAmountError('Please enter a valid amount')
             hasError = true
-        } else if (BigNumber(formData.amount).lt(61)){
-            setAmountError('Please enter an amount greater than 61 CKB')
-            hasError = true
-        } else if (BigNumber(formData.amount).gt(CkbBalance ? CkbBalance.amount : 0)) {
+        } else if (BigNumber(formData.amount).multipliedBy(10 ** token.decimal).gt(xudtBalance ? xudtBalance.amount : 0)) {
             setAmountError('Insufficient balance')
+            hasError = true
+        } else if (BigNumber(formData.amount).eq(0)) {
+            setAmountError('Please enter a valid amount')
             hasError = true
         } else {
             setAmountError('')
         }
 
 
-        const amount = BigNumber(BigNumber(formData.amount)).multipliedBy(10 ** 8)
-        const balance = BigNumber(CkbBalance ? CkbBalance.amount : 0)
-
-        let tx:helpers.TransactionSkeletonType | null = null
+        const amount = BigNumber(formData.amount).multipliedBy(10 ** 8)
+        let tx: {tx: helpers.TransactionSkeletonType,fee: string} | null = null
         if (!hasError) {
-            if (amount.eq(balance)) {
-                try {
-                  tx =  await build({
-                        from,
-                        to: formData.to,
-                        amount: amount.toString(),
-                        payeeAddress: formData.to,
-                        feeRate: 1000,
-
-                    })
-                    console.log('max amount tx', tx)
-                    setAmountError('')
-                } catch (e: any) {
-                    console.error(e)
-                    hasError = true
-                    setAmountError(e.message)
-                }
-            } else {
-                try {
-                 tx = await build({
-                        from,
-                        to: formData.to,
-                        amount: amount.toString(),
-                        payeeAddress: from,
-                        feeRate: 1000,
-                    })
-                    setAmountError('')
-                } catch (e: any) {
-                    console.error(e)
-                    hasError = true
-                    setAmountError(e.message)
-                }
+            try {
+                tx = await build({
+                    from,
+                    to: formData.to,
+                    amount: amount.toString(),
+                    payeeAddress: from,
+                    feeRate: 1000,
+                }) as any
+                setAmountError('')
+            } catch (e: any) {
+                console.error(e)
+                hasError = true
+                setAmountError(e.message)
             }
         }
 
@@ -124,23 +104,29 @@ export default function DialogCkbTransfer({children, from, className}: { childre
     const setMaxAmount = () => {
         setFormData({
             ...formData,
-            amount: CkbBalance ? BigNumber(CkbBalance.amount).dividedBy(10 ** 8).toString() : '0'
+            amount: xudtBalance ? BigNumber(xudtBalance.amount).dividedBy(10 ** 8).toString() : '0'
         })
     }
 
     const handleTransfer = async () => {
         const tx = await checkErrorsAndBuild()
         if (!!tx) {
-            try {
-                const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-                const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-                const fee = inputCap - outCap
-                setFee1000(fee.toString())
-                setStep(2)
-            } catch (e) {
-                console.error(e)
-            }
+            console.log('xudt tx info---->', tx, tx.fee)
+            setFee1000(tx.fee)
+            setStep(2)
         }
+
+        // if (!!tx) {
+        //     try {
+        //         const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+        //         const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+        //         const fee = inputCap - outCap
+        //         setFee1000(fee.toString())
+        //         setStep(2)
+        //     } catch (e) {
+        //         console.error(e)
+        //     }
+        // }
     }
 
     const HandleSignAndSend = async () => {
@@ -149,10 +135,11 @@ export default function DialogCkbTransfer({children, from, className}: { childre
         try {
             const amount = BigNumber(BigNumber(formData.amount)).multipliedBy(10 ** 8)
             const txHash = await signAndSend({
+                from,
                 to: formData.to,
                 amount: amount.toString(),
                 feeRate,
-                sendAll:amount.eq(CkbBalance ? CkbBalance.amount : 0)
+                sendAll:amount.eq(xudtBalance ? xudtBalance.amount : 0)
             })
             console.log(txHash, txHash)
             setTxHash(txHash)
@@ -209,17 +196,15 @@ export default function DialogCkbTransfer({children, from, className}: { childre
                                        onChange={e => {
                                            setFormData({...formData, to: e.target.value})
                                        }}/>
-                                <div className="font-normal text-red-400 mt-1">{toError}</div>
+                                <div className="font-normal text-red-400 mt-1 break-words">{toError}</div>
                             </div>
 
                             <div className="font-semibold mb-10">
                                 <div className="mb-2">
                                     Asset
                                 </div>
-                                <Input startIcon={<img width={32} height={32}
-                                                       src={TokenIcons['CKB']}
-                                                       alt="CKB"/>}
-                                       value={'CKB'}
+                                <Input startIcon={<TokenIcon  size={32} symbol={token.symbol}/>}
+                                       value={token.symbol}
                                        type={"text"}
                                        disabled/>
                             </div>
@@ -228,7 +213,7 @@ export default function DialogCkbTransfer({children, from, className}: { childre
                                 <div className="mb-2 flex-row flex items-center justify-between">
                                     <div>Amount</div>
                                     <div className="font-normal"><span
-                                        className="text-gray-500"> Balance:</span> {CkbBalance ? toDisplay(CkbBalance.amount, 8, true, 8) : '--'}
+                                        className="text-gray-500"> Balance:</span> {xudtBalance ? toDisplay(xudtBalance.amount, 8, true, 8) : '--'}
                                     </div>
                                 </div>
                                 <Input value={formData.amount}
@@ -239,7 +224,7 @@ export default function DialogCkbTransfer({children, from, className}: { childre
                                        endIcon={<div className="cursor-pointer text-[#6CD7B2]"
                                                      onClick={setMaxAmount}>Max</div>}
                                 />
-                                <div className="font-normal text-red-400 mt-1">{amountError}</div>
+                                <div className="font-normal text-red-400 mt-1 break-words">{amountError}</div>
                             </div>
 
                             <Button btntype={'primary'}
@@ -271,10 +256,10 @@ export default function DialogCkbTransfer({children, from, className}: { childre
                                 </div>
                                 <div className="flex flex-row flex-nowrap justify-between items-center mb-2 text-sm">
                                     <div className="flex flex-row flex-nowrap items-center">
-                                        <img src={TokenIcons['CKB']} width={18} height={18} className="mr-2" alt=""/>
-                                        CKB
+                                        <TokenIcon  size={18} symbol={token.symbol}/>
+                                        {token.symbol}
                                     </div>
-                                    <div>{formData.amount} CKB</div>
+                                    <div>{formData.amount} {token.symbol}</div>
                                 </div>
 
                                 <div className="flex flex-row flex-nowrap justify-between items-center text-sm">
@@ -286,25 +271,25 @@ export default function DialogCkbTransfer({children, from, className}: { childre
 
                                 <div className="my-4 h-[1px] bg-gray-100 w-full" />
 
-                                <div className="mb-2 font-semibold">
-                                    Transaction fee
-                                </div>
-                                <Select
-                                    className={"bg-gray-100 py-2 px-4 rounded-lg text-sm"}
-                                    defaultValue={'1000'}
-                                    value={feeRate + ''}
-                                    options={[
-                                        {id: '1000', label: `${fee(1000)} CKB (Slow: 1000 shannons/KB)`},
-                                        {id: '2000', label: `${fee(2000)} CKB (Standard: 2000 shannons/KB)`},
-                                        {id: '3000', label: `${fee(3000)} CKB (Fast: 3000 shannons/KB)`},
-                                    ]}
-                                    onValueChange={(value) => {
-                                        setFeeRate(Number(value) as 1000 | 2000 | 3000)
-                                    }}
-                                ></Select>
+                                {/*<div className="mb-2 font-semibold">*/}
+                                {/*    Transaction fee*/}
+                                {/*</div>*/}
+                                {/*<Select*/}
+                                {/*    className={"bg-gray-100 py-2 px-4 rounded-lg text-sm"}*/}
+                                {/*    defaultValue={'1000'}*/}
+                                {/*    value={feeRate + ''}*/}
+                                {/*    options={[*/}
+                                {/*        {id: '1000', label: `${fee(1000)} CKB (Slow: 1000 shannons/KB)`},*/}
+                                {/*        {id: '2000', label: `${fee(2000)} CKB (Standard: 2000 shannons/KB)`},*/}
+                                {/*        {id: '3000', label: `${fee(3000)} CKB (Fast: 3000 shannons/KB)`},*/}
+                                {/*    ]}*/}
+                                {/*    onValueChange={(value) => {*/}
+                                {/*        setFeeRate(Number(value) as 1000 | 2000 | 3000)*/}
+                                {/*    }}*/}
+                                {/*></Select>*/}
                             </div>
 
-                            <div className="text-red-400 h-6 mb-2">{transactionError}</div>
+                            <div className="text-red-400 min-h-6 mb-2 break-words">{transactionError}</div>
 
                             <div className="flex flex-row">
                                 <Button btntype={'secondary'}
@@ -360,7 +345,7 @@ export default function DialogCkbTransfer({children, from, className}: { childre
 
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                     <div className="text-gray-500">Amount</div>
-                                    <div className="font-semibold">{formData.amount} CKB</div>
+                                    <div className="font-semibold">{formData.amount} {token.symbol}</div>
                                 </div>
 
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
@@ -369,15 +354,6 @@ export default function DialogCkbTransfer({children, from, className}: { childre
                                 </div>
 
                                 <div className="h-[1px] bg-gray-200 my-4" />
-
-                                <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                    <div className="text-gray-500">Total amount</div>
-                                    <div className="font-semibold">{
-                                        BigNumber(BigNumber(formData.amount)).multipliedBy(10 ** 8).eq(CkbBalance ? CkbBalance.amount : 0) ?
-                                            Number(formData.amount):
-                                            Number(fee(feeRate)) + Number(formData.amount)
-                                    } CKB</div>
-                                </div>
 
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                     <div className="text-gray-500">Tx Hash</div>

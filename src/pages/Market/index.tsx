@@ -2,6 +2,10 @@ import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import useMarket from "@/serves/useMarket";
 import {toDisplay} from "@/utils/number_display";
 
+const showChange = [
+    'CKB', 'BTC', 'ETH'
+]
+
 export default function MarketPage() {
     const {data, status} = useMarket()
 
@@ -27,8 +31,9 @@ export default function MarketPage() {
                     </div>
                     <div className="flex flex-row items-center mb-4">
                         <div className="mr-[44px]">
-                            <div className="text-sm">Price</div>
-                            <div className="text-lg font-semibold">${item.price}</div>
+                            <div className="text-sm flex flex-row items-center">Price</div>
+                            <div className="text-lg font-semibold flex">${item.price}
+                            </div>
                         </div>
 
                         <div>
@@ -37,18 +42,20 @@ export default function MarketPage() {
                         </div>
                     </div>
                     <div className="flex flex-row items-center">
-                        <div className="bg-stone-50 rounded p-3 mr-2 flex-1">
-                            <div className="text-xs mb-1">Change 1h</div>
-                            <div className=""><DisPlayChange change={item.change_1h} /></div>
-                        </div>
-                        <div className="bg-stone-50 rounded p-3 mr-2 flex-1">
-                            <div className="text-xs mb-1">Change 24h</div>
-                            <div className=""><DisPlayChange change={item.change_24h} /></div>
-                        </div>
-                        <div className="bg-stone-50 rounded p-3 mr-2 flex-1">
-                            <div className="text-xs mb-1">Change 7d</div>
-                            <div className=""><DisPlayChange change={item.change_7d} /></div>
-                        </div>
+                        {/*<div className="bg-stone-50 rounded p-3 mr-2 flex-1">*/}
+                        {/*    <div className="text-xs mb-1">Change 1h</div>*/}
+                        {/*    <div className=""><DisPlayChange change={item.change_1h} /></div>*/}
+                        {/*</div>*/}
+                        { showChange.includes(item.symbol) &&
+                            <div className="bg-stone-50 rounded p-3 mr-2 flex-1">
+                                <div className="text-xs mb-1">Change 24h</div>
+                                <div className=""><DisPlayChange change={item.change_24h} /></div>
+                            </div>
+                        }
+                        {/*<div className="bg-stone-50 rounded p-3 mr-2 flex-1">*/}
+                        {/*    <div className="text-xs mb-1">Change 7d</div>*/}
+                        {/*    <div className=""><DisPlayChange change={item.change_7d} /></div>*/}
+                        {/*</div>*/}
                     </div>
                 </div>
 

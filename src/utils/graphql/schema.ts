@@ -8,6 +8,7 @@ const xudt_cell = `xudt_cell(){
         xudt_data_lock
         xudt_owner_lock_script_hash
         transaction_hash
+        is_consumed
     }`
 
 const token_info = `token_info(){

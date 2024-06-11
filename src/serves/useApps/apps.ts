@@ -7,22 +7,34 @@ export interface CkbApp {
 
 const apps: CkbApp[] = [
     {
-        logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/4948.png',
-        name: 'Nervos CKB',
-        url: 'https://www.nervos.org/',
-        description: 'Built on RISC-V and secured by Proof-of-Work, CKB is the most flexible and interoperable blockchain. It serves as the ultimate foundation of Nervos, a modular blockchain network built from the ground up to ensure outstanding security, decentralization, flexibility, and interoperability.'
+        logo: 'https://ik.imagekit.io/soladata/z8hkvqw5_4OsLMde3-',
+        name: 'Huehub',
+        url: 'https://huehub.xyz/',
+        description: 'RGB++ Assets Marketplace'
     },
     {
-        logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/4948.png',
-        name: 'Nervos CKB Nervos CKB Nervos CKB',
-        url: 'https://www.nervos.org/',
-        description: 'Built on RISC-V and secured by Proof-of-Work, CKB is the most flexible and interoperable blockchain. It serves as the ultimate foundation of Nervos, a modular blockchain network built from the ground up to ensure outstanding security, decentralization, flexibility, and interoperability.'
+        logo: 'https://ik.imagekit.io/soladata/i3830dqr_plNHCLl-G',
+        name: '.bit',
+        url: 'https://did.id/',
+        description: 'Unified DID, Access From Anywhere, Use It Everywhere'
     },
     {
-        logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/4948.png',
-        name: 'Nervos CKB',
-        url: 'https://www.nervos.org/',
-        description: 'Built on RISC-V and secured by Proof-of-Work, CKB is the most flexible and interoperable blockchain. It serves as the ultimate foundation of Nervos, a modular blockchain network built from the ground up to ensure outstanding security, decentralization, flexibility, and interoperability.'
+        logo: 'https://ik.imagekit.io/soladata/dx2hgk3e_0OXl2mDX9',
+        name: 'Omiga',
+        url: 'https://omiga.io/',
+        description: 'The first  inscription protocol builded on CKB, also an orderbook DEX supports xUDT, DOBs.'
+    },
+    {
+        logo: 'https://ik.imagekit.io/soladata/1vx4du4f_uz_lSWILL',
+        name: 'Mobit',
+        url: '/',
+        description: 'CKB 生态的资产管理器'
+    },
+    {
+        logo: 'https://ik.imagekit.io/soladata/8wcdvj7q_JPAaU7bA5',
+        name: 'CKB Explorer',
+        url: 'https://explorer.nervos.org/',
+        description: 'CKB Block Explorer'
     }
 ]
 

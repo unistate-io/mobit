@@ -14,9 +14,9 @@ export interface TokenInfo {
     decimal: number
     name: string
     symbol: string
-    transaction_hash: string
-    transaction_index: string
     type_id: string
+    transaction_hash?: string
+    transaction_index?: string
 }
 
 export interface XudtStatusCell {
