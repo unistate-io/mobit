@@ -58,7 +58,7 @@ export default function Profile() {
 
     return <div>
         <Background gradient={theme.bg}/>
-        <div className="max-w-[1044px] mx-auto px-3">
+        <div className="max-w-[1044px] mx-auto px-3 pb-10">
             <div
                 className="w-[200px] h-[200px] rounded-full overflow-hidden mt-[-100px] border-4 border-white hidden md:block">
                 <Avatar size={200} name={address || 'default'} colors={theme.colors}/>

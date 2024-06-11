@@ -103,7 +103,6 @@ export default function ListToken({
                                         </div>
                                     </DialogXudtReceive>
 
-
                                 </div>
                             </> :  <div
                                 className="shrink-0 flex-1 flex-row flex items-center justify-end">{toDisplay(item.amount, item.decimal!, true)}</div>

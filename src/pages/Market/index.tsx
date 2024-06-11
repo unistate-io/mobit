@@ -9,7 +9,7 @@ const showChange = [
 export default function MarketPage() {
     const {data, status} = useMarket()
 
-    return <div className="max-w-[624px] mx-auto px-3 mt-4 md:mt-10">
+    return <div className="max-w-[624px] mx-auto px-3 mt-4 md:mt-10 mb-10">
         { status=== 'loading' &&
             <>
                 <div className="loading-bg h-[50px] mb-3 rounded-lg" />
@@ -30,7 +30,7 @@ export default function MarketPage() {
                         <div className="text-xl font-semibold">{item.symbol}</div>
                     </div>
                     <div className="flex flex-row items-center mb-4">
-                        <div className="mr-[44px]">
+                        <div className="mr-[30px] min-w-[35%]">
                             <div className="text-sm flex flex-row items-center">Price</div>
                             <div className="text-lg font-semibold flex">${item.price}
                             </div>

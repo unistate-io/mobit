@@ -4,7 +4,7 @@ import {Link} from "react-router-dom"
 export default function AppsPage() {
     const {data} = useApps()
 
-    return <div className="max-w-[1044px] mx-auto mt-4 md:mt-10">
+    return <div className="max-w-[1044px] mx-auto mt-4 md:mt-10 mb-10">
        <div className="font-semibold text-2xl mb:4 md:mb-9 px-3 ">CKB Apps</div>
         <div className="flex flex-row flex-wrap w-full">
            {
