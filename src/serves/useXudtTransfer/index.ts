@@ -2,8 +2,8 @@ import {helpers, Indexer} from '@ckb-lumos/lumos'
 import {useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
-import {transferXudt} from './2-transfer-xudt'
 import {transferTokenToAddress} from './lib'
+import {TokenInfo} from "@/utils/graphql/types";
 
 
 const CKB_RPC_URL = process.env.REACT_APP_CKB_RPC_URL!
@@ -18,25 +18,20 @@ export default function useXudtTransfer() {
                              from,
                              to,
                              amount,
-                             feeRate
-                         }: { from: string, to: string, amount: string, payeeAddress: string, feeRate: number }) => {
+                             feeRate,
+                             tokenInfo
+                         }: { from: string, to: string, amount: string, payeeAddress: string, tokenInfo: TokenInfo, feeRate: number }) => {
 
         const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
 
         console.log('_txSkeleton', _txSkeleton)
 
-        const txInfo = await transferXudt({
-            fromAddress: from,
-            xudtType: {
-                codeHash: '0x50bd8d6680b8b9cf98b73f3c08faf8b2a21914311954118ad6609be6e78a1b95',
-                hashType: 'data1',
-                args: '0x6b33c69bdb25fac3d73e3c9e55f88785de27a54d722b4ab3455212f9a1b1645c'
-            },
-            receivers: [{
-                toAddress: to,
-                transferAmount: BigInt(amount)
-            }]
-        })
+        const txInfo = await transferTokenToAddress(
+            from,
+            amount,
+            to,
+            tokenInfo
+        )
 
         console.log('txInfo', txInfo)
 
@@ -49,8 +44,9 @@ export default function useXudtTransfer() {
                                    to,
                                    amount,
                                    feeRate,
-                                   sendAll
-                               }: { from: string, to: string, amount: string, feeRate: number, sendAll?: boolean }) => {
+                                   sendAll,
+                                   tokenInfo
+                               }: { from: string, to: string, amount: string, tokenInfo: TokenInfo, feeRate: number, sendAll?: boolean }) => {
         if (!signer) {
             throw new Error('Please connect wallet first')
         }
@@ -58,7 +54,8 @@ export default function useXudtTransfer() {
        const tx = await transferTokenToAddress(
            from,
            amount,
-           to
+           to,
+           tokenInfo
        )
 
 

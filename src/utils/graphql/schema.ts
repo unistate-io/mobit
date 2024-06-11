@@ -20,6 +20,21 @@ const token_info = `token_info(){
         type_id
     }`
 
+const token_info_address = `token_info(){
+        decimal
+        name
+        symbol
+        transaction_hash
+        transaction_index
+        type_id
+        address {
+            id
+          script_args
+          script_code_hash
+          script_hash_type
+        }
+    }`
+
 const xudt_status_cell = `xudt_status_cell(){
         input_transaction_hash
         input_transaction_index
@@ -51,12 +66,14 @@ const clusters = `clusters(){
       }`
 
 
+
 const schema = {
     xudt_cell,
     token_info,
     xudt_status_cell,
     spores,
-    clusters
+    clusters,
+    token_info_address
 }
 
 export const gql = (type: keyof typeof schema, opt?: string) => {

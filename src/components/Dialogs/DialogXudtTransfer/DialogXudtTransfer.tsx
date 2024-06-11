@@ -89,6 +89,7 @@ export default function DialogXudtTransfer({children, from, className, token}: {
                     amount: amount.toString(),
                     payeeAddress: from,
                     feeRate: 1000,
+                    tokenInfo:  token
                 }) as any
                 setAmountError('')
             } catch (e: any) {
@@ -139,7 +140,8 @@ export default function DialogXudtTransfer({children, from, className, token}: {
                 to: formData.to,
                 amount: amount.toString(),
                 feeRate,
-                sendAll:amount.eq(xudtBalance ? xudtBalance.amount : 0)
+                sendAll:amount.eq(xudtBalance ? xudtBalance.amount : 0),
+                tokenInfo:  token
             })
             console.log(txHash, txHash)
             setTxHash(txHash)

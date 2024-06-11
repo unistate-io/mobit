@@ -1,7 +1,7 @@
 // @ts-ignore
 import {request} from 'graphql-request'
 import {gql, gqls as _gqls} from "@/utils/graphql/schema";
-import {XudtCell, TokenInfo, Spores, Clusters} from "./types";
+import {XudtCell, TokenInfo, Spores, Clusters, TokenInfoWithAddress} from "./types";
 
 export const graphUrl = process.env.REACT_APP_GRAPH_URL!
 export const gqls = _gqls
@@ -21,6 +21,13 @@ export const queryTokenInfo = async (type_ids: string[]) => {
     const doc = gql('token_info', `where:{type_id: {_in: [${idStr}]}}`)
     const res: any = await query(doc)
     return res.token_info as TokenInfo[]
+}
+
+export const queryAddressInfoWithAddress = async (type_ids: string[]) => {
+    const idStr = type_ids.map(id => `"${id}"`).join(',')
+    const doc = gql('token_info_address', `where:{type_id: {_in: [${idStr}]}}`)
+    const res: any = await query(doc)
+    return res.token_info as TokenInfoWithAddress[]
 }
 
 export const querySporesByAddress = async (address: string, page: number, pageSize:number, allowBurned?: boolean) => {

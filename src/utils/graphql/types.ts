@@ -19,6 +19,21 @@ export interface TokenInfo {
     transaction_index?: string
 }
 
+export interface TokenInfoWithAddress {
+    decimal: number
+    name: string
+    symbol: string
+    type_id: string
+    transaction_hash?: string
+    transaction_index?: string
+    address: {
+        id: string
+        script_args: string
+        script_code_hash: string
+        script_hash_type: string
+    }
+}
+
 export interface XudtStatusCell {
     input_transaction_hash: string
     input_transaction_index: string
