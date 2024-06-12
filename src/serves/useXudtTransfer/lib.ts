@@ -123,25 +123,27 @@ export async function transferTokenToAddress(
     // todo calculate fee
     // const neededCapacity = BI.from(capacity.toString(10)).add(100000);
 
-    const neededCapacity = BI.from(targetOutputCapacity.toString(10));
-    console.log('neededCapacity', neededCapacity.toString())
-    let collectedSum = BI.from(0);
-    let collectedAmount = BI.from(0);
+    const targetXudtCellNeededCapacity = BI.from(targetOutputCapacity.toString(10));
+    console.log('neededCapacity', targetXudtCellNeededCapacity.toString())
+
+
+    let xudtCollectedCapSum = BI.from(0);
+    let xudtCollectedAmount = BI.from(0);
     const collected: Cell[] = [];
     const collector = indexer.collector({lock: senderLockScript, type: typeScript});
     console.log('xudt cells ->', collector)
     for await (const cell of collector.collect()) {
-        collectedSum = collectedSum.add(cell.cellOutput.capacity);
-        collectedAmount = collectedAmount.add(number.Uint128LE.unpack(cell.data));
+        xudtCollectedCapSum = xudtCollectedCapSum.add(cell.cellOutput.capacity);
+        xudtCollectedAmount = xudtCollectedAmount.add(number.Uint128LE.unpack(cell.data));
         console.log('cell', cell)
         collected.push(cell);
-        if (collectedAmount >= BI.from(amount)) break;
+        if (xudtCollectedAmount >= BI.from(amount)) break;
     }
 
     // 判断xudt是否需要找零
-    let changeOutputTokenAmount = BI.from(0);
-    if (collectedAmount.gt(BI.from(amount))) {
-        changeOutputTokenAmount = collectedAmount.sub(BI.from(amount));
+    let xudtChangeOutputTokenAmount = BI.from(0);
+    if (xudtCollectedAmount.gt(BI.from(amount))) {
+        xudtChangeOutputTokenAmount = xudtCollectedAmount.sub(BI.from(amount));
     }
 
     // xudt是否需要找零cell
@@ -151,15 +153,19 @@ export async function transferTokenToAddress(
             lock: senderLockScript,
             type: typeScript,
         },
-        data: bytes.hexify(number.Uint128LE.pack(changeOutputTokenAmount.toString(10))),
+        data: bytes.hexify(number.Uint128LE.pack(xudtChangeOutputTokenAmount.toString(10))),
     };
+    // xudt找零cell的最小capacity
+    const changeXudtOutputNeededCapacity = BI.from(helpers.minimalCellCapacity(changeOutput));
+    console.log('changeOutputNeededCapacity', changeXudtOutputNeededCapacity.toString(10))
 
-    const changeOutputNeededCapacity = BI.from(helpers.minimalCellCapacity(changeOutput));
-    console.log('changeOutputNeededCapacity', changeOutputNeededCapacity.toString(10))
+    // what the fuck ?
+    // const extraNeededCapacity = xudtCollectedCapSum.lt(targetXudtCellNeededCapacity) // neededCapacity === targetOutputCapacity
+    //     ? targetXudtCellNeededCapacity.sub(xudtCollectedCapSum).add(changeOutputNeededCapacity)
+    //     : xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).add(changeOutputNeededCapacity);
 
-    const extraNeededCapacity = collectedSum.lt(neededCapacity) // neededCapacity === targetOutputCapacity
-        ? neededCapacity.sub(collectedSum).add(changeOutputNeededCapacity)
-        : collectedSum.sub(neededCapacity).add(changeOutputNeededCapacity);
+    const extraNeededCapacity = targetXudtCellNeededCapacity.add(changeXudtOutputNeededCapacity).sub(xudtCollectedCapSum)
+    console.log('extraNeededCapacity', extraNeededCapacity.toString(10))
 
     if (extraNeededCapacity.gt(0)) {
         let extraCollectedSum = BI.from(0);
@@ -176,6 +182,9 @@ export async function transferTokenToAddress(
             }
         }
 
+        console.log('extraCollectedSum', extraCollectedSum.toString(10))
+        console.log('extraNeededCapacity', extraNeededCapacity.toString(10))
+
         if (extraCollectedSum.lt(extraNeededCapacity)) {
             throw new Error(`Not enough CKB for change, ${extraCollectedSum} < ${extraNeededCapacity}`);
         }
@@ -184,7 +193,7 @@ export async function transferTokenToAddress(
 
         const change2Capacity = extraCollectedSum.sub(extraNeededCapacity);
         if (change2Capacity.gt(61000000000)) {
-            changeOutput.cellOutput.capacity = changeOutputNeededCapacity.toHexString();
+            changeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity.toHexString();
             const changeOutput2: Cell = {
                 cellOutput: {
                     capacity: change2Capacity.toHexString(),
@@ -196,6 +205,9 @@ export async function transferTokenToAddress(
         } else {
             changeOutput.cellOutput.capacity = extraCollectedSum.toHexString();
         }
+    } else {
+        // xudt input cell 的 capacity 减去 target cell capacity 和 change cell capacity
+        changeOutput.cellOutput.capacity = xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).sub(changeXudtOutputNeededCapacity).toHexString();
     }
 
     txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(...collected));
