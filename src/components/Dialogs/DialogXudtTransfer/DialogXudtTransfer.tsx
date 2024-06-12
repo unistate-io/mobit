@@ -273,22 +273,20 @@ export default function DialogXudtTransfer({children, from, className, token}: {
 
                                 <div className="my-4 h-[1px] bg-gray-100 w-full" />
 
-                                {/*<div className="mb-2 font-semibold">*/}
-                                {/*    Transaction fee*/}
-                                {/*</div>*/}
-                                {/*<Select*/}
-                                {/*    className={"bg-gray-100 py-2 px-4 rounded-lg text-sm"}*/}
-                                {/*    defaultValue={'1000'}*/}
-                                {/*    value={feeRate + ''}*/}
-                                {/*    options={[*/}
-                                {/*        {id: '1000', label: `${fee(1000)} CKB (Slow: 1000 shannons/KB)`},*/}
-                                {/*        {id: '2000', label: `${fee(2000)} CKB (Standard: 2000 shannons/KB)`},*/}
-                                {/*        {id: '3000', label: `${fee(3000)} CKB (Fast: 3000 shannons/KB)`},*/}
-                                {/*    ]}*/}
-                                {/*    onValueChange={(value) => {*/}
-                                {/*        setFeeRate(Number(value) as 1000 | 2000 | 3000)*/}
-                                {/*    }}*/}
-                                {/*></Select>*/}
+                                <div className="mb-2 font-semibold">
+                                    Transaction fee
+                                </div>
+                                <Select
+                                    className={"bg-gray-100 py-2 px-4 rounded-lg text-sm"}
+                                    defaultValue={'0.01'}
+                                    value={'0.01'}
+                                    options={[
+                                        {id: '0.01', label: `0.01 CKB`},
+                                    ]}
+                                    onValueChange={(value) => {
+                                        // setFeeRate(Number(value) as 1000 | 2000 | 3000)
+                                    }}
+                                ></Select>
                             </div>
 
                             <div className="text-red-400 min-h-6 mb-2 break-words">{transactionError}</div>
@@ -352,7 +350,7 @@ export default function DialogXudtTransfer({children, from, className, token}: {
 
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                     <div className="text-gray-500">Transaction fee</div>
-                                    <div className="font-semibold">{fee(feeRate)} CKB</div>
+                                    <div className="font-semibold">{'0.01'} CKB</div>
                                 </div>
 
                                 <div className="h-[1px] bg-gray-200 my-4" />

@@ -13,13 +13,15 @@ import useTransactions from "@/serves/useTransactionsHistory"
 import ListHistory from "@/components/ListHistory/ListHistory"
 import useSpores from "@/serves/useSpores"
 import ListDOBs from "@/components/ListDOBs/ListDOBs"
+import {LangContext} from "@/providers/LangProvider/LangProvider";
 
-const tabs = ['All', 'Tokens', 'DOBs']
+
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
     const {internalAddress, signer} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
+    const {lang} = useContext(LangContext)
 
     const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useAllXudtBalance(address!)
     const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(address!)
@@ -56,6 +58,17 @@ export default function Profile() {
     }, [xudtDataErr, ckbDataErr])
 
 
+    const tabs = [{
+        value: 'All',
+        label: lang['All']
+    }, {
+        value: 'Tokens',
+        label: lang['Tokens']
+    }, {
+        value: 'DOBs',
+        label: lang['DOBs']
+    }]
+
     return <div>
         <Background gradient={theme.bg}/>
         <div className="max-w-[1044px] mx-auto px-3 pb-10">
@@ -83,9 +96,9 @@ export default function Profile() {
                         defaultValue="All">
                         <Tabs.List className="shrink-0 flex flex-row overflow-auto" aria-label="Assets">
                             {
-                                tabs.map((tab) => <Tabs.Trigger key={tab}
+                                tabs.map((tab) => <Tabs.Trigger key={tab.value}
                                                                 className="h-10 mr-4 font-bold outline-none cursor-pointer py-2 px-4 rounded-lg data-[state=active]:text-white data-[state=active]:bg-black"
-                                                                value={tab}>{tab}</Tabs.Trigger>)
+                                                                value={tab.value}>{tab.label}</Tabs.Trigger>)
                             }
                         </Tabs.List>
 

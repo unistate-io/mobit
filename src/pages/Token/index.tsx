@@ -1,29 +1,22 @@
-import {useContext, useState} from 'react'
-import {TokenInfo} from "@/utils/graphql/types"
+import {useContext } from 'react'
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import Button from "@/components/Form/Button/Button"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import DialogXudtReceive from "@/components/Dialogs/DialogXudtReceive/DialogXudtReceive"
 import {toDisplay} from "@/utils/number_display"
 import useTransactions from "@/serves/useTransactionsHistory"
-import ListTokenHistory from "@/components/ListTokenHistory/ListTokenHistory";
-import useTokenInfo from "@/serves/useTokenInfo";
-import {useParams} from "react-router-dom";
-import useXudtBalance from "@/serves/useXudtBalance";
-import DialogXudtTransfer from "@/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer";
+import ListTokenHistory from "@/components/ListTokenHistory/ListTokenHistory"
+import useTokenInfo from "@/serves/useTokenInfo"
+import {useParams} from "react-router-dom"
+import useXudtBalance from "@/serves/useXudtBalance"
+import DialogXudtTransfer from "@/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
 
-const CkbInfo: TokenInfo = {
-    decimal: 8,
-    name: 'Nervos CKB',
-    symbol: 'CKB',
-    transaction_hash: '',
-    transaction_index: '',
-    type_id: ''
-}
 
 export default function TokenPage() {
     const {tokenid} = useParams()
     const {signer, open, address} = useContext(CKBContext)
+    const {lang} = useContext(LangContext)
 
     const {data: tokenInfo, status:infoStatus} = useTokenInfo(tokenid!)
     const {data: xudtBalance, status: xudtBalanceStatus} = useXudtBalance(address!, tokenInfo || undefined)
@@ -46,9 +39,9 @@ export default function TokenPage() {
 
             {!signer && !!tokenInfo &&
                 <div className="flex flex-row justify-between text-sm">
-                    <Button className="mr-2" onClick={open}>Send</Button>
+                    <Button className="mr-2" onClick={open}>{lang['Send']}</Button>
                     <Button className="text-white !bg-[#000] hover:opacity-80 hover:bg-[#000]"
-                            onClick={open}>Receive</Button>
+                            onClick={open}>{lang['Receive']}</Button>
                 </div>
             }
 
@@ -60,7 +53,7 @@ export default function TokenPage() {
 
                     {xudtBalanceStatus === 'complete' &&
                         <div className={'flex flex-row justify-between h-[30px] mb-3'}>
-                            <div>Balance</div>
+                            <div>{lang['Balance']}</div>
                             <div className="font-semibold text-xl">{toDisplay(xudtBalance?.amount || '0', 8, true)} CKB
                             </div>
                         </div>
@@ -68,18 +61,18 @@ export default function TokenPage() {
 
                     <div className="flex flex-row justify-between text-sm">
                         <DialogXudtTransfer from={address!} token={tokenInfo} className="flex-1 mr-2">
-                            <Button >Send</Button>
+                            <Button>{lang['Send']}</Button>
                         </DialogXudtTransfer>
                         <DialogXudtReceive address={address!} className="flex-1">
                             <Button className="text-white !bg-[#000] hover:opacity-80 hover:bg-[#000]"
-                                   >Receive</Button>
+                                   >{lang['Receive']}</Button>
                         </DialogXudtReceive>
                     </div>
                 </>
             }
         </div>
         <div className="shadow flex-1 w-full mt-6 sm:mt-0 sm:ml-6 rounded-lg px-5 py-3">
-            <div className="font-semibold text-lg mb-4">Transactions</div>
+            <div className="font-semibold text-lg mb-4">{lang['Transactions']}</div>
 
             <ListTokenHistory data={historyData} status={historyDataStatus} address={address!} />
         </div>

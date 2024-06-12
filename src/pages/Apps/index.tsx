@@ -1,11 +1,14 @@
 import useApps from "@/serves/useApps"
 import {Link} from "react-router-dom"
+import {useContext} from "react"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 export default function AppsPage() {
     const {data} = useApps()
+    const {lang} = useContext(LangContext)
 
     return <div className="max-w-[1044px] mx-auto mt-4 md:mt-10 mb-10">
-       <div className="font-semibold text-2xl mb:4 md:mb-9 px-3 ">CKB Apps</div>
+       <div className="font-semibold text-2xl mb:4 md:mb-9 px-3 ">CKB {lang['Apps']}</div>
         <div className="flex flex-row flex-wrap w-full">
            {
                data.map((item, index) => {
@@ -19,7 +22,7 @@ export default function AppsPage() {
                            </div>
                            <div className="my-2 h-8 overflow-hidden line-clamp-2 line-clamp-ellipsis text-xs text-gray-400">{item.description}</div>
                            <div className="hover:bg-gray-200 font-semibold h-10 text-sm flex flex-row justify-center items-center rounded-lg bg-gray-100">
-                               View the product
+                               {lang['ViewTheProduct']}
                            </div>
                        </Link>
                    </div>

@@ -1,10 +1,11 @@
 import {Spores} from "@/utils/graphql/types"
-import {useEffect, useState} from "react"
+import {useEffect, useState, useContext} from "react"
 import {bufferToRawString} from '@spore-sdk/core'
 import {shortTransactionHash} from "@/utils/number_display"
 import {Link} from "react-router-dom"
 import {queryClustersByIds} from "@/utils/graphql";
 import {renderByTokenKey, svgToBase64} from '@nervina-labs/dob-render'
+import {LangContext} from "@/providers/LangProvider/LangProvider";
 
 export default function ListDOBs({
                                      data,
@@ -13,11 +14,12 @@ export default function ListDOBs({
                                      loaded
                                  }: { data: Spores[], status: string, loaded: boolean, onChangePage?: (page: number) => any }) {
     const [page, setPage] = useState<number>(1)
+    const {lang} = useContext(LangContext)
 
 
     return <div className="shadow rounded-lg bg-white py-4">
         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
-            <div className="text-xl font-semibold">DOBs</div>
+            <div className="text-xl font-semibold">{lang['DOBs']}</div>
         </div>
 
         <div className="flex flex-col">

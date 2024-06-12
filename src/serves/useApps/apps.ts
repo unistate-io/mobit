@@ -13,10 +13,10 @@ const apps: CkbApp[] = [
         description: 'RGB++ Assets Marketplace'
     },
     {
-        logo: 'https://ik.imagekit.io/soladata/i3830dqr_plNHCLl-G',
-        name: '.bit',
-        url: 'https://did.id/',
-        description: 'Unified DID, Access From Anywhere, Use It Everywhere'
+        logo: 'https://ik.imagekit.io/soladata/8wcdvj7q_JPAaU7bA5',
+        name: 'CKB Explorer',
+        url: 'https://explorer.nervos.org/',
+        description: 'CKB Block Explorer'
     },
     {
         logo: 'https://ik.imagekit.io/soladata/dx2hgk3e_0OXl2mDX9',
@@ -25,17 +25,17 @@ const apps: CkbApp[] = [
         description: 'The first  inscription protocol builded on CKB, also an orderbook DEX supports xUDT, DOBs.'
     },
     {
+        logo: 'https://ik.imagekit.io/soladata/i3830dqr_plNHCLl-G',
+        name: '.bit',
+        url: 'https://did.id/',
+        description: 'Unified DID, Access From Anywhere, Use It Everywhere'
+    },
+    {
         logo: 'https://ik.imagekit.io/soladata/1vx4du4f_uz_lSWILL',
         name: 'Mobit',
         url: '/',
-        description: 'CKB 生态的资产管理器'
+        description: 'CKB Assets Manager'
     },
-    {
-        logo: 'https://ik.imagekit.io/soladata/8wcdvj7q_JPAaU7bA5',
-        name: 'CKB Explorer',
-        url: 'https://explorer.nervos.org/',
-        description: 'CKB Block Explorer'
-    }
 ]
 
 export default apps

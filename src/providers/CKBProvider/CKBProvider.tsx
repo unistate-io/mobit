@@ -20,15 +20,12 @@ export const CKBContext = createContext<CKBContextType>({
     }
 })
 
-
-
 export default function CKBProvider({children}: { children: any }) {
     const {open, disconnect, wallet, setClient} = cccLib.useCcc()
     const signer = ccc.useSigner();
 
     const [internalAddress, setInternalAddress] = useState<undefined | string>(undefined)
     const [address, setAddress] = useState<undefined | string>(undefined)
-
 
     useEffect(() => {
         if (!signer) {
@@ -43,7 +40,6 @@ export default function CKBProvider({children}: { children: any }) {
         }
 
         (async () => {
-            console.log('signer', signer)
             const internalAddress = await signer.getInternalAddress()
             const address = await signer.getRecommendedAddress()
             setInternalAddress(internalAddress)

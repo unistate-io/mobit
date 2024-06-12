@@ -13,6 +13,22 @@ const langEN = {
     Profile: 'Profile',
     Market: 'Market',
     Apps: 'Apps',
+    All: 'All',
+    Tokens: 'Tokens',
+    DOBs: 'DOBs',
+    Activity: 'Activity',
+    Assets: 'Assets',
+    Balance: 'Balance',
+    Actions: 'Actions',
+    Receive: 'Receive',
+    Send: 'Send',
+    ViewAll: 'View All',
+    ShowMoreRecords: 'Show More Records',
+    Price: 'Price',
+    MarketCap: 'Market Cap',
+    Change24h: 'Change 24h',
+    ViewTheProduct: 'View The Product',
+    Transactions: 'Transactions',
 }
 
 

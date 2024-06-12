@@ -3,7 +3,7 @@ import {blockchain, values} from '@ckb-lumos/base';
 import {bytes, molecule, number} from '@ckb-lumos/codec';
 import {Byte32, Bytes, BytesOpt} from '@ckb-lumos/codec/lib/blockchain';
 import {fetchTypeIdCellDeps} from "@rgbpp-sdk/ckb"
-import {queryAddressInfoWithAddress, queryTokenInfo} from "@/utils/graphql";
+import {queryAddressInfoWithAddress} from "@/utils/graphql";
 import {TokenInfo} from "@/utils/graphql/types";
 
 const {table, option, vector} = molecule;
@@ -56,7 +56,7 @@ export async function transferTokenToAddress(
     tokenInfo: TokenInfo
 ) {
 
-    const tokenDetail= await queryAddressInfoWithAddress([tokenInfo.type_id])
+    const tokenDetail = await queryAddressInfoWithAddress([tokenInfo.type_id])
 
     if (!tokenDetail[0]) {
         throw new Error('Token not found')
@@ -140,6 +140,8 @@ export async function transferTokenToAddress(
         if (xudtCollectedAmount >= BI.from(amount)) break;
     }
 
+    console.log('xudtCollectedCapSum', xudtCollectedCapSum.toString())
+
     // 判断xudt是否需要找零
     let xudtChangeOutputTokenAmount = BI.from(0);
     if (xudtCollectedAmount.gt(BI.from(amount))) {
@@ -164,35 +166,50 @@ export async function transferTokenToAddress(
     //     ? targetXudtCellNeededCapacity.sub(xudtCollectedCapSum).add(changeOutputNeededCapacity)
     //     : xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).add(changeOutputNeededCapacity);
 
-    const extraNeededCapacity = targetXudtCellNeededCapacity.add(changeXudtOutputNeededCapacity).sub(xudtCollectedCapSum)
+    let extraNeededCapacity = targetXudtCellNeededCapacity.add(changeXudtOutputNeededCapacity).sub(xudtCollectedCapSum)
     console.log('extraNeededCapacity', extraNeededCapacity.toString(10))
 
-    if (extraNeededCapacity.gt(0)) {
-        let extraCollectedSum = BI.from(0);
+    if (
+        extraNeededCapacity.gt(0) ||
+        xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).lt(changeXudtOutputNeededCapacity)
+    ) {
+
+        if (xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).lt(changeXudtOutputNeededCapacity)) {
+            extraNeededCapacity = xudtCollectedCapSum
+                .sub(targetXudtCellNeededCapacity)
+                .sub(changeXudtOutputNeededCapacity)
+                .sub(100000)
+                .mul(-1)
+            console.log('extraNeededCapacity after', extraNeededCapacity.toString(10))
+            console.log('targetXudtCellNeededCapacity after', targetXudtCellNeededCapacity.toString(10))
+        }
+
+        let extraCollectedCapSum = BI.from(0);
         const extraCollectedCells: Cell[] = [];
         const collector = indexer.collector({lock: senderLockScript, type: 'empty'});
         console.log('ckb cells ->', collector)
         for await (const cell of collector.collect()) {
-            extraCollectedSum = extraCollectedSum.add(cell.cellOutput.capacity);
+            extraCollectedCapSum = extraCollectedCapSum.add(cell.cellOutput.capacity);
             extraCollectedCells.push(cell);
             console.log('ckb cell', cell)
-            if (extraCollectedSum.gte(extraNeededCapacity)) {
-                console.log('break', extraCollectedSum >= extraNeededCapacity)
+            if (extraCollectedCapSum.gte(extraNeededCapacity)) {
+                console.log('break', extraCollectedCapSum >= extraNeededCapacity)
                 break;
             }
         }
 
-        console.log('extraCollectedSum', extraCollectedSum.toString(10))
+        console.log('extraCollectedSum', extraCollectedCapSum.toString(10))
         console.log('extraNeededCapacity', extraNeededCapacity.toString(10))
 
-        if (extraCollectedSum.lt(extraNeededCapacity)) {
-            throw new Error(`Not enough CKB for change, ${extraCollectedSum} < ${extraNeededCapacity}`);
+        if (extraCollectedCapSum.lt(extraNeededCapacity)) {
+            throw new Error(`Not enough CKB for change, ${extraCollectedCapSum} < ${extraNeededCapacity}`);
         }
 
         txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(...extraCollectedCells));
 
-        const change2Capacity = extraCollectedSum.sub(extraNeededCapacity);
-        if (change2Capacity.gt(61000000000)) {
+        const change2Capacity = extraCollectedCapSum.sub(extraNeededCapacity);
+        console.log('extraCollectedCapSum', extraCollectedCapSum.toString(10))
+        if (change2Capacity.gt(6100000000)) {
             changeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity.toHexString();
             const changeOutput2: Cell = {
                 cellOutput: {
@@ -203,11 +220,14 @@ export async function transferTokenToAddress(
             };
             txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(changeOutput2));
         } else {
-            changeOutput.cellOutput.capacity = extraCollectedSum.toHexString();
+            changeOutput.cellOutput.capacity = extraCollectedCapSum.toHexString();
         }
     } else {
-        // xudt input cell 的 capacity 减去 target cell capacity 和 change cell capacity
-        changeOutput.cellOutput.capacity = xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).sub(changeXudtOutputNeededCapacity).toHexString();
+        // xudt input cell 的 capacity 减去 target cell capacity
+        changeOutput.cellOutput.capacity = xudtCollectedCapSum.
+        sub(targetXudtCellNeededCapacity)
+            .sub(100000) // fee 0.001
+            .toHexString();
     }
 
     txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(...collected));
@@ -230,6 +250,14 @@ export async function transferTokenToAddress(
     // txSkeleton = commons.common.prepareSigningEntries(txSkeleton);
 
     // console.log('txSkeleton', JSON.stringify(txSkeleton))
+    const inputs = txSkeleton.get('inputs').toArray().map((input) => {
+        return Number(input.cellOutput.capacity.toString())
+    });
+    const outputs = txSkeleton.get('outputs').toArray().map((out) => {
+        return Number(out.cellOutput.capacity.toString())
+    });
+    console.log('inputs cap', inputs)
+    console.log('outputs cap', outputs)
 
     return txSkeleton;
 }
