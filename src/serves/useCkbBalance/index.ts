@@ -1,13 +1,10 @@
-import {BI, helpers, Indexer } from '@ckb-lumos/lumos'
-import {useCallback, useEffect, useState} from "react";
-import {TokenBalance} from "@/components/ListToken/ListToken";
+import {BI, helpers, Indexer, config as lumosCoinfig } from '@ckb-lumos/lumos'
+import {useCallback, useEffect, useState, useContext} from "react"
+import {TokenBalance} from "@/components/ListToken/ListToken"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
-const CKB_RPC_URL = process.env.REACT_APP_CKB_RPC_URL!
-const CKB_INDEXER_URL = process.env.REACT_APP_CKB_INDEXER_URL!
+export async function getCapacities(address: string, indexer: Indexer): Promise<string> {
 
-const indexer = new Indexer(CKB_INDEXER_URL, CKB_RPC_URL);
-
-export async function getCapacities(address: string): Promise<string> {
     const collector = indexer.collector({
         lock: helpers.parseAddress(address),
     });
@@ -22,16 +19,21 @@ export async function getCapacities(address: string): Promise<string> {
 
 
 export default function useCkbBalance(address?: string) {
+    const {config, network} = useContext(CKBContext)
+
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
 
 
+
+
     const refresh = useCallback(async ()=>{
        if (!address) return
+        const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc);
 
         try {
-            const balance = await getCapacities(address)
+            const balance = await getCapacities(address, indexer)
             setData({
                 name: 'Nervos CKB',
                 symbol: 'CKB',
@@ -45,15 +47,16 @@ export default function useCkbBalance(address?: string) {
             setError(e)
             setStatus('error')
         }
-    }, [address])
+    }, [address, config])
 
     useEffect(() => {
        if (!!address) {
            setStatus('loading')
            setData(undefined)
+           lumosCoinfig.initializeConfig(network==='testnet' ? lumosCoinfig.predefined.AGGRON4 : lumosCoinfig.predefined.LINA);
            refresh()
        }
-    }, [refresh, address])
+    }, [refresh, address, network])
 
 
     return {

@@ -1,5 +1,5 @@
 import * as RadixSelect from '@radix-ui/react-select';
-import {forwardRef, LegacyRef, RefAttributes} from 'react';
+import {forwardRef, LegacyRef, RefAttributes, useRef} from 'react';
 import * as React from "react";
 import {SelectItemProps, SelectProps} from "@radix-ui/react-select";
 
@@ -14,6 +14,7 @@ export interface SelectOptionProps extends SelectProps {
     placeholder?: string;
     className?: string;
     hideDropIcon?: boolean;
+    containerWidthPrefix?: number;
 }
 
 
@@ -28,9 +29,27 @@ const SelectItem = forwardRef(({children, className, ...props} : SelectItemProps
     );
 });
 
+
+
 export default function Select ({options, placeholder, className='', hideDropIcon=false, ...props}: SelectOptionProps) {
-    return <RadixSelect.Root {...props}>
-        <RadixSelect.Trigger className={`SelectTrigger flex flex-row items-center justify-between w-full ${className}`} aria-label={props.name || 'Select'}>
+    const [open, setOpen] = React.useState(false)
+    const [menuWidth, setMenuWidth] = React.useState('auto')
+    const id = useRef(Math.floor(Math.random() * (100000 - 10000 + 1)) + 10000)
+
+    const toggleOpen = (openValue: boolean) => {
+        if (openValue) {
+            const width = document.querySelector(`.SelectTrigger-${id.current}`)?.clientWidth
+            console.log('width', width)
+            console.log('width', id.current)
+            console.log('width', document.querySelector(`.SelectTrigger-${id.current}`))
+            setMenuWidth(width ? `${width + 2 * (props.containerWidthPrefix || 0) }px` : 'auto')
+        }
+        setOpen(openValue)
+    }
+
+    return <RadixSelect.Root {...props} open={open} onOpenChange={(open) => {toggleOpen(open)}}>
+        <RadixSelect.Trigger
+            className={`SelectTrigger-${id.current} flex flex-row items-center justify-between w-full ${className}`} aria-label={props.name || 'Select'}>
             <RadixSelect.Value placeholder={placeholder || 'Select ...'} />
             { !hideDropIcon &&
                 <RadixSelect.Icon className="SelectIcon">
@@ -39,7 +58,10 @@ export default function Select ({options, placeholder, className='', hideDropIco
             }
         </RadixSelect.Trigger>
         <RadixSelect.Portal>
-            <RadixSelect.Content className="SelectContent z-[999]" position={'popper'}>
+            <RadixSelect.Content className={`SelectContent z-[999] `}  style={{
+                width: menuWidth,
+                marginLeft: props.containerWidthPrefix ? `${props.containerWidthPrefix * -1}px` : 'initial'
+            }} position={'popper'}>
                 <RadixSelect.ScrollUpButton className="SelectScrollButton">
                     <i className="uil-angle-up text-2xl" />
                 </RadixSelect.ScrollUpButton>

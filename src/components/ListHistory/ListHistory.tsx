@@ -4,6 +4,7 @@ import * as dayjsLib from "dayjs"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {useContext} from "react"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 const dayjs: any = dayjsLib
 const relativeTime = require('dayjs/plugin/relativeTime')
@@ -15,6 +16,7 @@ export default function ListHistory({
                                         address
                                     }: { data: TransactionHistory[], status: string, address: string }) {
     const {lang} = useContext(LangContext)
+    const {config} = useContext(CKBContext)
 
     return <div className="shadow rounded-lg bg-white py-4">
         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
@@ -41,12 +43,16 @@ export default function ListHistory({
                 data.map((item, index) => {
                     return <Link
                         target="blank"
-                        to={`https://explorer.nervos.org/transaction/${item.attributes.transaction_hash}`} key={item.id}
+                        to={`${config.explorer}/transaction/${item.attributes.transaction_hash}`} key={item.id}
                         className="bg-stone-50 rounded p-4 mt-3">
                         <div className="flex  flex-row text-xs">
                             <div
                                 className="text-[#6CD7B2] mr-2">{shortTransactionHash(item.attributes.transaction_hash)}</div>
                             <div className="text-neutral-500">{dayjs(item.attributes.created_at).fromNow()}</div>
+                            {
+                                item.attributes.rgb_txid &&
+                                <div className="text-neutral-500 text-sx text-gray-500 px-2 px-1 rounded ml-4" style={{background: 'linear-gradient(90.24deg,#ffd176 .23%,#ffdb81 6.7%,#84ffcb 99.82%)'}}>RGB++</div>
+                            }
                         </div>
                         {
                             calculateTotalAmount(item, address).map((res) => {
@@ -72,7 +78,7 @@ export default function ListHistory({
         {
             status === 'complete' &&
             <Link
-                to={`https://explorer.nervos.org/address/${address}`}
+                to={`${config.explorer}/address/${address}`}
                 className="cursor-pointer hover:bg-gray-300 bg-gray-200 h-[40px] rounded-lg flex flex-row items-center justify-center mx-3 mt-2 text-xs">
                 <div className="mr-2">{lang['ShowMoreRecords']}</div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
@@ -158,6 +164,7 @@ export interface TransactionHistory {
         created_at: string,
         income: string,
         transaction_hash: string,
+        rgb_txid?: string
         display_outputs: {
             address_hash: string
             capacity: string,

@@ -3,14 +3,8 @@ import {useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 
-
-const CKB_RPC_URL = process.env.REACT_APP_CKB_RPC_URL!
-const CKB_INDEXER_URL = process.env.REACT_APP_CKB_INDEXER_URL!
-
-const indexer = new Indexer(CKB_INDEXER_URL, CKB_RPC_URL);
-
 export default function useCkbTransfer(address: string) {
-    const {signer} = useContext(CKBContext)
+    const {signer, config} = useContext(CKBContext)
 
     const build = async ({
                              from,
@@ -19,6 +13,9 @@ export default function useCkbTransfer(address: string) {
                              payeeAddress,
                              feeRate
                          }: { from: string, to: string, amount: string, payeeAddress: string, feeRate: number }) => {
+
+
+        const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc);
         const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
         const txSkeleton = await commons.common.transfer(
             _txSkeleton,
@@ -61,6 +58,7 @@ export default function useCkbTransfer(address: string) {
             throw new Error('Please connect wallet first')
         }
 
+        const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc);
         const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
         let txSkeleton = await commons.common.transfer(
             _txSkeleton,

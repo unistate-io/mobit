@@ -1,17 +1,15 @@
 // @ts-ignore
 
-import {useEffect, useState} from "react";
-import {TokenBalance} from "@/components/ListToken/ListToken";
-import {TokenInfo} from "@/utils/graphql/types";
+import {useContext, useEffect, useState} from "react"
+import {TokenBalance} from "@/components/ListToken/ListToken"
+import {TokenInfo} from "@/utils/graphql/types"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
-import { Collector } from '@/libs/rgnpp_collector';
-import {  leToU128 } from '@rgbpp-sdk/ckb';
-import { addressToScript} from '@nervosnetwork/ckb-sdk-utils';
-
-export const collector = new Collector({
-    ckbNodeUrl: process.env.REACT_APP_CKB_RPC_URL!,
-    ckbIndexerUrl: process.env.REACT_APP_CKB_INDEXER_URL!,
-});
+import {Collector} from '@/libs/rgnpp_collector'
+import {leToU128} from '@rgbpp-sdk/ckb'
+import {addressToScript} from '@nervosnetwork/ckb-sdk-utils'
+import {queryAddressInfoWithAddress} from "@/utils/graphql";
+import {hashType} from "@/serves/useXudtTransfer/lib";
 
 const emptyToken: TokenInfo = {
     decimal: 0,
@@ -20,8 +18,7 @@ const emptyToken: TokenInfo = {
     type_id: '',
 }
 
-
-const getXudtBalance = async (address: string, tokenType: CKBComponents.Script) => {
+const getXudtBalance = async (address: string, tokenType: CKBComponents.Script, collector: Collector) => {
     const fromLock = addressToScript(address);
 
     const xudtCells = await collector.getCells({
@@ -40,6 +37,7 @@ export default function useXudtBalance(address: string, token?: TokenInfo) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance>({...emptyToken, amount: '0', type: 'xudt'})
     const [error, setError] = useState<undefined | any>(undefined)
+    const {config} = useContext(CKBContext)
 
     useEffect(() => {
         if (!address || !token) {
@@ -50,11 +48,23 @@ export default function useXudtBalance(address: string, token?: TokenInfo) {
 
         (async () => {
             setStatus('loading')
-            const balance = await getXudtBalance(address, {
-                codeHash: '0x50bd8d6680b8b9cf98b73f3c08faf8b2a21914311954118ad6609be6e78a1b95',
-                hashType: 'data1',
-                args: '0x6b33c69bdb25fac3d73e3c9e55f88785de27a54d722b4ab3455212f9a1b1645c'
+            const collector = new Collector({
+                ckbNodeUrl: config.ckb_rpc,
+                ckbIndexerUrl: config.ckb_indexer!,
             })
+
+            const tokenInfo = await queryAddressInfoWithAddress([token.type_id])
+
+            if (!tokenInfo[0]) {
+                throw new Error('Token not found')
+            }
+
+            const balance = await getXudtBalance(address, {
+                codeHash: tokenInfo[0].address.script_code_hash.replace('\\', '0'),
+                hashType: hashType[tokenInfo[0].address.script_hash_type],
+                args: tokenInfo[0].address.script_args.replace('\\', '0')
+            }, collector)
+
             setData({
                 ...token,
                 amount: balance,
@@ -62,7 +72,7 @@ export default function useXudtBalance(address: string, token?: TokenInfo) {
             })
             setStatus('complete')
         })()
-    }, [address, token])
+    }, [address, token, config])
 
 
     const refresh = async () => {
@@ -73,11 +83,24 @@ export default function useXudtBalance(address: string, token?: TokenInfo) {
         }
 
         setStatus('loading')
-        const balance = await getXudtBalance(address, {
-            codeHash: '0x50bd8d6680b8b9cf98b73f3c08faf8b2a21914311954118ad6609be6e78a1b95',
-            hashType: 'data1',
-            args: '0x6b33c69bdb25fac3d73e3c9e55f88785de27a54d722b4ab3455212f9a1b1645c'
+
+        const collector = new Collector({
+            ckbNodeUrl: config.ckb_rpc,
+            ckbIndexerUrl: config.ckb_indexer!,
         })
+
+        const tokenInfo = await queryAddressInfoWithAddress([token.type_id])
+
+        if (!tokenInfo[0]) {
+            throw new Error('Token not found')
+        }
+
+        const balance = await getXudtBalance(address, {
+            codeHash: tokenInfo[0].address.script_code_hash.replace('\\', '0'),
+            hashType: hashType[tokenInfo[0].address.script_hash_type],
+            args: tokenInfo[0].address.script_args.replace('\\', '0')
+        }, collector)
+
         setData({
             ...token,
             amount: balance,

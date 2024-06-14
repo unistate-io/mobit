@@ -1,14 +1,14 @@
 import Avatar from "@/components/Avatar/Avatar";
 import {getTheme} from "@/providers/UserProvider/themes";
-import {useContext, useEffect, useState, useRef} from "react";
+import {useContext, useEffect, useState, useRef} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {Link} from "react-router-dom"
 import Select from "@/components/Select/Select"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {useNavigate} from "react-router-dom"
 import Input from "@/components/Form/Input/Input"
 import {checksumCkbAddress} from "@/utils/common"
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
+import DialogProfileInfo from "@/components/Dialogs/DialogProfileInfo/DialogProfileInfo"
 
 export default function HeaderMenu() {
     const {open, address} = useContext(CKBContext);
@@ -26,12 +26,6 @@ export default function HeaderMenu() {
             searchRef.current?.focus()
         }, 100)
     }
-
-    useEffect(() => {
-        if (!!address) {
-            navigate(`/address/${address}`)
-        }
-    }, [address])
 
     return <div className="flex flex-row flex-nowrap items-center">
         <div className="text-sm relative flex flex-row items-center">
@@ -86,9 +80,12 @@ export default function HeaderMenu() {
         <i className="w-[1px] h-[14px] bg-black mx-3 scale-x-50"/>
         {
             address ?
-                <Link to={`/address/${address}`} className="flex flex-row items-center">
+                <DialogProfileInfo>
+                    <div className="flex flex-row items-center">
                     <Avatar size={18} colors={getTheme(address).colors} name={address}/>
-                </Link> :
+                </div>
+                </DialogProfileInfo>
+               :
                 <div className="text-xs cursor-pointer hover:text-[#6CD7B2]"
                      onClick={open}
                 ><i className="uil-wallet text-sm mr-1"/>{lang['Connect']}</div>

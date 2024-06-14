@@ -34,7 +34,7 @@ export const xudtWitnessType = table(
 export type CellDep = any
 type  TransactionSkeletonType = helpers.TransactionSkeletonType
 
-const hashType: any = {
+export const hashType: any = {
     '0': 'data',
     '1': 'type',
     '2': 'data1',
@@ -43,17 +43,13 @@ const hashType: any = {
 
 const OMNILOCK = config.MAINNET.SCRIPTS.OMNILOCK
 
-const CKB_RPC_URL = process.env.REACT_APP_CKB_RPC_URL!
-const CKB_INDEXER_URL = process.env.REACT_APP_CKB_INDEXER_URL!
-
-const indexer = new Indexer(CKB_INDEXER_URL, CKB_RPC_URL);
-
 
 export async function transferTokenToAddress(
     fromAddress: string,
     amount: string,
     receiverAddress: string,
-    tokenInfo: TokenInfo
+    tokenInfo: TokenInfo,
+    indexer: Indexer
 ) {
 
     const tokenDetail = await queryAddressInfoWithAddress([tokenInfo.type_id])

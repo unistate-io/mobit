@@ -1,7 +1,9 @@
 import {Link} from "react-router-dom"
 import {shortTransactionHash, toDisplay} from "@/utils/number_display"
 import * as dayjsLib from "dayjs"
-import CopyText from "@/components/CopyText/CopyText";
+import CopyText from "@/components/CopyText/CopyText"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import {useContext} from "react"
 
 const dayjs: any = dayjsLib
 const relativeTime = require('dayjs/plugin/relativeTime')
@@ -12,6 +14,9 @@ export default function ListTokenHistory({
                                         status,
                                         address
                                     }: { data: TransactionHistory[], status: string, address: string }) {
+    const {config} = useContext(CKBContext)
+
+
     return <div className="">
         <div className="flex flex-col">
             {status === 'loading' &&
@@ -39,7 +44,7 @@ export default function ListTokenHistory({
                 data.map((item, index) => {
                     return <Link
                         target="blank"
-                        to={`https://explorer.nervos.org/transaction/${item.attributes.transaction_hash}`} key={item.id}
+                        to={`${config.explorer}/transaction/${item.attributes.transaction_hash}`} key={item.id}
                         className="bg-stone-50 rounded p-4 mt-3">
                         <div className="flex flex-row text-sm mb-4 justify-between">
                             <div
@@ -119,7 +124,7 @@ export default function ListTokenHistory({
         {
             status === 'complete' && !!address &&
             <Link
-                to={`https://explorer.nervos.org/address/${address}`}
+                to={`${config.explorer}/address/${address}`}
                 className="cursor-pointer hover:bg-gray-300 bg-gray-200 h-[40px] rounded-lg flex flex-row items-center justify-center mt-2 text-xs">
                 <div className="mr-2">Show more records</div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">

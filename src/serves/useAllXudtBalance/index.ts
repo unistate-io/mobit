@@ -1,8 +1,8 @@
-import {gqls, query, queryTokenInfo, queryXudtCell} from "@/utils/graphql";
+import {queryTokenInfo, queryXudtCell} from "@/utils/graphql"
 // @ts-ignore
-import BigNumber from "bignumber.js";
-import {useEffect, useState} from "react";
-import {TokenBalance} from "@/components/ListToken/ListToken";
+import BigNumber from "bignumber.js"
+import {useEffect, useState} from "react"
+import {TokenBalance} from "@/components/ListToken/ListToken"
 
 export const balance = async (address: string): Promise<TokenBalance[]> => {
     const cells = await queryXudtCell(address)

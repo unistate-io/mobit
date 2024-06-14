@@ -1,18 +1,12 @@
-import {helpers, Indexer} from '@ckb-lumos/lumos'
+import {Indexer} from '@ckb-lumos/lumos'
 import {useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 import {transferTokenToAddress} from './lib'
-import {TokenInfo} from "@/utils/graphql/types";
-
-
-const CKB_RPC_URL = process.env.REACT_APP_CKB_RPC_URL!
-const CKB_INDEXER_URL = process.env.REACT_APP_CKB_INDEXER_URL!
-
-const indexer = new Indexer(CKB_INDEXER_URL, CKB_RPC_URL);
+import {TokenInfo} from "@/utils/graphql/types"
 
 export default function useXudtTransfer() {
-    const {signer} = useContext(CKBContext)
+    const {signer, config} = useContext(CKBContext)
 
     const build = async ({
                              from,
@@ -22,15 +16,14 @@ export default function useXudtTransfer() {
                              tokenInfo
                          }: { from: string, to: string, amount: string, payeeAddress: string, tokenInfo: TokenInfo, feeRate: number }) => {
 
-        const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
-
-        console.log('_txSkeleton', _txSkeleton)
+        const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc)
 
         const txInfo = await transferTokenToAddress(
             from,
             amount,
             to,
-            tokenInfo
+            tokenInfo,
+            indexer
         )
 
         console.log('txInfo', txInfo)
@@ -51,12 +44,14 @@ export default function useXudtTransfer() {
             throw new Error('Please connect wallet first')
         }
 
-       const tx = await transferTokenToAddress(
-           from,
-           amount,
-           to,
-           tokenInfo
-       )
+        const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc)
+        const tx = await transferTokenToAddress(
+            from,
+            amount,
+            to,
+            tokenInfo,
+            indexer
+        )
 
 
         const cccLib = ccc as any
