@@ -1,4 +1,4 @@
-import {Spores} from "@/utils/graphql/types"
+import {ChainIcons} from "@/components/TokenIcon/icons";
 import {useEffect, useState, useContext} from "react"
 import {bufferToRawString} from '@spore-sdk/core'
 import {shortTransactionHash} from "@/utils/number_display"
@@ -6,13 +6,14 @@ import {Link} from "react-router-dom"
 import {queryClustersByIds} from "@/utils/graphql";
 import {renderByTokenKey, svgToBase64} from '@nervina-labs/dob-render'
 import {LangContext} from "@/providers/LangProvider/LangProvider";
+import {SporesWithChainInfo} from "@/serves/useSpores";
 
 export default function ListDOBs({
                                      data,
                                      onChangePage,
                                      status,
                                      loaded
-                                 }: { data: Spores[], status: string, loaded: boolean, onChangePage?: (page: number) => any }) {
+                                 }: { data: SporesWithChainInfo[], status: string, loaded: boolean, onChangePage?: (page: number) => any }) {
     const [page, setPage] = useState<number>(1)
     const {lang} = useContext(LangContext)
 
@@ -62,7 +63,7 @@ export default function ListDOBs({
     </div>
 }
 
-function DOBItem({item}: { item: Spores }) {
+function DOBItem({item}: { item: SporesWithChainInfo }) {
     const [image, setImage] = useState<string | null>(null)
     const [video, setVideo] = useState(null)
     const [name, setName] = useState('')
@@ -120,9 +121,13 @@ function DOBItem({item}: { item: Spores }) {
 
     return <Link to={`/dob/${item.id.replace('\\', '').replace('x', '')}`} className="shrink-0 grow-0 max-w-[50%] basis-1/2 md:basis-1/3 md:max-w-[33.3%] box-border p-2">
         <div
-            className="w-full h-[140px] sm:h-[200px] md:h-[250px] lg:h-[180px]  overflow-hidden rounded-sm relative border border-1">
+            className="relative w-full h-[140px] sm:h-[200px] md:h-[250px] lg:h-[180px]  overflow-hidden rounded-sm relative border border-1">
             <img className="object-cover w-full h-full"
                  src={image || "https://explorer.nervos.org/images/spore_placeholder.svg"} alt=""/>
+            {
+                !!ChainIcons[item.chain] &&
+                <img src={ChainIcons[item.chain]} alt={item.chain} height={24} width={24} className="absolute top-3 right-3"/>
+            }
         </div>
         <div
             className="mt-1 text-base font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis h-[24px]">{name || plantText}</div>

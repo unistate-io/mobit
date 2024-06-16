@@ -2,7 +2,8 @@ import {ccc} from "@ckb-ccc/connector-react";
 import {createContext, useEffect, useState} from "react";
 import {Signer} from "@ckb-ccc/core/dist/signer/signer";
 import {NetworkConfig} from "@/providers/CKBProvider/network_config"
-import network_config from "@/providers/CKBProvider/network_config";
+import network_config from "@/providers/CKBProvider/network_config"
+import {SignerBtc} from '@ckb-ccc/core'
 
 const cccLib: any = ccc
 
@@ -47,6 +48,7 @@ export default function CKBProvider({children}: { children: any }) {
         }
 
         (async () => {
+            console.log('SignerBtc', SignerBtc)
             const internalAddress = await signer.getInternalAddress()
             const address = await signer.getRecommendedAddress()
             setInternalAddress(internalAddress)
@@ -73,7 +75,11 @@ export default function CKBProvider({children}: { children: any }) {
             network,
             setNetwork: _setNetwork,
             open: () => {
-                setClient(new cccLib.ClientPublicMainnet())
+                if (!(window as any).ethereum && !(window as any).unisat) {
+                    alert('Please install wallet to explorer or open in wallet app')
+                    return
+                }
+
                 open()
             }, disconnect, wallet, signer, internalAddress, address
         }}>

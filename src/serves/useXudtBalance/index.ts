@@ -35,14 +35,14 @@ const getXudtBalance = async (address: string, tokenType: CKBComponents.Script, 
 
 export default function useXudtBalance(address: string, token?: TokenInfo) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
-    const [data, setData] = useState<TokenBalance>({...emptyToken, amount: '0', type: 'xudt'})
+    const [data, setData] = useState<TokenBalance>({...emptyToken, amount: '0', type: 'xudt', chain: 'ckb'})
     const [error, setError] = useState<undefined | any>(undefined)
     const {config} = useContext(CKBContext)
 
     useEffect(() => {
         if (!address || !token) {
             setStatus('complete')
-            setData({...emptyToken, amount: '0', type: 'xudt'})
+            setData({...emptyToken, amount: '0', type: 'xudt', chain: 'ckb'})
             return
         }
 
@@ -68,7 +68,8 @@ export default function useXudtBalance(address: string, token?: TokenInfo) {
             setData({
                 ...token,
                 amount: balance,
-                type: 'xudt'
+                type: 'xudt',
+                chain: 'ckb'
             })
             setStatus('complete')
         })()
@@ -78,7 +79,7 @@ export default function useXudtBalance(address: string, token?: TokenInfo) {
     const refresh = async () => {
         if (!address || !token) {
             setStatus('complete')
-            setData({...emptyToken, amount: '0', type: 'xudt'})
+            setData({...emptyToken, amount: '0', type: 'xudt', chain: 'ckb'})
             return
         }
 
@@ -104,7 +105,8 @@ export default function useXudtBalance(address: string, token?: TokenInfo) {
         setData({
             ...token,
             amount: balance,
-            type: 'xudt'
+            type: 'xudt',
+            chain: 'ckb'
         })
         setStatus('complete')
     }

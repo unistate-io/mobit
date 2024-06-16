@@ -2,8 +2,12 @@ import {useEffect, useState} from "react";
 import {Spores} from "@/utils/graphql/types";
 import {querySporesByAddress} from "@/utils/graphql";
 
+export interface SporesWithChainInfo extends Spores {
+    chain: 'btc' | 'ckb'
+}
+
 export default function useSpores(address: string) {
-    const [data, setData] = useState<Spores[]>([])
+    const [data, setData] = useState<SporesWithChainInfo[]>([])
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [error, setError] = useState<undefined | any>(undefined)
     const [page, setPage] = useState(1)
@@ -28,7 +32,13 @@ export default function useSpores(address: string) {
         querySporesByAddress(address, page, pageSize)
             .then(res => {
                 setLoaded(res.length < pageSize)
-                setData(page === 1 ? res : [...data, ...res])
+                const list = page === 1 ? res : [...data, ...res]
+                setData(list.map((s: Spores) => {
+                    return {
+                        ...s,
+                        chain: 'ckb'
+                    }
+                }))
                 setStatus('complete')
             })
             .catch((e: any) => {

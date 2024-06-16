@@ -40,7 +40,8 @@ export default function useCkbBalance(address?: string) {
                 decimal: 8,
                 type_id: '',
                 type: 'ckb',
-                amount: balance
+                amount: balance,
+                chain: 'ckb'
             })
             setStatus('complete')
         } catch (e: any) {

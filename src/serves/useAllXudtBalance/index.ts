@@ -43,7 +43,8 @@ export const balance = async (address: string): Promise<TokenBalance[]> => {
             decimal: target_token ? target_token.decimal : 0,
             type_id: t,
             amount: sum.toString(),
-            type: 'xudt'
+            type: 'xudt',
+            chain: 'ckb'
         }
     })
 

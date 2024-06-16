@@ -11,6 +11,8 @@ import {LangContext} from "@/providers/LangProvider/LangProvider";
 export interface TokenBalance extends TokenInfo  {
     amount: string,
     type: string,
+    chain: 'ckb' | 'btc'
+
 }
 
 export default function ListToken({
@@ -66,7 +68,7 @@ export default function ListToken({
                 list.map((item, index) => {
                     return <Link to={item.symbol ==='CKB' ? '/token' : `/token/${item.type_id}`} key={index} className="flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100">
                         <div className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center">
-                            <TokenIcon symbol={item.symbol!} size={24} chain={'ckb'}/>{item.symbol!}
+                            <TokenIcon symbol={item.symbol!} size={24} chain={item.chain}/>{item.symbol!}
                         </div>
 
 
@@ -89,7 +91,7 @@ export default function ListToken({
                                    }
 
                                     {
-                                        item.symbol !== 'CKB' &&
+                                        item.symbol !== 'CKB' && item.chain !== 'btc' &&
                                         <DialogXudtTransfer from={address} token={item}>
                                             <div
                                                 className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">

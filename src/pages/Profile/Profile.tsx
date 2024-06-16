@@ -13,9 +13,8 @@ import useTransactions from "@/serves/useTransactionsHistory"
 import ListHistory from "@/components/ListHistory/ListHistory"
 import useSpores from "@/serves/useSpores"
 import ListDOBs from "@/components/ListDOBs/ListDOBs"
-import {LangContext} from "@/providers/LangProvider/LangProvider";
-
-
+import {LangContext} from "@/providers/LangProvider/LangProvider"
+import useLayer1Assets from "@/serves/useLayer1Assets";
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -27,23 +26,24 @@ export default function Profile() {
     const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(address!)
     const {data: historyData, status: historyDataStatus} = useTransactions(address!)
     const {data: sporesData, status: sporesDataStatus, loaded: sporesDataLoaded, setPage: setSporesDataPage } = useSpores(address!)
+    const {xudts: layer1Xudt, dobs: Layer1Dobs, status: layer1DataStatus, error: layer1DataErr } = useLayer1Assets(internalAddress && internalAddress.startsWith('bc1') ? internalAddress : undefined)
 
 
     const [tokens, setTokens] = useState<TokenBalance[]>([])
     const [tokensStatus, setTokensStatus] = useState<string>('loading')
 
     useEffect(() => {
-        if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading') {
+        if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' || layer1DataStatus === 'loading') {
             setTokens([])
             setTokensStatus('loading')
-        } else if (xudtDataStatus === 'error' || ckbDataStatus === 'error') {
+        } else if (xudtDataStatus === 'error' || ckbDataStatus === 'error' || layer1DataStatus === 'error') {
             setTokensStatus('error')
             setTokens([])
         } else if (xudtDataStatus === 'complete' && ckbDataStatus === 'complete' && ckbData) {
-            setTokens([ckbData, ...xudtData])
+            setTokens([ckbData, ...xudtData, ...layer1Xudt])
             setTokensStatus('complete')
         }
-    }, [xudtData, xudtDataStatus, ckbData, ckbDataStatus])
+    }, [xudtData, xudtDataStatus, ckbData, ckbDataStatus, layer1Xudt, layer1DataStatus])
 
     useEffect(() => {
         if (xudtDataErr) {
@@ -54,6 +54,11 @@ export default function Profile() {
         if (ckbDataErr) {
             console.error(ckbDataErr)
             showToast(ckbDataErr.message, ToastType.error)
+        }
+
+        if (layer1DataErr) {
+            console.error('layer1DataErr', layer1DataErr)
+            showToast(layer1DataErr.message, ToastType.error)
         }
     }, [xudtDataErr, ckbDataErr])
 
@@ -88,7 +93,6 @@ export default function Profile() {
                 }
             </div>
 
-
             <div className="flex mt-3 lg:mt-9 justify-between flex-col lg:flex-row">
                 <div className="flex-1 overflow-auto lg:max-w-[624px]">
                     <Tabs.Root
@@ -109,7 +113,7 @@ export default function Profile() {
                             <ListToken data={tokens} status={tokensStatus} address={signer ? address : undefined}/>
                             <div className="mt-6">
                                 <ListDOBs
-                                    data={sporesData}
+                                    data={[...Layer1Dobs, ...sporesData]}
                                     status={sporesDataStatus}
                                     loaded={sporesDataLoaded}
                                     onChangePage={(page) => {
@@ -128,7 +132,7 @@ export default function Profile() {
                             value="DOBs"
                         >
                             <ListDOBs
-                                data={sporesData}
+                                data={[...Layer1Dobs, ...sporesData]}
                                 status={sporesDataStatus}
                                 loaded={sporesDataLoaded}
                                 onChangePage={(page) => {
