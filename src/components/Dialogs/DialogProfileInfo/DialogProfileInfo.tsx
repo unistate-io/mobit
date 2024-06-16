@@ -60,7 +60,7 @@ export default function DialogProfileInfo({children, className}: {children: Reac
                             <div className="w-full bg-gray-100 rounded-lg p-2 flex items-center">
                                 <Select
                                     options={[
-                                        {id: 'mainnet', label: 'CKB Miannet'},
+                                        {id: 'mainnet', label: 'CKB Mainnet'},
                                         {id: 'testnet', label: 'CKB Testnet'},
                                     ]}
                                     value={network || 'mainnet'}
