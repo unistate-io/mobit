@@ -31,7 +31,7 @@ export default function DialogXudtTransfer({children, from, className, token}: {
     const [open, setOpen] = React.useState(false);
     const [formData, setFormData] = React.useState<XudtTransferProps>({
         form: "",
-        amount: "0",
+        amount: "",
         to: "",
     });
 
@@ -110,8 +110,8 @@ export default function DialogXudtTransfer({children, from, className, token}: {
     }
 
     const handleTransfer = async () => {
+        setSending(true)
         const tx = await checkErrorsAndBuild()
-
         if (!!tx) {
             try {
                 const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
@@ -124,6 +124,8 @@ export default function DialogXudtTransfer({children, from, className, token}: {
                 setStep(2)
             } catch (e) {
                 console.error(e)
+            } finally {
+                setSending(false)
             }
         }
     }
@@ -227,7 +229,7 @@ export default function DialogXudtTransfer({children, from, className, token}: {
                             </div>
 
                             <Button btntype={'primary'}
-                                    loading={status === 'loading'}
+                                    loading={status === 'loading' || sending}
                                     onClick={handleTransfer}>
                                 Continue
                             </Button>

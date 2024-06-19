@@ -143,41 +143,40 @@ export async function transferTokenToAddress(
 
     // 判断xudt是否需要找零
     let xudtChangeOutputTokenAmount = BI.from(0);
+    let xudtChangeOutput: Cell | null = null
+    let changeXudtOutputNeededCapacity = BI.from(0);
     if (xudtCollectedAmount.gt(BI.from(amount))) {
         xudtChangeOutputTokenAmount = xudtCollectedAmount.sub(BI.from(amount));
+        xudtChangeOutput = {
+            cellOutput: {
+                capacity: '0x0',
+                lock: senderLockScript,
+                type: typeScript,
+            },
+            data: bytes.hexify(number.Uint128LE.pack(xudtChangeOutputTokenAmount.toString(10))),
+        };
+
+        // xudt找零cell的最小capacity
+        changeXudtOutputNeededCapacity = BI.from(helpers.minimalCellCapacity(xudtChangeOutput));
+        console.log('changeOutputNeededCapacity', changeXudtOutputNeededCapacity.toString(10))
+        xudtChangeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity.toHexString();
     }
 
-    // xudt是否需要找零cell
-    const xudtChangeOutput: Cell = {
-        cellOutput: {
-            capacity: '0x0',
-            lock: senderLockScript,
-            type: typeScript,
-        },
-        data: bytes.hexify(number.Uint128LE.pack(xudtChangeOutputTokenAmount.toString(10))),
-    };
-    // xudt找零cell的最小capacity
-    const changeXudtOutputNeededCapacity = BI.from(helpers.minimalCellCapacity(xudtChangeOutput));
-    console.log('changeOutputNeededCapacity', changeXudtOutputNeededCapacity.toString(10))
 
-    // what the fuck ?
-    // const extraNeededCapacity = xudtCollectedCapSum.lt(targetXudtCellNeededCapacity) // neededCapacity === targetOutputCapacity
-    //     ? targetXudtCellNeededCapacity.sub(xudtCollectedCapSum).add(changeOutputNeededCapacity)
-    //     : xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).add(changeOutputNeededCapacity);
-
-    let extraNeededCapacity = targetXudtCellNeededCapacity.add(changeXudtOutputNeededCapacity).sub(xudtCollectedCapSum)
+    // fee 0.001
+    let extraNeededCapacity = targetXudtCellNeededCapacity.add(changeXudtOutputNeededCapacity).sub(xudtCollectedCapSum).add(fee);
     console.log('extraNeededCapacity', extraNeededCapacity.toString(10))
 
     if (
         extraNeededCapacity.gt(0) ||
-        xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).lt(changeXudtOutputNeededCapacity)
+        xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).sub(fee).lt(changeXudtOutputNeededCapacity)
     ) {
 
-        if (xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).lt(changeXudtOutputNeededCapacity)) {
+        if (xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).sub(fee).lt(changeXudtOutputNeededCapacity)) {
             extraNeededCapacity = xudtCollectedCapSum
                 .sub(targetXudtCellNeededCapacity)
                 .sub(changeXudtOutputNeededCapacity)
-                .sub(fee) // fee 0.001
+                .sub(fee)
                 .mul(-1)
             console.log('extraNeededCapacity after', extraNeededCapacity.toString(10))
             console.log('targetXudtCellNeededCapacity after', targetXudtCellNeededCapacity.toString(10))
@@ -211,7 +210,6 @@ export async function transferTokenToAddress(
         console.log('extraCollectedCapSum', extraCollectedCapSum.toString(10))
         console.log('ckbChangeCapacity', ckbChangeCapacity.toString(10))
         if (ckbChangeCapacity.gt(6100000000)) {
-            xudtChangeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity.toHexString();
             const ckbChangeOutput: Cell = {
                 cellOutput: {
                     capacity: ckbChangeCapacity.toHexString(),
@@ -221,18 +219,34 @@ export async function transferTokenToAddress(
             };
             txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(ckbChangeOutput));
         } else {
-            xudtChangeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity.add(ckbChangeCapacity).toHexString();
+            if (!!xudtChangeOutput) {
+                // 扣完手续费之后ckb剩余不足61个转到xudt找零cell上
+                xudtChangeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity.add(ckbChangeCapacity).toHexString();
+            } else {
+                // 全额发送xudt不找零, 扣完手续费之后ckb剩余不足61个直接送给对方
+                targetOutput.cellOutput.capacity = targetXudtCellNeededCapacity.add(ckbChangeCapacity).toHexString();
+            }
         }
     } else {
         // xudt input cell 的 capacity 减去 target cell capacity
-        xudtChangeOutput.cellOutput.capacity = xudtCollectedCapSum
-            .sub(targetXudtCellNeededCapacity)
-            .sub(fee) // fee 0.001
-            .toHexString();
+        if (!!xudtChangeOutput) {
+            xudtChangeOutput.cellOutput.capacity = xudtCollectedCapSum
+                .sub(targetXudtCellNeededCapacity)
+                .sub(fee)
+                .toHexString();
+        } else {
+            targetOutput.cellOutput.capacity = xudtCollectedCapSum
+                .sub(fee)
+                .toHexString();
+        }
     }
 
     txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(...collected));
-    txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(targetOutput, xudtChangeOutput));
+    if (!!xudtChangeOutput) {
+        txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(targetOutput, xudtChangeOutput!));
+    } else {
+        txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(targetOutput));
+    }
 
 
 
