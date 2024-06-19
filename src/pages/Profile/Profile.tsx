@@ -18,7 +18,7 @@ import useLayer1Assets from "@/serves/useLayer1Assets";
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
-    const {internalAddress, signer} = useContext(CKBContext)
+    const {internalAddress, signer, address:loginAddress} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
     const {lang} = useContext(LangContext)
 
@@ -110,7 +110,7 @@ export default function Profile() {
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value="All">
-                            <ListToken data={tokens} status={tokensStatus} address={signer ? address : undefined}/>
+                            <ListToken data={tokens} status={tokensStatus} address={signer ? loginAddress : undefined}/>
                             <div className="mt-6">
                                 <ListDOBs
                                     data={[...Layer1Dobs, ...sporesData]}
@@ -125,7 +125,7 @@ export default function Profile() {
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value="Tokens"
                         >
-                            <ListToken data={tokens} status={tokensStatus} address={signer ? address : undefined}/>
+                            <ListToken data={tokens} status={tokensStatus} address={signer ? loginAddress : undefined}/>
                         </Tabs.Content>
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"

@@ -1,4 +1,4 @@
-import {BI, Cell, config, helpers, Indexer} from '@ckb-lumos/lumos';
+import {BI, Cell, config, helpers, Indexer, commons} from '@ckb-lumos/lumos';
 import {blockchain, values} from '@ckb-lumos/base';
 import {bytes, molecule, number} from '@ckb-lumos/codec';
 import {Byte32, Bytes, BytesOpt} from '@ckb-lumos/codec/lib/blockchain';
@@ -49,9 +49,12 @@ export async function transferTokenToAddress(
     amount: string,
     receiverAddress: string,
     tokenInfo: TokenInfo,
-    indexer: Indexer
-) {
+    indexer: Indexer,
+    feeRate: number,
+    fee = 0,
+): Promise<TransactionSkeletonType> {
 
+    console.log('fee', fee)
     const tokenDetail = await queryAddressInfoWithAddress([tokenInfo.type_id])
 
     if (!tokenDetail[0]) {
@@ -120,7 +123,7 @@ export async function transferTokenToAddress(
     // const neededCapacity = BI.from(capacity.toString(10)).add(100000);
 
     const targetXudtCellNeededCapacity = BI.from(targetOutputCapacity.toString(10));
-    console.log('neededCapacity', targetXudtCellNeededCapacity.toString())
+    console.log('targetXudtCellNeededCapacity', targetXudtCellNeededCapacity.toString())
 
 
     let xudtCollectedCapSum = BI.from(0);
@@ -145,7 +148,7 @@ export async function transferTokenToAddress(
     }
 
     // xudt是否需要找零cell
-    const changeOutput: Cell = {
+    const xudtChangeOutput: Cell = {
         cellOutput: {
             capacity: '0x0',
             lock: senderLockScript,
@@ -154,7 +157,7 @@ export async function transferTokenToAddress(
         data: bytes.hexify(number.Uint128LE.pack(xudtChangeOutputTokenAmount.toString(10))),
     };
     // xudt找零cell的最小capacity
-    const changeXudtOutputNeededCapacity = BI.from(helpers.minimalCellCapacity(changeOutput));
+    const changeXudtOutputNeededCapacity = BI.from(helpers.minimalCellCapacity(xudtChangeOutput));
     console.log('changeOutputNeededCapacity', changeXudtOutputNeededCapacity.toString(10))
 
     // what the fuck ?
@@ -174,7 +177,7 @@ export async function transferTokenToAddress(
             extraNeededCapacity = xudtCollectedCapSum
                 .sub(targetXudtCellNeededCapacity)
                 .sub(changeXudtOutputNeededCapacity)
-                .sub(100000)
+                .sub(fee) // fee 0.001
                 .mul(-1)
             console.log('extraNeededCapacity after', extraNeededCapacity.toString(10))
             console.log('targetXudtCellNeededCapacity after', targetXudtCellNeededCapacity.toString(10))
@@ -198,36 +201,41 @@ export async function transferTokenToAddress(
         console.log('extraNeededCapacity', extraNeededCapacity.toString(10))
 
         if (extraCollectedCapSum.lt(extraNeededCapacity)) {
-            throw new Error(`Not enough CKB for change, ${extraCollectedCapSum} < ${extraNeededCapacity}`);
+            console.log(`Not enough CKB for change, ${extraCollectedCapSum} < ${extraNeededCapacity}`)
+            throw new Error(`Not enough CKB for change, extra needed: ${extraNeededCapacity.div(10**8).toString(10)} CKB`);
         }
 
         txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(...extraCollectedCells));
 
-        const change2Capacity = extraCollectedCapSum.sub(extraNeededCapacity);
+        const ckbChangeCapacity = extraCollectedCapSum.sub(extraNeededCapacity);
         console.log('extraCollectedCapSum', extraCollectedCapSum.toString(10))
-        if (change2Capacity.gt(6100000000)) {
-            changeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity.toHexString();
-            const changeOutput2: Cell = {
+        console.log('ckbChangeCapacity', ckbChangeCapacity.toString(10))
+        if (ckbChangeCapacity.gt(6100000000)) {
+            xudtChangeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity.toHexString();
+            const ckbChangeOutput: Cell = {
                 cellOutput: {
-                    capacity: change2Capacity.toHexString(),
+                    capacity: ckbChangeCapacity.toHexString(),
                     lock: senderLockScript,
                 },
                 data: '0x',
             };
-            txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(changeOutput2));
+            txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(ckbChangeOutput));
         } else {
-            changeOutput.cellOutput.capacity = extraCollectedCapSum.toHexString();
+            xudtChangeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity.add(ckbChangeCapacity).toHexString();
         }
     } else {
         // xudt input cell 的 capacity 减去 target cell capacity
-        changeOutput.cellOutput.capacity = xudtCollectedCapSum.
-        sub(targetXudtCellNeededCapacity)
-            .sub(100000) // fee 0.001
+        xudtChangeOutput.cellOutput.capacity = xudtCollectedCapSum
+            .sub(targetXudtCellNeededCapacity)
+            .sub(fee) // fee 0.001
             .toHexString();
     }
 
     txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(...collected));
-    txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(targetOutput, changeOutput));
+    txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(targetOutput, xudtChangeOutput));
+
+
+
     /* 65-byte zeros in hex */
     const lockWitness =
         '0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
@@ -245,7 +253,7 @@ export async function transferTokenToAddress(
     // signing
     // txSkeleton = commons.common.prepareSigningEntries(txSkeleton);
 
-    // console.log('txSkeleton', JSON.stringify(txSkeleton))
+
     const inputs = txSkeleton.get('inputs').toArray().map((input) => {
         return Number(input.cellOutput.capacity.toString())
     });
@@ -255,7 +263,16 @@ export async function transferTokenToAddress(
     console.log('inputs cap', inputs)
     console.log('outputs cap', outputs)
 
-    return txSkeleton;
+    // console.log('txSkeleton', JSON.stringify(txSkeleton))
+
+    if (fee === 0) {
+        const txSize = commons.common.__tests__.getTransactionSize(txSkeleton);
+        console.log(txSize)
+        const _fee = (txSize + 20) * (feeRate / 1000)
+        return await transferTokenToAddress(fromAddress, amount, receiverAddress, tokenInfo, indexer, feeRate, _fee)
+    } else {
+        return txSkeleton
+    }
 }
 
 export function addCellDep(txSkeleton: TransactionSkeletonType, newCellDep: CellDep): TransactionSkeletonType {

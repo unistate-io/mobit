@@ -23,7 +23,8 @@ export default function useXudtTransfer() {
             amount,
             to,
             tokenInfo,
-            indexer
+            indexer,
+            feeRate
         )
 
         console.log('txInfo', txInfo)
@@ -37,9 +38,8 @@ export default function useXudtTransfer() {
                                    to,
                                    amount,
                                    feeRate,
-                                   sendAll,
                                    tokenInfo
-                               }: { from: string, to: string, amount: string, tokenInfo: TokenInfo, feeRate: number, sendAll?: boolean }) => {
+                               }: { from: string, to: string, amount: string, tokenInfo: TokenInfo, feeRate: number}) => {
         if (!signer) {
             throw new Error('Please connect wallet first')
         }
@@ -50,7 +50,8 @@ export default function useXudtTransfer() {
             amount,
             to,
             tokenInfo,
-            indexer
+            indexer,
+            feeRate
         )
 
 

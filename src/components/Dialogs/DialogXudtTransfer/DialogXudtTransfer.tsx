@@ -80,7 +80,7 @@ export default function DialogXudtTransfer({children, from, className, token}: {
 
 
         const amount = BigNumber(formData.amount).multipliedBy(10 ** 8)
-        let tx: {tx: helpers.TransactionSkeletonType,fee: string} | null = null
+        let tx: helpers.TransactionSkeletonType | null = null
         if (!hasError) {
             try {
                 tx = await build({
@@ -111,23 +111,21 @@ export default function DialogXudtTransfer({children, from, className, token}: {
 
     const handleTransfer = async () => {
         const tx = await checkErrorsAndBuild()
-        if (!!tx) {
-            console.log('xudt tx info---->', tx, tx.fee)
-            setFee1000(tx.fee)
-            setStep(2)
-        }
 
-        // if (!!tx) {
-        //     try {
-        //         const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-        //         const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-        //         const fee = inputCap - outCap
-        //         setFee1000(fee.toString())
-        //         setStep(2)
-        //     } catch (e) {
-        //         console.error(e)
-        //     }
-        // }
+        if (!!tx) {
+            try {
+                const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+                const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+                const fee = inputCap - outCap
+                console.log('inputCap', inputCap)
+                console.log('outCap', outCap)
+                console.log('fee', fee)
+                setFee1000(fee.toString())
+                setStep(2)
+            } catch (e) {
+                console.error(e)
+            }
+        }
     }
 
     const HandleSignAndSend = async () => {
@@ -140,8 +138,7 @@ export default function DialogXudtTransfer({children, from, className, token}: {
                 to: formData.to,
                 amount: amount.toString(),
                 feeRate,
-                sendAll:amount.eq(xudtBalance ? xudtBalance.amount : 0),
-                tokenInfo:  token
+                tokenInfo: token
             })
             console.log(txHash, txHash)
             setTxHash(txHash)
@@ -278,13 +275,15 @@ export default function DialogXudtTransfer({children, from, className, token}: {
                                 </div>
                                 <Select
                                     className={"bg-gray-100 py-2 px-4 rounded-lg text-sm"}
-                                    defaultValue={'0.01'}
-                                    value={'0.01'}
+                                    defaultValue={'1000'}
+                                    value={feeRate + ''}
                                     options={[
-                                        {id: '0.01', label: `0.01 CKB`},
+                                        {id: '1000', label: `${fee(1000)} CKB (Slow: 1000 shannons/KB)`},
+                                        {id: '2000', label: `${fee(2000)} CKB (Standard: 2000 shannons/KB)`},
+                                        {id: '3000', label: `${fee(3000)} CKB (Fast: 3000 shannons/KB)`},
                                     ]}
                                     onValueChange={(value) => {
-                                        // setFeeRate(Number(value) as 1000 | 2000 | 3000)
+                                        setFeeRate(Number(value) as 1000 | 2000 | 3000)
                                     }}
                                 ></Select>
                             </div>
