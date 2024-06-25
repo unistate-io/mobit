@@ -16,6 +16,7 @@ export interface CKBContextType {
     wallet?: any
     internalAddress?: string
     address?: string
+    addresses?: string[]
     signer?: Signer | undefined
     setNetwork: (network: Network) => any
     config: NetworkConfig
@@ -38,46 +39,44 @@ export default function CKBProvider({children}: { children: any }) {
 
     const [internalAddress, setInternalAddress] = useState<undefined | string>(undefined)
     const [address, setAddress] = useState<undefined | string>(undefined)
+    const [addresses, setAddresses] = useState<undefined | string[]>(undefined)
     const [network, _setNetwork] = useState<Network>(localStorage.getItem('ckb_network') as Network || 'mainnet')
+
+    const switchNetwork = (network: Network) => {
+        // 需要重新连接
+        disconnect()
+        _setNetwork(network)
+        open()
+    }
 
     useEffect(() => {
         if (!signer) {
             setInternalAddress(undefined)
             setAddress(undefined)
+            setAddress(undefined)
             return
         }
 
-        if (!(signer as any)?.client_.url.includes(network)) {
-            return;
-        }
-
         (async () => {
-            console.log('SignerBtc', SignerBtc)
             const internalAddress = await signer.getInternalAddress()
             const address = await signer.getRecommendedAddress()
+            const addresses = await signer.getAddresses()
             setInternalAddress(internalAddress)
             setAddress(address)
+            setAddresses(addresses)
         })();
     }, [signer])
 
     useEffect(() => {
-        if (network && wallet && signer) {
-            if (!(signer as any)?.client_.url.includes(network)) {
-                if (network === 'testnet') {
-                    setClient(new cccLib.ClientPublicTestnet())
-                } else {
-                    setClient(new cccLib.ClientPublicMainnet())
-                }
-                localStorage.setItem('ckb_network', network)
-            }
-        }
-    }, [network, signer, wallet])
+        setClient(network === 'testnet' ? new cccLib.ClientPublicTestnet():new cccLib.ClientPublicMainnet())
+        localStorage.setItem('ckb_network', network)
+    }, [network, setClient])
 
     return (
         <CKBContext.Provider value={{
             config: network_config[network],
             network,
-            setNetwork: _setNetwork,
+            setNetwork: switchNetwork,
             open: () => {
                 if (!(window as any).ethereum && !(window as any).unisat) {
                     alert('Please install wallet to explorer or open in wallet app')
@@ -85,7 +84,7 @@ export default function CKBProvider({children}: { children: any }) {
                 }
 
                 open()
-            }, disconnect, wallet, signer, internalAddress, address
+            }, disconnect, wallet, signer, internalAddress, address, addresses
         }}>
             {children}
         </CKBContext.Provider>

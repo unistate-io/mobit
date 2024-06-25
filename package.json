@@ -4,9 +4,9 @@
   "private": true,
   "dependencies": {
     "@babel/core": "^7.16.0",
-    "@ckb-ccc/connector": "^0.0.5-alpha.3",
-    "@ckb-ccc/connector-react": "^0.0.5-alpha.3",
-    "@ckb-ccc/core": "^0.0.5-alpha.2",
+    "@ckb-ccc/connector": "0.0.5-alpha.4",
+    "@ckb-ccc/connector-react": "0.0.5-alpha.4",
+    "@ckb-ccc/core": "0.0.5-alpha.2",
     "@ckb-lumos/lumos": "0.22.0",
     "@joyid/ckb": "^0.0.8",
     "@nervina-labs/dob-render": "^0.0.0",
