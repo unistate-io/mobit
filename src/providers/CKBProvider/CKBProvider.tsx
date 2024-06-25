@@ -47,6 +47,10 @@ export default function CKBProvider({children}: { children: any }) {
             return
         }
 
+        if (!(signer as any)?.client_.url.includes(network)) {
+            return;
+        }
+
         (async () => {
             console.log('SignerBtc', SignerBtc)
             const internalAddress = await signer.getInternalAddress()

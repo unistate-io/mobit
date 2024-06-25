@@ -52,7 +52,9 @@ export default function DialogProfileInfo({children, className}: {children: Reac
                                 <CopyText copyText={address} className="mb-2">
                                     <div>{shortTransactionHash(address, 8)}</div>
                                 </CopyText>
-                                <CopyText copyText={internalAddress}>{shortTransactionHash(internalAddress, 8)}</CopyText>
+                                { internalAddress !== address &&
+                                    <CopyText copyText={internalAddress}>{shortTransactionHash(internalAddress, 8)}</CopyText>
+                                }
                             </div>
                         </div>
                         <div className="w-full  mt-4 flex items-center">

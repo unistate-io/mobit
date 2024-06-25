@@ -88,7 +88,7 @@ export default function Profile() {
             <div className="mt-4 flex flex-col items-center md:flex-row">
                 <div className="mb-4"><AddressCapsule address={address!}/></div>
 
-                {isOwner && internalAddress &&
+                {isOwner && internalAddress &&  internalAddress !== address &&
                     <div className="mb-4"><AddressCapsule address={internalAddress}/></div>
                 }
             </div>

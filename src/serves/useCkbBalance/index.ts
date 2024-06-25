@@ -5,16 +5,24 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 export async function getCapacities(address: string, indexer: Indexer): Promise<string> {
 
-    const collector = indexer.collector({
-        lock: helpers.parseAddress(address),
-    });
+    try {
+        const collector = indexer.collector({
+            lock: helpers.parseAddress(address),
+        });
 
-    let capacities = BI.from(0);
-    for await (const cell of collector.collect()) {
-        capacities = capacities.add(cell.cellOutput.capacity);
+        let capacities = BI.from(0);
+        for await (const cell of collector.collect()) {
+            capacities = capacities.add(cell.cellOutput.capacity);
+        }
+
+        return capacities.toString();
+    } catch (e: any) {
+        if (e.message.includes('Invalid checksum')) {
+            return  '0'
+        } else {
+            throw e
+        }
     }
-
-    return capacities.toString();
 }
 
 
