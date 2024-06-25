@@ -18,15 +18,21 @@ import useLayer1Assets from "@/serves/useLayer1Assets";
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
-    const {internalAddress, signer, address:loginAddress} = useContext(CKBContext)
+    const {internalAddress, signer, address: loginAddress} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
     const {lang} = useContext(LangContext)
 
     const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useAllXudtBalance(address!)
     const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(address!)
     const {data: historyData, status: historyDataStatus} = useTransactions(address!)
-    const {data: sporesData, status: sporesDataStatus, loaded: sporesDataLoaded, setPage: setSporesDataPage } = useSpores(address!)
-    const {xudts: layer1Xudt, dobs: Layer1Dobs, status: layer1DataStatus, error: layer1DataErr } = useLayer1Assets(internalAddress && internalAddress.startsWith('bc1') ? internalAddress : undefined)
+    const {
+        data: sporesData,
+        status: sporesDataStatus,
+        loaded: sporesDataLoaded,
+        setPage: setSporesDataPage
+    } = useSpores(address!)
+    const {xudts: layer1Xudt, dobs: Layer1Dobs, status: layer1DataStatus, error: layer1DataErr} = useLayer1Assets(
+        internalAddress && internalAddress.startsWith('bc1') && loginAddress === address ? internalAddress : undefined)
 
 
     const [tokens, setTokens] = useState<TokenBalance[]>([])
@@ -88,7 +94,7 @@ export default function Profile() {
             <div className="mt-4 flex flex-col items-center md:flex-row">
                 <div className="mb-4"><AddressCapsule address={address!}/></div>
 
-                {isOwner && internalAddress &&  internalAddress !== address &&
+                {isOwner && internalAddress && internalAddress !== address &&
                     <div className="mb-4"><AddressCapsule address={internalAddress}/></div>
                 }
             </div>
