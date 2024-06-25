@@ -78,11 +78,6 @@ export default function CKBProvider({children}: { children: any }) {
             network,
             setNetwork: switchNetwork,
             open: () => {
-                if (!(window as any).ethereum && !(window as any).unisat) {
-                    alert('Please install wallet to explorer or open in wallet app')
-                    return
-                }
-
                 open()
             }, disconnect, wallet, signer, internalAddress, address, addresses
         }}>
