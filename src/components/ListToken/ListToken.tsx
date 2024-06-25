@@ -1,5 +1,5 @@
 import TokenIcon from '../TokenIcon/TokenIcon'
-import {useState, useContext} from "react"
+import {useContext, useState} from "react"
 import {toDisplay} from "@/utils/number_display"
 import DialogXudtReceive from "@/components/Dialogs/DialogXudtReceive/DialogXudtReceive"
 import DialogCkbTransfer from "@/components/Dialogs/DialogCkbTransfer/DialogCkbTransfer"
@@ -8,11 +8,10 @@ import {TokenInfo} from "@/utils/graphql/types"
 import DialogXudtTransfer from "@/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer"
 import {LangContext} from "@/providers/LangProvider/LangProvider";
 
-export interface TokenBalance extends TokenInfo  {
+export interface TokenBalance extends TokenInfo {
     amount: string,
     type: string,
     chain: 'ckb' | 'btc'
-
 }
 
 export default function ListToken({
@@ -27,6 +26,16 @@ export default function ListToken({
     let list = data
     if (compact) {
         list = data.slice(0, previewSize)
+    }
+
+    const getLink = (token: TokenBalance) => {
+        if (token.symbol === 'CKB') {
+            return '/token'
+        } else if (token.symbol === 'BTC') {
+            return '/token/btc'
+        } else {
+            return `/token/${token.type_id}`
+        }
     }
 
     return <div className="shadow rounded-lg bg-white py-4">
@@ -66,7 +75,8 @@ export default function ListToken({
 
             {status !== 'loading' &&
                 list.map((item, index) => {
-                    return <Link to={item.symbol ==='CKB' ? '/token' : `/token/${item.type_id}`} key={index} className="flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100">
+                    return <Link to={getLink(item)} key={index}
+                                 className="flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100">
                         <div className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center">
                             <TokenIcon symbol={item.symbol!} size={24} chain={item.chain}/>{item.symbol!}
                         </div>
@@ -77,18 +87,20 @@ export default function ListToken({
                                 <div
                                     className="shrink-0 flex-1 flex-row flex items-center">{toDisplay(item.amount, item.decimal!, true)}</div>
                                 <div
-                                    onClick={e => {e.preventDefault()}}
+                                    onClick={e => {
+                                        e.preventDefault()
+                                    }}
                                     className="shrink-0 basis-1/3 md:basis-1/4 text-right flex-row items-center flex flex-nowrap justify-end">
 
-                                   {
-                                       item.symbol === 'CKB' &&
-                                       <DialogCkbTransfer from={address}>
-                                           <div
-                                               className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
-                                               {lang['Send']}
-                                           </div>
-                                       </DialogCkbTransfer>
-                                   }
+                                    {
+                                        item.symbol === 'CKB' &&
+                                        <DialogCkbTransfer from={address}>
+                                            <div
+                                                className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                {lang['Send']}
+                                            </div>
+                                        </DialogCkbTransfer>
+                                    }
 
                                     {
                                         item.symbol !== 'CKB' && item.chain !== 'btc' &&
@@ -100,15 +112,17 @@ export default function ListToken({
                                         </DialogXudtTransfer>
                                     }
 
-                                    <DialogXudtReceive address={address}>
-                                        <div
-                                            className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
-                                            {lang['Receive']}
-                                        </div>
-                                    </DialogXudtReceive>
+                                    { item.symbol !== 'BTC' &&
+                                        <DialogXudtReceive address={address}>
+                                            <div
+                                                className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
+                                                {lang['Receive']}
+                                            </div>
+                                        </DialogXudtReceive>
+                                    }
 
                                 </div>
-                            </> :  <div
+                            </> : <div
                                 className="shrink-0 flex-1 flex-row flex items-center justify-end">{toDisplay(item.amount, item.decimal!, true)}</div>
                         }
                     </Link>

@@ -15,7 +15,7 @@ export const UserContext = createContext<UserContextType>({
 })
 
 function UserProvider(props: { children: any, address: string }) {
-    const {address: connectedAddress} = useContext(CKBContext)
+    const {address: connectedAddress, addresses} = useContext(CKBContext)
 
     const [theme, setTheme] = useState<UserTheme>(defaultTheme)
     const [address, setAddress] = useState<undefined | string>(props.address)
@@ -28,12 +28,12 @@ function UserProvider(props: { children: any, address: string }) {
     }, [props.address])
 
     useEffect(() => {
-        if (!!connectedAddress) {
-            setIsOwner(props.address === connectedAddress)
+        if (!!connectedAddress && addresses && addresses.length > 0) {
+            setIsOwner(addresses.includes(props.address))
         } else {
             setIsOwner(false)
         }
-    }, [connectedAddress, props.address])
+    }, [addresses, props.address])
 
     return (<UserContext.Provider value={{address, theme, isOwner}}
     >{props.children}

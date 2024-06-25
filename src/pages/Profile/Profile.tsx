@@ -2,7 +2,6 @@ import {UserContext} from '@/providers/UserProvider/UserProvider'
 import {useContext, useEffect, useState} from "react"
 import Background from "@/components/Background/Background"
 import Avatar from "@/components/Avatar/Avatar"
-import AddressCapsule from "@/components/AddressCapsule/AddressCapsule"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import * as Tabs from '@radix-ui/react-tabs'
 import ListToken, {TokenBalance} from "@/components/ListToken/ListToken"
@@ -14,11 +13,12 @@ import ListHistory from "@/components/ListHistory/ListHistory"
 import useSpores from "@/serves/useSpores"
 import ListDOBs from "@/components/ListDOBs/ListDOBs"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
-import useLayer1Assets from "@/serves/useLayer1Assets";
+import useLayer1Assets from "@/serves/useLayer1Assets"
+import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
-    const {internalAddress, signer, address: loginAddress} = useContext(CKBContext)
+    const {internalAddress, signer, address: loginAddress, addresses} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
     const {lang} = useContext(LangContext)
 
@@ -31,7 +31,12 @@ export default function Profile() {
         loaded: sporesDataLoaded,
         setPage: setSporesDataPage
     } = useSpores(address!)
-    const {xudts: layer1Xudt, dobs: Layer1Dobs, status: layer1DataStatus, error: layer1DataErr} = useLayer1Assets(
+    const {
+        xudts: layer1Xudt,
+        dobs: layer1Dobs,
+        btc: layer1Btc,
+        status: layer1DataStatus,
+        error: layer1DataErr} = useLayer1Assets(
         internalAddress && internalAddress.startsWith('bc1') && loginAddress === address ? internalAddress : undefined)
 
 
@@ -46,10 +51,12 @@ export default function Profile() {
             setTokensStatus('error')
             setTokens([])
         } else if (xudtDataStatus === 'complete' && ckbDataStatus === 'complete' && ckbData) {
-            setTokens([ckbData, ...xudtData, ...layer1Xudt])
+            setTokens(layer1Btc
+                ? [ckbData, layer1Btc, ...xudtData, ...layer1Xudt]
+                : [ckbData, ...xudtData, ...layer1Xudt])
             setTokensStatus('complete')
         }
-    }, [xudtData, xudtDataStatus, ckbData, ckbDataStatus, layer1Xudt, layer1DataStatus])
+    }, [xudtData, xudtDataStatus, ckbData, ckbDataStatus, layer1Xudt, layer1DataStatus, layer1Btc])
 
     useEffect(() => {
         if (xudtDataErr) {
@@ -92,10 +99,21 @@ export default function Profile() {
                 <Avatar size={128} name={address || 'default'} colors={theme.colors}/>
             </div>
             <div className="mt-4 flex flex-col items-center md:flex-row">
-                <div className="mb-4"><AddressCapsule address={address!}/></div>
 
-                {isOwner && internalAddress && internalAddress !== address &&
-                    <div className="mb-4"><AddressCapsule address={internalAddress}/></div>
+
+                {
+                    isOwner && internalAddress && internalAddress !== address && addresses ?
+                        <>
+                            <div className="mb-4 md:mr-6">
+                                <ProfileAddresses addresses={[internalAddress!]} defaultAddress={internalAddress!}/>
+                            </div>
+                            <div className="mb-4">
+                                <ProfileAddresses addresses={addresses} defaultAddress={address!}/>
+                            </div>
+                        </> :
+                        <div className="mb-4">
+                            <ProfileAddresses addresses={[address!]} defaultAddress={address!}/>
+                        </div>
                 }
             </div>
 
@@ -119,7 +137,7 @@ export default function Profile() {
                             <ListToken data={tokens} status={tokensStatus} address={signer ? loginAddress : undefined}/>
                             <div className="mt-6">
                                 <ListDOBs
-                                    data={[...Layer1Dobs, ...sporesData]}
+                                    data={[...layer1Dobs, ...sporesData]}
                                     status={sporesDataStatus}
                                     loaded={sporesDataLoaded}
                                     onChangePage={(page) => {
@@ -138,7 +156,7 @@ export default function Profile() {
                             value="DOBs"
                         >
                             <ListDOBs
-                                data={[...Layer1Dobs, ...sporesData]}
+                                data={[...layer1Dobs, ...sporesData]}
                                 status={sporesDataStatus}
                                 loaded={sporesDataLoaded}
                                 onChangePage={(page) => {

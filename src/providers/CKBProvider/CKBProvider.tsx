@@ -64,6 +64,7 @@ export default function CKBProvider({children}: { children: any }) {
             setInternalAddress(internalAddress)
             setAddress(address)
             setAddresses(addresses)
+            console.log('addresses:', addresses)
         })();
     }, [signer])
 

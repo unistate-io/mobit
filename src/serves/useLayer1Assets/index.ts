@@ -6,19 +6,29 @@ import {TokenBalance} from "@/components/ListToken/ListToken"
 import {Spores} from "@/utils/graphql/types";
 import {SporesWithChainInfo} from "@/serves/useSpores";
 
-const queryAssets = async (address: string):Promise<{
+const queryAssets = async (btcAddress: string):Promise<{
     xudts: TokenBalance[],
-    dobs: SporesWithChainInfo[]
+    dobs: SporesWithChainInfo[],
+    btc: TokenBalance
 }> => {
-    const res = await fetch(`https://ckb-btc-api.deno.dev/?btcAddress=${address}`)
+    const res = await fetch(`https://ckb-btc-api.deno.dev/?btcAddress=${btcAddress}`)
     const json = await res.json()
 
     const list = {
         xudts: [] as TokenBalance[],
-        dobs:[] as SporesWithChainInfo[]
+        dobs:[] as SporesWithChainInfo[],
+        btc: {
+            decimal: 0,
+            name: 'Bitcoin',
+            symbol: 'BTC',
+            type_id: '',
+            amount: json.balance.total_satoshi,
+            type: 'btc',
+            chain: 'btc'
+        } as TokenBalance
     }
 
-    json.forEach((t: any) => {
+    json.assets.forEach((t: any) => {
         if (!!t.xudtCell) {
             list.xudts.push({
                 name: t.xudtCell.addressByTypeId.token_info.name,
@@ -48,26 +58,39 @@ const queryAssets = async (address: string):Promise<{
     return  list
 }
 
-export default function useLayer1Assets(address?: string) {
+const btcEmpty: TokenBalance = {
+    decimal: 0,
+    name: 'Bitcoin',
+    symbol: 'BTC',
+    type_id: '',
+    amount: '0',
+    type: 'btc',
+    chain: 'btc'
+}
+
+export default function useLayer1Assets(btcAddress?: string) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [xudts, setXudts] = useState<TokenBalance[]>([])
     const [dobs, setDobs] = useState<SporesWithChainInfo[]>([])
+    const [btc, setBtc] = useState<TokenBalance | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
 
     useEffect(() => {
-        if (!address) {
+        if (!btcAddress) {
             setStatus('complete')
             setXudts([])
             setDobs([])
+            setBtc(undefined)
             return
         }
 
         setStatus('loading')
         setXudts([])
-        queryAssets(address)
+        queryAssets(btcAddress)
             .then(res => {
                 setXudts(res.xudts)
                 setDobs(res.dobs)
+                setBtc(res.btc)
                 setStatus('complete')
             })
             .catch((e: any) => {
@@ -75,12 +98,13 @@ export default function useLayer1Assets(address?: string) {
                 setStatus('error')
                 setError(e)
             })
-    }, [address])
+    }, [btcAddress])
 
     return {
         status,
         xudts,
         dobs,
-        error
+        error,
+        btc
     }
 }
