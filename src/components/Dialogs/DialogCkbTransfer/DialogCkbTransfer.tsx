@@ -67,8 +67,8 @@ export default function DialogCkbTransfer({children, from, className}: { childre
         if (formData.amount === '') {
             setAmountError('Please enter a valid amount')
             hasError = true
-        } else if (BigNumber(formData.amount).lt(61)){
-            setAmountError('Please enter an amount greater than 61 CKB')
+        } else if (BigNumber(formData.amount).lt(63)){
+            setAmountError('Please enter an amount greater than 63 CKB')
             hasError = true
         } else if (BigNumber(formData.amount).gt(CkbBalance ? CkbBalance.amount : 0)) {
             setAmountError('Insufficient balance')
@@ -85,13 +85,12 @@ export default function DialogCkbTransfer({children, from, className}: { childre
         if (!hasError) {
             if (amount.eq(balance)) {
                 try {
-                  tx =  await build({
+                  tx = await build({
                         from,
                         to: formData.to,
                         amount: amount.toString(),
                         payeeAddress: formData.to,
                         feeRate: 1000,
-
                     })
                     console.log('max amount tx', tx)
                     setAmountError('')
@@ -130,6 +129,7 @@ export default function DialogCkbTransfer({children, from, className}: { childre
 
     const handleTransfer = async () => {
         const tx = await checkErrorsAndBuild()
+        console.log('tx =>', tx)
         if (!!tx) {
             try {
                 const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
@@ -199,6 +199,16 @@ export default function DialogCkbTransfer({children, from, className}: { childre
                                 </div>
                             </div>
 
+                            <div className="font-semibold mb-10">
+                                <div className="mb-2">
+                                    From
+                                </div>
+                                <Input
+                                       value={shortTransactionHash(from, 12)}
+                                       type={"text"}
+                                       disabled/>
+                            </div>
+
 
                             <div className="font-semibold mb-10">
                                 <div className="mb-2">
@@ -249,8 +259,6 @@ export default function DialogCkbTransfer({children, from, className}: { childre
                             </Button>
                         </>
                     }
-
-
 
                     {
                         step === 2 &&
@@ -304,7 +312,7 @@ export default function DialogCkbTransfer({children, from, className}: { childre
                                 ></Select>
                             </div>
 
-                            <div className="text-red-400 h-6 mb-2">{transactionError}</div>
+                            <div className="text-red-400 min-h-6 mb-2">{transactionError}</div>
 
                             <div className="flex flex-row">
                                 <Button btntype={'secondary'}

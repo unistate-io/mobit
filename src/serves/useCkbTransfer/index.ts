@@ -17,6 +17,7 @@ export default function useCkbTransfer(address: string) {
 
         const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc);
         const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
+
         const txSkeleton = await commons.common.transfer(
             _txSkeleton,
             [from],
