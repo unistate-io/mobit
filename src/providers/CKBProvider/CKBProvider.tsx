@@ -3,7 +3,7 @@ import {createContext, useEffect, useState} from "react";
 import {Signer} from "@ckb-ccc/core/dist/signer/signer";
 import {NetworkConfig} from "@/providers/CKBProvider/network_config"
 import network_config from "@/providers/CKBProvider/network_config"
-import {SignerBtc} from '@ckb-ccc/core'
+import {Client} from '@ckb-ccc/core'
 
 const cccLib: any = ccc
 
@@ -19,7 +19,8 @@ export interface CKBContextType {
     addresses?: string[]
     signer?: Signer | undefined
     setNetwork: (network: Network) => any
-    config: NetworkConfig
+    config: NetworkConfig,
+    client?: Client
 }
 
 export const CKBContext = createContext<CKBContextType>({
@@ -34,7 +35,7 @@ export const CKBContext = createContext<CKBContextType>({
 })
 
 export default function CKBProvider({children}: { children: any }) {
-    const {open, disconnect, wallet, setClient} = cccLib.useCcc()
+    const {open, disconnect, wallet, setClient, client} = cccLib.useCcc()
     const signer = ccc.useSigner();
 
     const [internalAddress, setInternalAddress] = useState<undefined | string>(undefined)
@@ -64,7 +65,6 @@ export default function CKBProvider({children}: { children: any }) {
             setInternalAddress(internalAddress)
             setAddress(address)
             setAddresses(addresses)
-            console.log('addresses:', addresses)
         })();
     }, [signer])
 
@@ -75,6 +75,7 @@ export default function CKBProvider({children}: { children: any }) {
 
     return (
         <CKBContext.Provider value={{
+            client,
             config: network_config[network],
             network,
             setNetwork: switchNetwork,

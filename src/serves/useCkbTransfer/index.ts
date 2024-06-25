@@ -3,39 +3,38 @@ import {useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 
-export default function useCkbTransfer(address: string) {
+export default function useCkbTransfer(addresses: string[]) {
     const {signer, config} = useContext(CKBContext)
 
     const build = async ({
-                             from,
+                             froms,
                              to,
                              amount,
-                             payeeAddress,
+                             payeeAddresses,
                              feeRate
-                         }: { from: string, to: string, amount: string, payeeAddress: string, feeRate: number }) => {
+                         }: { froms: string[], to: string, amount: string, payeeAddresses: string[], feeRate: number }) => {
 
 
         const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc);
         const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
-
         const txSkeleton = await commons.common.transfer(
             _txSkeleton,
-            [from],
+            froms,
             to,
             BigInt(amount),
         )
 
         return await commons.common.payFeeByFeeRate(
             txSkeleton,
-            [payeeAddress],
+            payeeAddresses,
             feeRate,
         )
     }
 
-    const calculateFee = async (feeRate: number, tx: helpers.TransactionSkeletonType, payeeAddress: string) => {
+    const calculateFee = async (feeRate: number, tx: helpers.TransactionSkeletonType, payeeAddresses: string[]) => {
         const newTxSkeleton = await commons.common.payFeeByFeeRate(
             tx,
-            [payeeAddress],
+            payeeAddresses,
             feeRate)
 
         const txSize = await commons.common.__tests__.getTransactionSize(newTxSkeleton!)
@@ -63,7 +62,7 @@ export default function useCkbTransfer(address: string) {
         const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
         let txSkeleton = await commons.common.transfer(
             _txSkeleton,
-            [await signer.getRecommendedAddress()],
+            (await signer.getAddresses()),
             to,
             BigInt(amount)
         )

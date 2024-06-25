@@ -23,7 +23,7 @@ export default function Profile() {
     const {lang} = useContext(LangContext)
 
     const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useAllXudtBalance(address!)
-    const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(address!)
+    const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(!!addresses && addresses.includes(address!) ? addresses : [address!])
     const {data: historyData, status: historyDataStatus} = useTransactions(address!)
     const {
         data: sporesData,
@@ -137,7 +137,7 @@ export default function Profile() {
                             <ListToken
                                 data={tokens}
                                 status={tokensStatus}
-                                address={signer ? (address === loginAddress ? loginAddress : address) : undefined}/>
+                                addresses={signer && addresses ? (addresses.includes(address!) ? addresses : [address!]) : undefined}/>
                             <div className="mt-6">
                                 <ListDOBs
                                     data={[...layer1Dobs, ...sporesData]}
@@ -155,7 +155,7 @@ export default function Profile() {
                             <ListToken
                                 data={tokens}
                                 status={tokensStatus}
-                                address={signer ? (address === loginAddress ? loginAddress : address) : undefined}/>
+                                addresses={signer && addresses ? (addresses.includes(address!) ? addresses : [address!]) : undefined}/>
                         </Tabs.Content>
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"

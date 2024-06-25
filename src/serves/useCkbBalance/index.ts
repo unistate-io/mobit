@@ -1,13 +1,17 @@
-import {BI, helpers, Indexer, config as lumosCoinfig } from '@ckb-lumos/lumos'
-import {useCallback, useEffect, useState, useContext} from "react"
+import {BI, config as lumosCoinfig, helpers, Indexer} from '@ckb-lumos/lumos'
+import {useCallback, useContext, useEffect, useRef, useState} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import {ccc} from "@ckb-ccc/connector-react"
+
+const cccLib: any = ccc
 
 export async function getCapacities(address: string, indexer: Indexer): Promise<string> {
 
     try {
         const collector = indexer.collector({
             lock: helpers.parseAddress(address),
+            type: 'empty'
         });
 
         let capacities = BI.from(0);
@@ -18,7 +22,7 @@ export async function getCapacities(address: string, indexer: Indexer): Promise<
         return capacities.toString();
     } catch (e: any) {
         if (e.message.includes('Invalid checksum')) {
-            return  '0'
+            return '0'
         } else {
             throw e
         }
@@ -26,29 +30,30 @@ export async function getCapacities(address: string, indexer: Indexer): Promise<
 }
 
 
-export default function useCkbBalance(address?: string) {
-    const {config, network} = useContext(CKBContext)
-
+export default function useCkbBalance(addresses?: string[]) {
+    const { network, client} = useContext(CKBContext)
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
 
+    const historyRef = useRef('')
 
-
-
-    const refresh = useCallback(async ()=>{
-       if (!address) return
-        const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc);
+    const refresh = useCallback(async () => {
+        if (!addresses || !addresses.length || !client) return
 
         try {
-            const balance = await getCapacities(address, indexer)
+            const client = network === 'testnet' ? new cccLib.ClientPublicTestnet() : new cccLib.ClientPublicMainnet()
+            const _balance = await client.getBalance(addresses.map((address) => {
+                return helpers.addressToScript(address)
+            }))
+
             setData({
                 name: 'Nervos CKB',
                 symbol: 'CKB',
                 decimal: 8,
                 type_id: '',
                 type: 'ckb',
-                amount: balance,
+                amount: _balance.toString(),
                 chain: 'ckb'
             })
             setStatus('complete')
@@ -56,16 +61,16 @@ export default function useCkbBalance(address?: string) {
             setError(e)
             setStatus('error')
         }
-    }, [address, config])
+    }, [addresses, network])
 
     useEffect(() => {
-       if (!!address) {
-           setStatus('loading')
-           setData(undefined)
-           lumosCoinfig.initializeConfig(network==='testnet' ? lumosCoinfig.predefined.AGGRON4 : lumosCoinfig.predefined.LINA);
-           refresh()
-       }
-    }, [refresh, address, network])
+        if (!!addresses && addresses.length > 0 && historyRef.current !== addresses.join(',')) {
+            historyRef.current = addresses.join(',')
+            setStatus('loading')
+            setData(undefined)
+            refresh()
+        }
+    }, [refresh, addresses, network])
 
 
     return {

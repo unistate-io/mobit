@@ -20,11 +20,11 @@ const CkbInfo: TokenInfo = {
 }
 
 export default function TokenPage() {
-    const {signer, open, address} = useContext(CKBContext)
+    const {signer, open, addresses} = useContext(CKBContext)
 
     const [tokenInfo, setTokenInfo] = useState(CkbInfo)
-    const {data: ckbBalabce, status: ckbBalanceStatue} = useCkbBalance(address)
-    const {data: historyData, status: historyDataStatus} = useTransactions(address, 10)
+    const {data: ckbBalabce, status: ckbBalanceStatue} = useCkbBalance(addresses)
+    const {data: historyData, status: historyDataStatus} = useTransactions(addresses?.[0], 10)
 
     return <div className="max-w-[1044px] mx-auto px-3 py-8 flex flex-col sm:flex-row items-start mb-10">
         <div
@@ -45,7 +45,7 @@ export default function TokenPage() {
                 </div>
             }
 
-            {signer && address &&
+            {signer && !!addresses && addresses.length > 0 &&
                 <>
                     {ckbBalanceStatue === 'loading' &&
                         <div className={'loading-bg h-[30px] mb-3 rounded-lg'}/>
@@ -60,10 +60,10 @@ export default function TokenPage() {
                     }
 
                     <div className="flex flex-row justify-between text-sm">
-                        <DialogCkbTransfer from={address!} className="flex-1 mr-2">
+                        <DialogCkbTransfer froms={addresses} className="flex-1 mr-2">
                             <Button>Send</Button>
                         </DialogCkbTransfer>
-                        <DialogXudtReceive address={address!} className="flex-1">
+                        <DialogXudtReceive address={addresses[0]} className="flex-1">
                             <Button className="text-white !bg-[#000] hover:opacity-80 hover:bg-[#000]"
                                     >Receive</Button>
                         </DialogXudtReceive>
@@ -74,7 +74,7 @@ export default function TokenPage() {
         <div className="shadow flex-1 w-full mt-6 sm:mt-0 sm:ml-6 rounded-lg px-5 py-3">
             <div className="font-semibold text-lg mb-4">Transactions</div>
 
-            <ListTokenHistory data={historyData} status={historyDataStatus} address={address!} />
+            <ListTokenHistory data={historyData} status={historyDataStatus} address={addresses![0]} />
         </div>
     </div>
 }

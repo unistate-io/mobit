@@ -21,9 +21,9 @@ export interface XudtTransferProps {
     to: string,
 }
 
-export default function DialogCkbTransfer({children, from, className}: { children: React.ReactNode, from: string, className?: string }) {
-    const {build, signAndSend} = useCkbTransfer(from)
-    const {data: CkbBalance, status, refresh} = useCkbBalance(from)
+export default function DialogCkbTransfer({children, froms, className}: { children: React.ReactNode, froms: string[], className?: string }) {
+    const {build, signAndSend} = useCkbTransfer(froms)
+    const {data: CkbBalance, status, refresh} = useCkbBalance(froms)
 
 
     const [open, setOpen] = React.useState(false);
@@ -86,10 +86,10 @@ export default function DialogCkbTransfer({children, from, className}: { childre
             if (amount.eq(balance)) {
                 try {
                   tx = await build({
-                        from,
+                        froms,
                         to: formData.to,
                         amount: amount.toString(),
-                        payeeAddress: formData.to,
+                        payeeAddresses: [formData.to],
                         feeRate: 1000,
                     })
                     console.log('max amount tx', tx)
@@ -102,10 +102,10 @@ export default function DialogCkbTransfer({children, from, className}: { childre
             } else {
                 try {
                  tx = await build({
-                        from,
+                        froms,
                         to: formData.to,
                         amount: amount.toString(),
-                        payeeAddress: from,
+                        payeeAddresses: froms,
                         feeRate: 1000,
                     })
                     setAmountError('')
@@ -197,16 +197,6 @@ export default function DialogCkbTransfer({children, from, className}: { childre
                                      className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100">
                                     <i className="uil-times text-gray-500"/>
                                 </div>
-                            </div>
-
-                            <div className="font-semibold mb-10">
-                                <div className="mb-2">
-                                    From
-                                </div>
-                                <Input
-                                       value={shortTransactionHash(from, 12)}
-                                       type={"text"}
-                                       disabled/>
                             </div>
 
 
@@ -351,10 +341,6 @@ export default function DialogCkbTransfer({children, from, className}: { childre
                             <div className="text-center text-sm">The transaction is sent and will be confirmed later</div>
 
                             <div className="my-4 p-3 bg-gray-100 rounded-lg">
-                                <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                    <div className="text-gray-500">From</div>
-                                    <div className="font-semibold">{shortTransactionHash(from)}</div>
-                                </div>
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                     <div className="text-gray-500">To</div>
                                     <div className="font-semibold">{shortTransactionHash(formData.to)}</div>
