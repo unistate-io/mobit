@@ -18,7 +18,7 @@ const queryAssets = async (btcAddress: string):Promise<{
         xudts: [] as TokenBalance[],
         dobs:[] as SporesWithChainInfo[],
         btc: {
-            decimal: 0,
+            decimal: 8,
             name: 'Bitcoin',
             symbol: 'BTC',
             type_id: '',
@@ -59,7 +59,7 @@ const queryAssets = async (btcAddress: string):Promise<{
 }
 
 const btcEmpty: TokenBalance = {
-    decimal: 0,
+    decimal: 8,
     name: 'Bitcoin',
     symbol: 'BTC',
     type_id: '',
