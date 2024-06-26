@@ -26,22 +26,18 @@ export default function useSpores(addresses: string[]) {
         if (!addresses || !addresses.length) return
         if (historyRef.current !== addresses.join(',')) {
             historyRef.current = addresses.join(',')
-            console.log('setPage(1)')
             setPage(1)
             return
         }
     }, [addresses])
 
     useEffect(() => {
-        console.trace('useSpores useEffect', addresses)
         if (page === 1) {
-            console.log('set loading')
             setStatus('loading')
         }
 
         (async () => {
             try {
-                console.log('fetch spores')
                 const spores = await querySporesByAddress(addresses, page, pageSize)
                 setLoaded(spores.length < pageSize)
                 const list = page === 1 ? spores : [...data, ...spores]
