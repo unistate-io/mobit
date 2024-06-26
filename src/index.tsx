@@ -5,7 +5,6 @@ import {RouterProvider} from "react-router-dom";
 import router from "./pages/router";
 import reportWebVitals from './reportWebVitals';
 import {ccc} from "@ckb-ccc/connector-react";
-import CKBProvider from "@/providers/CKBProvider/CKBProvider";
 import LangProvider from "@/providers/LangProvider/LangProvider";
 import ToastProvider from "@/providers/ToastProvider/ToastProvider";
 
@@ -16,11 +15,9 @@ root.render(
     <React.StrictMode>
         <LangProvider>
             <ccc.Provider>
-                <CKBProvider>
-                    <ToastProvider>
-                        <RouterProvider router={router}/>
-                    </ToastProvider>
-                </CKBProvider>
+                <ToastProvider>
+                    <RouterProvider router={router}/>
+                </ToastProvider>
             </ccc.Provider>
         </LangProvider>
     </React.StrictMode>

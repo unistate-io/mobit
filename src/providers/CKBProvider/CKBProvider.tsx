@@ -1,16 +1,17 @@
-import {ccc} from "@ckb-ccc/connector-react";
-import {createContext, useEffect, useState} from "react";
-import {Signer} from "@ckb-ccc/core/dist/signer/signer";
+import {ccc} from "@ckb-ccc/connector-react"
+import {createContext, useEffect, useRef, useState} from "react"
+import {Signer} from "@ckb-ccc/core/dist/signer/signer"
 import {NetworkConfig} from "@/providers/CKBProvider/network_config"
 import network_config from "@/providers/CKBProvider/network_config"
 import {Client} from '@ckb-ccc/core'
+import {useNavigate} from "react-router-dom"
 
 const cccLib: any = ccc
 
 export type Network = 'mainnet' | 'testnet'
 
 export interface CKBContextType {
-    open: () => any;
+    open: () => any
     network: Network
     disconnect: () => any
     wallet?: any
@@ -36,12 +37,15 @@ export const CKBContext = createContext<CKBContextType>({
 
 export default function CKBProvider({children}: { children: any }) {
     const {open, disconnect, wallet, setClient, client} = cccLib.useCcc()
-    const signer = ccc.useSigner();
+    const signer = ccc.useSigner()
+    const navigate = useNavigate()
 
     const [internalAddress, setInternalAddress] = useState<undefined | string>(undefined)
     const [address, setAddress] = useState<undefined | string>(undefined)
     const [addresses, setAddresses] = useState<undefined | string[]>(undefined)
     const [network, _setNetwork] = useState<Network>(localStorage.getItem('ckb_network') as Network || 'mainnet')
+
+    const needRedirect = useRef(false)
 
     const switchNetwork = (network: Network) => {
         // 需要重新连接
@@ -54,7 +58,7 @@ export default function CKBProvider({children}: { children: any }) {
         if (!signer) {
             setInternalAddress(undefined)
             setAddress(undefined)
-            setAddress(undefined)
+            setAddresses(undefined)
             return
         }
 
@@ -65,7 +69,12 @@ export default function CKBProvider({children}: { children: any }) {
             setInternalAddress(internalAddress)
             setAddress(address)
             setAddresses(addresses)
-        })();
+
+            if (needRedirect.current) {
+                needRedirect.current = false
+                navigate(`/address/${address}`)
+            }
+        })()
     }, [signer])
 
     useEffect(() => {
@@ -80,6 +89,7 @@ export default function CKBProvider({children}: { children: any }) {
             network,
             setNetwork: switchNetwork,
             open: () => {
+                needRedirect.current = true
                 open()
             }, disconnect, wallet, signer, internalAddress, address, addresses
         }}>

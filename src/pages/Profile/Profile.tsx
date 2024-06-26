@@ -68,7 +68,7 @@ export default function Profile() {
             setTokens([])
         } else if (xudtDataStatus === 'complete' && ckbDataStatus === 'complete' && ckbData) {
             setTokens(layer1Btc
-                ? [ckbData, layer1Btc, ...xudtData, ...layer1Xudt]
+                ? [ckbData, ...xudtData, layer1Btc, ...layer1Xudt]
                 : [ckbData, ...xudtData, ...layer1Xudt])
             setTokensStatus('complete')
         }
