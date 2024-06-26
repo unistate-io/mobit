@@ -15,11 +15,11 @@ import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 export default function TokenPage() {
     const {tokenid} = useParams()
-    const {signer, open, address} = useContext(CKBContext)
+    const {signer, open, address, addresses} = useContext(CKBContext)
     const {lang} = useContext(LangContext)
 
     const {data: tokenInfo, status:infoStatus} = useTokenInfo(tokenid!)
-    const {data: xudtBalance, status: xudtBalanceStatus} = useXudtBalance(address!, tokenInfo || undefined)
+    const {data: xudtBalance, status: xudtBalanceStatus} = useXudtBalance(addresses, tokenInfo || undefined)
     const {data: historyData, status: historyDataStatus} = useTransactions(address, 10)
 
     return <div className="max-w-[1044px] mx-auto px-3 py-8 flex flex-col sm:flex-row items-start mb-10">
@@ -60,7 +60,7 @@ export default function TokenPage() {
                     }
 
                     <div className="flex flex-row justify-between text-sm">
-                        <DialogXudtTransfer from={address!} token={tokenInfo} className="flex-1 mr-2">
+                        <DialogXudtTransfer froms={addresses!} token={tokenInfo} className="flex-1 mr-2">
                             <Button>{lang['Send']}</Button>
                         </DialogXudtTransfer>
                         <DialogXudtReceive address={address!} className="flex-1">

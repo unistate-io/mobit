@@ -9,17 +9,17 @@ export default function useXudtTransfer() {
     const {signer, config} = useContext(CKBContext)
 
     const build = async ({
-                             from,
+                             froms,
                              to,
                              amount,
                              feeRate,
                              tokenInfo
-                         }: { from: string, to: string, amount: string, payeeAddress: string, tokenInfo: TokenInfo, feeRate: number }) => {
+                         }: { froms: string[], to: string, amount: string, tokenInfo: TokenInfo, feeRate: number }) => {
 
         const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc)
 
         const txInfo = await transferTokenToAddress(
-            from,
+            froms,
             amount,
             to,
             tokenInfo,
@@ -34,19 +34,19 @@ export default function useXudtTransfer() {
 
 
     const signAndSend = async ({
-                                   from,
+                                   froms,
                                    to,
                                    amount,
                                    feeRate,
                                    tokenInfo
-                               }: { from: string, to: string, amount: string, tokenInfo: TokenInfo, feeRate: number}) => {
+                               }: { froms: string[], to: string, amount: string, tokenInfo: TokenInfo, feeRate: number}) => {
         if (!signer) {
             throw new Error('Please connect wallet first')
         }
 
         const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc)
         const tx = await transferTokenToAddress(
-            from,
+            froms,
             amount,
             to,
             tokenInfo,

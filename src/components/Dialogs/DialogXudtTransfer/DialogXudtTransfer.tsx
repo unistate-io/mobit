@@ -23,10 +23,10 @@ export interface XudtTransferProps {
     to: string,
 }
 
-export default function DialogXudtTransfer({children, from, className, token}: { children: React.ReactNode, from: string, token: TokenInfo,  className?: string }) {
+export default function DialogXudtTransfer({children, froms, className, token}: { children: React.ReactNode, froms: string[], token: TokenInfo,  className?: string }) {
     const {build, signAndSend} = useXudtTransfer()
     const [open, setOpen] = React.useState(false);
-    const {data: xudtBalance, status, refresh} = useXudtBalance((open ? from : undefined), token)
+    const {data: xudtBalance, status, refresh} = useXudtBalance((open ? froms : undefined), token)
 
     const [formData, setFormData] = React.useState<XudtTransferProps>({
         form: "",
@@ -83,10 +83,9 @@ export default function DialogXudtTransfer({children, from, className, token}: {
         if (!hasError) {
             try {
                 tx = await build({
-                    from,
+                    froms,
                     to: formData.to,
                     amount: amount.toString(),
-                    payeeAddress: from,
                     feeRate: 1000,
                     tokenInfo:  token
                 }) as any
@@ -135,7 +134,7 @@ export default function DialogXudtTransfer({children, from, className, token}: {
         try {
             const amount = BigNumber(BigNumber(formData.amount)).multipliedBy(10 ** 8)
             const txHash = await signAndSend({
-                from,
+                froms,
                 to: formData.to,
                 amount: amount.toString(),
                 feeRate,
@@ -329,10 +328,6 @@ export default function DialogXudtTransfer({children, from, className, token}: {
 
                             <div className="my-4 p-3 bg-gray-100 rounded-lg">
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                    <div className="text-gray-500">From</div>
-                                    <div className="font-semibold">{shortTransactionHash(from)}</div>
-                                </div>
-                                <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                     <div className="text-gray-500">To</div>
                                     <div className="font-semibold">{shortTransactionHash(formData.to)}</div>
                                 </div>
@@ -350,7 +345,7 @@ export default function DialogXudtTransfer({children, from, className, token}: {
 
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                     <div className="text-gray-500">Transaction fee</div>
-                                    <div className="font-semibold">{'0.01'} CKB</div>
+                                    <div className="font-semibold">{fee(feeRate)} CKB</div>
                                 </div>
 
                                 <div className="h-[1px] bg-gray-200 my-4" />

@@ -1,6 +1,6 @@
 // @ts-ignore
 
-import {useContext, useEffect, useState} from "react"
+import {useContext, useEffect, useRef, useState, useCallback} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {TokenInfo} from "@/utils/graphql/types"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
@@ -18,70 +18,39 @@ const emptyToken: TokenInfo = {
     type_id: '',
 }
 
-const getXudtBalance = async (address: string, tokenType: CKBComponents.Script, collector: Collector) => {
-    const fromLock = addressToScript(address);
+const getXudtBalance = async (addresses: string[], tokenType: CKBComponents.Script, collector: Collector) => {
+    const _locks = addresses.map(address => addressToScript(address))
+    let _sum = BigInt(0)
 
-    const xudtCells = await collector.getCells({
-        lock: fromLock,
-        type: tokenType,
-    });
+    for (let i = 0; i < _locks.length; i++) {
+        const xudtCells = await collector.getCells({
+            lock: _locks[i],
+            type: tokenType,
+        });
 
-    const sum = xudtCells.reduce((prev, current) => {
-        return prev + leToU128(current.outputData)
-    }, BigInt(0))
+        _sum += xudtCells.reduce((prev, current) => {
+            return prev + leToU128(current.outputData)
+        }, BigInt(0))
+    }
 
-    return sum.toString()
+    return _sum.toString()
 }
 
-export default function useXudtBalance(address?: string, token?: TokenInfo) {
+export default function useXudtBalance(addresses?: string[], token?: TokenInfo) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance>({...emptyToken, amount: '0', type: 'xudt', chain: 'ckb'})
     const [error, setError] = useState<undefined | any>(undefined)
     const {config} = useContext(CKBContext)
 
-    useEffect(() => {
-        if (!address || !token) {
+    const refresh = useCallback(async () => {
+        console.log('refresh')
+
+        if (!addresses || !addresses.length || !token) {
             setStatus('complete')
             setData({...emptyToken, amount: '0', type: 'xudt', chain: 'ckb'})
             return
         }
 
-        (async () => {
-            setStatus('loading')
-            const collector = new Collector({
-                ckbNodeUrl: config.ckb_rpc,
-                ckbIndexerUrl: config.ckb_indexer!,
-            })
-
-            const tokenInfo = await queryAddressInfoWithAddress([token.type_id])
-
-            if (!tokenInfo[0]) {
-                throw new Error('Token not found')
-            }
-
-            const balance = await getXudtBalance(address, {
-                codeHash: tokenInfo[0].address.script_code_hash.replace('\\', '0'),
-                hashType: hashType[tokenInfo[0].address.script_hash_type],
-                args: tokenInfo[0].address.script_args.replace('\\', '0')
-            }, collector)
-
-            setData({
-                ...token,
-                amount: balance,
-                type: 'xudt',
-                chain: 'ckb'
-            })
-            setStatus('complete')
-        })()
-    }, [address, token, config])
-
-
-    const refresh = async () => {
-        if (!address || !token) {
-            setStatus('complete')
-            setData({...emptyToken, amount: '0', type: 'xudt', chain: 'ckb'})
-            return
-        }
 
         setStatus('loading')
 
@@ -96,7 +65,7 @@ export default function useXudtBalance(address?: string, token?: TokenInfo) {
             throw new Error('Token not found')
         }
 
-        const balance = await getXudtBalance(address, {
+        const balance = await getXudtBalance(addresses, {
             codeHash: tokenInfo[0].address.script_code_hash.replace('\\', '0'),
             hashType: hashType[tokenInfo[0].address.script_hash_type],
             args: tokenInfo[0].address.script_args.replace('\\', '0')
@@ -109,7 +78,14 @@ export default function useXudtBalance(address?: string, token?: TokenInfo) {
             chain: 'ckb'
         })
         setStatus('complete')
-    }
+    }, [addresses, token, config])
+
+    useEffect(() => {
+        refresh()
+    }, [addresses, token, config , refresh])
+
+
+
 
     return {
         status,

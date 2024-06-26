@@ -74,7 +74,7 @@ export default function ProfileAddresses ({addresses, defaultAddress, onChoose}:
         }}
         onOpenChange={(open) => {toggleOpen(open)}}>
         <div className="flex flex-row items-center mr-1 cursor-pointer hover:text-[#6cd7b2]">
-            <div onClick={e => {e.preventDefault();handleCopy(defaultAddress)}} >
+            <div onClick={e => {e.preventDefault();handleCopy(value)}} >
                 <RadixSelect.Value placeholder={'Select ...'}/>
             </div>
             <RadixSelect.Trigger

@@ -45,7 +45,7 @@ const OMNILOCK = config.MAINNET.SCRIPTS.OMNILOCK
 
 
 export async function transferTokenToAddress(
-    fromAddress: string,
+    fromAddresses: string[],
     amount: string,
     receiverAddress: string,
     tokenInfo: TokenInfo,
@@ -67,7 +67,7 @@ export async function transferTokenToAddress(
         args: tokenDetail[0].address.script_args.replace('\\', '0'),
     }
 
-    const senderLockScript = helpers.parseAddress(fromAddress)
+    const senderLockScript = helpers.parseAddress(fromAddresses[0])
     // console.log('senderLockScript', senderLockScript)
     const receiverLockScript = helpers.parseAddress(receiverAddress);
     // console.log('receiverLockScript', receiverLockScript)
@@ -129,15 +129,41 @@ export async function transferTokenToAddress(
     let xudtCollectedCapSum = BI.from(0);
     let xudtCollectedAmount = BI.from(0);
     const collected: Cell[] = [];
-    const collector = indexer.collector({lock: senderLockScript, type: typeScript});
-    console.log('xudt cells ->', collector)
-    for await (const cell of collector.collect()) {
-        xudtCollectedCapSum = xudtCollectedCapSum.add(cell.cellOutput.capacity);
-        xudtCollectedAmount = xudtCollectedAmount.add(number.Uint128LE.unpack(cell.data));
-        console.log('cell', cell)
-        collected.push(cell);
-        if (xudtCollectedAmount >= BI.from(amount)) break;
+
+    const senderLocks = fromAddresses.map((address) => {
+        return helpers.parseAddress(address)
+    })
+
+
+    let xudtCollectBreak = false
+    for (const lock of senderLocks) {
+        if (xudtCollectBreak) break
+
+        const collector = indexer.collector({lock: lock, type: typeScript});
+        console.log('xudt cells ->', collector)
+        for await (const cell of collector.collect()) {
+            xudtCollectedCapSum = xudtCollectedCapSum.add(cell.cellOutput.capacity);
+            xudtCollectedAmount = xudtCollectedAmount.add(number.Uint128LE.unpack(cell.data));
+            console.log('cell', cell)
+            collected.push(cell);
+            if (xudtCollectedAmount >= BI.from(amount)) {
+                xudtCollectBreak = true
+                break;
+            }
+        }
     }
+
+    console.log('collected inputs', collected)
+
+    // const collector = indexer.collector({lock: senderLockScript, type: typeScript});
+    // console.log('xudt cells ->', collector)
+    // for await (const cell of collector.collect()) {
+    //     xudtCollectedCapSum = xudtCollectedCapSum.add(cell.cellOutput.capacity);
+    //     xudtCollectedAmount = xudtCollectedAmount.add(number.Uint128LE.unpack(cell.data));
+    //     console.log('cell', cell)
+    //     collected.push(cell);
+    //     if (xudtCollectedAmount >= BI.from(amount)) break;
+    // }
 
     console.log('xudtCollectedCapSum', xudtCollectedCapSum.toString())
 
@@ -184,17 +210,34 @@ export async function transferTokenToAddress(
 
         let extraCollectedCapSum = BI.from(0);
         const extraCollectedCells: Cell[] = [];
-        const collector = indexer.collector({lock: senderLockScript, type: 'empty'});
-        console.log('ckb cells ->', collector)
-        for await (const cell of collector.collect()) {
-            extraCollectedCapSum = extraCollectedCapSum.add(cell.cellOutput.capacity);
-            extraCollectedCells.push(cell);
-            console.log('ckb cell', cell)
-            if (extraCollectedCapSum.gte(extraNeededCapacity)) {
-                console.log('break', extraCollectedCapSum >= extraNeededCapacity)
-                break;
+
+        let ckbCollectBreak = false
+        for (const lock of senderLocks) {
+            if (ckbCollectBreak) break
+
+            const collector = indexer.collector({lock: lock, type: 'empty'});
+            console.log('ckb cells ->', collector)
+            for await (const cell of collector.collect()) {
+                extraCollectedCapSum = extraCollectedCapSum.add(cell.cellOutput.capacity);
+                extraCollectedCells.push(cell);
+                console.log('ckb cell', cell)
+                if (extraCollectedCapSum.gte(extraNeededCapacity)) {
+                    ckbCollectBreak = true
+                    break;
+                }
             }
         }
+        // const collector = indexer.collector({lock: senderLockScript, type: 'empty'});
+        // console.log('ckb cells ->', collector)
+        // for await (const cell of collector.collect()) {
+        //     extraCollectedCapSum = extraCollectedCapSum.add(cell.cellOutput.capacity);
+        //     extraCollectedCells.push(cell);
+        //     console.log('ckb cell', cell)
+        //     if (extraCollectedCapSum.gte(extraNeededCapacity)) {
+        //         console.log('break', extraCollectedCapSum >= extraNeededCapacity)
+        //         break;
+        //     }
+        // }
 
         console.log('extraCollectedSum', extraCollectedCapSum.toString(10))
         console.log('extraNeededCapacity', extraNeededCapacity.toString(10))
@@ -264,10 +307,6 @@ export async function transferTokenToAddress(
     const witness = bytes.hexify(witnessArgs);
     txSkeleton = txSkeleton.update('witnesses', (witnesses) => witnesses.set(0, witness));
 
-    // signing
-    // txSkeleton = commons.common.prepareSigningEntries(txSkeleton);
-
-
     const inputs = txSkeleton.get('inputs').toArray().map((input) => {
         return Number(input.cellOutput.capacity.toString())
     });
@@ -277,16 +316,31 @@ export async function transferTokenToAddress(
     console.log('inputs cap', inputs)
     console.log('outputs cap', outputs)
 
-    // console.log('txSkeleton', JSON.stringify(txSkeleton))
-
     if (fee === 0) {
         const txSize = commons.common.__tests__.getTransactionSize(txSkeleton);
         console.log(txSize)
-        const _fee = (txSize + 20) * (feeRate / 1000)
-        return await transferTokenToAddress(fromAddress, amount, receiverAddress, tokenInfo, indexer, feeRate, _fee)
+        const _fee = (txSize + 300) * (feeRate / 1000)
+        return await transferTokenToAddress(fromAddresses, amount, receiverAddress, tokenInfo, indexer, feeRate, _fee)
     } else {
         return txSkeleton
     }
+
+    // txSkeleton = await commons.common.payFeeByFeeRate(
+    //     txSkeleton,
+    //     fromAddresses,
+    //     feeRate,
+    // );
+    //
+    // const inputs = txSkeleton.get('inputs').toArray().map((input) => {
+    //     return Number(input.cellOutput.capacity.toString())
+    // });
+    // const outputs = txSkeleton.get('outputs').toArray().map((out) => {
+    //     return Number(out.cellOutput.capacity.toString())
+    // });
+    // console.log('inputs cap', inputs)
+    // console.log('outputs cap', outputs)
+    //
+    // return txSkeleton
 }
 
 export function addCellDep(txSkeleton: TransactionSkeletonType, newCellDep: CellDep): TransactionSkeletonType {
