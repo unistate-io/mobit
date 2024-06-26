@@ -49,7 +49,7 @@ export default function Select ({options, placeholder, className='', hideDropIco
 
     return <RadixSelect.Root {...props} open={open} onOpenChange={(open) => {toggleOpen(open)}}>
         <RadixSelect.Trigger
-            className={`SelectTrigger-${id.current} flex flex-row items-center justify-between w-full ${className}`} aria-label={props.name || 'Select'}>
+            className={`SelectTrigger-${id.current} flex flex-row items-center justify-between w-full outline-0 ${className}`} aria-label={props.name || 'Select'}>
             <RadixSelect.Value placeholder={placeholder || 'Select ...'} />
             { !hideDropIcon &&
                 <RadixSelect.Icon className="SelectIcon">
@@ -59,7 +59,7 @@ export default function Select ({options, placeholder, className='', hideDropIco
         </RadixSelect.Trigger>
         <RadixSelect.Portal>
             <RadixSelect.Content className={`SelectContent z-[999] `}  style={{
-                width: menuWidth,
+                minWidth: menuWidth,
                 marginLeft: props.containerWidthPrefix ? `${props.containerWidthPrefix * -1}px` : 'initial'
             }} position={'popper'}>
                 <RadixSelect.ScrollUpButton className="SelectScrollButton">
