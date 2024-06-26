@@ -10,8 +10,8 @@ export const query = async (query: string, variables?: any) => {
     return await request(graphUrl, query, variables)
 }
 
-export const queryXudtCell = async (address: string) => {
-    const doc = gql('xudt_cell', `where:{lock_id: {_eq: "${address}"},  is_consumed: {_eq: false}}`)
+export const queryXudtCell = async (addresses: string[]) => {
+    const doc = gql('xudt_cell', `where:{lock_id: {_in: ${JSON.stringify(addresses)}},  is_consumed: {_eq: false}}`)
     const res: any = await query(doc)
     return res.xudt_cell as XudtCell[]
 }
@@ -30,8 +30,8 @@ export const queryAddressInfoWithAddress = async (type_ids: string[]) => {
     return res.token_info as TokenInfoWithAddress[]
 }
 
-export const querySporesByAddress = async (address: string, page: number, pageSize:number, allowBurned?: boolean) => {
-    const condition = allowBurned ? `where: {owner_address: {_eq: "${address}"}}, limit: ${pageSize}, offset: ${(page - 1) * pageSize}` : `where: {owner_address: {_eq: "${address}"}, is_burned: {_eq: false}}, limit: ${pageSize}, offset: ${(page - 1) * pageSize}`
+export const querySporesByAddress = async (addresses: string[], page: number, pageSize:number, allowBurned?: boolean) => {
+    const condition = allowBurned ? `where: {owner_address: {_in: ${JSON.stringify(addresses)}}, limit: ${pageSize}, offset: ${(page - 1) * pageSize}` : `where: {owner_address: {_in: ${JSON.stringify(addresses)}}, is_burned: {_eq: false}}, limit: ${pageSize}, offset: ${(page - 1) * pageSize}`
     const doc = gql('spores', condition)
     const res: any = await query(doc)
     return res.spores as Spores[]

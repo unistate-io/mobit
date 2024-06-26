@@ -1,6 +1,6 @@
 import {createContext, useContext, useEffect, useState} from 'react'
-import {defaultTheme, getTheme, UserTheme} from "@/providers/UserProvider/themes";
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider";
+import {defaultTheme, getTheme, UserTheme} from "@/providers/UserProvider/themes"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 export interface UserContextType {
     address?: string

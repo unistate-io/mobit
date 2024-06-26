@@ -1,12 +1,11 @@
 import {queryTokenInfo, queryXudtCell} from "@/utils/graphql"
 // @ts-ignore
 import BigNumber from "bignumber.js"
-import {useEffect, useState} from "react"
+import {useEffect, useState, useRef} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 
-export const balance = async (address: string): Promise<TokenBalance[]> => {
-    const cells = await queryXudtCell(address)
-    console.log('cells', cells)
+export const balance = async (addresses: string[]): Promise<TokenBalance[]> => {
+    const cells = await queryXudtCell(addresses)
 
     if (cells.length === 0) {
         console.log('enpty')
@@ -19,10 +18,8 @@ export const balance = async (address: string): Promise<TokenBalance[]> => {
             typed_ids.push(c.type_id)
         }
     })
-    console.log('typed_ids', typed_ids)
 
     const tokensInfo = await queryTokenInfo(typed_ids)
-    console.log('tokenInfo', tokensInfo)
 
     const res = typed_ids.map(t => {
         const target_cells = cells.filter(vc => {
@@ -48,29 +45,34 @@ export const balance = async (address: string): Promise<TokenBalance[]> => {
         }
     })
 
-    console.log('res', res)
     return res as TokenBalance[]
 }
 
-export default function useAllXudtBalance(address: string) {
+export default function useAllXudtBalance(addresses: string[]) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance[]>([])
     const [error, setError] = useState<undefined | any>(undefined)
 
+    const historyRef = useRef('')
+
     useEffect(() => {
+        if (!addresses || !addresses.length ||  historyRef.current === addresses.join(',')) return
+        historyRef.current = addresses.join(',')
         setStatus('loading')
-        setData([])
-        balance(address)
-            .then(res => {
+        setData([]);
+
+        (async () => {
+            try {
+                const res = await balance(addresses)
                 setData(res)
                 setStatus('complete')
-            })
-            .catch((e: any) => {
+            } catch (e: any) {
                 console.error(e)
-                setStatus('error')
                 setError(e)
-            })
-    }, [address])
+                setStatus('error')
+            }
+        })()
+    }, [addresses])
 
     return {
         status,

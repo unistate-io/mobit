@@ -25,10 +25,9 @@ export interface XudtTransferProps {
 
 export default function DialogXudtTransfer({children, from, className, token}: { children: React.ReactNode, from: string, token: TokenInfo,  className?: string }) {
     const {build, signAndSend} = useXudtTransfer()
-    const {data: xudtBalance, status, refresh} = useXudtBalance(from, token)
-
-
     const [open, setOpen] = React.useState(false);
+    const {data: xudtBalance, status, refresh} = useXudtBalance((open ? from : undefined), token)
+
     const [formData, setFormData] = React.useState<XudtTransferProps>({
         form: "",
         amount: "",

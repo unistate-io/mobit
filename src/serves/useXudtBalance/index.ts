@@ -33,7 +33,7 @@ const getXudtBalance = async (address: string, tokenType: CKBComponents.Script, 
     return sum.toString()
 }
 
-export default function useXudtBalance(address: string, token?: TokenInfo) {
+export default function useXudtBalance(address?: string, token?: TokenInfo) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance>({...emptyToken, amount: '0', type: 'xudt', chain: 'ckb'})
     const [error, setError] = useState<undefined | any>(undefined)

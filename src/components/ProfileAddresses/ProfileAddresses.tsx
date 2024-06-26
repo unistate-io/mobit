@@ -1,15 +1,14 @@
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
 import * as RadixSelect from '@radix-ui/react-select';
-import {forwardRef, LegacyRef, RefAttributes, useRef, useContext} from 'react'
+import {forwardRef, LegacyRef, RefAttributes, useRef, useContext, useEffect} from 'react'
 import * as React from "react"
 import {SelectItemProps} from "@radix-ui/react-select"
 import {shortTransactionHash} from "@/utils/common"
-import { useNavigate } from "react-router-dom";
-
 
 export interface SelectOptionProps {
     addresses: string[];
     defaultAddress: string;
+    onChoose?: (address: string) => void;
 }
 
 const getLabel = (address: string) => {
@@ -36,17 +35,21 @@ const getLabel = (address: string) => {
     }
 }
 
-export default function ProfileAddresses ({addresses, defaultAddress}: SelectOptionProps) {
-    const navigate = useNavigate()
+export default function ProfileAddresses ({addresses, defaultAddress, onChoose}: SelectOptionProps) {
     const [open, setOpen] = React.useState(false)
     const [menuWidth, setMenuWidth] = React.useState('auto')
     const id = useRef(Math.floor(Math.random() * (100000 - 10000 + 1)) + 10000)
     const {showToast} = useContext(ToastContext)
+    const [value, setValue] = React.useState<string>(defaultAddress)
 
     const handleCopy = (text: string) => {
         navigator.clipboard.writeText(text)
         showToast('Copied to clipboard !', ToastType.success)
     }
+
+    useEffect(()=>{
+        setValue(defaultAddress)
+    }, [defaultAddress])
 
     const toggleOpen = (openValue: boolean) => {
         if (openValue) {
@@ -62,10 +65,13 @@ export default function ProfileAddresses ({addresses, defaultAddress}: SelectOpt
     }
 
     return <RadixSelect.Root
-        value={defaultAddress}
+        value={value}
         disabled={addresses.length === 1}
         open={open}
-        onValueChange={(value) => {navigate(`/address/${value}`)}}
+        onValueChange={(value) => {
+            setValue(value)
+            !!onChoose && onChoose(value)
+        }}
         onOpenChange={(open) => {toggleOpen(open)}}>
         <div className="flex flex-row items-center mr-1 cursor-pointer hover:text-[#6cd7b2]">
             <div onClick={e => {e.preventDefault();handleCopy(defaultAddress)}} >

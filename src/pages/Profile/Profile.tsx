@@ -1,5 +1,5 @@
 import {UserContext} from '@/providers/UserProvider/UserProvider'
-import {useContext, useEffect, useState} from "react"
+import {useContext, useEffect, useMemo, useState} from "react"
 import Background from "@/components/Background/Background"
 import Avatar from "@/components/Avatar/Avatar"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
@@ -18,19 +18,28 @@ import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
-    const {internalAddress, signer, address: loginAddress, addresses} = useContext(CKBContext)
+    const {internalAddress, address: loginAddress, addresses} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
     const {lang} = useContext(LangContext)
 
-    const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useAllXudtBalance(address!)
-    const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(!!addresses && addresses.includes(address!) ? addresses : [address!])
-    const {data: historyData, status: historyDataStatus} = useTransactions(address!)
+    const [selectedAddress, setSelectedAddress] = useState<string | undefined>(address)
+    const [tokens, setTokens] = useState<TokenBalance[]>([])
+    const [tokensStatus, setTokensStatus] = useState<string>('loading')
+
+
+    const queryAddress = useMemo(() => {
+        return !!addresses && addresses.includes(address!) ? addresses : [address!]
+    }, [addresses, address])
+
+    const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useAllXudtBalance(queryAddress)
+    const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(queryAddress)
+    const {data: historyData, status: historyDataStatus} = useTransactions(selectedAddress!)
     const {
         data: sporesData,
         status: sporesDataStatus,
         loaded: sporesDataLoaded,
         setPage: setSporesDataPage
-    } = useSpores(address!)
+    } = useSpores(queryAddress)
     const {
         xudts: layer1Xudt,
         dobs: layer1Dobs,
@@ -38,10 +47,6 @@ export default function Profile() {
         status: layer1DataStatus,
         error: layer1DataErr} = useLayer1Assets(
         internalAddress && internalAddress.startsWith('bc1') && loginAddress === address ? internalAddress : undefined)
-
-
-    const [tokens, setTokens] = useState<TokenBalance[]>([])
-    const [tokensStatus, setTokensStatus] = useState<string>('loading')
 
     useEffect(() => {
         if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' || layer1DataStatus === 'loading') {
@@ -99,8 +104,6 @@ export default function Profile() {
                 <Avatar size={128} name={address || 'default'} colors={theme.colors}/>
             </div>
             <div className="mt-4 flex flex-col items-center md:flex-row">
-
-
                 {
                     isOwner && internalAddress && internalAddress !== address && addresses ?
                         <>
@@ -108,7 +111,12 @@ export default function Profile() {
                                 <ProfileAddresses addresses={[internalAddress!]} defaultAddress={internalAddress!}/>
                             </div>
                             <div className="mb-4">
-                                <ProfileAddresses addresses={addresses} defaultAddress={address!}/>
+                                <ProfileAddresses
+                                    onChoose={(e) => {
+                                        setSelectedAddress(e)
+                                    }}
+                                    addresses={addresses}
+                                    defaultAddress={address!}/>
                             </div>
                         </> :
                         <div className="mb-4">
@@ -137,7 +145,7 @@ export default function Profile() {
                             <ListToken
                                 data={tokens}
                                 status={tokensStatus}
-                                addresses={signer && addresses ? (addresses.includes(address!) ? addresses : [address!]) : undefined}/>
+                                addresses={queryAddress}/>
                             <div className="mt-6">
                                 <ListDOBs
                                     data={[...layer1Dobs, ...sporesData]}
@@ -155,7 +163,7 @@ export default function Profile() {
                             <ListToken
                                 data={tokens}
                                 status={tokensStatus}
-                                addresses={signer && addresses ? (addresses.includes(address!) ? addresses : [address!]) : undefined}/>
+                                addresses={queryAddress}/>
                         </Tabs.Content>
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
@@ -174,7 +182,7 @@ export default function Profile() {
                 </div>
 
                 <div className="lg:max-w-[380px] flex-1 lg:ml-4 lg:pt-[56px]">
-                    <ListHistory address={address!} data={historyData} status={historyDataStatus}/>
+                    <ListHistory address={selectedAddress!} data={historyData} status={historyDataStatus}/>
                 </div>
             </div>
         </div>

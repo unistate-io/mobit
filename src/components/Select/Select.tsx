@@ -39,9 +39,6 @@ export default function Select ({options, placeholder, className='', hideDropIco
     const toggleOpen = (openValue: boolean) => {
         if (openValue) {
             const width = document.querySelector(`.SelectTrigger-${id.current}`)?.clientWidth
-            console.log('width', width)
-            console.log('width', id.current)
-            console.log('width', document.querySelector(`.SelectTrigger-${id.current}`))
             setMenuWidth(width ? `${width + 2 * (props.containerWidthPrefix || 0) }px` : 'auto')
         }
         setOpen(openValue)
