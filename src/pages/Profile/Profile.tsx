@@ -26,7 +26,6 @@ export default function Profile() {
     const [tokens, setTokens] = useState<TokenBalance[]>([])
     const [tokensStatus, setTokensStatus] = useState<string>('loading')
 
-
     const queryAddress = useMemo(() => {
         return !!addresses && addresses.includes(address!) ? addresses : [address!]
     }, [addresses, address])
@@ -47,6 +46,18 @@ export default function Profile() {
         status: layer1DataStatus,
         error: layer1DataErr} = useLayer1Assets(
         internalAddress && internalAddress.startsWith('bc1') && loginAddress === address ? internalAddress : undefined)
+
+    const dobsListStatue = useMemo(() => {
+        if (layer1DataStatus === 'loading' || sporesDataStatus === 'loading') {
+            return 'loading'
+        } else if (layer1DataStatus === 'error' || sporesDataStatus === 'error') {
+            return 'error'
+        } else if (layer1DataStatus === 'complete' && sporesDataStatus === 'complete') {
+            return 'complete'
+        }
+
+        return  'loading'
+    }, [layer1DataStatus, sporesDataStatus])
 
     useEffect(() => {
         if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' || layer1DataStatus === 'loading') {
@@ -149,7 +160,7 @@ export default function Profile() {
                             <div className="mt-6">
                                 <ListDOBs
                                     data={[...layer1Dobs, ...sporesData]}
-                                    status={sporesDataStatus}
+                                    status={dobsListStatue}
                                     loaded={sporesDataLoaded}
                                     onChangePage={(page) => {
                                         setSporesDataPage(page)
@@ -171,7 +182,7 @@ export default function Profile() {
                         >
                             <ListDOBs
                                 data={[...layer1Dobs, ...sporesData]}
-                                status={sporesDataStatus}
+                                status={dobsListStatue}
                                 loaded={sporesDataLoaded}
                                 onChangePage={(page) => {
                                     setSporesDataPage(page)

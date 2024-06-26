@@ -23,16 +23,17 @@ export default function useSpores(addresses: string[]) {
     }
 
     useEffect(() => {
-        console.trace('useSpores useEffect', addresses)
         if (!addresses || !addresses.length) return
-
         if (historyRef.current !== addresses.join(',')) {
             historyRef.current = addresses.join(',')
             console.log('setPage(1)')
             setPage(1)
             return
         }
+    }, [addresses])
 
+    useEffect(() => {
+        console.trace('useSpores useEffect', addresses)
         if (page === 1) {
             console.log('set loading')
             setStatus('loading')
@@ -59,7 +60,7 @@ export default function useSpores(addresses: string[]) {
                 setError(e)
             }
         })()
-    }, [page, addresses])
+    }, [page])
 
     return {
         setPage: handleNextPage,
