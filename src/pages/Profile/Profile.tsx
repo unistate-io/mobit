@@ -15,6 +15,8 @@ import ListDOBs from "@/components/ListDOBs/ListDOBs"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import useLayer1Assets from "@/serves/useLayer1Assets"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
+import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
+import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -22,9 +24,24 @@ export default function Profile() {
     const {showToast} = useContext(ToastContext)
     const {lang} = useContext(LangContext)
 
+    // ui state
     const [selectedAddress, setSelectedAddress] = useState<string | undefined>(address)
-    const [tokens, setTokens] = useState<TokenBalance[]>([])
-    const [tokensStatus, setTokensStatus] = useState<string>('loading')
+    const [activeTab, setActiveTab] = useState<'ckb' | 'btc'>('ckb')
+
+    useEffect(() => {
+        if (!internalAddress) {
+            setActiveTab('ckb')
+        }
+    }, [internalAddress])
+
+    const isBtc = useMemo(() => {
+        if (!internalAddress) {
+            return false
+        }
+
+        return internalAddress.startsWith('bc1') || internalAddress.startsWith('tb1')
+    }, [internalAddress])
+
 
     const queryAddress = useMemo(() => {
         return !!addresses && addresses.includes(address!) ? addresses : [address!]
@@ -44,8 +61,23 @@ export default function Profile() {
         dobs: layer1Dobs,
         btc: layer1Btc,
         status: layer1DataStatus,
-        error: layer1DataErr} = useLayer1Assets(
-        internalAddress && internalAddress.startsWith('bc1') && loginAddress === address ? internalAddress : undefined)
+        error: layer1DataErr
+    } = useLayer1Assets(
+        internalAddress && isBtc && loginAddress === address ? internalAddress : undefined)
+
+    const {data: btcHistory, status: btcHistoryStatus} = useBtcTransactionsHistory(internalAddress, 5)
+
+    const tokensStatus = useMemo(() => {
+        if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' || layer1DataStatus === 'loading') {
+            return 'loading'
+        } else if (xudtDataStatus === 'error' || ckbDataStatus === 'error' || layer1DataStatus === 'error') {
+            return 'error'
+        } else if (xudtDataStatus === 'complete' && ckbDataStatus === 'complete' && ckbData) {
+            return 'complete'
+        }
+
+        return 'loading'
+    }, [xudtDataStatus, ckbDataStatus, layer1DataStatus, ckbData])
 
     const dobsListStatue = useMemo(() => {
         if (layer1DataStatus === 'loading' || sporesDataStatus === 'loading') {
@@ -56,23 +88,18 @@ export default function Profile() {
             return 'complete'
         }
 
-        return  'loading'
+        return 'loading'
     }, [layer1DataStatus, sporesDataStatus])
 
-    useEffect(() => {
-        if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' || layer1DataStatus === 'loading') {
-            setTokens([])
-            setTokensStatus('loading')
-        } else if (xudtDataStatus === 'error' || ckbDataStatus === 'error' || layer1DataStatus === 'error') {
-            setTokensStatus('error')
-            setTokens([])
-        } else if (xudtDataStatus === 'complete' && ckbDataStatus === 'complete' && ckbData) {
-            setTokens(layer1Btc
-                ? [ckbData, ...xudtData, layer1Btc, ...layer1Xudt]
-                : [ckbData, ...xudtData, ...layer1Xudt])
-            setTokensStatus('complete')
+    const tokenData = useMemo(() => {
+        if (tokensStatus === 'loading' || tokensStatus === 'error') {
+            return [] as TokenBalance[]
+        } else {
+            return layer1Btc
+                ? [ckbData!, ...xudtData, layer1Btc, ...layer1Xudt]
+                : [ckbData!, ...xudtData, ...layer1Xudt]
         }
-    }, [xudtData, xudtDataStatus, ckbData, ckbDataStatus, layer1Xudt, layer1DataStatus, layer1Btc])
+    }, [ckbData, layer1Btc, layer1Xudt, tokensStatus, xudtData])
 
     useEffect(() => {
         if (xudtDataErr) {
@@ -92,16 +119,18 @@ export default function Profile() {
     }, [xudtDataErr, ckbDataErr])
 
 
-    const tabs = [{
-        value: 'All',
-        label: lang['All']
-    }, {
-        value: 'Tokens',
-        label: lang['Tokens']
-    }, {
-        value: 'DOBs',
-        label: lang['DOBs']
-    }]
+    const tabs = useMemo(() => {
+        return [{
+            value: 'All',
+            label: lang['All']
+        }, {
+            value: 'Tokens',
+            label: lang['Tokens']
+        }, {
+            value: 'DOBs',
+            label: lang['DOBs']
+        }]
+    }, [lang])
 
     return <div>
         <Background gradient={theme.bg}/>
@@ -154,7 +183,7 @@ export default function Profile() {
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
                             value="All">
                             <ListToken
-                                data={tokens}
+                                data={tokenData}
                                 status={tokensStatus}
                                 addresses={queryAddress}/>
                             <div className="mt-6">
@@ -172,7 +201,7 @@ export default function Profile() {
                             value="Tokens"
                         >
                             <ListToken
-                                data={tokens}
+                                data={tokenData}
                                 status={tokensStatus}
                                 addresses={queryAddress}/>
                         </Tabs.Content>
@@ -193,7 +222,34 @@ export default function Profile() {
                 </div>
 
                 <div className="lg:max-w-[380px] flex-1 lg:ml-4 lg:pt-[56px]">
-                    <ListHistory address={selectedAddress!} data={historyData} status={historyDataStatus}/>
+                    <div className="shadow rounded-lg bg-white py-4">
+                        <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
+                            <div className="text-xl font-semibold">{lang['Activity']}</div>
+                        </div>
+                        {!!internalAddress && isBtc &&
+                            <div className="flex flex-row items-center px-2">
+                                <div onClick={e => {
+                                    setActiveTab('ckb')
+                                }}
+                                     className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'ckb' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>CKB
+                                </div>
+                                <div onClick={e => {
+                                    setActiveTab('btc')
+                                }}
+                                     className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'btc' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>BTC
+                                </div>
+                            </div>
+                        }
+
+                        {activeTab === 'ckb' &&
+                            <ListHistory address={selectedAddress!} data={historyData} status={historyDataStatus}/>
+                        }
+
+                        {activeTab === 'btc' && isBtc &&
+                            <ListBtcHistory internalAddress={internalAddress!} data={btcHistory}
+                                            status={btcHistoryStatus}/>
+                        }
+                    </div>
                 </div>
             </div>
         </div>

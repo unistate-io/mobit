@@ -1,20 +1,21 @@
-import {Link} from "react-router-dom"
-import {shortTransactionHash} from "@/utils/number_display"
 import * as dayjsLib from "dayjs"
-import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import {BtcTransaction} from "@/serves/useBtcTransactionsHistory";
+import {shortTransactionHash} from "@/utils/number_display";
+import TokenIcon from "@/components/TokenIcon/TokenIcon";
+import {Link} from "react-router-dom";
 
 const dayjs: any = dayjsLib
 const relativeTime = require('dayjs/plugin/relativeTime')
 dayjsLib.extend(relativeTime)
 
-export default function ListHistory({
-                                        data,
-                                        status,
-                                        address
-                                    }: { data: TransactionHistory[], status: string, address: string }) {
+export default function ListBtcHistory({
+                                           data,
+                                           status,
+                                           internalAddress
+                                       }: { data: BtcTransaction[], status: string, internalAddress: string }) {
     const {lang} = useContext(LangContext)
     const {config} = useContext(CKBContext)
 
@@ -40,19 +41,15 @@ export default function ListHistory({
                 data.map((item, index) => {
                     return <Link
                         target="blank"
-                        to={`${config.explorer}/transaction/${item.attributes.transaction_hash}`} key={item.id}
-                        className="bg-stone-50 rounded p-4 mt-3">
+                        to={`${config.btc_explorer}/tx/${item.txid}`} key={item.txid}
+                        className="bg-[#fffbf5] rounded p-4 mt-3">
                         <div className="flex  flex-row text-xs">
                             <div
-                                className="text-[#6CD7B2] mr-2">{shortTransactionHash(item.attributes.transaction_hash)}</div>
-                            <div className="text-neutral-500">{dayjs(item.attributes.created_at).fromNow()}</div>
-                            {
-                                item.attributes.rgb_txid &&
-                                <div className="text-neutral-500 text-sx text-gray-500 px-2 px-1 rounded ml-4" style={{background: 'linear-gradient(90.24deg,#ffd176 .23%,#ffdb81 6.7%,#84ffcb 99.82%)'}}>RGB++</div>
-                            }
+                                className="text-[#f7931a] mr-2">{shortTransactionHash(item.txid)}</div>
+                            <div className="text-neutral-500">{dayjs(item.status.block_time * 1000).fromNow()}</div>
                         </div>
                         {
-                            calculateTotalAmount(item, address).map((res) => {
+                            calculateTotalAmount(item, internalAddress).map((res) => {
                                 const color = res.delta.includes('+') ?
                                     'text-green-500'
                                     : res.delta.includes('-') ?
@@ -71,10 +68,11 @@ export default function ListHistory({
                 })
             }
         </div>
+
         {
             status === 'complete' &&
             <Link
-                to={`${config.explorer}/address/${address}`}
+                to={`${config.btc_explorer}/address/${internalAddress}`}
                 className="cursor-pointer hover:bg-gray-300 bg-gray-200 h-[40px] rounded-lg flex flex-row items-center justify-center mx-3 mt-2 text-xs">
                 <div className="mr-2">{lang['ShowMoreRecords']}</div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
@@ -87,125 +85,23 @@ export default function ListHistory({
     </div>
 }
 
-function calculateTotalAmount(data: TransactionHistory, address: string) {
-    const inputs = data.attributes.display_inputs.filter((input) => input.address_hash === address)
-    const outputs = data.attributes.display_outputs.filter((output) => output.address_hash === address)
+function calculateTotalAmount(data: BtcTransaction, address: string) {
+    const inputs = data.vin.filter((input) => input.prevout.scriptpubkey_address === address)
+    const outputs = data.vout.filter((output) => output.scriptpubkey_address === address)
 
-    let tokens: { symbol: string, decimal: string }[] = []
-    inputs.forEach((input) => {
-        if (input.xudt_info && !tokens.some((token) => token.symbol === input.xudt_info!.symbol)) {
-            tokens.push({
-                symbol: input.xudt_info!.symbol,
-                decimal: input.xudt_info!.decimal
-            })
-        }
-    })
-
-    const inputCkbAmount = inputs.reduce((acc, input) => {
-        if (!input.xudt_info) {
-            return acc + Number(input.capacity)
-        } else {
-            return acc
-        }
+    const inputAmount = inputs.reduce((acc, input) => {
+        return acc + Number(input.prevout.value)
     }, 0)
 
-    const outputCkbAmount = outputs.reduce((acc, output) => {
-        if (!output.xudt_info) {
-            return acc + Number(output.capacity)
-        } else {
-            return acc
-        }
+    const outputAmount = outputs.reduce((acc, output) => {
+        return acc + Number(output.value)
     }, 0)
 
-    const ckbDelta = (outputCkbAmount - inputCkbAmount) / 10 ** 8
-    let res = [{
-        symbol: 'CKB',
+    const ckbDelta = (outputAmount - inputAmount) / 10 ** 8
+
+    return [{
+        symbol: 'BTC',
         delta: ckbDelta > 0 ? '+' + ckbDelta.toString() : ckbDelta.toString(),
     }] as { symbol: string, delta: string }[]
-
-    tokens.map((token) => {
-        const inputAmount = inputs.reduce((acc, input) => {
-            if (input.xudt_info && input.xudt_info.symbol === token.symbol) {
-                return acc + Number(input.xudt_info.amount)
-            } else {
-                return acc
-            }
-        }, 0)
-
-        const outputAmount = outputs.reduce((acc, output) => {
-            if (output.xudt_info && output.xudt_info.symbol === token.symbol) {
-                return acc + Number(output.xudt_info.amount)
-            } else {
-                return acc
-            }
-        }, 0)
-
-        const delta = (outputAmount - inputAmount) / 10 ** Number(token.decimal)
-
-        res.push({
-            symbol: token.symbol,
-            delta: delta > 0 ? '+' + delta.toString() : delta.toString(),
-        })
-    })
-
-    return res
 }
 
-export interface TransactionHistory {
-    id: string,
-    type: string,
-    attributes: {
-        block_number: string,
-        block_timestamp: string,
-        created_at: string,
-        income: string,
-        transaction_hash: string,
-        rgb_txid?: string
-        display_outputs: {
-            address_hash: string
-            capacity: string,
-            cell_index: string,
-            cell_type: string,
-            generated_tx_hash: string,
-            id: string,
-            occupied_capacity: string
-            status: string
-            xudt_info?: {
-                symbol: string,
-                amount: string,
-                decimal: string,
-                published: boolean,
-                type_hash: string,
-            }
-            extra_info?: {
-                amount: string,
-                decimal: string,
-                display_name: string,
-                symbol: string,
-            }
-        }[],
-        display_inputs: {
-            address_hash: string
-            capacity: string,
-            cell_index: string,
-            cell_type: string,
-            generated_tx_hash: string,
-            id: string,
-            occupied_capacity: string
-            status: string
-            xudt_info?: {
-                symbol: string,
-                amount: string,
-                decimal: string,
-                published: boolean,
-                type_hash: string,
-            }
-            extra_info?: {
-                amount: string,
-                decimal: string,
-                display_name: string,
-                symbol: string,
-            }
-        }[],
-    }
-}

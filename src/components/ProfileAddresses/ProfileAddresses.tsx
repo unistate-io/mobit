@@ -22,7 +22,7 @@ const getLabel = (address: string) => {
             className: 'bg-gray-200 text-gray-800',
             label: 'CKB'
         }
-    } else if (address.startsWith('bc1')) {
+    } else if (address.startsWith('bc1') || address.startsWith('tb1')) {
         return {
             className: 'bg-[#FFF7E8] text-[#F1CB45]',
             label: 'BTC'
