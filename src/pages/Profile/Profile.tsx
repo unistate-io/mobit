@@ -185,6 +185,7 @@ export default function Profile() {
                             <ListToken
                                 data={tokenData}
                                 status={tokensStatus}
+                                internalAddress={internalAddress}
                                 addresses={queryAddress}/>
                             <div className="mt-6">
                                 <ListDOBs
@@ -203,6 +204,7 @@ export default function Profile() {
                             <ListToken
                                 data={tokenData}
                                 status={tokensStatus}
+                                internalAddress={internalAddress}
                                 addresses={queryAddress}/>
                         </Tabs.Content>
                         <Tabs.Content

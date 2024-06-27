@@ -18,8 +18,9 @@ export default function ListToken({
                                       data,
                                       status,
                                       addresses,
+                                      internalAddress,
                                       previewSize = 5
-                                  }: { data: TokenBalance[], status: string, addresses?: string[], previewSize?: number }) {
+                                  }: { data: TokenBalance[], status: string, addresses?: string[], internalAddress?: string ,previewSize?: number }) {
     const [compact, setCompact] = useState(true)
     const {lang} = useContext(LangContext)
 
@@ -32,7 +33,7 @@ export default function ListToken({
         if (token.symbol === 'CKB') {
             return '/token'
         } else if (token.symbol === 'BTC') {
-            return '/token/btc'
+            return '/bitcoin'
         } else {
             return `/token/${token.type_id}`
         }
@@ -112,8 +113,15 @@ export default function ListToken({
                                         </DialogXudtTransfer>
                                     }
 
-                                    { item.symbol !== 'BTC' &&
-                                        <DialogXudtReceive address={addresses[0]}>
+
+                                    { item.chain === 'btc' && !!internalAddress ?
+                                        <DialogXudtReceive address={internalAddress}>
+                                            <div
+                                                className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
+                                                {lang['Receive']}
+                                            </div>
+                                        </DialogXudtReceive>
+                                        : <DialogXudtReceive address={addresses[0]}>
                                             <div
                                                 className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
                                                 {lang['Receive']}

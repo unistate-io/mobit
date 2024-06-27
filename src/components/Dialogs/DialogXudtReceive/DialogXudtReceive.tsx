@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import * as Dialog from '@radix-ui/react-dialog'
 import QRCode from 'qrcode'
-import AddressCapsule from "@/components/AddressCapsule/AddressCapsule";
+import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 
 export default function DialogXudtReceive(props: { children: React.ReactNode, address: string, className?: string }) {
     const [open, setOpen] = React.useState(false)
@@ -34,12 +34,12 @@ export default function DialogXudtReceive(props: { children: React.ReactNode, ad
                     </div>
 
                     <div className="flex flex-col items-center justify-center w-[300px] py-6">
-                        <div className="rounded-xl bg-gray-800 p-3">
+                        <div className="rounded-xl bg-gray-800 p-3 mb-4 ">
                             <img className="rounded-xl" src={qrcodeUrl} width={200} height={200} alt=""/>
                             <div className="text-white text-center font-semibold mt-2">Scan to Transfer</div>
                         </div>
 
-                        <AddressCapsule className={'!mr-0 mt-6'} address={props.address}/>
+                        <ProfileAddresses addresses={[props.address]} defaultAddress={props.address}/>
                     </div>
                 </Dialog.Content>
             </Dialog.Portal>

@@ -4,8 +4,9 @@ import ProfilePage from "@/pages/Profile"
 import MarketPage from "@/pages/Market"
 import Apps from '@/pages/Apps'
 import Dob from '@/pages/Dob'
-import TokenPage from "@/pages/Token";
-import CkbTokenPage from "@/pages/CkbToken";
+import TokenPage from "@/pages/Token"
+import CkbTokenPage from "@/pages/CkbToken"
+import BtcTokenPage from "@/pages/BtcToken"
 
 const router = createBrowserRouter([
     {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
             { path: "/dob/:tokenid", element: <Dob /> },
             { path: "/token/:tokenid", element: <TokenPage /> },
             { path: "/token", element: <CkbTokenPage />},
+            { path: "/bitcoin", element: <BtcTokenPage />},
         ]
     },
 ]);

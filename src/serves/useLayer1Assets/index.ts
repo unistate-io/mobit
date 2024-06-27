@@ -54,7 +54,6 @@ const queryAssets = async (btcAddress: string):Promise<{
         }
     })
 
-    console.log('list', list)
     return  list
 }
 
