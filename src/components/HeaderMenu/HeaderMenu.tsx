@@ -1,17 +1,17 @@
 import Avatar from "@/components/Avatar/Avatar";
 import {getTheme} from "@/providers/UserProvider/themes";
-import {useContext, useEffect, useState, useRef} from "react"
+import {useContext, useRef, useState} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import Select from "@/components/Select/Select"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {useNavigate} from "react-router-dom"
 import Input from "@/components/Form/Input/Input"
-import {checksumCkbAddress} from "@/utils/common"
+import {checksumCkbAddress, getCkbAddressFromEvm} from "@/utils/common"
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
 import DialogProfileInfo from "@/components/Dialogs/DialogProfileInfo/DialogProfileInfo"
 
 export default function HeaderMenu() {
-    const {open, address} = useContext(CKBContext);
+    const {open, address, client} = useContext(CKBContext);
     const {lang, langType, switchLang} = useContext(LangContext)
     const navigate = useNavigate()
     const {showToast} = useContext(ToastContext)
@@ -27,6 +27,30 @@ export default function HeaderMenu() {
         }, 100)
     }
 
+    const handleSearch = async (keyword: string) => {
+        if (checksumCkbAddress(keyword)) {
+            navigate(`/address/${keyword}`)
+            searchRef.current?.blur()
+            setShowSearchInput(false)
+            return
+        }
+
+        if (!!client) {
+            if (keyword.startsWith('0x') && keyword.length === 42) {
+                const ckbAddressFromEvm = await getCkbAddressFromEvm(keyword, client)
+                if (ckbAddressFromEvm) {
+                    navigate(`/internaladdress/${keyword}`)
+                    searchRef.current?.blur()
+                    setShowSearchInput(false)
+                    return
+                }
+            }
+        }
+
+        showToast('Invalid address', ToastType.error)
+        return
+    }
+
     return <div className="flex flex-row flex-nowrap items-center">
         <div className="text-sm relative flex flex-row items-center">
             {
@@ -36,22 +60,16 @@ export default function HeaderMenu() {
                         onBlur={() => setShowSearchInput(false)}
                         onKeyUp={(e) => {
                             if (e.key === 'Enter') {
-                                if (checksumCkbAddress(e.currentTarget.value)) {
-                                    navigate(`/address/${e.currentTarget.value}`)
-                                    e.currentTarget.blur()
-                                    setShowSearchInput(false)
-                                } else {
-                                    showToast('Invalid address', ToastType.error)
-                                }
+                                handleSearch(e.currentTarget.value)
                             }
 
-                            if (e.key=== 'Escape') {
+                            if (e.key === 'Escape') {
                                 setShowSearchInput(false)
                             }
                         }}
                         ref={searchRef}
                         startIcon={<i className="uil-search"/>}
-                        endIcon={<img src={'/images/icon_esc.svg'} alt={""} />}
+                        endIcon={<img src={'/images/icon_esc.svg'} alt={""}/>}
                         className={'h-30 w-[250px] !py-2'}
                         placeholder="Search..."
                     />
@@ -82,10 +100,10 @@ export default function HeaderMenu() {
             address ?
                 <DialogProfileInfo>
                     <div className="flex flex-row items-center">
-                    <Avatar size={18} colors={getTheme(address).colors} name={address}/>
-                </div>
+                        <Avatar size={18} colors={getTheme(address).colors} name={address}/>
+                    </div>
                 </DialogProfileInfo>
-               :
+                :
                 <div className="text-xs cursor-pointer hover:text-[#6CD7B2]"
                      onClick={open}
                 ><i className="uil-wallet text-sm mr-1"/>{lang['Connect']}</div>
