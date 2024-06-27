@@ -54,7 +54,7 @@ export default function TokenPage() {
                     {xudtBalanceStatus === 'complete' &&
                         <div className={'flex flex-row justify-between h-[30px] mb-3'}>
                             <div>{lang['Balance']}</div>
-                            <div className="font-semibold text-xl">{toDisplay(xudtBalance?.amount || '0', 8, true)} CKB
+                            <div className="font-semibold text-xl">{toDisplay(xudtBalance?.amount || '0', 8, true)} {tokenInfo.symbol}
                             </div>
                         </div>
                     }
