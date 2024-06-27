@@ -16,9 +16,9 @@ export function toDisplay(numStr: string, decimal: number, split?: boolean, fixe
     const d = BigNumber(10 ** decimal + '')
 
     if (split) {
-        return num.dividedBy(d).toFormat(fixed !== undefined ? fixed : 4)
+        return num.dividedBy(d).toFormat(fixed)
     } else {
-        return num.dividedBy(d).toFixed(fixed !== undefined ? fixed : 4)
+        return fixed ? num.dividedBy(d).toFixed(fixed) : num.dividedBy(d).toString()
     }
 }
 
