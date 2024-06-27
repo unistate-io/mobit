@@ -4,13 +4,13 @@ import Button from "@/components/Form/Button/Button"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import DialogXudtReceive from "@/components/Dialogs/DialogXudtReceive/DialogXudtReceive"
 import {toDisplay} from "@/utils/number_display"
-import useTransactions from "@/serves/useTransactionsHistory"
 import ListTokenHistory from "@/components/ListTokenHistory/ListTokenHistory"
 import useTokenInfo from "@/serves/useTokenInfo"
 import {useParams} from "react-router-dom"
 import useXudtBalance from "@/serves/useXudtBalance"
 import DialogXudtTransfer from "@/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
+import useTokenTransactions from "@/serves/useTokenTransactionsHistory"
 
 
 export default function TokenPage() {
@@ -20,7 +20,7 @@ export default function TokenPage() {
 
     const {data: tokenInfo, status:infoStatus} = useTokenInfo(tokenid!)
     const {data: xudtBalance, status: xudtBalanceStatus} = useXudtBalance(addresses, tokenInfo || undefined)
-    const {data: historyData, status: historyDataStatus} = useTransactions(address, 10)
+    const {data: historyData, status: historyDataStatus} = useTokenTransactions(tokenInfo, address, 10)
 
     return <div className="max-w-[1044px] mx-auto px-3 py-8 flex flex-col sm:flex-row items-start mb-10">
         <div

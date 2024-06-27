@@ -13,7 +13,6 @@ export default function DobPage() {
         throw new Error('tokenid needed')
     }
 
-
     const {status, data} = useSporeDetail(tokenid)
     const [image, setImage] = useState<string | null>(null)
     const [des, setDes] = useState<string>('')

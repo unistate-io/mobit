@@ -65,7 +65,7 @@ export default function Profile() {
     } = useLayer1Assets(
         internalAddress && isBtc && loginAddress === address ? internalAddress : undefined)
 
-    const {data: btcHistory, status: btcHistoryStatus} = useBtcTransactionsHistory(internalAddress, 5)
+    const {data: btcHistory, status: btcHistoryStatus} = useBtcTransactionsHistory(isBtc ? internalAddress: undefined, 5)
 
     const tokensStatus = useMemo(() => {
         if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' || layer1DataStatus === 'loading') {

@@ -43,8 +43,6 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfo) 
     const {config} = useContext(CKBContext)
 
     const refresh = useCallback(async () => {
-        console.log('refresh')
-
         if (!addresses || !addresses.length || !token) {
             setStatus('complete')
             setData({...emptyToken, amount: '0', type: 'xudt', chain: 'ckb'})
