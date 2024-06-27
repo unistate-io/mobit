@@ -11186,6 +11186,11 @@ raw-body@2.5.2:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+react-alive-outlet@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.npmmirror.com/react-alive-outlet/-/react-alive-outlet-0.0.6.tgz#64f43a506e0a1500990cfd8fb314cc0ab21f30b9"
+  integrity sha512-XIfgc1/vmEmYJtB1fK3gmY6IV4qlE/ZcHsOI5ngaojwe1ZfIUucRNAZ/LUVhKtAKgzpzwauUU3pQx7AIIJ1a+w==
+
 react-app-polyfill@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmmirror.com/react-app-polyfill/-/react-app-polyfill-3.0.0.tgz#95221e0a9bd259e5ca6b177c7bb1cb6768f68fd7"
