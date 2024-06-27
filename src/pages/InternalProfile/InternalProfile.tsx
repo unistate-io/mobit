@@ -18,7 +18,7 @@ import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
 import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
 
-export default function InternalProfile({internalAddress}:{internalAddress: string}) {
+export default function InternalProfile({internalAddress}: { internalAddress: string }) {
     const {address, theme, isOwner} = useContext(UserContext)
     const {internalAddress: loginInternalAddress, address: loginAddress, addresses} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
@@ -69,7 +69,10 @@ export default function InternalProfile({internalAddress}:{internalAddress: stri
     } = useLayer1Assets(
         internalAddress && isBtc && loginAddress === address ? internalAddress : undefined)
 
-    const {data: btcHistory, status: btcHistoryStatus} = useBtcTransactionsHistory(isBtc ? internalAddress: undefined, 5)
+    const {
+        data: btcHistory,
+        status: btcHistoryStatus
+    } = useBtcTransactionsHistory(isBtc ? internalAddress : undefined, 5)
 
     const tokensStatus = useMemo(() => {
         if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' || layer1DataStatus === 'loading') {
@@ -182,7 +185,7 @@ export default function InternalProfile({internalAddress}:{internalAddress: stri
                                 data={tokenData}
                                 status={tokensStatus}
                                 internalAddress={internalAddress}
-                                addresses={addresses}/>
+                                addresses={isOwner ? addresses : undefined}/>
                             <div className="mt-6">
                                 <ListDOBs
                                     data={[...layer1Dobs, ...sporesData]}
@@ -201,7 +204,7 @@ export default function InternalProfile({internalAddress}:{internalAddress: stri
                                 data={tokenData}
                                 status={tokensStatus}
                                 internalAddress={internalAddress}
-                                addresses={addresses} />
+                                addresses={isOwner ? addresses : undefined}/>
                         </Tabs.Content>
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
