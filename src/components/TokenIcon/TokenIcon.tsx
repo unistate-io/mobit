@@ -30,7 +30,7 @@ export default function TokenIcon({symbol, size, chain, rounded=true} : {symbol:
 
 
 
-    const tokenIcon = TokenIcons[symbol] || 'data:image/svg+xml;base64,' + new Identicon(getStrHash(symbol), (options as any)).toString()
+    const tokenIcon = TokenIcons[symbol.toUpperCase()] || 'data:image/svg+xml;base64,' + new Identicon(getStrHash(symbol), (options as any)).toString()
     const chainIcon = chain ? ChainIcons[chain]: undefined
 
 
