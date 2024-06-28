@@ -39,7 +39,7 @@ export default function HeaderMenu() {
             if (keyword.startsWith('0x') && keyword.length === 42) {
                 const ckbAddressFromEvm = await getCkbAddressFromEvm(keyword, client)
                 if (ckbAddressFromEvm) {
-                    navigate(`/internaladdress/${keyword}`)
+                    navigate(`/address/${keyword}`)
                     searchRef.current?.blur()
                     setShowSearchInput(false)
                     return
