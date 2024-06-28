@@ -50,13 +50,10 @@ export default function HeaderMenu() {
                 }
 
                 if (keyword.startsWith('bc1')) {
-                    const ckbAddressFromBtc = await getCkbAddressFromBTC(keyword, client)
-                    if (!!ckbAddressFromBtc) {
-                        navigate(`/address/${keyword}`)
-                        searchRef.current?.blur()
-                        setShowSearchInput(false)
-                        return
-                    }
+                    navigate(`/address/${keyword}`)
+                    searchRef.current?.blur()
+                    setShowSearchInput(false)
+                    return
                 }
             }
 

@@ -5,6 +5,7 @@ import InternalProfile from "./InternalProfile"
 import {useEffect, useState} from "react"
 import {checksumCkbAddress, getCkbAddressFromBTC, getCkbAddressFromEvm} from "@/utils/common"
 import {ccc} from "@ckb-ccc/connector-react"
+import BtcProfile from "@/pages/Profile/BtcProfile"
 
 export default function ProfilePage() {
     const {address} = useParams()
@@ -39,16 +40,20 @@ export default function ProfilePage() {
             // btc address
             if (!!client && address.startsWith('bc1')) {
                 const res = await getCkbAddressFromBTC(address, client)
-                setDisplayAddress(res!)
-                setDisplayInternalAddress(address)
+                if (!!res) {
+                    setDisplayAddress(res!)
+                    setDisplayInternalAddress(address)
+                } else {
+                    setDisplayInternalAddress(address)
+                }
                 setReady(true)
+
             }
         })()
     }, [address, client])
 
     return <>
-        {
-            ready &&
+        { ready && !!displayAddress &&
             <UserProvider address={displayAddress!}>
                 {
                     displayInternalAddress
@@ -56,6 +61,10 @@ export default function ProfilePage() {
                         : <Profile/>
                 }
             </UserProvider>
+        }
+
+        { ready && !displayAddress && !!displayInternalAddress &&
+             <BtcProfile internalAddress={displayInternalAddress} />
         }
     </>
 }
