@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom"
 import Profile from "@/pages/Profile/Profile"
 import InternalProfile from "./InternalProfile"
 import {useEffect, useState} from "react"
-import {checksumCkbAddress, getCkbAddressFromEvm} from "@/utils/common"
+import {checksumCkbAddress, getCkbAddressFromBTC, getCkbAddressFromEvm} from "@/utils/common"
 import {ccc} from "@ckb-ccc/connector-react"
 
 export default function ProfilePage() {
@@ -28,7 +28,6 @@ export default function ProfilePage() {
                 return
             }
 
-
             // evm address
             if (!!client && address.startsWith('0x') && address.length === 42) {
                 const res = await getCkbAddressFromEvm(address, client)
@@ -36,11 +35,15 @@ export default function ProfilePage() {
                 setDisplayInternalAddress(address)
                 setReady(true)
             }
-        })()
 
-        if (address?.startsWith('0x') && address?.length === 42) {
-            setDisplayInternalAddress(address)
-        }
+            // btc address
+            if (!!client && address.startsWith('bc1')) {
+                const res = await getCkbAddressFromBTC(address, client)
+                setDisplayAddress(res!)
+                setDisplayInternalAddress(address)
+                setReady(true)
+            }
+        })()
     }, [address, client])
 
     return <>

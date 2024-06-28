@@ -186,7 +186,7 @@ export default function Profile() {
                                 data={tokenData}
                                 status={tokensStatus}
                                 internalAddress={internalAddress}
-                                addresses={queryAddress}/>
+                                addresses={isOwner ? addresses: undefined}/>
                             <div className="mt-6">
                                 <ListDOBs
                                     data={[...layer1Dobs, ...sporesData]}
@@ -205,7 +205,7 @@ export default function Profile() {
                                 data={tokenData}
                                 status={tokensStatus}
                                 internalAddress={internalAddress}
-                                addresses={queryAddress}/>
+                                addresses={isOwner ? addresses: undefined}/>
                         </Tabs.Content>
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"

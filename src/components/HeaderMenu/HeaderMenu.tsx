@@ -6,7 +6,7 @@ import Select from "@/components/Select/Select"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {useNavigate} from "react-router-dom"
 import Input from "@/components/Form/Input/Input"
-import {checksumCkbAddress, getCkbAddressFromEvm} from "@/utils/common"
+import {checksumCkbAddress, getCkbAddressFromBTC, getCkbAddressFromEvm} from "@/utils/common"
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
 import DialogProfileInfo from "@/components/Dialogs/DialogProfileInfo/DialogProfileInfo"
 
@@ -19,6 +19,7 @@ export default function HeaderMenu() {
     const searchRef = useRef<HTMLInputElement | null>(null)
 
     const [showSearchInput, setShowSearchInput] = useState(false)
+    const [searching, setSearching] = useState(false)
 
     const showSearch = () => {
         setShowSearchInput(true)
@@ -28,27 +29,45 @@ export default function HeaderMenu() {
     }
 
     const handleSearch = async (keyword: string) => {
-        if (checksumCkbAddress(keyword)) {
-            navigate(`/address/${keyword}`)
-            searchRef.current?.blur()
-            setShowSearchInput(false)
-            return
-        }
+        setSearching(true)
+        try {
+            if (checksumCkbAddress(keyword)) {
+                navigate(`/address/${keyword}`)
+                searchRef.current?.blur()
+                setShowSearchInput(false)
+                return
+            }
 
-        if (!!client) {
-            if (keyword.startsWith('0x') && keyword.length === 42) {
-                const ckbAddressFromEvm = await getCkbAddressFromEvm(keyword, client)
-                if (ckbAddressFromEvm) {
-                    navigate(`/address/${keyword}`)
-                    searchRef.current?.blur()
-                    setShowSearchInput(false)
-                    return
+            if (!!client) {
+                if (keyword.startsWith('0x') && keyword.length === 42) {
+                    const ckbAddressFromEvm = await getCkbAddressFromEvm(keyword, client)
+                    if (ckbAddressFromEvm) {
+                        navigate(`/address/${keyword}`)
+                        searchRef.current?.blur()
+                        setShowSearchInput(false)
+                        return
+                    }
+                }
+
+                if (keyword.startsWith('bc1')) {
+                    const ckbAddressFromBtc = await getCkbAddressFromBTC(keyword, client)
+                    if (!!ckbAddressFromBtc) {
+                        navigate(`/address/${keyword}`)
+                        searchRef.current?.blur()
+                        setShowSearchInput(false)
+                        return
+                    }
                 }
             }
-        }
 
-        showToast('Invalid address', ToastType.error)
-        return
+            showToast('Invalid address or not exist', ToastType.error)
+            return
+        } catch (e: any) {
+            console.warn(e)
+            showToast('Invalid address or not exist', ToastType.error)
+        } finally {
+            setSearching(false)
+        }
     }
 
     return <div className="flex flex-row flex-nowrap items-center">
@@ -69,7 +88,26 @@ export default function HeaderMenu() {
                         }}
                         ref={searchRef}
                         startIcon={<i className="uil-search"/>}
-                        endIcon={<img src={'/images/icon_esc.svg'} alt={""}/>}
+                        endIcon={
+                        searching ?
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="18px" height="18px"
+                                 viewBox="0 0 128 128">
+                                <rect x="0" y="0" width="100%" height="100%" fill="none"/>
+                                <g>
+                                    <linearGradient id="linear-gradient">
+                                        <stop offset="0%" stopColor="#ffffff"/>
+                                        <stop offset="100%" stopColor="#999"/>
+                                    </linearGradient>
+                                    <path
+                                        d="M63.85 0A63.85 63.85 0 1 1 0 63.85 63.85 63.85 0 0 1 63.85 0zm.65 19.5a44 44 0 1 1-44 44 44 44 0 0 1 44-44z"
+                                        fill="url(#linear-gradient)" fillRule="evenodd"/>
+                                    <animateTransform attributeName="transform" type="rotate" from="0 64 64"
+                                                      to="360 64 64" dur="1080ms"
+                                                      repeatCount="indefinite"></animateTransform>
+                                </g>
+                            </svg>:
+                        <img src={'/images/icon_esc.svg'} alt={""}/>
+                    }
                         className={'h-30 w-[250px] !py-2'}
                         placeholder="Search..."
                     />

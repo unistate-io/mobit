@@ -67,7 +67,7 @@ export default function InternalProfile({internalAddress}: { internalAddress: st
         status: layer1DataStatus,
         error: layer1DataErr
     } = useLayer1Assets(
-        internalAddress && isBtc && loginAddress === address ? internalAddress : undefined)
+        internalAddress && isBtc ? internalAddress : undefined)
 
     const {
         data: btcHistory,

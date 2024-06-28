@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
 
-const getBtcTransactionsHistory = async (address: string) => {
+export const getBtcTransactionsHistory = async (address: string) => {
     const res = await fetch(`https://ckb-btc-api.deno.dev/?btcAddress=${address}/txs`)
     return await res.json() as BtcTransaction[]
 }

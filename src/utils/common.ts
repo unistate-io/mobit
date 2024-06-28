@@ -1,6 +1,9 @@
 import {helpers} from "@ckb-lumos/lumos"
 import {ccc} from "@ckb-ccc/connector-react"
 import {Client} from "@ckb-ccc/core/dist.commonjs";
+import {getBtcTransactionsHistory} from "@/serves/useBtcTransactionsHistory"
+import {ripemd160} from '@noble/hashes/ripemd160'
+import {sha256} from '@noble/hashes/sha256'
 
 enum KnownScript {
     Secp256k1Blake160,
@@ -30,6 +33,40 @@ export async function getCkbAddressFromEvm(address: string, client: Client): Pro
         const _a = await (ccc as any).Address.fromKnownScript(
             KnownScript.OmniLock as any,
             (ccc as any).hexFrom([0x12, ...(ccc as any).bytesFrom(address), 0x00]),
+            client,
+        )
+        return _a.toString()
+    } catch (e: any) {
+        console.warn(e)
+        return null
+    }
+}
+
+export async function getCkbAddressFromBTC(address: string, client: Client): Promise<string | null> {
+    const txs = await getBtcTransactionsHistory(address)
+    if (!txs.length) return null
+
+    const utxo = txs[0].vin.find(v => {
+        return v.prevout.scriptpubkey_address === address
+    })
+    if (!utxo) return null
+
+    let pubkey: string | null = null
+    utxo.witness.find(w => {
+        if ((w.startsWith('02') || w.startsWith('04')) && w.length === 66) {
+            pubkey = w
+            return true
+        }
+        return false
+    })
+
+    if (!pubkey) return null
+
+    try {
+        const hash = ripemd160(sha256((ccc as any).bytesFrom('0x' + pubkey)));
+        const _a = await (ccc as any).Address.fromKnownScript(
+            KnownScript.OmniLock as any,
+            (ccc as any).hexFrom([0x04, ...hash, 0x00]),
             client,
         )
         return _a.toString()
