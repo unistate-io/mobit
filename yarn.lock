@@ -1187,19 +1187,19 @@
     "@ckb-ccc/okx" "0.0.5-alpha.2"
     "@ckb-ccc/uni-sat" "0.0.5-alpha.2"
 
-"@ckb-ccc/connector-react@0.0.5-alpha.4":
-  version "0.0.5-alpha.4"
-  resolved "https://registry.npmmirror.com/@ckb-ccc/connector-react/-/connector-react-0.0.5-alpha.4.tgz#5bfd544d8ba4b752bb704fe08cbbc36711f00170"
-  integrity sha512-sxWnaI67SsX26AIYOp4Z73+cwMwcDpjNaynICkqg4jM3CJJGNE9NwRKKgiFWyNs+fJ9DW6HxoWARc5NuStd+Ow==
+"@ckb-ccc/connector-react@0.0.5-alpha.5":
+  version "0.0.5-alpha.5"
+  resolved "https://registry.npmmirror.com/@ckb-ccc/connector-react/-/connector-react-0.0.5-alpha.5.tgz#43c9ee6588789b397e73d5d80ff7f286229069a0"
+  integrity sha512-3W50RmZ22XI/gzXOVkQu/ic+02vVMudOMyRxB47GCo5So3mGlos5NLalkVUC6xwsYx6SS9+gk9BgPp2UzBsRXA==
   dependencies:
-    "@ckb-ccc/connector" "0.0.5-alpha.4"
+    "@ckb-ccc/connector" "0.0.5-alpha.5"
     "@lit/react" "^1.0.5"
     react "^18"
 
-"@ckb-ccc/connector@0.0.5-alpha.4":
-  version "0.0.5-alpha.4"
-  resolved "https://registry.npmmirror.com/@ckb-ccc/connector/-/connector-0.0.5-alpha.4.tgz#b29f29591b412d13a2c406f42c32ee671fff5718"
-  integrity sha512-ysaOu2NUZjoydEpN/Tq4qZjAjZ83Ol2W28iCrA7NHXf/DkhlxLtUqt1K9W8lYKwED62ddUc3fz8ylYnIT09XOg==
+"@ckb-ccc/connector@0.0.5-alpha.5":
+  version "0.0.5-alpha.5"
+  resolved "https://registry.npmmirror.com/@ckb-ccc/connector/-/connector-0.0.5-alpha.5.tgz#cfc8e3d2a27c3fadbfca5f307ca87c0e15387ec3"
+  integrity sha512-vhRjv2BE8b5lVVcAZ2ZIeSvKGEthRF1DbCPrZFj1a7L25X1AZYQbLhBJ9fAogMwDyJCNNshOxNdBffiEhT/PeA==
   dependencies:
     "@ckb-ccc/ccc" "0.0.5-alpha.2"
     lit "^3.1.3"
