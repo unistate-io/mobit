@@ -50,7 +50,9 @@ export default function CKBProvider({children}: { children: any }) {
     const switchNetwork = (network: Network) => {
         // 需要重新连接
         disconnect()
+        navigate('/')
         _setNetwork(network)
+        needRedirect.current = true
         open()
     }
 

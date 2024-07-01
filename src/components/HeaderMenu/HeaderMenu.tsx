@@ -6,7 +6,13 @@ import Select from "@/components/Select/Select"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {useNavigate} from "react-router-dom"
 import Input from "@/components/Form/Input/Input"
-import {checksumCkbAddress, getCkbAddressFromBTC, getCkbAddressFromEvm} from "@/utils/common"
+import {
+    checksumCkbAddress,
+    getCkbAddressFromBTC,
+    getCkbAddressFromEvm,
+    isBtcAddress,
+    isEvmAddress
+} from "@/utils/common"
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
 import DialogProfileInfo from "@/components/Dialogs/DialogProfileInfo/DialogProfileInfo"
 
@@ -39,7 +45,7 @@ export default function HeaderMenu() {
             }
 
             if (!!client) {
-                if (keyword.startsWith('0x') && keyword.length === 42) {
+                if (isEvmAddress(keyword)) {
                     const ckbAddressFromEvm = await getCkbAddressFromEvm(keyword, client)
                     if (ckbAddressFromEvm) {
                         navigate(`/address/${keyword}`)
@@ -49,7 +55,7 @@ export default function HeaderMenu() {
                     }
                 }
 
-                if (keyword.startsWith('bc1')) {
+                if (isBtcAddress(keyword)) {
                     navigate(`/address/${keyword}`)
                     searchRef.current?.blur()
                     setShowSearchInput(false)

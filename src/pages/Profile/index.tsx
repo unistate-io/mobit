@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom"
 import Profile from "@/pages/Profile/Profile"
 import InternalProfile from "./InternalProfile"
 import {useEffect, useState} from "react"
-import {checksumCkbAddress, getCkbAddressFromBTC, getCkbAddressFromEvm} from "@/utils/common"
+import {checksumCkbAddress, getCkbAddressFromBTC, getCkbAddressFromEvm, isEvmAddress, isBtcAddress} from "@/utils/common"
 import {ccc} from "@ckb-ccc/connector-react"
 import BtcProfile from "@/pages/Profile/BtcProfile"
 
@@ -22,15 +22,18 @@ export default function ProfilePage() {
     // check address type
     useEffect(() => {
         (async () => {
+            console.log('profile', address)
             // ckb address
             if (checksumCkbAddress(address)) {
+                console.log('ckb profile')
                 setDisplayAddress(address)
                 setReady(true)
                 return
             }
 
             // evm address
-            if (!!client && address.startsWith('0x') && address.length === 42) {
+            if (!!client && isEvmAddress(address)) {
+                console.log('evm profile')
                 const res = await getCkbAddressFromEvm(address, client)
                 setDisplayAddress(res!)
                 setDisplayInternalAddress(address)
@@ -38,7 +41,8 @@ export default function ProfilePage() {
             }
 
             // btc address
-            if (!!client && address.startsWith('bc1')) {
+            if (!!client && isBtcAddress(address)) {
+                console.log('btc profile')
                 const res = await getCkbAddressFromBTC(address, client)
                 if (!!res) {
                     setDisplayAddress(res!)
@@ -47,8 +51,11 @@ export default function ProfilePage() {
                     setDisplayInternalAddress(address)
                 }
                 setReady(true)
-
+                return
             }
+
+            setDisplayAddress(address)
+            setReady(true)
         })()
     }, [address, client])
 

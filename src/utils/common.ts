@@ -23,6 +23,14 @@ export const checksumCkbAddress = (address: string): boolean => {
     }
 }
 
+export const isBtcAddress = (address: string): boolean => {
+    return address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1') || address.startsWith('tb1')
+}
+
+export const isEvmAddress = (address: string): boolean => {
+    return address.startsWith('0x') && address.length === 42
+}
+
 export function shortTransactionHash(hash: string, keep?: number): string {
     const length = keep || 6
     return hash.slice(0, length) + '...' + hash.slice(hash.length - length)
