@@ -17,6 +17,7 @@ import useLayer1Assets from "@/serves/useLayer1Assets"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
 import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
+import {isBtcAddress} from "@/utils/common";
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -34,13 +35,17 @@ export default function Profile() {
         }
     }, [internalAddress])
 
-    const isBtc = useMemo(() => {
+    const btcAddress = useMemo(() => {
         if (!internalAddress) {
-            return false
+            return undefined
         }
 
-        return internalAddress.startsWith('bc1') || internalAddress.startsWith('tb1')
-    }, [internalAddress])
+        if (!addresses?.includes(address!)) {
+            return undefined
+        }
+
+        return isBtcAddress(internalAddress) ? internalAddress : undefined
+    }, [internalAddress, address, addresses])
 
 
     const queryAddress = useMemo(() => {
@@ -62,10 +67,12 @@ export default function Profile() {
         btc: layer1Btc,
         status: layer1DataStatus,
         error: layer1DataErr
-    } = useLayer1Assets(
-        internalAddress && isBtc && loginAddress === address ? internalAddress : undefined)
+    } = useLayer1Assets(btcAddress)
 
-    const {data: btcHistory, status: btcHistoryStatus} = useBtcTransactionsHistory(isBtc ? internalAddress: undefined, 5)
+    const {
+        data: btcHistory,
+        status: btcHistoryStatus
+    } = useBtcTransactionsHistory(btcAddress, 5)
 
     const tokensStatus = useMemo(() => {
         if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' || layer1DataStatus === 'loading') {
@@ -186,7 +193,7 @@ export default function Profile() {
                                 data={tokenData}
                                 status={tokensStatus}
                                 internalAddress={internalAddress}
-                                addresses={isOwner ? addresses: undefined}/>
+                                addresses={isOwner ? addresses : undefined}/>
                             <div className="mt-6">
                                 <ListDOBs
                                     data={[...layer1Dobs, ...sporesData]}
@@ -205,7 +212,7 @@ export default function Profile() {
                                 data={tokenData}
                                 status={tokensStatus}
                                 internalAddress={internalAddress}
-                                addresses={isOwner ? addresses: undefined}/>
+                                addresses={isOwner ? addresses : undefined}/>
                         </Tabs.Content>
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
@@ -228,7 +235,7 @@ export default function Profile() {
                         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
                             <div className="text-xl font-semibold">{lang['Activity']}</div>
                         </div>
-                        {!!internalAddress && isBtc &&
+                        {!!internalAddress && btcAddress &&
                             <div className="flex flex-row items-center px-2">
                                 <div onClick={e => {
                                     setActiveTab('ckb')
@@ -247,7 +254,7 @@ export default function Profile() {
                             <ListHistory address={selectedAddress!} data={historyData} status={historyDataStatus}/>
                         }
 
-                        {activeTab === 'btc' && isBtc &&
+                        {activeTab === 'btc' && btcAddress &&
                             <ListBtcHistory internalAddress={internalAddress!} data={btcHistory}
                                             status={btcHistoryStatus}/>
                         }
