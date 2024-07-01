@@ -57,22 +57,24 @@ export default function DialogProfileInfo({children, className}: {children: Reac
                                 }
                             </div>
                         </div>
-                        <div className="w-full  mt-4 flex items-center">
-                            <div className="mr-4">Network: </div>
-                            <div className="w-full bg-gray-100 rounded-lg p-2 flex items-center">
-                                <Select
-                                    options={[
-                                        {id: 'mainnet', label: 'CKB Mainnet'},
-                                        {id: 'testnet', label: 'CKB Testnet'},
-                                    ]}
-                                    value={network || 'mainnet'}
-                                    containerWidthPrefix={8}
-                                    onValueChange={(value) => {
-                                        setNetwork(value as Network)
-                                    }}
-                                />
+                        { false &&
+                            <div className="w-full  mt-4 flex items-center">
+                                <div className="mr-4">Network: </div>
+                                <div className="w-full bg-gray-100 rounded-lg p-2 flex items-center">
+                                    <Select
+                                        options={[
+                                            {id: 'mainnet', label: 'CKB Mainnet'},
+                                            {id: 'testnet', label: 'CKB Testnet'},
+                                        ]}
+                                        value={network || 'mainnet'}
+                                        containerWidthPrefix={8}
+                                        onValueChange={(value) => {
+                                            setNetwork(value as Network)
+                                        }}
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        }
                         <div className="flex flex-row items-center mt-6">
                             <Button className="mr-4 text-red-500"
                                     onClick={disconnect}
