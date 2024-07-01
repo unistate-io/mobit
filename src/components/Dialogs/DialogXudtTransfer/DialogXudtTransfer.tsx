@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useContext, useEffect} from 'react'
 import Input from "@/components/Form/Input/Input"
 import * as Dialog from '@radix-ui/react-dialog'
 import Button from "@/components/Form/Button/Button"
@@ -10,6 +10,7 @@ import Select from "@/components/Select/Select"
 import CopyText from "@/components/CopyText/CopyText"
 import useXudtTransfer from "@/serves/useXudtTransfer"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider";
 
 
 import * as dayjsLib from "dayjs"
@@ -25,6 +26,7 @@ export interface XudtTransferProps {
 
 export default function DialogXudtTransfer({children, froms, className, token}: { children: React.ReactNode, froms: string[], token: TokenInfo,  className?: string }) {
     const {build, signAndSend} = useXudtTransfer()
+    const {network} = useContext(CKBContext)
     const [open, setOpen] = React.useState(false);
     const {data: xudtBalance, status, refresh} = useXudtBalance((open ? froms : undefined), token)
 
@@ -57,7 +59,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
         if (formData.to === '') {
             setToError('Please enter a valid address')
             hasError = true
-        } else if (!checksumCkbAddress(formData.to)) {
+        } else if (!checksumCkbAddress(formData.to, network)) {
             setToError('Invalid CKB address')
             hasError = true
         } else {

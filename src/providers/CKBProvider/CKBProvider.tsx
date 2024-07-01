@@ -51,9 +51,11 @@ export default function CKBProvider({children}: { children: any }) {
         // 需要重新连接
         disconnect()
         navigate('/')
-        _setNetwork(network)
-        needRedirect.current = true
-        open()
+        setTimeout(()=> {
+            _setNetwork(network)
+            needRedirect.current = true
+            open()
+        }, 300)
     }
 
     useEffect(() => {

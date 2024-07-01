@@ -17,7 +17,7 @@ import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
 import DialogProfileInfo from "@/components/Dialogs/DialogProfileInfo/DialogProfileInfo"
 
 export default function HeaderMenu() {
-    const {open, address, client} = useContext(CKBContext);
+    const {open, address, client, network} = useContext(CKBContext);
     const {lang, langType, switchLang} = useContext(LangContext)
     const navigate = useNavigate()
     const {showToast} = useContext(ToastContext)
@@ -37,7 +37,7 @@ export default function HeaderMenu() {
     const handleSearch = async (keyword: string) => {
         setSearching(true)
         try {
-            if (checksumCkbAddress(keyword)) {
+            if (checksumCkbAddress(keyword, network)) {
                 navigate(`/address/${keyword}`)
                 searchRef.current?.blur()
                 setShowSearchInput(false)

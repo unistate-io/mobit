@@ -51,10 +51,12 @@ export async function transferTokenToAddress(
     tokenInfo: TokenInfo,
     indexer: Indexer,
     feeRate: number,
+    network :'mainnet' | 'testnet',
     fee = 0,
 ): Promise<TransactionSkeletonType> {
 
     console.log('fee', fee)
+    const scriptConfig = network === 'mainnet' ? config.MAINNET : config.TESTNET
     const tokenDetail = await queryAddressInfoWithAddress([tokenInfo.type_id])
 
     if (!tokenDetail[0]) {
@@ -67,9 +69,9 @@ export async function transferTokenToAddress(
         args: tokenDetail[0].address.script_args.replace('\\', '0'),
     }
 
-    const senderLockScript = helpers.parseAddress(fromAddresses[0])
+    const senderLockScript = helpers.addressToScript(fromAddresses[0], { config: scriptConfig })
     // console.log('senderLockScript', senderLockScript)
-    const receiverLockScript = helpers.parseAddress(receiverAddress);
+    const receiverLockScript = helpers.addressToScript(receiverAddress, { config: scriptConfig });
     // console.log('receiverLockScript', receiverLockScript)
 
     const lockDeps = OMNILOCK;
@@ -131,7 +133,7 @@ export async function transferTokenToAddress(
     const collected: Cell[] = [];
 
     const senderLocks = fromAddresses.map((address) => {
-        return helpers.parseAddress(address)
+        return helpers.addressToScript(address, { config: scriptConfig })
     })
 
 
@@ -320,7 +322,7 @@ export async function transferTokenToAddress(
         const txSize = commons.common.__tests__.getTransactionSize(txSkeleton);
         console.log(txSize)
         const _fee = (txSize + 300) * (feeRate / 1000)
-        return await transferTokenToAddress(fromAddresses, amount, receiverAddress, tokenInfo, indexer, feeRate, _fee)
+        return await transferTokenToAddress(fromAddresses, amount, receiverAddress, tokenInfo, indexer, feeRate, network, _fee)
     } else {
         return txSkeleton
     }

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useContext, useEffect} from 'react'
 import Input from "@/components/Form/Input/Input"
 import * as Dialog from '@radix-ui/react-dialog'
 import Button from "@/components/Form/Button/Button"
@@ -9,7 +9,8 @@ import {toDisplay} from "@/utils/number_display"
 import useCkbTransfer from "@/serves/useCkbTransfer"
 import {TokenIcons} from "@/components/TokenIcon/icons"
 import Select from "@/components/Select/Select"
-import CopyText from "@/components/CopyText/CopyText";
+import CopyText from "@/components/CopyText/CopyText"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 import * as dayjsLib from "dayjs"
 import {helpers} from "@ckb-lumos/lumos";
@@ -24,6 +25,7 @@ export interface XudtTransferProps {
 export default function DialogCkbTransfer({children, froms, className}: { children: React.ReactNode, froms: string[], className?: string }) {
     const {build, signAndSend} = useCkbTransfer(froms)
     const {data: CkbBalance, status, refresh} = useCkbBalance(froms)
+    const {network, config} = useContext(CKBContext)
 
 
     const [open, setOpen] = React.useState(false);
@@ -57,7 +59,7 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
         if (formData.to === '') {
             setToError('Please enter a valid address')
             hasError = true
-        } else if (!checksumCkbAddress(formData.to)) {
+        } else if (!checksumCkbAddress(formData.to, network)) {
             setToError('Invalid CKB address')
             hasError = true
         } else {
@@ -389,7 +391,7 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
                                        className={"mr-4 text-xs"}
                                        loading={sending}
                                        onClick={e => {
-                                           window.open(`https://explorer.nervos.org/transaction/${txHash}`, '_blank')
+                                           window.open(`${config.explorer}/transaction/${txHash}`, '_blank')
                                        }} >
                                    View on Explorer
                                </Button>

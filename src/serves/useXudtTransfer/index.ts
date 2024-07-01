@@ -6,7 +6,7 @@ import {transferTokenToAddress} from './lib'
 import {TokenInfo} from "@/utils/graphql/types"
 
 export default function useXudtTransfer() {
-    const {signer, config} = useContext(CKBContext)
+    const {signer, config, network} = useContext(CKBContext)
 
     const build = async ({
                              froms,
@@ -24,7 +24,8 @@ export default function useXudtTransfer() {
             to,
             tokenInfo,
             indexer,
-            feeRate
+            feeRate,
+            network
         )
 
         console.log('txInfo', txInfo)
@@ -51,7 +52,8 @@ export default function useXudtTransfer() {
             to,
             tokenInfo,
             indexer,
-            feeRate
+            feeRate,
+            network
         )
 
 

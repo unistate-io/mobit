@@ -2,14 +2,16 @@ import UserProvider from "@/providers/UserProvider/UserProvider"
 import {useParams} from "react-router-dom"
 import Profile from "@/pages/Profile/Profile"
 import InternalProfile from "./InternalProfile"
-import {useEffect, useState} from "react"
+import {useEffect, useState, useContext} from "react"
 import {checksumCkbAddress, getCkbAddressFromBTC, getCkbAddressFromEvm, isEvmAddress, isBtcAddress} from "@/utils/common"
 import {ccc} from "@ckb-ccc/connector-react"
 import BtcProfile from "@/pages/Profile/BtcProfile"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 export default function ProfilePage() {
     const {address} = useParams()
     const {client} = ccc.useCcc()
+    const {network} = useContext(CKBContext)
 
     if (!address) {
         throw new Error('address is required')
@@ -22,9 +24,8 @@ export default function ProfilePage() {
     // check address type
     useEffect(() => {
         (async () => {
-            console.log('profile', address)
             // ckb address
-            if (checksumCkbAddress(address)) {
+            if (checksumCkbAddress(address, network)) {
                 console.log('ckb profile')
                 setDisplayAddress(address)
                 setReady(true)

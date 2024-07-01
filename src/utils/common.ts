@@ -1,4 +1,4 @@
-import {helpers} from "@ckb-lumos/lumos"
+import {helpers, config as lumosConfig} from "@ckb-lumos/lumos"
 import {ccc} from "@ckb-ccc/connector-react"
 import {Client} from "@ckb-ccc/core/dist.commonjs";
 import {getBtcTransactionsHistory} from "@/serves/useBtcTransactionsHistory"
@@ -14,9 +14,9 @@ enum KnownScript {
     OmniLock,
 }
 
-export const checksumCkbAddress = (address: string): boolean => {
+export const checksumCkbAddress = (address: string, network: 'mainnet' | 'testnet'): boolean => {
     try {
-        helpers.parseAddress(address)
+        helpers.addressToScript(address, {config: network === 'mainnet' ? lumosConfig.MAINNET : lumosConfig.TESTNET})
         return true
     } catch (e: any) {
         return false
