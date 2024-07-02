@@ -1,11 +1,15 @@
 import {commons, helpers, Indexer, config as lumosConfig} from '@ckb-lumos/lumos'
-import {useContext} from "react"
+import {useContext, useMemo} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 import { predefined } from "@ckb-lumos/config-manager"
 
 export default function useCkbTransfer(addresses: string[]) {
     const {signer, config, network} = useContext(CKBContext)
+
+    const scriptConfig = useMemo(() => {
+        return network === 'testnet' ? lumosConfig.TESTNET : lumosConfig.MAINNET
+    }, [network])
 
     const build = async ({
                              froms,
@@ -18,7 +22,6 @@ export default function useCkbTransfer(addresses: string[]) {
 
         const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc);
         const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
-        const scriptConfig = network === 'testnet' ? lumosConfig.TESTNET : lumosConfig.MAINNET
         const txSkeleton = await commons.common.transfer(
             _txSkeleton,
             froms,
@@ -67,7 +70,6 @@ export default function useCkbTransfer(addresses: string[]) {
 
         const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc);
         const _txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer})
-        const scriptConfig = network === 'testnet' ? lumosConfig.TESTNET : lumosConfig.MAINNET
         let txSkeleton = await commons.common.transfer(
             _txSkeleton,
             (await signer.getAddresses()),

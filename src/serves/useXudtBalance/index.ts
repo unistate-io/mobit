@@ -83,8 +83,6 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfo) 
     }, [addresses, token, config , refresh])
 
 
-
-
     return {
         status,
         data,
