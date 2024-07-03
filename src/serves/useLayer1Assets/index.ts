@@ -106,6 +106,10 @@ export default function useLayer1Assets(btcAddress?: string) {
             })
             .catch((e: any) => {
                 console.error(e)
+                setStatus('complete')
+                setXudts([])
+                setDobs([])
+                setBtc(undefined)
                 setStatus('error')
                 setError(e)
             })
