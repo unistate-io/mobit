@@ -15,7 +15,7 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider";
 
 import * as dayjsLib from "dayjs"
 import {helpers} from "@ckb-lumos/lumos"
-import {TokenInfo} from "@/utils/graphql/types"
+import {TokenInfo, TokenInfoWithAddress} from "@/utils/graphql/types"
 const dayjs: any = dayjsLib
 
 export interface XudtTransferProps {
@@ -24,7 +24,7 @@ export interface XudtTransferProps {
     to: string,
 }
 
-export default function DialogXudtTransfer({children, froms, className, token}: { children: React.ReactNode, froms: string[], token: TokenInfo,  className?: string }) {
+export default function DialogXudtTransfer({children, froms, className, token}: { children: React.ReactNode, froms: string[], token: TokenInfoWithAddress,  className?: string }) {
     const {build, signAndSend} = useXudtTransfer()
     const {network} = useContext(CKBContext)
     const [open, setOpen] = React.useState(false);

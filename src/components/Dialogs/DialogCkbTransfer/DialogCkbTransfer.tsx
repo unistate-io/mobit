@@ -24,7 +24,6 @@ export interface XudtTransferProps {
 
 export default function DialogCkbTransfer({children, froms, className}: { children: React.ReactNode, froms: string[], className?: string }) {
     const {build, signAndSend} = useCkbTransfer(froms)
-    const {data: CkbBalance, status, refresh} = useCkbBalance(froms)
     const {network, config} = useContext(CKBContext)
 
 
@@ -35,6 +34,7 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
         to: "",
     });
 
+    const {data: CkbBalance, status, refresh} = useCkbBalance(open ? froms: undefined)
     const [step, setStep] = React.useState<1 | 2 | 3>(1)
     const [feeRate, setFeeRate] = React.useState<1000 | 2000 | 3000>(1000)
     const [sending, setSending] = React.useState(false)

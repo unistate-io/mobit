@@ -35,10 +35,7 @@ export const balance = async (addresses: string[]): Promise<TokenBalance[]> => {
         }, BigNumber(0))
 
         return {
-            name: target_token ? target_token.name : 'Unknown Token',
-            symbol: target_token ? target_token.symbol : '',
-            decimal: target_token ? target_token.decimal : 0,
-            type_id: t,
+            ...target_token!,
             amount: sum.toString(),
             type: 'xudt',
             chain: 'ckb'

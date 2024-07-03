@@ -4,11 +4,11 @@ import {toDisplay} from "@/utils/number_display"
 import DialogXudtReceive from "@/components/Dialogs/DialogXudtReceive/DialogXudtReceive"
 import DialogCkbTransfer from "@/components/Dialogs/DialogCkbTransfer/DialogCkbTransfer"
 import {Link} from "react-router-dom"
-import {TokenInfo} from "@/utils/graphql/types"
+import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import DialogXudtTransfer from "@/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer"
 import {LangContext} from "@/providers/LangProvider/LangProvider";
 
-export interface TokenBalance extends TokenInfo {
+export interface TokenBalance extends TokenInfoWithAddress {
     amount: string,
     type: string,
     chain: 'ckb' | 'btc'
@@ -20,7 +20,7 @@ export default function ListToken({
                                       addresses,
                                       internalAddress,
                                       previewSize = 5
-                                  }: { data: TokenBalance[], status: string, addresses?: string[], internalAddress?: string ,previewSize?: number }) {
+                                  }: { data: TokenBalance[], status: string, addresses?: string[], internalAddress?: string, previewSize?: number }) {
     const [compact, setCompact] = useState(true)
     const {lang} = useContext(LangContext)
 
@@ -114,7 +114,7 @@ export default function ListToken({
                                     }
 
 
-                                    { item.chain === 'btc' && !!internalAddress ?
+                                    {item.chain === 'btc' && !!internalAddress ?
                                         <DialogXudtReceive address={internalAddress}>
                                             <div
                                                 className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">

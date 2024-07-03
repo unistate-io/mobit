@@ -16,18 +16,15 @@ export const queryXudtCell = async (addresses: string[]) => {
     return res.xudt_cell as XudtCell[]
 }
 
-export const queryTokenInfo = async (type_ids: string[]) => {
-    const idStr = type_ids.map(id => `"${id}"`).join(',')
-    const doc = gql('token_info', `where:{type_id: {_in: [${idStr}]}}`)
-    const res: any = await query(doc)
-    return res.token_info as TokenInfo[]
-}
-
 export const queryAddressInfoWithAddress = async (type_ids: string[]) => {
     const idStr = type_ids.map(id => `"${id}"`).join(',')
     const doc = gql('token_info_address', `where:{type_id: {_in: [${idStr}]}}`)
     const res: any = await query(doc)
     return res.token_info as TokenInfoWithAddress[]
+}
+
+export const queryTokenInfo = async (type_ids: string[]) => {
+    return await queryAddressInfoWithAddress(type_ids)
 }
 
 export const querySporesByAddress = async (addresses: string[], page: number, pageSize:number, allowBurned?: boolean) => {

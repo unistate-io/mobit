@@ -19,7 +19,9 @@ export default function useCkbBalance(addresses?: string[]) {
     }, [network])
 
     const refresh = useCallback(async () => {
-        if (!addresses || !addresses.length || !client) return
+        if (!addresses || !addresses.length || !client) {
+            return
+        }
 
         try {
             const client = network === 'testnet' ? new cccLib.ClientPublicTestnet() : new cccLib.ClientPublicMainnet()
@@ -34,7 +36,13 @@ export default function useCkbBalance(addresses?: string[]) {
                 type_id: '',
                 type: 'ckb',
                 amount: _balance.toString(),
-                chain: 'ckb'
+                chain: 'ckb',
+                address: {
+                    id: '',
+                    script_args: '',
+                    script_code_hash: '',
+                    script_hash_type: ''
+                }
             })
             setStatus('complete')
         } catch (e: any) {

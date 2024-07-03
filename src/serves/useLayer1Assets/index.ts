@@ -37,7 +37,13 @@ const queryAssets = async (btcAddress: string):Promise<{
                 type_id: t.xudtCell.type_id,
                 amount: t.xudtCell.amount,
                 type: 'xudt',
-                chain: 'btc'
+                chain: 'btc',
+                address: {
+                    id: '',
+                    script_args: '',
+                    script_code_hash: '',
+                    script_hash_type: ''
+                }
             })
         } else {
             list.dobs.push({
@@ -64,7 +70,13 @@ const btcEmpty: TokenBalance = {
     type_id: '',
     amount: '0',
     type: 'btc',
-    chain: 'btc'
+    chain: 'btc',
+    address: {
+        id: '',
+        script_args: '',
+        script_code_hash: '',
+        script_hash_type: ''
+    }
 }
 
 export default function useLayer1Assets(btcAddress?: string) {
