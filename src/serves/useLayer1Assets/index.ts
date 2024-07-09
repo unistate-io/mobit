@@ -6,13 +6,24 @@ import {TokenBalance} from "@/components/ListToken/ListToken"
 import {Spores} from "@/utils/graphql/types";
 import {SporesWithChainInfo} from "@/serves/useSpores";
 
+
+interface AssetDetails {
+    xudtCell?: any;
+    sporeActions?: any;
+}
+
+interface QueryResult {
+    balance: any;
+    assets: AssetDetails;
+}
+
 const queryAssets = async (btcAddress: string):Promise<{
     xudts: TokenBalance[],
     dobs: SporesWithChainInfo[],
     btc: TokenBalance
 }> => {
-    const res = await fetch(`https://ckb-btc-api.deno.dev/?btcAddress=${btcAddress}`)
-    const json = await res.json()
+    const res = await fetch(`https://ckb-btc-api--refactor.deno.dev/?btcAddress=${btcAddress}`)
+    const json = await res.json() as QueryResult
 
     const list = {
         xudts: [] as TokenBalance[],
@@ -28,37 +39,41 @@ const queryAssets = async (btcAddress: string):Promise<{
         } as TokenBalance
     }
 
-    json.assets.forEach((t: any) => {
-        if (!!t.xudtCell) {
+    if (json.assets.xudtCell && json.assets.xudtCell.length) {
+        json.assets.xudtCell.forEach((t: any) => {
             list.xudts.push({
-                name: t.xudtCell.addressByTypeId.token_info.name,
-                symbol: t.xudtCell.addressByTypeId.token_info.symbol,
-                decimal: t.xudtCell.addressByTypeId.token_info.decimal,
-                type_id: t.xudtCell.type_id,
-                amount: t.xudtCell.amount,
+                name: t.addressByTypeId.token_info.name,
+                symbol: t.addressByTypeId.token_info.symbol,
+                decimal: t.addressByTypeId.token_info.decimal,
+                type_id: t.type_id,
+                amount: t.amount,
                 type: 'xudt',
                 chain: 'btc',
                 address: {
                     id: '',
-                    script_args: '',
+                    script_args: t.addressByTypeId.script_args,
                     script_code_hash: '',
                     script_hash_type: ''
                 }
             })
-        } else {
+        })
+    }
+
+    if (json.assets.sporeActions && json.assets.sporeActions.length) {
+        json.assets.sporeActions.forEach((t: any) => {
             list.dobs.push({
-                id: t.sporeActions[0].spore.id,
-                content: t.sporeActions[0].spore.content,
-                cluster_id: t.sporeActions[0].spore.cluster_id,
-                is_burned: t.sporeActions[0].spore.is_burned,
-                owner_address: t.sporeActions[0].spore.owner_address,
-                content_type: t.sporeActions[0].spore.content_type,
-                created_at: t.sporeActions[0].spore.created_at,
-                updated_at: t.sporeActions[0].spore.updated_at,
+                id: t.spore.id,
+                content: t.spore.content,
+                cluster_id: t.spore.cluster_id,
+                is_burned: t.spore.is_burned,
+                owner_address: t.spore.owner_address,
+                content_type: t.spore.content_type,
+                created_at: t.spore.created_at,
+                updated_at: t.spore.updated_at,
                 chain: 'btc'
             })
-        }
-    })
+        })
+    }
 
     return  list
 }
