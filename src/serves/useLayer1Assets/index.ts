@@ -22,7 +22,7 @@ const queryAssets = async (btcAddress: string):Promise<{
     dobs: SporesWithChainInfo[],
     btc: TokenBalance
 }> => {
-    const res = await fetch(`https://ckb-btc-api--refactor.deno.dev/?btcAddress=${btcAddress}`)
+    const res = await fetch(`https://ckb-btc-api.deno.dev/?btcAddress=${btcAddress}`)
     const json = await res.json() as QueryResult
 
     const list = {
