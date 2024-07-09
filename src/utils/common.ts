@@ -24,7 +24,7 @@ export const checksumCkbAddress = (address: string, network: 'mainnet' | 'testne
 }
 
 export const isBtcAddress = (address: string): boolean => {
-    return address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1') || address.startsWith('tb1')
+    return address.startsWith('bc1') || address.startsWith('tb1')
 }
 
 export const isEvmAddress = (address: string): boolean => {

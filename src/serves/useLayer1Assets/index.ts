@@ -51,7 +51,7 @@ const queryAssets = async (btcAddress: string):Promise<{
                 chain: 'btc',
                 address: {
                     id: '',
-                    script_args: t.addressByTypeId.script_args,
+                    script_args: t.addressByTypeId.script_args.replace('\\', '0'),
                     script_code_hash: '',
                     script_hash_type: ''
                 }

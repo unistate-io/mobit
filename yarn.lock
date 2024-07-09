@@ -1176,6 +1176,14 @@
   resolved "https://registry.npmmirror.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@bitcoinerlab/secp256k1@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.npmmirror.com/@bitcoinerlab/secp256k1/-/secp256k1-1.1.1.tgz#938305c30505b67b15f3de53627bc9d8b4cc7680"
+  integrity sha512-uhjW51WfVLpnHN7+G0saDcM/k9IqcyTbZ+bDgLF3AX8V/a3KXSE9vn7UPBrcdU72tp0J4YPR7BHp2m7MLAZ/1Q==
+  dependencies:
+    "@noble/hashes" "^1.1.5"
+    "@noble/secp256k1" "^1.7.1"
+
 "@ckb-ccc/ccc@0.0.5-alpha.2":
   version "0.0.5-alpha.2"
   resolved "https://registry.npmmirror.com/@ckb-ccc/ccc/-/ccc-0.0.5-alpha.2.tgz#3fd751dc9e1caa31f32c178259b9dde98b480244"
@@ -2685,10 +2693,15 @@
   resolved "https://registry.npmmirror.com/@noble/hashes/-/hashes-1.3.3.tgz#39908da56a4adc270147bb07968bf3b16cfe1699"
   integrity sha512-V7/fPHgl+jsVPXqqeOzT8egNj2iBIVt+ECeMMG8TdcnTikP3oaBtUVqpT/gYCR68aEBJSF+XbYUxStjbFMqIIA==
 
-"@noble/hashes@^1.4.0":
+"@noble/hashes@^1.1.5", "@noble/hashes@^1.2.0", "@noble/hashes@^1.4.0":
   version "1.4.0"
   resolved "https://registry.npmmirror.com/@noble/hashes/-/hashes-1.4.0.tgz#45814aa329f30e4fe0ba49426f49dfccdd066426"
   integrity sha512-V1JJ1WTRUqHHrOSh597hURcMqVKVGL/ea3kv0gSnEdsEZ0/+VyPghM1lMNGc00z7CIQorSvbKpuJkxvuHbvdbg==
+
+"@noble/secp256k1@^1.7.1":
+  version "1.7.1"
+  resolved "https://registry.npmmirror.com/@noble/secp256k1/-/secp256k1-1.7.1.tgz#b251c70f824ce3ca7f8dc3df08d58f005cc0507c"
+  integrity sha512-hOUk6AyBFmqVrv7k5WAw/LpszxVbj9gGN4JRkIX52fdFAj1UA61KXmZDvqVEm+pOyec3+fIeZB02LYa/pWOArw==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -3079,6 +3092,39 @@
   resolved "https://registry.npmmirror.com/@remix-run/router/-/router-1.16.1.tgz#73db3c48b975eeb06d0006481bde4f5f2d17d1cd"
   integrity sha512-es2g3dq6Nb07iFxGk5GuHN20RwBZOsuDQN7izWIisUcv9r+d2C5jQxqmgkdebXgReWfiyUabcki6Fg77mSNrig==
 
+"@rgbpp-sdk/btc@0.4.0", "@rgbpp-sdk/btc@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.npmmirror.com/@rgbpp-sdk/btc/-/btc-0.4.0.tgz#f47d7c041d17efe2ce93bb3211c88526028eccf0"
+  integrity sha512-4Fx/UsN2T1CyhyasK565ChofxRFA1JyCSnUuAPh0fpQ2AAcPzrbKGZS65hpOPa/2qClkzzszdXz1sgkbXUCaPg==
+  dependencies:
+    "@bitcoinerlab/secp256k1" "^1.1.1"
+    "@ckb-lumos/codec" "0.22.2"
+    "@nervosnetwork/ckb-types" "^0.109.1"
+    "@rgbpp-sdk/ckb" "^0.4.0"
+    "@rgbpp-sdk/service" "^0.4.0"
+    bip32 "^4.0.0"
+    bitcoinjs-lib "^6.1.5"
+    ecpair "^2.1.0"
+    lodash "^4.17.21"
+    p-limit "^3.1.0"
+
+"@rgbpp-sdk/ckb@0.4.0", "@rgbpp-sdk/ckb@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.npmmirror.com/@rgbpp-sdk/ckb/-/ckb-0.4.0.tgz#2753721f14109b2acfb0c216cda06bbd5fc50b8e"
+  integrity sha512-mqwWL+mnuyzLoGBR58eeNPRITp0fVqf0smU8BiR0Ey4cVpF206mBMscgex8EHwgAMU6cUjBLBDej0HYugpshZw==
+  dependencies:
+    "@ckb-lumos/base" "^0.22.2"
+    "@ckb-lumos/codec" "^0.22.2"
+    "@exact-realty/multipart-parser" "^1.0.13"
+    "@nervosnetwork/ckb-sdk-core" "^0.109.1"
+    "@nervosnetwork/ckb-sdk-utils" "^0.109.1"
+    "@nervosnetwork/ckb-types" "^0.109.1"
+    "@rgbpp-sdk/service" "^0.4.0"
+    "@spore-sdk/core" "^0.2.0-beta.6"
+    axios "^1.6.8"
+    camelcase-keys "^7.0.2"
+    js-sha256 "^0.11.0"
+
 "@rgbpp-sdk/ckb@^0.3.0":
   version "0.3.0"
   resolved "https://registry.npmmirror.com/@rgbpp-sdk/ckb/-/ckb-0.3.0.tgz#51b17e642959052d05e1c99b7427367db1d0df3d"
@@ -3095,6 +3141,16 @@
     axios "^1.6.8"
     camelcase-keys "^7.0.2"
     js-sha256 "^0.11.0"
+
+"@rgbpp-sdk/service@0.4.0", "@rgbpp-sdk/service@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.npmmirror.com/@rgbpp-sdk/service/-/service-0.4.0.tgz#4bb9b4ca79e983cda2baf062ddf79d07c8ecd2ea"
+  integrity sha512-OvSNcSAmI7RDbf2bzySmHL0UO/S4dn5LAWrfJ41B2WXZiKAAtZ5IG4ajW6RKz6bxf0t7EcjRtXimdGieoubzyw==
+  dependencies:
+    "@ckb-lumos/base" "0.22.2"
+    "@ckb-lumos/codec" "0.22.2"
+    "@nervosnetwork/ckb-types" "^0.109.1"
+    lodash "^4.17.21"
 
 "@rgbpp-sdk/service@^0.3.0":
   version "0.3.0"
@@ -3147,6 +3203,11 @@
   version "1.10.3"
   resolved "https://registry.npmmirror.com/@rushstack/eslint-patch/-/eslint-patch-1.10.3.tgz#391d528054f758f81e53210f1a1eebcf1a8b1d20"
   integrity sha512-qC/xYId4NMebE6w/V33Fh9gWxLgURiNYgVNObbJl2LZv0GUUItCcCqC5axQSwRaAgaxl2mELq1rMzlswaQ0Zxg==
+
+"@scure/base@^1.1.1":
+  version "1.1.7"
+  resolved "https://registry.npmmirror.com/@scure/base/-/base-1.1.7.tgz#fe973311a5c6267846aa131bc72e96c5d40d2b30"
+  integrity sha512-PPNYBslrLNNUQ/Yad37MHYsNQtK67EhWb6WtSvNLLPo7SdVZgkUjD6Dg+5On7zNwmskf8OX7I7Nx5oN+MIWE0g==
 
 "@scure/base@~1.1.4":
   version "1.1.6"
@@ -4780,6 +4841,33 @@ bip-schnorr@=0.6.4:
     randombytes "^2.1.0"
     safe-buffer "^5.2.1"
 
+bip174@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.npmmirror.com/bip174/-/bip174-2.1.1.tgz#ef3e968cf76de234a546962bcf572cc150982f9f"
+  integrity sha512-mdFV5+/v0XyNYXjBS6CQPLo9ekCx4gtKZFnJm5PMto7Fs9hTTDpkkzOB7/FtluRI6JbUUAu+snTYfJRgHLZbZQ==
+
+bip32@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmmirror.com/bip32/-/bip32-4.0.0.tgz#7fac3c05072188d2d355a4d6596b37188f06aa2f"
+  integrity sha512-aOGy88DDlVUhspIXJN+dVEtclhIsfAUppD43V0j40cPTld3pv/0X/MlrZSZ6jowIaQQzFwP8M6rFU2z2mVYjDQ==
+  dependencies:
+    "@noble/hashes" "^1.2.0"
+    "@scure/base" "^1.1.1"
+    typeforce "^1.11.5"
+    wif "^2.0.6"
+
+bitcoinjs-lib@^6.1.5:
+  version "6.1.6"
+  resolved "https://registry.npmmirror.com/bitcoinjs-lib/-/bitcoinjs-lib-6.1.6.tgz#f57c17c82511f860f11946d784c18da39f8618a8"
+  integrity sha512-Fk8+Vc+e2rMoDU5gXkW9tD+313rhkm5h6N9HfZxXvYU9LedttVvmXKTgd9k5rsQJjkSfsv6XRM8uhJv94SrvcA==
+  dependencies:
+    "@noble/hashes" "^1.2.0"
+    bech32 "^2.0.0"
+    bip174 "^2.1.1"
+    bs58check "^3.0.1"
+    typeforce "^1.11.3"
+    varuint-bitcoin "^1.1.2"
+
 bitcore-lib@^10.0.0:
   version "10.0.36"
   resolved "https://registry.npmmirror.com/bitcore-lib/-/bitcore-lib-10.0.36.tgz#2a88c8e0e63d4fc08e870fcc2d6493b931cfd630"
@@ -4975,7 +5063,7 @@ browserslist@^4.0.0, browserslist@^4.18.1, browserslist@^4.21.10, browserslist@^
     node-releases "^2.0.14"
     update-browserslist-db "^1.0.13"
 
-bs58@^4.0.1:
+bs58@^4.0.0, bs58@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npmmirror.com/bs58/-/bs58-4.0.1.tgz#be161e76c354f6f788ae4071f63f34e8c4f0a42a"
   integrity sha512-Ok3Wdf5vOIlBrgCvTq96gBkJw+JUEzdBgyaza5HLtPm7yTHkjRy8+JzNyHF7BHa0bNWOQIp3m5YF0nnFcOIKLw==
@@ -4988,6 +5076,23 @@ bs58@^5.0.0:
   integrity sha512-r+ihvQJvahgYT50JD05dyJNKlmmSlMoOGwn1lCcEzanPglg7TxYjioQUYehQ9mAR/+hOSd2jRc/Z2y5UxBymvQ==
   dependencies:
     base-x "^4.0.0"
+
+bs58check@<3.0.0:
+  version "2.1.2"
+  resolved "https://registry.npmmirror.com/bs58check/-/bs58check-2.1.2.tgz#53b018291228d82a5aa08e7d796fdafda54aebfc"
+  integrity sha512-0TS1jicxdU09dwJMNZtVAfzPi6Q6QeN0pM1Fkzrjn+XYHvzMKPU3pHVpva+769iNVSfIYWf7LJ6WR+BuuMf8cA==
+  dependencies:
+    bs58 "^4.0.0"
+    create-hash "^1.1.0"
+    safe-buffer "^5.1.2"
+
+bs58check@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npmmirror.com/bs58check/-/bs58check-3.0.1.tgz#2094d13720a28593de1cba1d8c4e48602fdd841c"
+  integrity sha512-hjuuJvoWEybo7Hn/0xOrczQKKEKD63WguEjlhLExYs2wUBcebDC1jDNK17eEAD2lYfw82d5ASC1d7K3SWszjaQ==
+  dependencies:
+    "@noble/hashes" "^1.2.0"
+    bs58 "^5.0.0"
 
 bser@2.1.1:
   version "2.1.1"
@@ -5564,6 +5669,13 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+cross-env@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.npmmirror.com/cross-env/-/cross-env-7.0.3.tgz#865264b29677dc015ba8418918965dd232fc54cf"
+  integrity sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==
+  dependencies:
+    cross-spawn "^7.0.1"
+
 cross-fetch@4.0.0, cross-fetch@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmmirror.com/cross-fetch/-/cross-fetch-4.0.0.tgz#f037aef1580bb3a1a35164ea2a848ba81b445983"
@@ -5578,7 +5690,7 @@ cross-fetch@^3.1.5:
   dependencies:
     node-fetch "^2.6.12"
 
-cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
+cross-spawn@^7.0.0, cross-spawn@^7.0.1, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
   version "7.0.3"
   resolved "https://registry.npmmirror.com/cross-spawn/-/cross-spawn-7.0.3.tgz#f73a85b9d5d41d045551c177e2882d4ac85728a6"
   integrity sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==
@@ -6261,6 +6373,15 @@ eastasianwidth@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmmirror.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz#696ce2ec0aa0e6ea93a397ffcf24aa7840c827cb"
   integrity sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==
+
+ecpair@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmmirror.com/ecpair/-/ecpair-2.1.0.tgz#673f826b1d80d5eb091b8e2010c6b588e8d2cb45"
+  integrity sha512-cL/mh3MtJutFOvFc27GPZE2pWL3a3k4YvzUWEOvilnfZVlH3Jwgx/7d6tlD7/75tNk8TG2m+7Kgtz0SI1tWcqw==
+  dependencies:
+    randombytes "^2.1.0"
+    typeforce "^1.18.0"
+    wif "^2.0.6"
 
 ecurve@^1.0.6:
   version "1.0.6"
@@ -9735,6 +9856,23 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
+mobit-sdk@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.1.1.tgz#f78ec8ae79c1d3ca006343faa386b465e1eae152"
+  integrity sha512-zRvYIWR3VKoUANqX0LtiQ2Ztu4m64BxTKJ9EfFtK9Fm+9si34UCvO5TjC2WlfF7wwGDn5fpXnDrXfGEESgwXEg==
+  dependencies:
+    "@ckb-ccc/core" "0.0.5-alpha.2"
+    "@ckb-lumos/base" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/codec" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/common-scripts" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/helpers" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/lumos" "0.0.0-canary-d279b87-20240624101315"
+    "@nervosnetwork/ckb-sdk-utils" "^0.109.1"
+    "@rgbpp-sdk/btc" "^0.4.0"
+    "@rgbpp-sdk/ckb" "^0.4.0"
+    "@rgbpp-sdk/service" "^0.4.0"
+    rgbpp "^0.4.0"
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmmirror.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
@@ -10164,7 +10302,7 @@ p-limit@^2.0.0, p-limit@^2.2.0:
   dependencies:
     p-try "^2.0.0"
 
-p-limit@^3.0.2:
+p-limit@^3.0.2, p-limit@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmmirror.com/p-limit/-/p-limit-3.1.0.tgz#e1daccbe78d0d1388ca18c64fea38e3e57e3706b"
   integrity sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==
@@ -11585,6 +11723,16 @@ reusify@^1.0.4:
   resolved "https://registry.npmmirror.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
+rgbpp@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.npmmirror.com/rgbpp/-/rgbpp-0.4.0.tgz#ebbb56cc8feee33363daacd7c36292823436e901"
+  integrity sha512-V8a5NV/bjKGYYN8gM7b/ed27hVAhIhZK0MJnpFalaasctZjhjtt8BjK9XWGS2mabSR+feHK/5/ROBEVLNOeFhg==
+  dependencies:
+    "@nervosnetwork/ckb-sdk-utils" "^0.109.1"
+    "@rgbpp-sdk/btc" "0.4.0"
+    "@rgbpp-sdk/ckb" "0.4.0"
+    "@rgbpp-sdk/service" "0.4.0"
+
 rimraf@^3.0.0, rimraf@^3.0.2:
   version "3.0.2"
   resolved "https://registry.npmmirror.com/rimraf/-/rimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
@@ -12876,6 +13024,11 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
+typeforce@^1.11.3, typeforce@^1.11.5, typeforce@^1.18.0:
+  version "1.18.0"
+  resolved "https://registry.npmmirror.com/typeforce/-/typeforce-1.18.0.tgz#d7416a2c5845e085034d70fcc5b6cc4a90edbfdc"
+  integrity sha512-7uc1O8h1M1g0rArakJdf0uLRSSgFcYexrVoKo+bzJd32gd4gDy2L/Z+8/FjPnU9ydY3pEnVPtr9FyscYY60K1g==
+
 typescript@^4.9.5:
   version "4.9.5"
   resolved "https://registry.npmmirror.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
@@ -13105,6 +13258,13 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+varuint-bitcoin@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.npmmirror.com/varuint-bitcoin/-/varuint-bitcoin-1.1.2.tgz#e76c138249d06138b480d4c5b40ef53693e24e92"
+  integrity sha512-4EVb+w4rx+YfVM32HQX42AbbT7/1f5zwAYhIujKXKk8NQK+JfRVl3pqT3hjNn/L+RstigmGGKVwHA/P0wgITZw==
+  dependencies:
+    safe-buffer "^5.1.1"
 
 vary@~1.1.2:
   version "1.1.2"
@@ -13447,6 +13607,13 @@ wide-align@^1.1.5:
   integrity sha512-eDMORYaPNZ4sQIuuYPDHdQvf4gyCF9rEEV/yPxGfwPkRodwEgiMUUXTx/dex+Me0wxx53S+NgUHaP7y3MGlDmg==
   dependencies:
     string-width "^1.0.2 || 2 || 3 || 4"
+
+wif@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.npmmirror.com/wif/-/wif-2.0.6.tgz#08d3f52056c66679299726fade0d432ae74b4704"
+  integrity sha512-HIanZn1zmduSF+BQhkE+YXIbEiH0xPr1012QbFEGB0xsKqJii0/SqJjyn8dFv6y36kOznMgMB+LGcbZTJ1xACQ==
+  dependencies:
+    bs58check "<3.0.0"
 
 word-wrap@^1.2.5, word-wrap@~1.2.3:
   version "1.2.5"
