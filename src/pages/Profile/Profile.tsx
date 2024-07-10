@@ -18,6 +18,7 @@ import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
 import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
 import {isBtcAddress} from "@/utils/common";
+import useTransactionsHistory from "@/serves/useTransactionsHistory";
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -27,7 +28,7 @@ export default function Profile() {
 
     // ui state
     const [selectedAddress, setSelectedAddress] = useState<string | undefined>(address)
-    const [activeTab, setActiveTab] = useState<'ckb' | 'btc'>('ckb')
+    const [activeTab, setActiveTab] = useState<'ckb' | 'btc' | 'rgbpp'>('ckb')
 
     useEffect(() => {
         if (!internalAddress) {
@@ -73,6 +74,8 @@ export default function Profile() {
         data: btcHistory,
         status: btcHistoryStatus
     } = useBtcTransactionsHistory(btcAddress, 5)
+
+    const {data: rgbppHistory, status: rgbppHistoryStatus} = useTransactionsHistory(btcAddress)
 
     const tokensStatus = useMemo(() => {
         if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' || layer1DataStatus === 'loading') {
@@ -247,6 +250,11 @@ export default function Profile() {
                                 }}
                                      className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'btc' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>BTC
                                 </div>
+                                <div onClick={e => {
+                                    setActiveTab('rgbpp')
+                                }}
+                                     className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'rgbpp' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>RGB++
+                                </div>
                             </div>
                         }
 
@@ -257,6 +265,11 @@ export default function Profile() {
                         {activeTab === 'btc' && btcAddress &&
                             <ListBtcHistory internalAddress={internalAddress!} data={btcHistory}
                                             status={btcHistoryStatus}/>
+                        }
+
+                        {activeTab === 'rgbpp' && btcAddress &&
+                            <ListHistory internalAddress={internalAddress!} data={rgbppHistory}
+                                            status={rgbppHistoryStatus} />
                         }
                     </div>
                 </div>

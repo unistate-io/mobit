@@ -13,8 +13,9 @@ dayjsLib.extend(relativeTime)
 export default function ListHistory({
                                         data,
                                         status,
-                                        address
-                                    }: { data: TransactionHistory[], status: string, address: string }) {
+                                        address,
+                                        internalAddress,
+                                    }: { data: TransactionHistory[], status: string, address?: string, internalAddress?: string }) {
     const {lang} = useContext(LangContext)
     const {config} = useContext(CKBContext)
 
@@ -42,17 +43,36 @@ export default function ListHistory({
                         target="blank"
                         to={`${config.explorer}/transaction/${item.attributes.transaction_hash}`} key={item.id}
                         className="bg-stone-50 rounded p-4 mt-3">
-                        <div className="flex  flex-row text-xs">
-                            <div
-                                className="text-[#6CD7B2] mr-2">{shortTransactionHash(item.attributes.transaction_hash)}</div>
-                            <div className="text-neutral-500">{dayjs(item.attributes.created_at).fromNow()}</div>
+                        <div className="flex  flex-row text-xs justify-between mb-3">
+                           <div className="flex flex-row">
+                               <div
+                                   className="text-[#6CD7B2] mr-2">{shortTransactionHash(item.attributes.transaction_hash)}</div>
+                               <div className="text-neutral-500">{dayjs(item.attributes.created_at).fromNow()}</div>
+                           </div>
                             {
                                 item.attributes.rgb_txid &&
                                 <div className="text-neutral-500 text-sx text-gray-500 px-2 px-1 rounded ml-4" style={{background: 'linear-gradient(90.24deg,#ffd176 .23%,#ffdb81 6.7%,#84ffcb 99.82%)'}}>RGB++</div>
                             }
                         </div>
-                        {
+                        { !!address &&
                             calculateTotalAmount(item, address).map((res) => {
+                                const color = res.delta.includes('+') ?
+                                    'text-green-500'
+                                    : res.delta.includes('-') ?
+                                        'text-red-500' :
+                                        'text-neutral-500'
+                                return <div key={res.symbol} className="flex flex-row justify-between mt-1 text-xs">
+                                    <div className="flex-row flex items-center">
+                                        <TokenIcon symbol={res.symbol} size={18}/>
+                                        {res.symbol}
+                                    </div>
+                                    <div className={`font-semibold ${color}`}>{res.delta}</div>
+                                </div>
+                            })
+                        }
+
+                        { !!internalAddress &&
+                            calculateTotalAmountRgbpp(item, internalAddress).map((res) => {
                                 const color = res.delta.includes('+') ?
                                     'text-green-500'
                                     : res.delta.includes('-') ?
@@ -72,9 +92,9 @@ export default function ListHistory({
             }
         </div>
         {
-            status === 'complete' &&
+            status === 'complete' && (address || internalAddress) &&
             <Link
-                to={`${config.explorer}/address/${address}`}
+                to={`${config.explorer}/address/${address || internalAddress}`}
                 className="cursor-pointer hover:bg-gray-300 bg-gray-200 h-[40px] rounded-lg flex flex-row items-center justify-center mx-3 mt-2 text-xs">
                 <div className="mr-2">{lang['ShowMoreRecords']}</div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
@@ -87,7 +107,7 @@ export default function ListHistory({
     </div>
 }
 
-function calculateTotalAmount(data: TransactionHistory, address: string) {
+function calculateTotalAmount(data: TransactionHistory, address:string = '') {
     const inputs = data.attributes.display_inputs.filter((input) => input.address_hash === address)
     const outputs = data.attributes.display_outputs.filter((output) => output.address_hash === address)
 
@@ -151,6 +171,73 @@ function calculateTotalAmount(data: TransactionHistory, address: string) {
     return res
 }
 
+function calculateTotalAmountRgbpp(data: TransactionHistory, internalAddress: string) {
+    const inputs = data.attributes.display_inputs.filter((input) => input.rgb_info && input.rgb_info!.address === internalAddress)
+    const outputs = data.attributes.display_outputs.filter((output) => output.rgb_info && output.rgb_info!.address === internalAddress)
+    const total = [...inputs, ...outputs]
+
+    console.log('inputs', inputs)
+    console.log('outputs', outputs)
+    let tokens: { symbol: string, decimal: string }[] = []
+    total.forEach((input) => {
+        if (input.xudt_info && !tokens.some((token) => token.symbol === input.xudt_info!.symbol)) {
+            tokens.push({
+                symbol: input.xudt_info!.symbol,
+                decimal: input.xudt_info!.decimal
+            })
+        }
+    })
+
+    const inputCkbAmount = inputs.reduce((acc, input) => {
+        if (!input.xudt_info) {
+            return acc + Number(input.capacity)
+        } else {
+            return acc
+        }
+    }, 0)
+
+    const outputCkbAmount = outputs.reduce((acc, output) => {
+        if (!output.xudt_info) {
+            return acc + Number(output.capacity)
+        } else {
+            return acc
+        }
+    }, 0)
+
+    const ckbDelta = (outputCkbAmount - inputCkbAmount) / 10 ** 8
+    let res = [{
+        symbol: 'CKB',
+        delta: ckbDelta > 0 ? '+' + ckbDelta.toString() : ckbDelta.toString(),
+    }] as { symbol: string, delta: string }[]
+
+    tokens.map((token) => {
+        const inputAmount = inputs.reduce((acc, input) => {
+            if (input.xudt_info && input.xudt_info.symbol === token.symbol) {
+                return acc + Number(input.xudt_info.amount)
+            } else {
+                return acc
+            }
+        }, 0)
+
+        const outputAmount = outputs.reduce((acc, output) => {
+            if (output.xudt_info && output.xudt_info.symbol === token.symbol) {
+                return acc + Number(output.xudt_info.amount)
+            } else {
+                return acc
+            }
+        }, 0)
+
+        const delta = (outputAmount - inputAmount) / 10 ** Number(token.decimal)
+
+        res.push({
+            symbol: token.symbol,
+            delta: delta > 0 ? '+' + delta.toString() : delta.toString(),
+        })
+    })
+
+    return res.filter((res) => res.delta !== '0')
+}
+
 export interface TransactionHistory {
     id: string,
     type: string,
@@ -182,6 +269,13 @@ export interface TransactionHistory {
                 decimal: string,
                 display_name: string,
                 symbol: string,
+            },
+            rgb_info?: {
+                txid: string,
+                index: string,
+                address: string,
+                status: string,
+                consumed_txid: string
             }
         }[],
         display_inputs: {
@@ -205,6 +299,13 @@ export interface TransactionHistory {
                 decimal: string,
                 display_name: string,
                 symbol: string,
+            },
+            rgb_info?: {
+                txid: string,
+                index: string,
+                address: string,
+                status: string,
+                consumed_txid: string
             }
         }[],
     }

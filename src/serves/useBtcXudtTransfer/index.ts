@@ -9,7 +9,7 @@ export default function useBtcXudtTransfer() {
 
     const {network} = useContext(CKBContext)
 
-    const signAndSend = async ({from, to, args, amount} : {
+    const signAndSend = async ({from, to, args, amount}: {
         from: string;
         to: string;
         args: string;
@@ -22,7 +22,7 @@ export default function useBtcXudtTransfer() {
         const btcHelper = new BtcHelper(unisat, network === 'mainnet' ? 0 : 1)
         const ckbHelper = new CkbHelper(network === 'mainnet')
 
-       const {btcTxId , error} = await transferCombined({
+        const {btcTxId, error} = await transferCombined({
             toBtcAddress: to,
             xudtTypeArgs: args,
             transferAmount: BigInt(amount),
