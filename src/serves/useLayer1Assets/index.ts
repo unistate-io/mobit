@@ -1,9 +1,7 @@
-import {queryTokenInfo, queryXudtCell} from "@/utils/graphql"
 // @ts-ignore
 import BigNumber from "bignumber.js"
 import {useEffect, useState} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
-import {Spores} from "@/utils/graphql/types";
 import {SporesWithChainInfo} from "@/serves/useSpores";
 
 
@@ -17,7 +15,7 @@ interface QueryResult {
     assets: AssetDetails;
 }
 
-const queryAssets = async (btcAddress: string):Promise<{
+const queryAssets = async (btcAddress: string): Promise<{
     xudts: TokenBalance[],
     dobs: SporesWithChainInfo[],
     btc: TokenBalance
@@ -27,7 +25,7 @@ const queryAssets = async (btcAddress: string):Promise<{
 
     const list = {
         xudts: [] as TokenBalance[],
-        dobs:[] as SporesWithChainInfo[],
+        dobs: [] as SporesWithChainInfo[],
         btc: {
             decimal: 8,
             name: 'Bitcoin',
@@ -40,23 +38,55 @@ const queryAssets = async (btcAddress: string):Promise<{
     }
 
     if (json.assets.xudtCell && json.assets.xudtCell.length) {
+        let tokens: string[] = []
         json.assets.xudtCell.forEach((t: any) => {
+            if (!tokens.includes(t.type_id)) {
+                tokens.push(t.type_id)
+            }
+        })
+
+        console.log('tokens', tokens)
+
+        tokens.forEach((t) => {
+            const cells = json.assets.xudtCell.filter((c: any) => c.type_id === t)
+            const balance = cells.reduce((acc: BigNumber, c: any) => acc.plus(c.amount), new BigNumber(0))
+
+            console.log('cells[0]', cells[0])
             list.xudts.push({
-                name: t.addressByTypeId.token_info.name,
-                symbol: t.addressByTypeId.token_info.symbol,
-                decimal: t.addressByTypeId.token_info.decimal,
-                type_id: t.type_id,
-                amount: t.amount,
+                name: cells[0].addressByTypeId.token_info.name,
+                symbol: cells[0].addressByTypeId.token_info.symbol,
+                decimal: cells[0].addressByTypeId.token_info.decimal,
+                type_id: cells[0].type_id,
+                amount: balance.toString(),
                 type: 'xudt',
                 chain: 'btc',
                 address: {
                     id: '',
-                    script_args: t.addressByTypeId.script_args.replace('\\', '0'),
+                    script_args: cells[0].addressByTypeId.script_args.replace('\\', '0'),
                     script_code_hash: '',
                     script_hash_type: ''
                 }
             })
         })
+
+
+        // json.assets.xudtCell.forEach((t: any) => {
+        //     list.xudts.push({
+        //         name: t.addressByTypeId.token_info.name,
+        //         symbol: t.addressByTypeId.token_info.symbol,
+        //         decimal: t.addressByTypeId.token_info.decimal,
+        //         type_id: t.type_id,
+        //         amount: t.amount,
+        //         type: 'xudt',
+        //         chain: 'btc',
+        //         address: {
+        //             id: '',
+        //             script_args: t.addressByTypeId.script_args.replace('\\', '0'),
+        //             script_code_hash: '',
+        //             script_hash_type: ''
+        //         }
+        //     })
+        // })
     }
 
     if (json.assets.sporeActions && json.assets.sporeActions.length) {
@@ -75,7 +105,7 @@ const queryAssets = async (btcAddress: string):Promise<{
         })
     }
 
-    return  list
+    return list
 }
 
 const btcEmpty: TokenBalance = {

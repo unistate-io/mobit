@@ -30,7 +30,7 @@ export default function DialogBtcXudtTransfer({
                                                   className,
                                                   token
                                               }: { children: React.ReactNode, froms: string[], token: TokenInfoWithAddress, className?: string }) {
-    const {build, signAndSend} = useBtcXudtTransfer()
+    const {signAndSend} = useBtcXudtTransfer()
     const {config, internalAddress} = useContext(CKBContext)
     const [open, setOpen] = React.useState(false)
 
@@ -129,12 +129,14 @@ export default function DialogBtcXudtTransfer({
         const amount = BigNumber(formData.amount).multipliedBy(10 ** token.decimal).toString()
         setSending(true)
         try {
-            await build({
+          const tx = await signAndSend({
                 from: btcAddress!,
                 to: formData.to,
                 amount: amount,
                 args: token.address.script_args
             })
+            setTxHash(tx)
+            setStep(3)
         } catch (e: any) {
             setTransactionError(e.message)
         } finally {

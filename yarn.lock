@@ -9856,10 +9856,10 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mobit-sdk@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.1.1.tgz#f78ec8ae79c1d3ca006343faa386b465e1eae152"
-  integrity sha512-zRvYIWR3VKoUANqX0LtiQ2Ztu4m64BxTKJ9EfFtK9Fm+9si34UCvO5TjC2WlfF7wwGDn5fpXnDrXfGEESgwXEg==
+mobit-sdk@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.1.2.tgz#2b5b78db5b1a2525105480a4cce341ee795a0ec3"
+  integrity sha512-zLetdb19a2zrJPBciq3UUntxZNAhLN89nqPU+1YeWN1vBFMEKgDd4RjuGTZuont2W/DlYyLV4vMGmfaXmbo2/A==
   dependencies:
     "@ckb-ccc/core" "0.0.5-alpha.2"
     "@ckb-lumos/base" "0.0.0-canary-d279b87-20240624101315"
