@@ -68,25 +68,6 @@ const queryAssets = async (btcAddress: string): Promise<{
                 }
             })
         })
-
-
-        // json.assets.xudtCell.forEach((t: any) => {
-        //     list.xudts.push({
-        //         name: t.addressByTypeId.token_info.name,
-        //         symbol: t.addressByTypeId.token_info.symbol,
-        //         decimal: t.addressByTypeId.token_info.decimal,
-        //         type_id: t.type_id,
-        //         amount: t.amount,
-        //         type: 'xudt',
-        //         chain: 'btc',
-        //         address: {
-        //             id: '',
-        //             script_args: t.addressByTypeId.script_args.replace('\\', '0'),
-        //             script_code_hash: '',
-        //             script_hash_type: ''
-        //         }
-        //     })
-        // })
     }
 
     if (json.assets.sporeActions && json.assets.sporeActions.length) {
@@ -124,12 +105,14 @@ const btcEmpty: TokenBalance = {
     }
 }
 
-export default function useLayer1Assets(btcAddress?: string) {
+export default function useLayer1Assets(btcAddress?: string, polling?: boolean) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [xudts, setXudts] = useState<TokenBalance[]>([])
     const [dobs, setDobs] = useState<SporesWithChainInfo[]>([])
     const [btc, setBtc] = useState<TokenBalance | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
+
+    const pollingInterval = 1000 * 30 // 30s 一次
 
     useEffect(() => {
         if (!btcAddress) {
@@ -159,6 +142,26 @@ export default function useLayer1Assets(btcAddress?: string) {
                 setError(e)
             })
     }, [btcAddress])
+
+
+    useEffect(() => {
+        if (polling) {
+            const interval = setInterval(() => {
+                if (btcAddress) {
+                    queryAssets(btcAddress)
+                        .then(res => {
+                            setXudts(res.xudts)
+                            setDobs(res.dobs)
+                            setBtc(res.btc)
+                        })
+                        .catch((e: any) => {
+                            console.error(e)
+                        })
+                }
+            }, pollingInterval)
+            return () => clearInterval(interval)
+        }
+    }, [polling])
 
     return {
         status,

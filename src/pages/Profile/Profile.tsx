@@ -67,7 +67,7 @@ export default function Profile() {
         btc: layer1Btc,
         status: layer1DataStatus,
         error: layer1DataErr
-    } = useLayer1Assets(btcAddress)
+    } = useLayer1Assets(btcAddress, true)
 
     const {
         data: btcHistory,
