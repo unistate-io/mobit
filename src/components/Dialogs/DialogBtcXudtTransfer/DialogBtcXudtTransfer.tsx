@@ -26,10 +26,9 @@ export interface XudtTransferProps {
 
 export default function DialogBtcXudtTransfer({
                                                   children,
-                                                  froms,
                                                   className,
                                                   token
-                                              }: { children: React.ReactNode, froms: string[], token: TokenInfoWithAddress, className?: string }) {
+                                              }: { children: React.ReactNode,  token: TokenInfoWithAddress, className?: string }) {
     const {signAndSend} = useBtcXudtTransfer()
     const {config, internalAddress} = useContext(CKBContext)
     const [open, setOpen] = React.useState(false)

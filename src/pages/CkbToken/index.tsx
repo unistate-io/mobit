@@ -74,7 +74,7 @@ export default function TokenPage() {
         <div className="shadow flex-1 w-full mt-6 sm:mt-0 sm:ml-6 rounded-lg px-5 py-3">
             <div className="font-semibold text-lg mb-4">Transactions</div>
 
-            <ListTokenHistory data={historyData} status={historyDataStatus} address={addresses![0]} />
+            <ListTokenHistory data={historyData} status={historyDataStatus} address={addresses?.[0]} />
         </div>
     </div>
 }

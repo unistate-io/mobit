@@ -106,7 +106,7 @@ export default function ListToken({
 
                                     {
                                         item.chain === 'btc' &&  item.symbol !== 'BTC' &&
-                                        <DialogBtcXudtTransfer froms={addresses} token={item}>
+                                        <DialogBtcXudtTransfer token={item}>
                                             <div
                                                 className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
                                                 {lang['Send']}

@@ -45,13 +45,10 @@ const queryAssets = async (btcAddress: string): Promise<{
             }
         })
 
-        console.log('tokens', tokens)
-
         tokens.forEach((t) => {
             const cells = json.assets.xudtCell.filter((c: any) => c.type_id === t)
             const balance = cells.reduce((acc: BigNumber, c: any) => acc.plus(c.amount), new BigNumber(0))
 
-            console.log('cells[0]', cells[0])
             list.xudts.push({
                 name: cells[0].addressByTypeId.token_info.name,
                 symbol: cells[0].addressByTypeId.token_info.symbol,

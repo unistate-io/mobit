@@ -84,7 +84,6 @@ export default function DialogProfileInfo({children, className}: {children: Reac
                     </>
                 }
 
-
             </Dialog.Content>
         </Dialog.Portal>
     </Dialog.Root>

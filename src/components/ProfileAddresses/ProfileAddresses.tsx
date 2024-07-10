@@ -6,9 +6,10 @@ import {SelectItemProps} from "@radix-ui/react-select"
 import {shortTransactionHash} from "@/utils/common"
 
 export interface SelectOptionProps {
-    addresses: string[];
-    defaultAddress: string;
-    onChoose?: (address: string) => void;
+    addresses: string[]
+    defaultAddress: string
+    onChoose?: (address: string) => void
+    clickable?: boolean
 }
 
 const getLabel = (address: string) => {
@@ -35,7 +36,7 @@ const getLabel = (address: string) => {
     }
 }
 
-export default function ProfileAddresses ({addresses, defaultAddress, onChoose}: SelectOptionProps) {
+export default function ProfileAddresses ({addresses, defaultAddress, onChoose, clickable = true}: SelectOptionProps) {
     const [open, setOpen] = React.useState(false)
     const [menuWidth, setMenuWidth] = React.useState('auto')
     const id = useRef(Math.floor(Math.random() * (100000 - 10000 + 1)) + 10000)
@@ -43,8 +44,10 @@ export default function ProfileAddresses ({addresses, defaultAddress, onChoose}:
     const [value, setValue] = React.useState<string>(defaultAddress)
 
     const handleCopy = (text: string) => {
-        navigator.clipboard.writeText(text)
-        showToast('Copied to clipboard !', ToastType.success)
+        if (clickable) {
+            navigator.clipboard.writeText(text)
+            showToast('Copied to clipboard !', ToastType.success)
+        }
     }
 
     useEffect(()=>{
