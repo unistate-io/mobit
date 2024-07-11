@@ -44,7 +44,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
 
 
     const fee = (feeRate: number) =>{
-        return BigNumber(fee1000).multipliedBy(feeRate / 1000).dividedBy(10**8).toString()
+        return BigNumber(fee1000).multipliedBy(feeRate / 1000).dividedBy(10** token.decimal).toString()
     }
 
 
@@ -80,7 +80,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
         }
 
 
-        const amount = BigNumber(formData.amount).multipliedBy(10 ** 8)
+        const amount = BigNumber(formData.amount).multipliedBy(10 ** token.decimal)
         let tx: helpers.TransactionSkeletonType | null = null
         if (!hasError) {
             try {
@@ -105,7 +105,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
     const setMaxAmount = () => {
         setFormData({
             ...formData,
-            amount: xudtBalance ? BigNumber(xudtBalance.amount).dividedBy(10 ** 8).toString() : '0'
+            amount: xudtBalance ? BigNumber(xudtBalance.amount).dividedBy(10 ** token.decimal).toString() : '0'
         })
     }
 
@@ -134,7 +134,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
         setSending(true)
         setTransactionError('')
         try {
-            const amount = BigNumber(BigNumber(formData.amount)).multipliedBy(10 ** 8)
+            const amount = BigNumber(BigNumber(formData.amount)).multipliedBy(10 ** token.decimal)
             const txHash = await signAndSend({
                 froms,
                 to: formData.to,
@@ -214,7 +214,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                                 <div className="mb-2 flex-row flex items-center justify-between">
                                     <div>Amount</div>
                                     <div className="font-normal"><span
-                                        className="text-gray-500"> Balance:</span> {xudtBalance ? toDisplay(xudtBalance.amount, 8, true, 8) : '--'}
+                                        className="text-gray-500"> Balance:</span> {xudtBalance ? toDisplay(xudtBalance.amount, token.decimal, true) : '--'}
                                     </div>
                                 </div>
                                 <Input value={formData.amount}
