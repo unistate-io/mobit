@@ -32,6 +32,10 @@ const langCN: LangConfig = {
     ViewTheProduct: '查看应用',
     Transactions: '交易',
     Merge: '合并',
+    Burn: '销毁',
+    Cancel: '取消',
+    Input: '输入',
+    Output: '输出',
 }
 
 

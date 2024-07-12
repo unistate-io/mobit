@@ -30,6 +30,10 @@ const langEN = {
     ViewTheProduct: 'View The Product',
     Transactions: 'Transactions',
     Merge: 'Merge',
+    Burn: 'Burn',
+    Cancel: 'Cancel',
+    Input: 'Input',
+    Output: 'Output',
 }
 
 

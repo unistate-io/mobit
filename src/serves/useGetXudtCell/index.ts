@@ -1,8 +1,8 @@
 import {useContext, useEffect, useState} from "react"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
-import {Cell, config as lumosConfig, helpers, Indexer, commons} from "@ckb-lumos/lumos"
+import {Cell, config as lumosConfig, helpers, Indexer, commons, config} from "@ckb-lumos/lumos"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {hashType} from "@/serves/useXudtTransfer/lib"
+import {addCellDep, hashType} from "@/serves/useXudtTransfer/lib"
 import {CkbHelper, createMergeXudtTransaction, convertToTxSkeleton} from "mobit-sdk"
 import {ccc} from "@ckb-ccc/connector-react"
 
@@ -70,11 +70,24 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
             isMainnet: network === 'mainnet'
         })
 
+        const OMNILOCK = lumosConfig.MAINNET.SCRIPTS.OMNILOCK;
+
+        tx.cellDeps.push({
+            outPoint: {
+                txHash: OMNILOCK.TX_HASH,
+                index: OMNILOCK.INDEX,
+            },
+            depType: OMNILOCK.DEP_TYPE,
+        })
+
         let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector);
         const cccLib = ccc as any
         txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton);
-        (txSkeleton as any).outputs[1].capacity = (txSkeleton as any).outputs[1].capacity - BigInt(30)
 
+        (txSkeleton as any).outputs[1].capacity = (txSkeleton as any).outputs[1].capacity - BigInt(100);
+
+
+        console.log('txSkeleton', txSkeleton)
         return txSkeleton
     }
 
@@ -84,6 +97,8 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
         if (!signer) {
             throw new Error('Please connect wallet first.')
         }
+
+        console.log('signer', signer)
 
         const hash = await signer.sendTransaction(tx as any)
         return hash

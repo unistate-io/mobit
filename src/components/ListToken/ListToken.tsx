@@ -9,6 +9,7 @@ import DialogXudtTransfer from "@/components/Dialogs/DialogXudtTransfer/DialogXu
 import DialogBtcXudtTransfer from "@/components/Dialogs/DialogBtcXudtTransfer/DialogBtcXudtTransfer"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import DialogXudtCellMerge from "@/components/Dialogs/DialogXudtCellMerge/DialogXudtCellMerge"
+import Dropdown from "@/components/Popover/Popover";
 
 export interface TokenBalance extends TokenInfoWithAddress {
     amount: string,
@@ -93,7 +94,45 @@ export default function ListToken({
                                     onClick={e => {
                                         e.preventDefault()
                                     }}
-                                    className="shrink-0 basis-1/3 md:basis-1/4 text-right flex-row items-center flex flex-nowrap justify-end">
+                                    className="shrink-0 basis-1/3 text-right flex-row items-center flex flex-nowrap justify-end">
+
+
+                                    { item.symbol !== 'CKB' && item.chain === 'ckb' &&
+                                        <>
+                                            <DialogXudtCellMerge
+                                                xudt={item}
+                                                addresses={addresses}>
+                                                <div id="xudt-merge-btn" />
+                                            </DialogXudtCellMerge>
+
+                                            <Dropdown
+                                                content={(close) => {
+                                                    return <div>
+                                                        <div
+                                                            onClick={() => {
+                                                                close()
+                                                                document.getElementById('xudt-merge-btn')?.click()
+                                                            }}
+                                                            className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
+                                                            {lang['Merge']}
+                                                        </div>
+                                                        <div
+                                                            onClick={() => {
+                                                                close()
+                                                                alert('coming soon')
+                                                            }}
+                                                            className=" mt-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
+                                                            {lang['Burn']}
+                                                        </div>
+                                                    </div>
+                                                }}
+                                                className="p-2">
+                                                <div className="cursor-pointer md:mr-2 mr-1 px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
+                                                    <i className="uil-ellipsis-h" />
+                                                </div>
+                                            </Dropdown>
+                                        </>
+                                    }
 
                                     {
                                         item.symbol === 'CKB' &&
@@ -139,15 +178,6 @@ export default function ListToken({
                                                 {lang['Receive']}
                                             </div>
                                         </DialogXudtReceive>
-                                    }
-
-                                    { item.symbol !== 'CKB' && item.chain === 'ckb' &&
-                                        <DialogXudtCellMerge xudt={item} addresses={addresses}>
-                                            <div
-                                                className="cursor-pointer ml-2 px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
-                                                {lang['Merge']}
-                                            </div>
-                                        </DialogXudtCellMerge>
                                     }
 
                                 </div>
