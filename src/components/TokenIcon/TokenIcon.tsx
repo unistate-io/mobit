@@ -22,7 +22,7 @@ function getStrHash(name: string) {
 export default function TokenIcon({symbol, size, chain, rounded=true} : {symbol: string, size: number, chain?: string, rounded?: boolean}) {
     const options = {
         foreground: [216, 140, 173, 255] ,
-        background: [255, 255, 255, 255] ,
+        background: [245, 245, 245, 255] ,
         margin: 0,
         size: size,
         format: 'svg'

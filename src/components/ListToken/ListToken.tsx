@@ -8,6 +8,7 @@ import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import DialogXudtTransfer from "@/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer"
 import DialogBtcXudtTransfer from "@/components/Dialogs/DialogBtcXudtTransfer/DialogBtcXudtTransfer"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
+import DialogXudtCellMerge from "@/components/Dialogs/DialogXudtCellMerge/DialogXudtCellMerge"
 
 export interface TokenBalance extends TokenInfoWithAddress {
     amount: string,
@@ -138,6 +139,15 @@ export default function ListToken({
                                                 {lang['Receive']}
                                             </div>
                                         </DialogXudtReceive>
+                                    }
+
+                                    { item.symbol !== 'CKB' && item.chain === 'ckb' &&
+                                        <DialogXudtCellMerge xudt={item} addresses={addresses}>
+                                            <div
+                                                className="cursor-pointer ml-2 px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
+                                                {lang['Merge']}
+                                            </div>
+                                        </DialogXudtCellMerge>
                                     }
 
                                 </div>

@@ -29,6 +29,7 @@ const langEN = {
     Change24h: 'Change 24h',
     ViewTheProduct: 'View The Product',
     Transactions: 'Transactions',
+    Merge: 'Merge',
 }
 
 

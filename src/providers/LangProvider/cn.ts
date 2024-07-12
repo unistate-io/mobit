@@ -31,6 +31,7 @@ const langCN: LangConfig = {
     Change24h: '24小时涨跌',
     ViewTheProduct: '查看应用',
     Transactions: '交易',
+    Merge: '合并',
 }
 
 
