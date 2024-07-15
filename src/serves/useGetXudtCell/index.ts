@@ -65,26 +65,27 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
 
         let tx = await createMergeXudtTransaction({
             xudtArgs: tokenInfo.address.script_args.replace('\\', '0'),
+            ckbAddresses: addresses,
             ckbAddress: addresses[0],
             collector: ckbHelper.collector,
             isMainnet: network === 'mainnet'
         })
 
-        const OMNILOCK = lumosConfig.MAINNET.SCRIPTS.OMNILOCK;
-
-        tx.cellDeps.push({
-            outPoint: {
-                txHash: OMNILOCK.TX_HASH,
-                index: OMNILOCK.INDEX,
-            },
-            depType: OMNILOCK.DEP_TYPE,
-        })
+        // const OMNILOCK = lumosConfig.MAINNET.SCRIPTS.OMNILOCK;
+        //
+        // tx.cellDeps.push({
+        //     outPoint: {
+        //         txHash: OMNILOCK.TX_HASH,
+        //         index: OMNILOCK.INDEX,
+        //     },
+        //     depType: OMNILOCK.DEP_TYPE,
+        // })
 
         let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector);
-        const cccLib = ccc as any
-        txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton);
-
-        (txSkeleton as any).outputs[1].capacity = (txSkeleton as any).outputs[1].capacity - BigInt(100);
+        // const cccLib = ccc as any
+        // txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton);
+        //
+        // (txSkeleton as any).outputs[1].capacity = (txSkeleton as any).outputs[1].capacity - BigInt(100);
 
 
         console.log('txSkeleton', txSkeleton)
