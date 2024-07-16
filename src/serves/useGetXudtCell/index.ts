@@ -1,9 +1,9 @@
 import {useContext, useEffect, useState} from "react"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
-import {Cell, config as lumosConfig, helpers, Indexer, commons, config} from "@ckb-lumos/lumos"
+import {Cell, config as lumosConfig, helpers, Indexer} from "@ckb-lumos/lumos"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {addCellDep, hashType} from "@/serves/useXudtTransfer/lib"
-import {CkbHelper, createMergeXudtTransaction, convertToTxSkeleton} from "mobit-sdk"
+import {hashType} from "@/serves/useXudtTransfer/lib"
+import {CkbHelper, convertToTxSkeleton, createMergeXudtTransaction} from "mobit-sdk"
 import {ccc} from "@ckb-ccc/connector-react"
 
 export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, addresses?: string[]) {
@@ -26,7 +26,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
             const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc)
             const scriptConfig = network === 'mainnet' ? lumosConfig.MAINNET : lumosConfig.TESTNET
             const senderLocks = addresses.map((address) => {
-                return helpers.addressToScript(address, { config: scriptConfig })
+                return helpers.addressToScript(address, {config: scriptConfig})
             })
 
             const typeScript: any = {
@@ -59,7 +59,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
 
 
     const createMergeXudtCellTx = async () => {
-        if (!tokenInfo || !addresses || !addresses.length)  return null
+        if (!tokenInfo || !addresses || !addresses.length) return null
 
         const ckbHelper = new CkbHelper(network === 'mainnet')
 
@@ -92,7 +92,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
     }
 
     const signAndSend = async (tx: helpers.TransactionSkeletonType) => {
-        if (!tokenInfo || !addresses || !addresses.length)  return null
+        if (!tokenInfo || !addresses || !addresses.length) return null
 
         if (!signer) {
             throw new Error('Please connect wallet first.')

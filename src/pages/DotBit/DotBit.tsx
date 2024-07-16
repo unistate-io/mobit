@@ -4,9 +4,11 @@ import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import {shortTransactionHash} from "@/utils/common"
 import dayjs from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
+import {TokenIcons} from "@/components/TokenIcon/icons"
+import coin_types from "@/libs/coin_types"
 
 export default function DotBit() {
-    const {domain} = useParams<{domain: string}>()
+    const {domain} = useParams<{ domain: string }>()
 
     const {data, status} = useDotbitDetail(domain)
 
@@ -73,7 +75,8 @@ export default function DotBit() {
                     <div className="text-sm mb-6">
                         <div className="text-sm mb-3">Manager</div>
                         <div className="flex flex-row items-center text-sm font-semibold break-all">
-                            <CopyText copyText={data.manager_key}>{shortTransactionHash(data.manager_key, 10)}</CopyText>
+                            <CopyText
+                                copyText={data.manager_key}>{shortTransactionHash(data.manager_key, 10)}</CopyText>
                         </div>
                     </div>
 
@@ -90,6 +93,50 @@ export default function DotBit() {
                             {dayjs(data.expired_at_unix * 1000).format('YYYY-MM-DD HH:mm')}
                         </div>
                     </div>
+
+                    {
+                        !!data.records.length &&
+                        <>
+                            <div className="font-semibold text-lg mb-4">Records</div>
+                            {
+                                data.records.map((record, index) => {
+                                    if (record.key.includes('address')) {
+                                        const chainIndex = record.key.split('.')[1]
+                                        const chain = coin_types[Number(chainIndex)]
+
+                                        return <div className="flex flex-row items-center px-4 py-3 rounded-lg bg-gray-100 mb-3" key={index}>
+                                            <div className="text-sm flex flex-row items-center">
+                                                {!!chain ?
+                                                   <>
+                                                   {!!TokenIcons[chain[1]] &&
+                                                       <img className="rounded-full w-6 h-6 mr-2" src={TokenIcons[chain[1]]}  alt={''} />
+                                                   }
+                                                       <div className="font-semibold">{chain[1]}</div>
+                                                   </>
+                                                    : <div className="font-semibold">{record.key}</div>
+                                                }
+                                            </div>
+                                            <div className="text-sm ml-3">
+                                                <CopyText
+                                                    copyText={record.value}>{shortTransactionHash(record.value, 6)}</CopyText>
+
+                                            </div>
+                                        </div>
+                                    } else {
+                                        return <div className="flex flex-row items-center px-4 py-3 rounded-lg bg-gray-100 mb-3" key={index}>
+                                            <div className="text-sm flex flex-row items-center">
+                                                <div className="font-semibold">{record.key}</div>
+                                            </div>
+                                            <div className="text-sm ml-3">
+                                                <CopyText
+                                                    copyText={record.value}>{record.value}</CopyText>
+                                            </div>
+                                        </div>
+                                    }
+                                })
+                            }
+                        </>
+                    }
                 </>
             }
         </div>

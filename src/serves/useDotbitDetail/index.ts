@@ -10,6 +10,11 @@ export interface DotbitDetail {
     owner_key: string,
     manager_key: string,
     display_name: string,
+    records: {
+        key: string,
+        value: string,
+        label: string
+    }[]
 }
 
 export default function useDotbitDetail(domain?: string) {
@@ -38,7 +43,8 @@ export default function useDotbitDetail(domain?: string) {
                 setData({
                     account: domain,
                     tx_hash: _data.out_point.tx_hash,
-                    ..._data.account_info
+                    ..._data.account_info,
+                    records: res.records.result.data.records || []
                 })
                 setStatus('complete')
             })
