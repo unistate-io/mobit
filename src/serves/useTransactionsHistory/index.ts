@@ -9,7 +9,7 @@ export default function useTransactions(address?: string, pageSize?: number) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [error, setError] = useState<undefined | any>(undefined)
     const [page, setPage] = useState(1)
-    const size = pageSize || 5
+    const size = pageSize || 100
 
     useEffect(() => {
         if (!address) {
