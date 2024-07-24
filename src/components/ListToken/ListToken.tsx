@@ -9,6 +9,7 @@ import DialogXudtTransfer from "@/components/Dialogs/DialogXudtTransfer/DialogXu
 import DialogBtcXudtTransfer from "@/components/Dialogs/DialogBtcXudtTransfer/DialogBtcXudtTransfer"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import DialogXudtCellMerge from "@/components/Dialogs/DialogXudtCellMerge/DialogXudtCellMerge"
+import DialogXudtCellBurn from "@/components/Dialogs/DialogXudtCellBurn/DialogXudtCellBurn"
 import Dropdown from "@/components/Popover/Popover";
 
 export interface TokenBalance extends TokenInfoWithAddress {
@@ -105,6 +106,12 @@ export default function ListToken({
                                                 <div id="xudt-merge-btn" />
                                             </DialogXudtCellMerge>
 
+                                            <DialogXudtCellBurn
+                                                xudt={item}
+                                                addresses={addresses}>
+                                                <div id="xudt-burn-btn" />
+                                            </DialogXudtCellBurn>
+
                                             <Dropdown
                                                 content={(close) => {
                                                     return <div>
@@ -119,7 +126,7 @@ export default function ListToken({
                                                         <div
                                                             onClick={() => {
                                                                 close()
-                                                                alert('coming soon')
+                                                                document.getElementById('xudt-burn-btn')?.click()
                                                             }}
                                                             className=" mt-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
                                                             {lang['Burn']}
