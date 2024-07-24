@@ -1,6 +1,6 @@
 import {useContext, useEffect, useState} from "react"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
-import {Cell, config as lumosConfig, helpers, Indexer} from "@ckb-lumos/lumos"
+import {Cell, config as lumosConfig, helpers, Indexer, commons} from "@ckb-lumos/lumos"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {hashType} from "@/serves/useXudtTransfer/lib"
 import {CkbHelper, convertToTxSkeleton, createMergeXudtTransaction} from "mobit-sdk"
@@ -66,7 +66,6 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
         let tx = await createMergeXudtTransaction({
             xudtArgs: tokenInfo.address.script_args.replace('\\', '0'),
             ckbAddresses: addresses,
-            ckbAddress: addresses[0],
             collector: ckbHelper.collector,
             isMainnet: network === 'mainnet'
         })
@@ -82,8 +81,10 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
         // })
 
         let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector);
-        // const cccLib = ccc as any
-        // txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton);
+        const cccLib = ccc as any
+        txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton);
+        // txSkeleton =  await commons.common.payFeeByFeeRate(txSkeleton, addresses,1000)
+
         //
         // (txSkeleton as any).outputs[1].capacity = (txSkeleton as any).outputs[1].capacity - BigInt(100);
 

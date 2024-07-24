@@ -83,7 +83,7 @@ export default function DialogXudtCellMerge({
         if (!rawTx || !data.length) return '0'
         try {
             const inputCap = data.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-            const outCap = rawTx.outputs.reduce((sum, input: any) => sum + Number(input.cellOutput.capacity), 0)
+            const outCap = rawTx.outputs.reduce((sum, input: any) => sum + Number(input.capacity), 0)
             return (inputCap - outCap) / 10 ** xudt!.decimal + ''
         } catch (e) {
             console.error(e)
@@ -167,27 +167,27 @@ export default function DialogXudtCellMerge({
                                                     className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden">
                                             <div
                                                 className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
-                                                {toDisplay(Number(cellOutput.cellOutput.capacity).toString(), xudt?.decimal || 0, true)} CKB
+                                                {toDisplay(Number(cellOutput.capacity).toString(), xudt?.decimal || 0, true)} CKB
                                             </div>
                                             {
-                                                !!cellOutput.cellOutput.type &&
+                                                !!cellOutput.type &&
                                                 <div className="flex flex-row items-center p-2">
                                                     <TokenIcon size={28} symbol={xudt?.symbol || ''}/>
                                                     <div className="text-sm">
                                                         <div>{xudt?.symbol}</div>
                                                         <div
-                                                            className="font-semibold">{toDisplay(number.Uint128LE.unpack(cellOutput.data).toString(), xudt?.decimal || 0, true)}</div>
+                                                            className="font-semibold">{toDisplay(number.Uint128LE.unpack((rawTx! as any).outputsData[index]).toString(), xudt?.decimal || 0, true)}</div>
                                                     </div>
                                                 </div>
                                             }
 
                                             {
-                                                !cellOutput.cellOutput.type &&
+                                                !cellOutput.type &&
                                                 <div className="flex flex-row items-center p-2">
                                                     <TokenIcon size={28} symbol="CKB"/>        <div className="text-sm">
                                                         <div>CKB</div>
                                                         <div
-                                                            className="font-semibold">{toDisplay(cellOutput.cellOutput.capacity.toString(), xudt?.decimal || 0, true)}</div>
+                                                            className="font-semibold">{toDisplay(cellOutput.capacity.toString(), 8, true)}</div>
                                                     </div>
                                                 </div>
                                             }
