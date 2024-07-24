@@ -1,7 +1,8 @@
-import {useEffect, useState} from "react";
-import {queryClustersByIds, querySporesById} from "@/utils/graphql";
-import {Clusters, Spores} from "@/utils/graphql/types";
-import {bufferToRawString} from "@spore-sdk/core";
+import {useEffect, useState, useContext} from "react"
+import {queryClustersByIds, querySporesById} from "@/utils/graphql"
+import {Clusters, Spores} from "@/utils/graphql/types"
+import {bufferToRawString} from "@spore-sdk/core"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 export interface SporeDetail extends Spores {
     dob0?: {
@@ -46,10 +47,11 @@ export default function useSporeDetail(tokenid: string) {
     const [status, setStatus] = useState<'loading' | 'error' | 'complete'>('loading')
     const [data, setData] = useState<SporeDetail | null>(null)
     const [error, setError] = useState<undefined | any>(undefined)
+    const {network} = useContext(CKBContext)
 
     useEffect(() => {
         (async () => {
-            const spore = await querySporesById(`\\\\x${tokenid}`)
+            const spore = await querySporesById(`\\\\x${tokenid}`, network === 'mainnet')
             if (!spore) {
                 setStatus("complete")
             } else {
@@ -58,7 +60,7 @@ export default function useSporeDetail(tokenid: string) {
                 let cluster: Clusters | undefined = undefined
 
                 if (spore.cluster_id) {
-                    cluster = await queryClustersByIds(spore.cluster_id)
+                    cluster = await queryClustersByIds(spore.cluster_id, network === 'mainnet')
                 }
 
                 if (spore.content_type === 'dob/0') {

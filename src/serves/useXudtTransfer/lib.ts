@@ -57,7 +57,7 @@ export async function transferTokenToAddress(
 
     console.log('fee', fee)
     const scriptConfig = network === 'mainnet' ? config.MAINNET : config.TESTNET
-    const tokenDetail = await queryAddressInfoWithAddress([tokenInfo.type_id])
+    const tokenDetail = await queryAddressInfoWithAddress([tokenInfo.type_id], network === 'mainnet')
 
     if (!tokenDetail[0]) {
         throw new Error('Token not found')
