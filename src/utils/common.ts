@@ -36,7 +36,7 @@ export function shortTransactionHash(hash: string, keep?: number): string {
     return hash.slice(0, length) + '...' + hash.slice(hash.length - length)
 }
 
-export async function getCkbAddressFromEvm(address: string, client: Client): Promise<string | null> {
+export async function getCkbAddressFromEvm(address: string, client: any): Promise<string | null> {
     try {
         const _a = await (ccc as any).Address.fromKnownScript(
             KnownScript.OmniLock as any,
@@ -50,7 +50,7 @@ export async function getCkbAddressFromEvm(address: string, client: Client): Pro
     }
 }
 
-export async function getCkbAddressFromBTC(address: string, client: Client): Promise<string | null> {
+export async function getCkbAddressFromBTC(address: string, client: any): Promise<string | null> {
     const txs = await getBtcTransactionsHistory(address)
     if (!txs.length) return null
 
