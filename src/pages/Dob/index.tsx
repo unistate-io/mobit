@@ -5,6 +5,7 @@ import useSporeDetail from "@/serves/useSporeDetail"
 import {renderByTokenKey, svgToBase64} from "@nervina-labs/dob-render"
 import CopyText from "@/components/CopyText/CopyText"
 import {shortTransactionHash} from "@/utils/common"
+import {getImgFromSporeCell} from "@/utils/spore";
 
 export default function DobPage() {
     const {tokenid} = useParams()
@@ -20,7 +21,10 @@ export default function DobPage() {
     useEffect(() => {
         if (!data) return
 
-        if (data?.dob0) {
+        if (data.content_type.startsWith('image')) {
+            const content = data.content.replace('\\x', '')
+            setImage(getImgFromSporeCell(content, data.content_type))
+        } else if (data?.dob0) {
             renderByTokenKey(`${tokenid}`)
                 .then(async (res) => {
                     const url = await svgToBase64(res)
@@ -33,7 +37,12 @@ export default function DobPage() {
         }
 
         if (data.cluster?.cluster_description) {
-            setDes(JSON.parse(data.cluster?.cluster_description).description)
+            if (data.cluster?.cluster_description.startsWith('{')) {
+                const clusterDescription = JSON.parse(data.cluster?.cluster_description)
+                setDes(clusterDescription.description)
+            } else {
+                setDes(data.cluster?.cluster_description)
+            }
         }
     }, [data, tokenid])
 

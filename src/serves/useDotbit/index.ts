@@ -1,4 +1,5 @@
-import {useEffect, useState} from "react"
+import {useEffect, useState, useContext} from "react"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 
 export default function useDotbit(address?: string) {
@@ -6,9 +7,10 @@ export default function useDotbit(address?: string) {
     const [domains, setDomains] = useState<string[]>([])
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>("loading")
     const [error, setError] = useState<any | null>(null)
+    const {network} = useContext(CKBContext)
 
     useEffect(() => {
-        if (!address) {
+        if (!address || network === 'testnet') {
             setStatus("complete")
             setError(null)
             setDomains([])

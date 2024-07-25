@@ -1,12 +1,14 @@
-import {ChainIcons} from "@/components/TokenIcon/icons";
-import {useEffect, useState, useContext} from "react"
+import {ChainIcons} from "@/components/TokenIcon/icons"
+import {useContext, useEffect, useState} from "react"
 import {bufferToRawString} from '@spore-sdk/core'
 import {shortTransactionHash} from "@/utils/number_display"
 import {Link} from "react-router-dom"
-import {queryClustersByIds} from "@/utils/graphql";
+import {queryClustersByIds} from "@/utils/graphql"
 import {renderByTokenKey, svgToBase64} from '@nervina-labs/dob-render'
-import {LangContext} from "@/providers/LangProvider/LangProvider";
-import {SporesWithChainInfo} from "@/serves/useSpores";
+import {LangContext} from "@/providers/LangProvider/LangProvider"
+import {SporesWithChainInfo} from "@/serves/useSpores"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import {getImgFromSporeCell} from "@/utils/spore";
 
 export default function ListDOBs({
                                      data,
@@ -67,9 +69,7 @@ function DOBItem({item}: { item: SporesWithChainInfo }) {
     const [video, setVideo] = useState(null)
     const [name, setName] = useState('')
     const [plantText, setPlantText] = useState('')
-
-
-
+    const {network} = useContext(CKBContext)
 
     useEffect(() => {
         if (item.content_type === 'application/json') {
@@ -100,8 +100,8 @@ function DOBItem({item}: { item: SporesWithChainInfo }) {
             setPlantText(bufferToRawString(item.content.replace('\\', '0')))
         }
 
-        if (item.content_type.includes('dob/0')) {
-            queryClustersByIds(item.cluster_id).then((clusters) => {
+        if (item.content_type.includes('dob/0') && network === 'mainnet') {
+            queryClustersByIds(item.cluster_id, true).then((clusters) => {
                 if (clusters) {
                     setName(clusters.cluster_name)
                 }
@@ -115,17 +115,25 @@ function DOBItem({item}: { item: SporesWithChainInfo }) {
                     console.warn(e)
                 })
         }
+
+        if (item.content_type.includes('image')) {
+            const data = item.content.replace('\\x', '')
+            const res = getImgFromSporeCell(data, item.content_type)
+            setImage(res)
+        }
     }, [item])
 
 
-    return <Link to={`/dob/${item.id.replace('\\', '').replace('x', '')}`} className="shrink-0 grow-0 max-w-[50%] basis-1/2 md:basis-1/3 md:max-w-[33.3%] box-border p-2">
+    return <Link to={`/dob/${item.id.replace('\\', '').replace('x', '')}`}
+                 className="shrink-0 grow-0 max-w-[50%] basis-1/2 md:basis-1/3 md:max-w-[33.3%] box-border p-2">
         <div
             className="relative w-full h-[140px] sm:h-[200px] md:h-[250px] lg:h-[180px]  overflow-hidden rounded-sm relative border border-1">
             <img className="object-cover w-full h-full"
                  src={image || "https://explorer.nervos.org/images/spore_placeholder.svg"} alt=""/>
             {
                 !!ChainIcons[item.chain] &&
-                <img src={ChainIcons[item.chain]} alt={item.chain} height={24} width={24} className="absolute top-3 right-3"/>
+                <img src={ChainIcons[item.chain]} alt={item.chain} height={24} width={24}
+                     className="absolute top-3 right-3"/>
             }
         </div>
         <div

@@ -57,7 +57,7 @@ export async function transferTokenToAddress(
 
     console.log('fee', fee)
     const scriptConfig = network === 'mainnet' ? config.MAINNET : config.TESTNET
-    const tokenDetail = await queryAddressInfoWithAddress([tokenInfo.type_id])
+    const tokenDetail = await queryAddressInfoWithAddress([tokenInfo.type_id], network === 'mainnet')
 
     if (!tokenDetail[0]) {
         throw new Error('Token not found')
@@ -145,7 +145,7 @@ export async function transferTokenToAddress(
         console.log('xudt cells ->', collector)
         for await (const cell of collector.collect()) {
             xudtCollectedCapSum = xudtCollectedCapSum.add(cell.cellOutput.capacity);
-            xudtCollectedAmount = xudtCollectedAmount.add(number.Uint128LE.unpack(cell.data));
+            xudtCollectedAmount = xudtCollectedAmount.add(number.Uint128LE.unpack(cell.data) as any);
             console.log('cell', cell)
             collected.push(cell);
             if (xudtCollectedAmount >= BI.from(amount)) {

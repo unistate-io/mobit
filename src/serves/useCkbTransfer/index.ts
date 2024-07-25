@@ -4,7 +4,7 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 import { predefined } from "@ckb-lumos/config-manager"
 
-export default function useCkbTransfer(addresses: string[]) {
+export default function useCkbTransfer() {
     const {signer, config, network} = useContext(CKBContext)
 
     const scriptConfig = useMemo(() => {
