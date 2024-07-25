@@ -15,7 +15,8 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider";
 
 import * as dayjsLib from "dayjs"
 import {helpers} from "@ckb-lumos/lumos"
-import {TokenInfo, TokenInfoWithAddress} from "@/utils/graphql/types"
+import {TokenInfoWithAddress} from "@/utils/graphql/types"
+
 const dayjs: any = dayjsLib
 
 export interface XudtTransferProps {
@@ -24,7 +25,12 @@ export interface XudtTransferProps {
     to: string,
 }
 
-export default function DialogXudtTransfer({children, froms, className, token}: { children: React.ReactNode, froms: string[], token: TokenInfoWithAddress,  className?: string }) {
+export default function DialogXudtTransfer({
+                                               children,
+                                               froms,
+                                               className,
+                                               token
+                                           }: { children: React.ReactNode, froms: string[], token: TokenInfoWithAddress, className?: string }) {
     const {build, signAndSend} = useXudtTransfer()
     const {network} = useContext(CKBContext)
     const [open, setOpen] = React.useState(false);
@@ -43,8 +49,8 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
     const [fee1000, setFee1000] = React.useState<string>('0')
 
 
-    const fee = (feeRate: number) =>{
-        return BigNumber(fee1000).multipliedBy(feeRate / 1000).dividedBy(10** token.decimal).toString()
+    const fee = (feeRate: number) => {
+        return BigNumber(fee1000).multipliedBy(feeRate / 1000).dividedBy(10 ** token.decimal).toString()
     }
 
 
@@ -89,7 +95,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                     to: formData.to,
                     amount: amount.toString(),
                     feeRate: 1000,
-                    tokenInfo:  token
+                    tokenInfo: token
                 }) as any
                 setAmountError('')
             } catch (e: any) {
@@ -111,9 +117,9 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
 
     const handleTransfer = async () => {
         setSending(true)
-        const tx = await checkErrorsAndBuild()
-        if (!!tx) {
-            try {
+        try {
+            const tx = await checkErrorsAndBuild()
+            if (!!tx) {
                 const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
                 const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
                 const fee = inputCap - outCap
@@ -122,11 +128,11 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                 console.log('fee', fee)
                 setFee1000(fee.toString())
                 setStep(2)
-            } catch (e) {
-                console.error(e)
-            } finally {
-                setSending(false)
             }
+        } catch (e: any) {
+            console.error(e)
+        } finally {
+            setSending(false)
         }
     }
 
@@ -145,7 +151,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
             console.log(txHash, txHash)
             setTxHash(txHash)
             setStep(3)
-        } catch (e:any) {
+        } catch (e: any) {
             console.error(e)
             setTransactionError(e.message)
         } finally {
@@ -204,7 +210,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                                 <div className="mb-2">
                                     Asset
                                 </div>
-                                <Input startIcon={<TokenIcon  size={32} symbol={token.symbol}/>}
+                                <Input startIcon={<TokenIcon size={32} symbol={token.symbol}/>}
                                        value={token.symbol}
                                        type={"text"}
                                        disabled/>
@@ -237,7 +243,6 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                     }
 
 
-
                     {
                         step === 2 &&
                         <>
@@ -257,7 +262,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                                 </div>
                                 <div className="flex flex-row flex-nowrap justify-between items-center mb-2 text-sm">
                                     <div className="flex flex-row flex-nowrap items-center">
-                                        <TokenIcon  size={18} symbol={token.symbol}/>
+                                        <TokenIcon size={18} symbol={token.symbol}/>
                                         {token.symbol}
                                     </div>
                                     <div>{formData.amount} {token.symbol}</div>
@@ -270,7 +275,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                                     <div>{shortTransactionHash(formData.to)}</div>
                                 </div>
 
-                                <div className="my-4 h-[1px] bg-gray-100 w-full" />
+                                <div className="my-4 h-[1px] bg-gray-100 w-full"/>
 
                                 <div className="mb-2 font-semibold">
                                     Transaction fee
@@ -296,7 +301,9 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                                 <Button btntype={'secondary'}
                                         className="mr-4"
                                         loading={status === 'loading'}
-                                        onClick={e => {setStep(1)}}>
+                                        onClick={e => {
+                                            setStep(1)
+                                        }}>
                                     Cancel
                                 </Button>
                                 <Button btntype={'primary'}
@@ -313,10 +320,13 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                         step === 3 &&
                         <>
                             <div className="flex flex-row justify-center items-center mb-4 mt-2">
-                                <svg width="73" height="72" viewBox="0 0 73 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg width="73" height="72" viewBox="0 0 73 72" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
                                     <g clipPath="url(#clip0_699_1259)">
                                         <circle cx="36.5" cy="36" r="36" fill="#41D195" fillOpacity="0.12"/>
-                                        <path d="M37 19.3335C27.8167 19.3335 20.3333 26.8168 20.3333 36.0002C20.3333 45.1835 27.8167 52.6668 37 52.6668C46.1833 52.6668 53.6667 45.1835 53.6667 36.0002C53.6667 26.8168 46.1833 19.3335 37 19.3335ZM44.9667 32.1668L35.5167 41.6168C35.2833 41.8502 34.9667 41.9835 34.6333 41.9835C34.3 41.9835 33.9833 41.8502 33.75 41.6168L29.0333 36.9002C28.55 36.4168 28.55 35.6168 29.0333 35.1335C29.5167 34.6502 30.3167 34.6502 30.8 35.1335L34.6333 38.9668L43.2 30.4002C43.6833 29.9168 44.4833 29.9168 44.9667 30.4002C45.45 30.8835 45.45 31.6668 44.9667 32.1668Z" fill="#41D195"/>
+                                        <path
+                                            d="M37 19.3335C27.8167 19.3335 20.3333 26.8168 20.3333 36.0002C20.3333 45.1835 27.8167 52.6668 37 52.6668C46.1833 52.6668 53.6667 45.1835 53.6667 36.0002C53.6667 26.8168 46.1833 19.3335 37 19.3335ZM44.9667 32.1668L35.5167 41.6168C35.2833 41.8502 34.9667 41.9835 34.6333 41.9835C34.3 41.9835 33.9833 41.8502 33.75 41.6168L29.0333 36.9002C28.55 36.4168 28.55 35.6168 29.0333 35.1335C29.5167 34.6502 30.3167 34.6502 30.8 35.1335L34.6333 38.9668L43.2 30.4002C43.6833 29.9168 44.4833 29.9168 44.9667 30.4002C45.45 30.8835 45.45 31.6668 44.9667 32.1668Z"
+                                            fill="#41D195"/>
                                     </g>
                                     <defs>
                                         <clipPath id="clip0_699_1259">
@@ -326,7 +336,8 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                                 </svg>
                             </div>
                             <div className="font-semibold text-center text-lg">Transaction Sent !</div>
-                            <div className="text-center text-sm">The transaction is sent and will be confirmed later</div>
+                            <div className="text-center text-sm">The transaction is sent and will be confirmed later
+                            </div>
 
                             <div className="my-4 p-3 bg-gray-100 rounded-lg">
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
@@ -338,7 +349,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                                     <div className="font-semibold">{dayjs().format("YYYY-MM-DD HH:mm")}</div>
                                 </div>
 
-                                <div className="h-[1px] bg-gray-200 my-4" />
+                                <div className="h-[1px] bg-gray-200 my-4"/>
 
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                     <div className="text-gray-500">Amount</div>
@@ -350,7 +361,7 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                                     <div className="font-semibold">{fee(feeRate)} CKB</div>
                                 </div>
 
-                                <div className="h-[1px] bg-gray-200 my-4" />
+                                <div className="h-[1px] bg-gray-200 my-4"/>
 
                                 <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                     <div className="text-gray-500">Tx Hash</div>
@@ -363,22 +374,24 @@ export default function DialogXudtTransfer({children, froms, className, token}: 
                                 </div>
                             </div>
 
-                           <div className="flex">
-                               <Button btntype={'secondary'}
-                                       className={"mr-4 text-xs"}
-                                       loading={sending}
-                                       onClick={e => {
-                                           window.open(`https://explorer.nervos.org/transaction/${txHash}`, '_blank')
-                                       }} >
-                                   View on Explorer
-                               </Button>
+                            <div className="flex">
+                                <Button btntype={'secondary'}
+                                        className={"mr-4 text-xs"}
+                                        loading={sending}
+                                        onClick={e => {
+                                            window.open(`https://explorer.nervos.org/transaction/${txHash}`, '_blank')
+                                        }}>
+                                    View on Explorer
+                                </Button>
 
-                               <Button btntype={'primary'}
-                                       loading={sending}
-                                       onClick={e => {setOpen(false)}} >
-                                   Done
-                               </Button>
-                           </div>
+                                <Button btntype={'primary'}
+                                        loading={sending}
+                                        onClick={e => {
+                                            setOpen(false)
+                                        }}>
+                                    Done
+                                </Button>
+                            </div>
                         </>
                     }
                 </Dialog.Content>

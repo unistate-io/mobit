@@ -1,9 +1,9 @@
 import {useContext, useEffect, useState} from "react"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
-import {Cell, config as lumosConfig, helpers, Indexer} from "@ckb-lumos/lumos"
+import {Cell, config as lumosConfig, helpers, Indexer, commons} from "@ckb-lumos/lumos"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {hashType} from "@/serves/useXudtTransfer/lib"
-import {CkbHelper, convertToTxSkeleton, createMergeXudtTransaction} from "mobit-sdk"
+import {CkbHelper, convertToTxSkeleton, createMergeXudtTransaction, createBurnXudtTransaction} from "mobit-sdk"
 import {ccc} from "@ckb-ccc/connector-react"
 
 export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, addresses?: string[]) {
@@ -41,7 +41,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
                 for (const lock of senderLocks) {
                     const collector = indexer.collector({lock: lock, type: typeScript});
                     for await (const cell of collector.collect()) {
-                        collected.push(cell);
+                        collected.push(cell)
                     }
                 }
 
@@ -65,27 +65,49 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
 
         let tx = await createMergeXudtTransaction({
             xudtArgs: tokenInfo.address.script_args.replace('\\', '0'),
-            ckbAddress: addresses[0],
+            ckbAddresses: addresses,
             collector: ckbHelper.collector,
             isMainnet: network === 'mainnet'
         })
 
-        const OMNILOCK = lumosConfig.MAINNET.SCRIPTS.OMNILOCK;
+        // const OMNILOCK = lumosConfig.MAINNET.SCRIPTS.OMNILOCK;
+        //
+        // tx.cellDeps.push({
+        //     outPoint: {
+        //         txHash: OMNILOCK.TX_HASH,
+        //         index: OMNILOCK.INDEX,
+        //     },
+        //     depType: OMNILOCK.DEP_TYPE,
+        // })
 
-        tx.cellDeps.push({
-            outPoint: {
-                txHash: OMNILOCK.TX_HASH,
-                index: OMNILOCK.INDEX,
-            },
-            depType: OMNILOCK.DEP_TYPE,
+        let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
+        const cccLib = ccc as any
+        txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
+        // txSkeleton =  await commons.common.payFeeByFeeRate(txSkeleton, addresses,1000)
+
+        //
+        // (txSkeleton as any).outputs[1].capacity = (txSkeleton as any).outputs[1].capacity - BigInt(100);
+
+
+        console.log('txSkeleton', txSkeleton)
+        return txSkeleton
+    }
+
+    const createBurnXudtCellTx = async (burnAmount: bigint) => {
+        if (!tokenInfo || !addresses || !addresses.length || burnAmount === BigInt(0)) return null
+        const ckbHelper = new CkbHelper(network === 'mainnet')
+
+        let tx = await createBurnXudtTransaction({
+            xudtArgs: tokenInfo.address.script_args.replace('\\', '0'),
+            ckbAddress: addresses[0],
+            burnAmount: burnAmount,
+            collector: ckbHelper.collector,
+            isMainnet: network === 'mainnet'
         })
 
-        let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector);
+        let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
         const cccLib = ccc as any
-        txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton);
-
-        (txSkeleton as any).outputs[1].capacity = (txSkeleton as any).outputs[1].capacity - BigInt(100);
-
+        txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
 
         console.log('txSkeleton', txSkeleton)
         return txSkeleton
@@ -110,6 +132,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
         status,
         error,
         createMergeXudtCellTx,
+        createBurnXudtCellTx,
         signAndSend
     }
 }
