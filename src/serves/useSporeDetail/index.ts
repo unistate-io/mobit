@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
-import {queryClustersByIds, querySporesById} from "@/utils/graphql";
-import {Clusters, Spores} from "@/utils/graphql/types";
-import {bufferToRawString} from "@spore-sdk/core";
+import {queryClustersByIds, querySporesById} from "@/utils/graphql"
+import {Clusters} from "@/utils/graphql/types"
+import {bufferToRawString} from "@spore-sdk/core"
+import {SporesWithChainInfo} from "@/serves/useSpores"
 
-export interface SporeDetail extends Spores {
+export interface SporeDetail extends SporesWithChainInfo {
     dob0?: {
         dob_content: {dna : string, id: string}
         render_output: [{
@@ -42,7 +43,7 @@ function decodeBob0(tokenid: string) {
 }
 
 
-export default function useSporeDetail(tokenid: string) {
+export default function useSporeDetail(tokenid: string, chain: 'ckb' | 'btc' = 'ckb') {
     const [status, setStatus] = useState<'loading' | 'error' | 'complete'>('loading')
     const [data, setData] = useState<SporeDetail | null>(null)
     const [error, setError] = useState<undefined | any>(undefined)
@@ -53,7 +54,10 @@ export default function useSporeDetail(tokenid: string) {
             if (!spore) {
                 setStatus("complete")
             } else {
-                let res: SporeDetail = spore
+                let res: SporeDetail = {
+                    ...spore,
+                    chain,
+                }
 
                 let cluster: Clusters | undefined = undefined
 
@@ -65,6 +69,7 @@ export default function useSporeDetail(tokenid: string) {
                     const decode:any = await decodeBob0(tokenid.replace('0x', ''))
                     res = {
                         ...spore,
+                        chain,
                         dob0: {
                             dob_content: decode.dob_content,
                             render_output: JSON.parse(decode.render_output)
@@ -73,11 +78,13 @@ export default function useSporeDetail(tokenid: string) {
                 } else if (spore.content_type === 'application/json') {
                     const decode:any = JSON.parse(bufferToRawString(spore.content.replace('\\', '0')))
                     res = {
+                        chain,
                         ...spore,
                         json: decode,
                     }
                 } else if (spore.content_type.includes('text')) {
                     res = {
+                        chain,
                         ...spore,
                         plant_text: bufferToRawString(spore.content.replace('\\', '0')),
                     }

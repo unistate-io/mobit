@@ -49,7 +49,8 @@ const queryAssets = async (btcAddress: string):Promise<{
                 content_type: t.sporeActions[0].spore.content_type,
                 created_at: t.sporeActions[0].spore.created_at,
                 updated_at: t.sporeActions[0].spore.updated_at,
-                chain: 'btc'
+                chain: 'btc',
+                spore_actions: []
             })
         }
     })

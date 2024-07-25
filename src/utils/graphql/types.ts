@@ -50,6 +50,10 @@ export interface Spores {
     content_type: string
     created_at: string
     updated_at: string
+    spore_actions: {
+        tx: string
+        to_address_id: string
+    }[]
 }
 
 export interface Clusters {
