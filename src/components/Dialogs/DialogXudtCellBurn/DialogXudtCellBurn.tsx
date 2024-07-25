@@ -86,18 +86,18 @@ export default function DialogXudtCellBurn({
     }
 
     const handleSignAndSend = async () => {
-        // setSending(true)
-        // setTxError('')
-        // try {
-        //     const txHash = await signAndSend(rawTx!)
-        //     setTxHash(txHash)
-        //     setStep(2)
-        // } catch (e: any) {
-        //     console.error(e)
-        //     setTxError(e.message || 'Failed to send transaction')
-        // } finally {
-        //     setSending(false)
-        // }
+        setSending(true)
+        setTxError('')
+        try {
+            const txHash = await signAndSend(rawTx!)
+            setTxHash(txHash)
+            setStep(3)
+        } catch (e: any) {
+            console.error(e)
+            setTxError(e.message || 'Failed to send transaction')
+        } finally {
+            setSending(false)
+        }
     }
 
     const fee = useMemo(() => {
@@ -284,7 +284,6 @@ export default function DialogXudtCellBurn({
                                 {lang['Cancel']}
                             </Button>
                             <Button
-                                disabled={data.length < 2}
                                 btntype={'primary'}
                                 loading={sending || status === 'loading'}
                                 onClick={handleSignAndSend}>
