@@ -130,6 +130,7 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
     }
 
     const handleTransfer = async () => {
+        setSending(true)
         const tx = await checkErrorsAndBuild()
         console.log('tx =>', tx)
         if (!!tx) {
@@ -141,7 +142,11 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
                 setStep(2)
             } catch (e) {
                 console.error(e)
+            } finally {
+                setSending(false)
             }
+        } else {
+            setSending(false)
         }
     }
 
@@ -245,7 +250,7 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
                             </div>
 
                             <Button btntype={'primary'}
-                                    loading={status === 'loading'}
+                                    loading={status === 'loading' || sending}
                                     onClick={handleTransfer}>
                                 Continue
                             </Button>
