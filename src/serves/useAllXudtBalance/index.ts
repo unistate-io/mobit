@@ -31,6 +31,10 @@ export const balance = async (addresses: string[], isMainnet: boolean): Promise<
             return token.type_id === t
         })
 
+        if (!target_token) {
+            return null
+        }
+
         const sum = target_cells.reduce((prev, cur, index,) => {
             return prev.plus(BigNumber(cur.amount))
         }, BigNumber(0))
@@ -43,7 +47,7 @@ export const balance = async (addresses: string[], isMainnet: boolean): Promise<
         }
     })
 
-    return res as TokenBalance[]
+    return res.filter(t =>!!t) as TokenBalance[]
 }
 
 export default function useAllXudtBalance(addresses: string[]) {

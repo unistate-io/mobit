@@ -19,7 +19,7 @@ function getStrHash(name: string) {
 }
 
 
-export default function TokenIcon({symbol, size, chain, rounded=true} : {symbol: string, size: number, chain?: string, rounded?: boolean}) {
+export default function TokenIcon({symbol='default', size, chain, rounded=true} : {symbol: string, size: number, chain?: string, rounded?: boolean}) {
     const options = {
         foreground: [216, 140, 173, 255] ,
         background: [245, 245, 245, 255] ,
@@ -35,11 +35,11 @@ export default function TokenIcon({symbol, size, chain, rounded=true} : {symbol:
 
 
     return <div className={`relative mr-3`} style={{width: size + 'px', height: size + 'px'}}>
-        <img src={tokenIcon} className={`${rounded ? 'rounded-full' : 'rounded-lg'}`} alt="icon" width={size} height={size}/>
+        <img src={tokenIcon} className={`bg-gray-200 ${rounded ? 'rounded-full' : 'rounded-lg'}`} alt="icon" width={size} height={size}/>
         {
             chainIcon &&
             <img src={chainIcon}
-                 className={`${rounded ? 'rounded-full' : 'rounded-lg'} absolute right-0 top-0 border border-white shadow block`}
+                 className={`bg-gray-200 ${rounded ? 'rounded-full' : 'rounded-lg'} absolute right-0 top-0 border border-white shadow block`}
                  style={{marginRight: (size/ 8 * -3) + 'px'}}
                  width={size/4 * 3} height={size/4 * 3} alt=""/>
         }

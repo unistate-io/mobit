@@ -1,8 +1,10 @@
 // @ts-ignore
 import BigNumber from "bignumber.js"
-import {useEffect, useState} from "react"
+import {useEffect, useState, useContext} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
-import {SporesWithChainInfo} from "@/serves/useSpores";
+import {SporesWithChainInfo} from "@/serves/useSpores"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import * as net from "net";
 
 
 interface AssetDetails {
@@ -108,11 +110,12 @@ export default function useLayer1Assets(btcAddress?: string, polling?: boolean) 
     const [dobs, setDobs] = useState<SporesWithChainInfo[]>([])
     const [btc, setBtc] = useState<TokenBalance | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
+    const {network} = useContext(CKBContext)
 
     const pollingInterval = 1000 * 30 // 30s 一次
 
     useEffect(() => {
-        if (!btcAddress) {
+        if (!btcAddress || network === 'testnet') {
             setStatus('complete')
             setXudts([])
             setDobs([])

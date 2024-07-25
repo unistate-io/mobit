@@ -145,7 +145,7 @@ export async function transferTokenToAddress(
         console.log('xudt cells ->', collector)
         for await (const cell of collector.collect()) {
             xudtCollectedCapSum = xudtCollectedCapSum.add(cell.cellOutput.capacity);
-            xudtCollectedAmount = xudtCollectedAmount.add(number.Uint128LE.unpack(cell.data));
+            xudtCollectedAmount = xudtCollectedAmount.add(number.Uint128LE.unpack(cell.data) as any);
             console.log('cell', cell)
             collected.push(cell);
             if (xudtCollectedAmount >= BI.from(amount)) {

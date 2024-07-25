@@ -19,6 +19,7 @@ export const checksumCkbAddress = (address: string, network: 'mainnet' | 'testne
         helpers.addressToScript(address, {config: network === 'mainnet' ? lumosConfig.MAINNET : lumosConfig.TESTNET})
         return true
     } catch (e: any) {
+        console.log(e)
         return false
     }
 }
