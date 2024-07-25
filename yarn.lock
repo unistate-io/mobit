@@ -1246,14 +1246,12 @@
     cross-fetch "^4.0.0"
     ethers "^6.13.1"
 
-
 "@ckb-ccc/eip6963@0.0.10-alpha.0":
   version "0.0.10-alpha.0"
   resolved "https://registry.npmmirror.com/@ckb-ccc/eip6963/-/eip6963-0.0.10-alpha.0.tgz#ad9839b030a093a2b360e2fe6d0744d1d4cdbaae"
   integrity sha512-bwNMwTdKM4UYGNTW/uhNqNDijY1PR6GfFkw6ZPoYYazYtgSno5jPN4rDcX4W/jEMuquI/Q18lh/Pr70JAFdZrw==
   dependencies:
     "@ckb-ccc/core" "0.0.10-alpha.0"
-
 
 "@ckb-ccc/joy-id@0.0.10-alpha.0":
   version "0.0.10-alpha.0"
@@ -1286,7 +1284,6 @@
   integrity sha512-vjx0WlCEEg/6Bine3L1Vr0et39UWV4Wiit9/DzMlQc43jgS6bF3EOC1SDZQXJDgJ/8LEDLEK1Zwndi+/vhnHLA==
   dependencies:
     "@ckb-ccc/core" "0.0.10-alpha.0"
-
 
 "@ckb-lumos/base@0.0.0-canary-d279b87-20240624101315":
   version "0.0.0-canary-d279b87-20240624101315"
@@ -10119,10 +10116,10 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mobit-sdk@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.4.0.tgz#df99c35806959fcca572776425050186b3eaa5ad"
-  integrity sha512-y3Ell7fpUkphNnfEndBSeFWZ5L1mZfn6BHR8lf2KhsF3fQ/siDKNWYnPpyMdzDxjUwfcy1ZOOHb0OMDz41fihw==
+mobit-sdk@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.4.1.tgz#583690345df14fd5a13166271e97263dd8367d3f"
+  integrity sha512-quBUUl2YI79kTZKyGFHS2LNlQziXFGT+05mZDTAXJ6CPdxibHE+eRBPUDeP18JrVpnH2M67HXry2wqZEi+SkFw==
   dependencies:
     "@ckb-ccc/core" "0.0.5-alpha.2"
     "@ckb-lumos/base" "0.0.0-canary-d279b87-20240624101315"

@@ -22,23 +22,23 @@ export default function useBtcXudtTransfer() {
         const btcHelper = new BtcHelper(unisat, network === 'mainnet' ? 0 : 1)
         const ckbHelper = new CkbHelper(network === 'mainnet')
 
-        const {btcTxId, error} = await transferCombined({
-            toBtcAddress: to,
-            xudtTypeArgs: args,
-            transferAmount: BigInt(amount),
-            collector: ckbHelper.collector,
-            isMainnet: ckbHelper.isMainnet,
-            fromBtcAccount: from,
-            btcService: btcHelper.btcService,
-            btcDataSource: btcHelper.btcDataSource,
-            unisat: btcHelper.unisat
-        })
+        try {
+            const {btcTxId, ckbTxHash} = await transferCombined({
+                toBtcAddress: to,
+                xudtTypeArgs: args,
+                transferAmount: BigInt(amount),
+                collector: ckbHelper.collector,
+                isMainnet: ckbHelper.isMainnet,
+                fromBtcAccount: from,
+                btcService: btcHelper.btcService,
+                btcDataSource: btcHelper.btcDataSource,
+                unisat: btcHelper.unisat
+            })
 
-        if (error) {
-            throw error
+            return btcTxId
+        } catch (e) {
+            throw e
         }
-
-        return btcTxId
     }
 
 
