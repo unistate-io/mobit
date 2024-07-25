@@ -64,7 +64,7 @@
     "jest-watch-typeahead": "^1.0.0",
     "js-sha3": "^0.9.3",
     "mini-css-extract-plugin": "^2.4.5",
-    "mobit-sdk": "1.4.0",
+    "mobit-sdk": "^1.4.1-test.20240725104401",
     "node-polyfill-webpack-plugin": "^4.0.0",
     "path-browserify": "^1.0.1",
     "postcss": "^8.4.4",
@@ -127,7 +127,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/identicon.js": "^2.3.4",
     "cross-env": "^7.0.3",
-    "node-sass": "^9.0.0",
+    "sass": "^1.77.8",
     "sass-loader": "^14.2.1",
     "tailwindcss": "^3.4.3"
   },

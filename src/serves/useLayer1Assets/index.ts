@@ -1,9 +1,9 @@
 // @ts-ignore
-import BigNumber from "bignumber.js"
-import {useEffect, useState} from "react"
-import {TokenBalance} from "@/components/ListToken/ListToken"
-import {SporesWithChainInfo} from "@/serves/useSpores";
-
+import BigNumber from "bignumber.js";
+import { useEffect, useState } from "react";
+import { TokenBalance } from "@/components/ListToken/ListToken";
+import { SporesWithChainInfo } from "@/serves/useSpores";
+import { RgbppSDK } from "mobit-sdk";
 
 interface AssetDetails {
     xudtCell?: any;
@@ -16,55 +16,70 @@ interface QueryResult {
 }
 
 const queryAssets = async (btcAddress: string): Promise<{
-    xudts: TokenBalance[],
-    dobs: SporesWithChainInfo[],
-    btc: TokenBalance
+    xudts: TokenBalance[];
+    dobs: SporesWithChainInfo[];
+    btc: TokenBalance;
 }> => {
-    const res = await fetch(`https://ckb-btc-api.deno.dev/?btcAddress=${btcAddress}`)
-    const json = await res.json() as QueryResult
+    const sdk = new RgbppSDK(true);
+    const json = await sdk.fetchAssetsAndQueryDetails(btcAddress);
 
     const list = {
         xudts: [] as TokenBalance[],
         dobs: [] as SporesWithChainInfo[],
         btc: {
             decimal: 8,
-            name: 'Bitcoin',
-            symbol: 'BTC',
-            type_id: '',
-            amount: json.balance.total_satoshi,
-            type: 'btc',
-            chain: 'btc'
-        } as TokenBalance
-    }
+            name: "Bitcoin",
+            symbol: "BTC",
+            type_id: "",
+            amount: json.balance.total_satoshi.toString(),
+            type: "btc",
+            chain: "btc",
+            address: {
+                id: "",
+                script_args: "",
+                script_code_hash: "",
+                script_hash_type: "",
+            },
+        } as TokenBalance,
+    };
 
-    if (json.assets.xudtCell && json.assets.xudtCell.length) {
-        let tokens: string[] = []
-        json.assets.xudtCell.forEach((t: any) => {
+    if (json.assets.xudtCells && json.assets.xudtCells.length) {
+        let tokens: string[] = [];
+        json.assets.xudtCells.forEach((t: any) => {
             if (!tokens.includes(t.type_id)) {
-                tokens.push(t.type_id)
+                tokens.push(t.type_id);
             }
-        })
+        });
 
         tokens.forEach((t) => {
-            const cells = json.assets.xudtCell.filter((c: any) => c.type_id === t)
-            const balance = cells.reduce((acc: BigNumber, c: any) => acc.plus(c.amount), new BigNumber(0))
+            const cells = json.assets.xudtCells.filter((c: any) =>
+                c.type_id === t
+            );
+            const balance = cells.reduce(
+                (acc: BigNumber, c: any) => acc.plus(c.amount),
+                new BigNumber(0),
+            );
 
             list.xudts.push({
-                name: cells[0].addressByTypeId.token_info.name,
-                symbol: cells[0].addressByTypeId.token_info.symbol,
-                decimal: cells[0].addressByTypeId.token_info.decimal,
+                name: cells[0].addressByTypeId.token_info?.name ??
+                    "Unknown Token",
+                symbol: cells[0].addressByTypeId.token_info?.symbol ?? "UNK",
+                decimal: cells[0].addressByTypeId.token_info?.decimal ?? 0,
                 type_id: cells[0].type_id,
                 amount: balance.toString(),
-                type: 'xudt',
-                chain: 'btc',
+                type: "xudt",
+                chain: "btc",
                 address: {
-                    id: '',
-                    script_args: cells[0].addressByTypeId.script_args.replace('\\', '0'),
-                    script_code_hash: '',
-                    script_hash_type: ''
-                }
-            })
-        })
+                    id: "",
+                    script_args: cells[0].addressByTypeId.script_args.replace(
+                        "\\",
+                        "0",
+                    ),
+                    script_code_hash: "",
+                    script_hash_type: "",
+                },
+            });
+        });
     }
 
     if (json.assets.sporeActions && json.assets.sporeActions.length) {
@@ -78,93 +93,97 @@ const queryAssets = async (btcAddress: string): Promise<{
                 content_type: t.spore.content_type,
                 created_at: t.spore.created_at,
                 updated_at: t.spore.updated_at,
-                chain: 'btc'
-            })
-        })
+                chain: "btc",
+            });
+        });
     }
 
-    return list
-}
+    return list;
+};
 
 const btcEmpty: TokenBalance = {
     decimal: 8,
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    type_id: '',
-    amount: '0',
-    type: 'btc',
-    chain: 'btc',
+    name: "Bitcoin",
+    symbol: "BTC",
+    type_id: "",
+    amount: "0",
+    type: "btc",
+    chain: "btc",
     address: {
-        id: '',
-        script_args: '',
-        script_code_hash: '',
-        script_hash_type: ''
-    }
-}
+        id: "",
+        script_args: "",
+        script_code_hash: "",
+        script_hash_type: "",
+    },
+};
 
-export default function useLayer1Assets(btcAddress?: string, polling?: boolean) {
-    const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
-    const [xudts, setXudts] = useState<TokenBalance[]>([])
-    const [dobs, setDobs] = useState<SporesWithChainInfo[]>([])
-    const [btc, setBtc] = useState<TokenBalance | undefined>(undefined)
-    const [error, setError] = useState<undefined | any>(undefined)
+export default function useLayer1Assets(
+    btcAddress?: string,
+    polling?: boolean,
+) {
+    const [status, setStatus] = useState<"loading" | "complete" | "error">(
+        "loading",
+    );
+    const [xudts, setXudts] = useState<TokenBalance[]>([]);
+    const [dobs, setDobs] = useState<SporesWithChainInfo[]>([]);
+    const [btc, setBtc] = useState<TokenBalance | undefined>(undefined);
+    const [error, setError] = useState<undefined | any>(undefined);
 
-    const pollingInterval = 1000 * 30 // 30s 一次
+    const pollingInterval = 1000 * 30; // 30s 一次
 
     useEffect(() => {
         if (!btcAddress) {
-            setStatus('complete')
-            setXudts([])
-            setDobs([])
-            setBtc(undefined)
-            return
+            setStatus("complete");
+            setXudts([]);
+            setDobs([]);
+            setBtc(undefined);
+            return;
         }
 
-        setStatus('loading')
-        setXudts([])
+        setStatus("loading");
+        setXudts([]);
         queryAssets(btcAddress)
-            .then(res => {
-                setXudts(res.xudts)
-                setDobs(res.dobs)
-                setBtc(res.btc)
-                setStatus('complete')
+            .then((res) => {
+                setXudts(res.xudts);
+                setDobs(res.dobs);
+                setBtc(res.btc);
+                setStatus("complete");
             })
             .catch((e: any) => {
-                console.error(e)
-                setStatus('complete')
-                setXudts([])
-                setDobs([])
-                setBtc(undefined)
-                setStatus('error')
-                setError(e)
-            })
-    }, [btcAddress])
-
+                console.error(e);
+                setStatus("complete");
+                setXudts([]);
+                setDobs([]);
+                setBtc(undefined);
+                setStatus("error");
+                setError(e);
+            });
+    }, [btcAddress]);
 
     useEffect(() => {
         if (polling) {
             const interval = setInterval(() => {
                 if (btcAddress) {
                     queryAssets(btcAddress)
-                        .then(res => {
-                            setXudts(res.xudts)
-                            setDobs(res.dobs)
-                            setBtc(res.btc)
+                        .then((res) => {
+                            setXudts(res.xudts);
+                            setDobs(res.dobs);
+                            setBtc(res.btc);
                         })
                         .catch((e: any) => {
-                            console.error(e)
-                        })
+                            console.error(e);
+                        });
                 }
-            }, pollingInterval)
-            return () => clearInterval(interval)
+            }, pollingInterval);
+            return () => clearInterval(interval);
         }
-    }, [polling])
+    }, [polling]);
 
     return {
         status,
         xudts,
         dobs,
         error,
-        btc
-    }
+        btc,
+    };
 }

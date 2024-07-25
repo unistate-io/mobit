@@ -1,48 +1,54 @@
-import {useEffect, useState} from "react"
+import { RgbppSDK } from "mobit-sdk";
+import { useEffect, useState } from "react";
 
 export const getBtcTransactionsHistory = async (address: string) => {
-    const res = await fetch(`https://ckb-btc-api.deno.dev/?btcAddress=${address}/txs`)
-    return await res.json() as BtcTransaction[]
-}
+    const sdk = new RgbppSDK(true);
+    const res = await sdk.fetchTxsDetails(address);
+    return res;
+};
 
-export default function useBtcTransactionsHistory(address?: string, pageSize?: number) {
-    const [data, setData] = useState<BtcTransaction[]>([])
-    const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
-    const [error, setError] = useState<undefined | any>(undefined)
-    const [page, setPage] = useState(1)
-    const size = pageSize || 5
+export default function useBtcTransactionsHistory(
+    address?: string,
+    pageSize?: number,
+) {
+    const [data, setData] = useState<BtcTransaction[]>([]);
+    const [status, setStatus] = useState<"loading" | "complete" | "error">(
+        "loading",
+    );
+    const [error, setError] = useState<undefined | any>(undefined);
+    const [page, setPage] = useState(1);
+    const size = pageSize || 5;
 
     useEffect(() => {
         if (!address) {
-            setData([])
-            setStatus('complete')
-            setError(undefined)
-            return
+            setData([]);
+            setStatus("complete");
+            setError(undefined);
+            return;
         }
 
         (async () => {
             try {
-                const res = await getBtcTransactionsHistory(address)
-                const _res = res.slice(0, size)
-                setData(_res)
-                setStatus('complete')
+                const res = await getBtcTransactionsHistory(address);
+                const _res = res.slice(0, size);
+                setData(_res);
+                setStatus("complete");
             } catch (e: any) {
-                console.warn(e)
-                setData([])
-                setStatus('error')
-                setError(e)
+                console.warn(e);
+                setData([]);
+                setStatus("error");
+                setError(e);
             }
-        })()
-    }, [address, size])
-
+        })();
+    }, [address, size]);
 
     return {
         setPage,
         page,
         data,
         status,
-        error
-    }
+        error,
+    };
 }
 
 export interface BtcTransaction {
