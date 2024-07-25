@@ -23,7 +23,7 @@ export interface XudtTransferProps {
 }
 
 export default function DialogCkbTransfer({children, froms, className}: { children: React.ReactNode, froms: string[], className?: string }) {
-    const {build, signAndSend} = useCkbTransfer(froms)
+    const {build, signAndSend} = useCkbTransfer()
     const {network, config} = useContext(CKBContext)
 
 
