@@ -7,6 +7,8 @@ import Dob from '@/pages/Dob'
 import TokenPage from "@/pages/Token"
 import CkbTokenPage from "@/pages/CkbToken"
 import BtcTokenPage from "@/pages/BtcToken"
+import Test from "@/pages/Test"
+import DotBit from "@/pages/DotBit/DotBit"
 
 const router = createBrowserRouter([
     {
@@ -22,6 +24,8 @@ const router = createBrowserRouter([
             { path: "/token/:tokenid", element: <TokenPage /> },
             { path: "/token", element: <CkbTokenPage />},
             { path: "/bitcoin", element: <BtcTokenPage />},
+            { path: "/test", element: <Test />},
+            { path: "/dotbit/:domain", element: <DotBit />},
         ]
     },
 ]);

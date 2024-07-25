@@ -9,6 +9,7 @@ export const TokenIcons:IconsUrl = {
     'SEAL': 'https://xudtlogos.cc/logos/seal-logo.png',
     'MEMES': 'https://xudtlogos.cc/logos/memes-logo.png',
     'OTTER': 'https://xudtlogos.cc/logos/otter-logo.png',
+    'CLOWN': 'https://ik.imagekit.io/soladata/1ut68bmf_FlKFW3LGX'
 }
 
 export const ChainIcons:IconsUrl = {

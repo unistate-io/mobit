@@ -1,22 +1,33 @@
-import {queryTokenInfo, queryXudtCell} from "@/utils/graphql"
 // @ts-ignore
 import BigNumber from "bignumber.js"
-import {useEffect, useState} from "react"
+import {useEffect, useState, useContext} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
-import {Spores} from "@/utils/graphql/types";
-import {SporesWithChainInfo} from "@/serves/useSpores";
+import {SporesWithChainInfo} from "@/serves/useSpores"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import * as net from "net";
 
-const queryAssets = async (btcAddress: string):Promise<{
+
+interface AssetDetails {
+    xudtCell?: any;
+    sporeActions?: any;
+}
+
+interface QueryResult {
+    balance: any;
+    assets: AssetDetails;
+}
+
+const queryAssets = async (btcAddress: string): Promise<{
     xudts: TokenBalance[],
     dobs: SporesWithChainInfo[],
     btc: TokenBalance
 }> => {
     const res = await fetch(`https://ckb-btc-api.deno.dev/?btcAddress=${btcAddress}`)
-    const json = await res.json()
+    const json = await res.json() as QueryResult
 
     const list = {
         xudts: [] as TokenBalance[],
-        dobs:[] as SporesWithChainInfo[],
+        dobs: [] as SporesWithChainInfo[],
         btc: {
             decimal: 8,
             name: 'Bitcoin',
@@ -28,34 +39,54 @@ const queryAssets = async (btcAddress: string):Promise<{
         } as TokenBalance
     }
 
-    json.assets.forEach((t: any) => {
-        if (!!t.xudtCell) {
+    if (json.assets.xudtCell && json.assets.xudtCell.length) {
+        let tokens: string[] = []
+        json.assets.xudtCell.forEach((t: any) => {
+            if (!tokens.includes(t.type_id)) {
+                tokens.push(t.type_id)
+            }
+        })
+
+        tokens.forEach((t) => {
+            const cells = json.assets.xudtCell.filter((c: any) => c.type_id === t)
+            const balance = cells.reduce((acc: BigNumber, c: any) => acc.plus(c.amount), new BigNumber(0))
+
             list.xudts.push({
-                name: t.xudtCell.addressByTypeId.token_info.name,
-                symbol: t.xudtCell.addressByTypeId.token_info.symbol,
-                decimal: t.xudtCell.addressByTypeId.token_info.decimal,
-                type_id: t.xudtCell.type_id,
-                amount: t.xudtCell.amount,
+                name: cells[0].addressByTypeId.token_info.name,
+                symbol: cells[0].addressByTypeId.token_info.symbol,
+                decimal: cells[0].addressByTypeId.token_info.decimal,
+                type_id: cells[0].type_id,
+                amount: balance.toString(),
                 type: 'xudt',
-                chain: 'btc'
+                chain: 'btc',
+                address: {
+                    id: '',
+                    script_args: cells[0].addressByTypeId.script_args.replace('\\', '0'),
+                    script_code_hash: '',
+                    script_hash_type: ''
+                }
             })
-        } else {
+        })
+    }
+
+    if (json.assets.sporeActions && json.assets.sporeActions.length) {
+        json.assets.sporeActions.forEach((t: any) => {
             list.dobs.push({
-                id: t.sporeActions[0].spore.id,
-                content: t.sporeActions[0].spore.content,
-                cluster_id: t.sporeActions[0].spore.cluster_id,
-                is_burned: t.sporeActions[0].spore.is_burned,
-                owner_address: t.sporeActions[0].spore.owner_address,
-                content_type: t.sporeActions[0].spore.content_type,
-                created_at: t.sporeActions[0].spore.created_at,
-                updated_at: t.sporeActions[0].spore.updated_at,
+                id: t.spore.id,
+                content: t.spore.content,
+                cluster_id: t.spore.cluster_id,
+                is_burned: t.spore.is_burned,
+                owner_address: t.spore.owner_address,
+                content_type: t.spore.content_type,
+                created_at: t.spore.created_at,
+                updated_at: t.spore.updated_at,
                 chain: 'btc',
                 spore_actions: []
             })
-        }
-    })
+        })
+    }
 
-    return  list
+    return list
 }
 
 const btcEmpty: TokenBalance = {
@@ -65,18 +96,27 @@ const btcEmpty: TokenBalance = {
     type_id: '',
     amount: '0',
     type: 'btc',
-    chain: 'btc'
+    chain: 'btc',
+    address: {
+        id: '',
+        script_args: '',
+        script_code_hash: '',
+        script_hash_type: ''
+    }
 }
 
-export default function useLayer1Assets(btcAddress?: string) {
+export default function useLayer1Assets(btcAddress?: string, polling?: boolean) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [xudts, setXudts] = useState<TokenBalance[]>([])
     const [dobs, setDobs] = useState<SporesWithChainInfo[]>([])
     const [btc, setBtc] = useState<TokenBalance | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
+    const {network} = useContext(CKBContext)
+
+    const pollingInterval = 1000 * 30 // 30s 一次
 
     useEffect(() => {
-        if (!btcAddress) {
+        if (!btcAddress || network === 'testnet') {
             setStatus('complete')
             setXudts([])
             setDobs([])
@@ -95,10 +135,34 @@ export default function useLayer1Assets(btcAddress?: string) {
             })
             .catch((e: any) => {
                 console.error(e)
+                setStatus('complete')
+                setXudts([])
+                setDobs([])
+                setBtc(undefined)
                 setStatus('error')
                 setError(e)
             })
     }, [btcAddress])
+
+
+    useEffect(() => {
+        if (polling) {
+            const interval = setInterval(() => {
+                if (btcAddress) {
+                    queryAssets(btcAddress)
+                        .then(res => {
+                            setXudts(res.xudts)
+                            setDobs(res.dobs)
+                            setBtc(res.btc)
+                        })
+                        .catch((e: any) => {
+                            console.error(e)
+                        })
+                }
+            }, pollingInterval)
+            return () => clearInterval(interval)
+        }
+    }, [polling])
 
     return {
         status,

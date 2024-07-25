@@ -1,6 +1,7 @@
-import {useEffect, useRef, useState} from "react"
+import {useEffect, useRef, useState, useContext} from "react"
 import {Spores} from "@/utils/graphql/types"
 import {querySporesByAddress} from "@/utils/graphql"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 export interface SporesWithChainInfo extends Spores {
     chain: 'btc' | 'ckb'
@@ -12,6 +13,7 @@ export default function useSpores(addresses: string[]) {
     const [error, setError] = useState<undefined | any>(undefined)
     const [page, setPage] = useState(1)
     const [loaded, setLoaded] = useState(false)
+    const {network} = useContext(CKBContext)
     const pageSize = 3
 
     const historyRef = useRef('')
@@ -38,7 +40,7 @@ export default function useSpores(addresses: string[]) {
 
         (async () => {
             try {
-                const spores = await querySporesByAddress(addresses, page, pageSize)
+                const spores = await querySporesByAddress(addresses, page, pageSize, undefined, network === 'mainnet')
                 setLoaded(spores.length < pageSize)
                 const list = page === 1 ? spores : [...data, ...spores]
                 setData(list.map((s: Spores) => {

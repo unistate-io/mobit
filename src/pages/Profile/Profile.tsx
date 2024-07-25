@@ -9,6 +9,7 @@ import useAllXudtBalance from "@/serves/useAllXudtBalance"
 import useCkbBalance from "@/serves/useCkbBalance"
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
 import useTransactions from "@/serves/useTransactionsHistory"
+import useTransactionsHistory from "@/serves/useTransactionsHistory"
 import ListHistory from "@/components/ListHistory/ListHistory"
 import useSpores from "@/serves/useSpores"
 import ListDOBs from "@/components/ListDOBs/ListDOBs"
@@ -17,7 +18,9 @@ import useLayer1Assets from "@/serves/useLayer1Assets"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
 import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
-import {isBtcAddress} from "@/utils/common";
+import {isBtcAddress} from "@/utils/common"
+import useDotbit from "@/serves/useDotbit"
+import ListDotBit from "@/components/ListDotBit/ListDotBit"
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -27,7 +30,7 @@ export default function Profile() {
 
     // ui state
     const [selectedAddress, setSelectedAddress] = useState<string | undefined>(address)
-    const [activeTab, setActiveTab] = useState<'ckb' | 'btc'>('ckb')
+    const [activeTab, setActiveTab] = useState<'ckb' | 'btc' | 'rgbpp' | '.bit'>('ckb')
 
     useEffect(() => {
         if (!internalAddress) {
@@ -67,12 +70,16 @@ export default function Profile() {
         btc: layer1Btc,
         status: layer1DataStatus,
         error: layer1DataErr
-    } = useLayer1Assets(btcAddress)
+    } = useLayer1Assets(btcAddress, true)
 
     const {
         data: btcHistory,
         status: btcHistoryStatus
     } = useBtcTransactionsHistory(btcAddress, 5)
+
+    const {data: rgbppHistory, status: rgbppHistoryStatus} = useTransactionsHistory(btcAddress)
+
+    const {domains, bondingDomain, status: domainStatus} = useDotbit(address)
 
     const tokensStatus = useMemo(() => {
         if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' || layer1DataStatus === 'loading') {
@@ -136,6 +143,9 @@ export default function Profile() {
         }, {
             value: 'DOBs',
             label: lang['DOBs']
+        }, {
+            value: '.bit',
+            label: '.bit'
         }]
     }, [lang])
 
@@ -203,6 +213,12 @@ export default function Profile() {
                                         setSporesDataPage(page)
                                     }}/>
                             </div>
+                            <div className="mt-6">
+                                <ListDotBit
+                                    data={domains}
+                                    status={domainStatus}
+                                   />
+                            </div>
                         </Tabs.Content>
                         <Tabs.Content
                             className="py-4 px-1 grow bg-white rounded-b-md outline-none"
@@ -226,6 +242,15 @@ export default function Profile() {
                                     setSporesDataPage(page)
                                 }}/>
                         </Tabs.Content>
+                        <Tabs.Content
+                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
+                            value=".bit"
+                        >
+                            <ListDotBit
+                                data={domains}
+                                status={domainStatus}
+                            />
+                        </Tabs.Content>
 
                     </Tabs.Root>
                 </div>
@@ -247,16 +272,26 @@ export default function Profile() {
                                 }}
                                      className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'btc' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>BTC
                                 </div>
+                                <div onClick={e => {
+                                    setActiveTab('rgbpp')
+                                }}
+                                     className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'rgbpp' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>RGB++
+                                </div>
                             </div>
                         }
 
                         {activeTab === 'ckb' &&
-                            <ListHistory address={selectedAddress!} data={historyData} status={historyDataStatus}/>
+                            <ListHistory addresses={queryAddress} data={historyData} status={historyDataStatus}/>
                         }
 
                         {activeTab === 'btc' && btcAddress &&
                             <ListBtcHistory internalAddress={internalAddress!} data={btcHistory}
                                             status={btcHistoryStatus}/>
+                        }
+
+                        {activeTab === 'rgbpp' && btcAddress &&
+                            <ListHistory internalAddress={internalAddress!} data={rgbppHistory}
+                                         status={rgbppHistoryStatus}/>
                         }
                     </div>
                 </div>

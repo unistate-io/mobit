@@ -1,5 +1,5 @@
-import {config as lumosCoinfig, helpers} from '@ckb-lumos/lumos'
-import {useCallback, useContext, useEffect, useRef, useState} from "react"
+import {config as lumosConfig, config as lumosCoinfig, helpers} from '@ckb-lumos/lumos'
+import {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
@@ -14,12 +14,17 @@ export default function useCkbBalance(addresses?: string[]) {
 
     const historyRef = useRef('')
 
+    const scriptConfig = useMemo(() => {
+        return network === 'testnet' ? lumosConfig.TESTNET : lumosConfig.MAINNET
+    }, [network])
+
     const refresh = useCallback(async () => {
-        if (!addresses || !addresses.length || !client) return
+        if (!addresses || !addresses.length || !client) {
+            return
+        }
 
         try {
             const client = network === 'testnet' ? new cccLib.ClientPublicTestnet() : new cccLib.ClientPublicMainnet()
-            const scriptConfig = network === 'testnet' ? lumosCoinfig.TESTNET : lumosCoinfig.MAINNET
             const _balance = await client.getBalance(addresses.map((address) => {
                 return helpers.addressToScript(address, {config: scriptConfig})
             }))
@@ -31,7 +36,13 @@ export default function useCkbBalance(addresses?: string[]) {
                 type_id: '',
                 type: 'ckb',
                 amount: _balance.toString(),
-                chain: 'ckb'
+                chain: 'ckb',
+                address: {
+                    id: '',
+                    script_args: '',
+                    script_code_hash: '',
+                    script_hash_type: ''
+                }
             })
             setStatus('complete')
         } catch (e: any) {

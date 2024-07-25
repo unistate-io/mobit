@@ -13,7 +13,7 @@ export default function ListTokenHistory({
                                         data,
                                         status,
                                         address
-                                    }: { data: TransactionHistory[], status: string, address: string }) {
+                                    }: { data: TransactionHistory[], status: string, address?: string }) {
     const {config} = useContext(CKBContext)
 
 

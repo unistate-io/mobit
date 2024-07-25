@@ -1,11 +1,12 @@
 import {queryTokenInfo, queryXudtCell} from "@/utils/graphql"
 // @ts-ignore
 import BigNumber from "bignumber.js"
-import {useEffect, useState, useRef} from "react"
+import {useEffect, useState, useRef, useContext} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
-export const balance = async (addresses: string[]): Promise<TokenBalance[]> => {
-    const cells = await queryXudtCell(addresses)
+export const balance = async (addresses: string[], isMainnet: boolean): Promise<TokenBalance[]> => {
+    const cells = await queryXudtCell(addresses, isMainnet)
 
     if (cells.length === 0) {
         console.log('enpty')
@@ -19,7 +20,7 @@ export const balance = async (addresses: string[]): Promise<TokenBalance[]> => {
         }
     })
 
-    const tokensInfo = await queryTokenInfo(typed_ids)
+    const tokensInfo = await queryTokenInfo(typed_ids, isMainnet)
 
     const res = typed_ids.map(t => {
         const target_cells = cells.filter(vc => {
@@ -30,28 +31,31 @@ export const balance = async (addresses: string[]): Promise<TokenBalance[]> => {
             return token.type_id === t
         })
 
+        if (!target_token) {
+            return null
+        }
+
         const sum = target_cells.reduce((prev, cur, index,) => {
             return prev.plus(BigNumber(cur.amount))
         }, BigNumber(0))
 
         return {
-            name: target_token ? target_token.name : 'Unknown Token',
-            symbol: target_token ? target_token.symbol : '',
-            decimal: target_token ? target_token.decimal : 0,
-            type_id: t,
+            ...target_token!,
             amount: sum.toString(),
             type: 'xudt',
             chain: 'ckb'
         }
     })
 
-    return res as TokenBalance[]
+    return res.filter(t =>!!t) as TokenBalance[]
 }
 
 export default function useAllXudtBalance(addresses: string[]) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance[]>([])
     const [error, setError] = useState<undefined | any>(undefined)
+    const {network} = useContext(CKBContext)
+
 
     const historyRef = useRef('')
 
@@ -63,7 +67,7 @@ export default function useAllXudtBalance(addresses: string[]) {
 
         (async () => {
             try {
-                const res = await balance(addresses)
+                const res = await balance(addresses, network === 'mainnet')
                 setData(res)
                 setStatus('complete')
             } catch (e: any) {

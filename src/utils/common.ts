@@ -19,12 +19,13 @@ export const checksumCkbAddress = (address: string, network: 'mainnet' | 'testne
         helpers.addressToScript(address, {config: network === 'mainnet' ? lumosConfig.MAINNET : lumosConfig.TESTNET})
         return true
     } catch (e: any) {
+        console.log(e)
         return false
     }
 }
 
 export const isBtcAddress = (address: string): boolean => {
-    return address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1') || address.startsWith('tb1')
+    return address.startsWith('bc1') || address.startsWith('tb1')
 }
 
 export const isEvmAddress = (address: string): boolean => {
@@ -36,7 +37,7 @@ export function shortTransactionHash(hash: string, keep?: number): string {
     return hash.slice(0, length) + '...' + hash.slice(hash.length - length)
 }
 
-export async function getCkbAddressFromEvm(address: string, client: Client): Promise<string | null> {
+export async function getCkbAddressFromEvm(address: string, client: any): Promise<string | null> {
     try {
         const _a = await (ccc as any).Address.fromKnownScript(
             KnownScript.OmniLock as any,
@@ -50,7 +51,7 @@ export async function getCkbAddressFromEvm(address: string, client: Client): Pro
     }
 }
 
-export async function getCkbAddressFromBTC(address: string, client: Client): Promise<string | null> {
+export async function getCkbAddressFromBTC(address: string, client: any): Promise<string | null> {
     const txs = await getBtcTransactionsHistory(address)
     if (!txs.length) return null
 

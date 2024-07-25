@@ -19,13 +19,7 @@ export interface TokenInfo {
     transaction_index?: string
 }
 
-export interface TokenInfoWithAddress {
-    decimal: number
-    name: string
-    symbol: string
-    type_id: string
-    transaction_hash?: string
-    transaction_index?: string
+export interface TokenInfoWithAddress extends TokenInfo {
     address: {
         id: string
         script_args: string

@@ -1,21 +1,26 @@
 // @ts-ignore
 
-import {useContext, useEffect, useRef, useState, useCallback} from "react"
+import {useCallback, useContext, useEffect, useRef, useState} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
-import {TokenInfo} from "@/utils/graphql/types"
+import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 import {Collector} from '@/libs/rgnpp_collector'
 import {leToU128} from '@rgbpp-sdk/ckb'
 import {addressToScript} from '@nervosnetwork/ckb-sdk-utils'
-import {queryAddressInfoWithAddress} from "@/utils/graphql";
 import {hashType} from "@/serves/useXudtTransfer/lib";
 
-const emptyToken: TokenInfo = {
+const emptyToken: TokenInfoWithAddress = {
     decimal: 0,
     name: '',
     symbol: '--',
     type_id: '',
+    address: {
+        id: '',
+        script_args: '',
+        script_code_hash: '',
+        script_hash_type: '',
+    }
 }
 
 const getXudtBalance = async (addresses: string[], tokenType: CKBComponents.Script, collector: Collector) => {
@@ -36,7 +41,7 @@ const getXudtBalance = async (addresses: string[], tokenType: CKBComponents.Scri
     return _sum.toString()
 }
 
-export default function useXudtBalance(addresses?: string[], token?: TokenInfo) {
+export default function useXudtBalance(addresses?: string[], token?: TokenInfoWithAddress) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance>({...emptyToken, amount: '0', type: 'xudt', chain: 'ckb'})
     const [error, setError] = useState<undefined | any>(undefined)
@@ -49,7 +54,6 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfo) 
             return
         }
 
-
         setStatus('loading')
 
         const collector = new Collector({
@@ -57,16 +61,10 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfo) 
             ckbIndexerUrl: config.ckb_indexer!,
         })
 
-        const tokenInfo = await queryAddressInfoWithAddress([token.type_id])
-
-        if (!tokenInfo[0]) {
-            throw new Error('Token not found')
-        }
-
         const balance = await getXudtBalance(addresses, {
-            codeHash: tokenInfo[0].address.script_code_hash.replace('\\', '0'),
-            hashType: hashType[tokenInfo[0].address.script_hash_type],
-            args: tokenInfo[0].address.script_args.replace('\\', '0')
+            codeHash: token.address.script_code_hash.replace('\\', '0'),
+            hashType: hashType[token.address.script_hash_type],
+            args: token.address.script_args.replace('\\', '0')
         }, collector)
 
         setData({
@@ -80,9 +78,7 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfo) 
 
     useEffect(() => {
         refresh()
-    }, [addresses, token, config , refresh])
-
-
+    }, [addresses, token, config, refresh])
 
 
     return {

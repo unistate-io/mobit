@@ -243,7 +243,7 @@ export default function InternalProfile({internalAddress}: { internalAddress: st
                         }
 
                         {activeTab === 'ckb' &&
-                            <ListHistory address={selectedAddress!} data={historyData} status={historyDataStatus}/>
+                            <ListHistory addresses={queryAddress} data={historyData} status={historyDataStatus}/>
                         }
 
                         {activeTab === 'btc' && isBtc &&

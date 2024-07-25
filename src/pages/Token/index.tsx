@@ -1,4 +1,4 @@
-import {useContext, useEffect, useMemo, useState} from 'react'
+import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import Button from "@/components/Form/Button/Button"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
@@ -14,6 +14,8 @@ import useTokenTransactions from "@/serves/useTokenTransactionsHistory"
 import useTransactionsHistory from "@/serves/useTransactionsHistory"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import useLayer1Assets from "@/serves/useLayer1Assets"
+import DialogBtcXudtTransfer from "@/components/Dialogs/DialogBtcXudtTransfer/DialogBtcXudtTransfer"
+import DialogTransferFromAddressSelect from "@/components/Dialogs/DialogTransferFromAddressSelect/DialogTransferFromAddressSelect"
 
 
 export default function TokenPage() {
@@ -48,6 +50,34 @@ export default function TokenPage() {
         }
     }, [btcAddress])
 
+    const handleSend = useCallback(() => {
+        if (!!btcAddress) {
+            const btn: any = document.querySelector('#address-select')
+            if (!!btn) {
+                btn.click()
+            }
+        } else {
+            const btn: any = document.querySelector('#xudt-transfer')
+            if (!!btn) {
+                btn.click()
+            }
+        }
+    }, [btcAddress])
+
+    const handleSelectedAddress = useCallback((address: string) => {
+        if (internalAddress === address) {
+            const btn: any = document.querySelector('#btc-xudt-transfer')
+            if (!!btn) {
+                btn.click()
+            }
+        } else {
+            const btn: any = document.querySelector('#xudt-transfer')
+            if (!!btn) {
+                btn.click()
+            }
+        }
+    }, [internalAddress])
+
     return <div className="max-w-[1044px] mx-auto px-3 py-8 flex flex-col sm:flex-row items-start mb-10">
         <div
             className="sm:w-[320px] w-full shadow rounded-lg overflow-hidden bg-[url('./assets/token_bg.png')] bg-[length:100%_auto] bg-no-repeat p-5">
@@ -56,7 +86,7 @@ export default function TokenPage() {
             </div>
             {infoStatus === 'loading' ?
                 <div className={'loading-bg h-[30px] mb-3 rounded-lg'}/>
-                : <div className="text-lg mb-4 flex flex-row items-baseline">
+                : <div className="text-lg mb-4">
                     <div className="font-semibold mr-3 text-2xl"> {tokenInfo?.symbol}</div>
                     <div className="text-sm"> {tokenInfo?.name}</div>
                 </div>
@@ -76,9 +106,9 @@ export default function TokenPage() {
                     <div className={'justify-between mb-3'}>
                         <div className="mb-2">{lang['Balance']}</div>
                         {xudtBalanceStatus === 'loading' ?
-                            <div className={'loading-bg h-[30px] mb-3 rounded-lg'}/> :
+                            <div className={'loading-bg h-[30px] mb-3 rounded-lg mt-3'}/> :
                             <div>
-                                <ProfileAddresses addresses={[address]} defaultAddress={address} />
+                                <ProfileAddresses addresses={[address]} defaultAddress={address}/>
                                 <div className="font-semibold text-xl">
                                     {toDisplay(xudtBalance?.amount || '0', 8, true)} {tokenInfo.symbol}
                                 </div>
@@ -86,12 +116,12 @@ export default function TokenPage() {
                         }
 
                         {!!btcAddress && rgbppXudtsStatus === 'loading' &&
-                            <div className={'loading-bg h-[30px] mb-3 rounded-lg'}/>
+                            <div className={'loading-bg h-[30px] mb-3 rounded-lg mt-3'}/>
                         }
 
                         {!!btcAddress && rgbppXudtsStatus === 'complete' &&
                             <div className="mt-4">
-                                <ProfileAddresses addresses={[btcAddress]} defaultAddress={btcAddress} />
+                                <ProfileAddresses addresses={[btcAddress]} defaultAddress={btcAddress}/>
                                 <div className="font-semibold text-xl">
                                     {toDisplay(rgbppBalance || '0', tokenInfo!.decimal, true)} {tokenInfo.symbol}
                                 </div>
@@ -99,16 +129,36 @@ export default function TokenPage() {
                         }
                     </div>
 
+                    <DialogXudtTransfer froms={addresses!} token={tokenInfo}>
+                        <div id="xudt-transfer"/>
+                    </DialogXudtTransfer>
 
-                    <div className="flex flex-row justify-between text-sm">
-                        <DialogXudtTransfer froms={addresses!} token={tokenInfo} className="flex-1 mr-2">
-                            <Button>{lang['Send']}</Button>
-                        </DialogXudtTransfer>
-                        <DialogXudtReceive address={address!} className="flex-1">
-                            <Button className="text-white !bg-[#000] hover:opacity-80 hover:bg-[#000]"
-                            >{lang['Receive']}</Button>
-                        </DialogXudtReceive>
-                    </div>
+                    {!!btcAddress &&
+                        <>
+                            <DialogBtcXudtTransfer token={tokenInfo}>
+                                <div id="btc-xudt-transfer"/>
+                            </DialogBtcXudtTransfer>
+                            <DialogTransferFromAddressSelect onSelect={handleSelectedAddress}>
+                                <div id="address-select"/>
+                            </DialogTransferFromAddressSelect>
+                        </>
+                    }
+
+                    {
+                        xudtBalanceStatus === 'complete' && rgbppXudtsStatus === 'complete' &&
+
+                        <div className="flex flex-row justify-between text-sm">
+                            <Button
+                                onClick={handleSend}
+                                className="mr-2 flex-1"
+                            >{lang['Send']}</Button>
+
+                            <DialogXudtReceive address={address!} className="flex-1">
+                                <Button className="text-white !bg-[#000] hover:opacity-80 hover:bg-[#000]"
+                                >{lang['Receive']}</Button>
+                            </DialogXudtReceive>
+                        </div>
+                    }
                 </>
             }
         </div>
@@ -132,7 +182,7 @@ export default function TokenPage() {
                 </div>
             }
 
-            { activeTab === 'ckb' &&
+            {activeTab === 'ckb' &&
                 <ListTokenHistory data={historyData} status={historyDataStatus} address={address!}/>
             }
 

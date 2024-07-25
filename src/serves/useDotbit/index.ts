@@ -1,44 +1,49 @@
-import {useEffect, useState} from "react"
-import {BitAccountListItem} from "dotbit/src/fetchers/BitIndexer.type"
+import {useEffect, useState, useContext} from "react"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
-import {CoinType, createInstance} from 'dotbit'
 
-const dotbit = createInstance()
-
-export default function useDotbit(owner: string) {
-    const [data, setData] = useState<BitAccountListItem[]>([])
+export default function useDotbit(address?: string) {
+    const [bondingDomain, setBondingdomain] = useState<undefined | string>(undefined)
+    const [domains, setDomains] = useState<string[]>([])
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>("loading")
     const [error, setError] = useState<any | null>(null)
+    const {network} = useContext(CKBContext)
 
     useEffect(() => {
-        if (!owner) {
+        if (!address || network === 'testnet') {
             setStatus("complete")
             setError(null)
-            setData([])
+            setDomains([])
+            setBondingdomain(undefined)
             return
         }
 
         setStatus("loading")
-        dotbit.accountsOfOwner({
-            key: owner,
-            coin_type: CoinType.CKB
-        })
-            .then((res) => {
-                setData(res)
-                console.log(res)
+        fetch(`https://ckb-property-aggregator.unistate.io/?ckbaddress=${address}`)
+            .then(res => res.json())
+            .catch((e: any) => {
+                setError(e)
+                setDomains([])
+                setBondingdomain(undefined)
+                setStatus('error')
+            })
+            .then(res => {
+                setDomains(res.bitAccounts.domainlist)
+                setBondingdomain(res.bitAccounts.bondingdomain || undefined)
+                setStatus('complete')
             })
             .catch((e: any) => {
-                console.warn(e)
-                setStatus("error")
                 setError(e)
+                setDomains([])
+                setBondingdomain(undefined)
+                setStatus('error')
             })
-            .finally(() => {
-                setStatus("complete")
-            });
-    }, [owner])
+
+    }, [address])
 
     return {
-        data,
+        bondingDomain,
+        domains,
         status,
         error
     }
