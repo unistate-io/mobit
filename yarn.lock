@@ -9698,10 +9698,10 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mobit-sdk@1.5.3:
-  version "1.5.3"
-  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.5.3.tgz#85b947e1e2a6f0bf6317631e6d3eac2e5030d93b"
-  integrity sha512-v7vKdV2iMssRrmYsxnV3PZxMIYY8dup1DJZsF0QrXPRNGvc2PuU3Ne5fln0RRayP1x/OYftLG5BwDVNKGIJHUg==
+mobit-sdk@^1.5.3-test.20240728004905:
+  version "1.5.3-test.20240728004905"
+  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.5.3-test.20240728004905.tgz#f187a05978198ef24595335ed7eb7752ee7d7167"
+  integrity sha512-NjLWE/ikYRW9hfQahXgq0xdKoFkD+L5BxATsw6I+MfnNKQFNen+dhdVsZSQcQ1LocC2pVO2AxERnO4B/acGJCw==
   dependencies:
     "@apollo/client" "^3.11.1"
     "@ckb-ccc/core" "0.0.5-alpha.2"
