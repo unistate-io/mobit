@@ -27,10 +27,6 @@ export const queryAddressInfoWithAddress = async (type_ids: string[], isMainnet=
     return res.token_info as TokenInfoWithAddress[]
 }
 
-export const queryTokenInfo = async (type_ids: string[], isMainnet= true) => {
-    return await queryAddressInfoWithAddress(type_ids, isMainnet)
-}
-
 export const querySporesByAddress = async (addresses: string[], page: number, pageSize:number, allowBurned?: boolean, isMainnet=true) => {
     const condition = allowBurned ? `where: {owner_address: {_in: ${JSON.stringify(addresses)}}, limit: ${pageSize}, offset: ${(page - 1) * pageSize}` : `where: {owner_address: {_in: ${JSON.stringify(addresses)}}, is_burned: {_eq: false}}, limit: ${pageSize}, offset: ${(page - 1) * pageSize}`
     const doc = gql('spores', condition)

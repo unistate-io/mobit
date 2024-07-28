@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext, useEffect, useMemo} from 'react'
 import Input from "@/components/Form/Input/Input"
 import * as Dialog from '@radix-ui/react-dialog'
 import Button from "@/components/Form/Button/Button"
@@ -46,13 +46,12 @@ export default function DialogXudtTransfer({
     const [feeRate, setFeeRate] = React.useState<1000 | 2000 | 3000>(1000)
     const [sending, setSending] = React.useState(false)
     const [txHash, setTxHash] = React.useState<null | string>(null)
-    const [fee1000, setFee1000] = React.useState<string>('0')
+    const [tx, setTx] = React.useState<helpers.TransactionSkeletonType | null>(null)
 
 
     const fee = (feeRate: number) => {
         return BigNumber(fee1000).multipliedBy(feeRate / 1000).dividedBy(10 ** token.decimal).toString()
     }
-
 
     //errors
     const [toError, setToError] = React.useState<string>('')
@@ -97,6 +96,7 @@ export default function DialogXudtTransfer({
                     feeRate: 1000,
                     tokenInfo: token
                 }) as any
+                setTx(tx)
                 setAmountError('')
             } catch (e: any) {
                 console.error(e)
@@ -115,20 +115,21 @@ export default function DialogXudtTransfer({
         })
     }
 
+    const fee1000 = useMemo(() => {
+        if (!tx) return '0'
+        const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+        const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+        const fee = inputCap - outCap
+        return BigNumber(fee).multipliedBy(feeRate / 1000).dividedBy(10 ** token.decimal).toString()
+
+    }, [tx, feeRate, token.decimal])
+
     const handleTransfer = async () => {
         setSending(true)
         try {
             const tx = await checkErrorsAndBuild()
-            if (!!tx) {
-                const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-                const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-                const fee = inputCap - outCap
-                console.log('inputCap', inputCap)
-                console.log('outCap', outCap)
-                console.log('fee', fee)
-                setFee1000(fee.toString())
-                setStep(2)
-            }
+            setTx(tx)
+            setStep(2)
         } catch (e: any) {
             console.error(e)
         } finally {

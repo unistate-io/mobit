@@ -1,4 +1,4 @@
-import {queryTokenInfo, queryXudtCell} from "@/utils/graphql"
+import {queryAddressInfoWithAddress, queryXudtCell} from "@/utils/graphql"
 // @ts-ignore
 import BigNumber from "bignumber.js"
 import {useEffect, useState, useRef, useContext} from "react"
@@ -20,7 +20,7 @@ export const balance = async (addresses: string[], isMainnet: boolean): Promise<
         }
     })
 
-    const tokensInfo = await queryTokenInfo(typed_ids, isMainnet)
+    const tokensInfo = await queryAddressInfoWithAddress(typed_ids, isMainnet)
 
     const res = typed_ids.map(t => {
         const target_cells = cells.filter(vc => {
