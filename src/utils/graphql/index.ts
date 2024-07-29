@@ -9,7 +9,7 @@ const api = {
     testnet: 'https://unistate-ckb-test.unistate.io/v1/graphql'
 }
 
-export const query = async (query: string, variables?: any, isMainnet: boolean = true) => {
+export const query = async (query: string, variables?: any, isMainnet: boolean = true):Promise<any> => {
     const graphUrl = isMainnet ? api.mainnet : api.testnet
     return await request(graphUrl, query, variables)
 }

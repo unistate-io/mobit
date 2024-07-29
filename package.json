@@ -91,7 +91,6 @@
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.0.2",
     "terser-webpack-plugin": "^5.2.5",
-    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
     "webpack": "^5.64.4",
     "webpack-dev-server": "^4.6.0",
@@ -128,7 +127,8 @@
     "cross-env": "^7.0.3",
     "sass": "1.77.8",
     "sass-loader": "^14.2.1",
-    "tailwindcss": "^3.4.3"
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.5.4"
   },
   "jest": {
     "roots": [

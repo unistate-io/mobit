@@ -1,6 +1,6 @@
 import {ccc} from "@ckb-ccc/connector-react"
 import {createContext, useEffect, useRef, useState} from "react"
-import {Signer} from "@ckb-ccc/core/dist/signer/signer"
+import {Signer} from "@ckb-ccc/core"
 import {NetworkConfig} from "@/providers/CKBProvider/network_config"
 import network_config from "@/providers/CKBProvider/network_config"
 import {Client} from '@ckb-ccc/core'

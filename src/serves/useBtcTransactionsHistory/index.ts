@@ -1,19 +1,23 @@
-import {useEffect, useState} from "react"
+import {useEffect, useState, useContext} from "react"
+import {RgbppSDK} from  "mobit-sdk"
+import { BtcApiTransaction } from "@rgbpp-sdk/service"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
-export const getBtcTransactionsHistory = async (address: string) => {
-    const res = await fetch(`https://ckb-btc-api.deno.dev/?btcAddress=${address}/txs`)
-    return await res.json() as BtcTransaction[]
+export const getBtcTransactionsHistory = async (address: string, isMainnet: boolean = true) => {
+    const sdk = new RgbppSDK(isMainnet)
+    return await sdk.fetchTxsDetails(address)
 }
 
 export default function useBtcTransactionsHistory(address?: string, pageSize?: number) {
     const [data, setData] = useState<BtcTransaction[]>([])
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [error, setError] = useState<undefined | any>(undefined)
+    const {network} = useContext(CKBContext)
     const [page, setPage] = useState(1)
     const size = pageSize || 5
 
     useEffect(() => {
-        if (!address) {
+        if (!address || network === 'testnet') {
             setData([])
             setStatus('complete')
             setError(undefined)
@@ -22,7 +26,7 @@ export default function useBtcTransactionsHistory(address?: string, pageSize?: n
 
         (async () => {
             try {
-                const res = await getBtcTransactionsHistory(address)
+                const res = await getBtcTransactionsHistory(address, network === 'mainnet')
                 const _res = res.slice(0, size)
                 setData(_res)
                 setStatus('complete')
@@ -33,7 +37,7 @@ export default function useBtcTransactionsHistory(address?: string, pageSize?: n
                 setError(e)
             }
         })()
-    }, [address, size])
+    }, [address, network])
 
 
     return {
@@ -45,44 +49,4 @@ export default function useBtcTransactionsHistory(address?: string, pageSize?: n
     }
 }
 
-export interface BtcTransaction {
-    txid: string;
-    version: number;
-    locktime: number;
-    vin: Vin[];
-    vout: Vout[];
-    size: number;
-    weight: number;
-    fee: number;
-    status: {
-        confirmed: boolean;
-        block_height: number;
-        block_hash: string;
-        block_time: number;
-    };
-}
-
-export interface Vin {
-    txid: string;
-    vout: number;
-    prevout: {
-        scriptpubkey: string;
-        scriptpubkey_asm: string;
-        scriptpubkey_type: string;
-        scriptpubkey_address: string;
-        value: number;
-    };
-    scriptsig: string;
-    scriptsig_asm: string;
-    witness: string[];
-    is_coinbase: boolean;
-    sequence: number;
-}
-
-export interface Vout {
-    scriptpubkey: string;
-    scriptpubkey_asm: string;
-    scriptpubkey_type: string;
-    scriptpubkey_address?: string;
-    value: number;
-}
+export type BtcTransaction = BtcApiTransaction
