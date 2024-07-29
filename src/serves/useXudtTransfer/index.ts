@@ -13,7 +13,7 @@ export default function useXudtTransfer() {
                              amount,
                              feeRate,
                              tokenInfo
-                         }: { froms: string[], to: string, amount: string, tokenInfo: TokenInfoWithAddress, feeRate: number }) => {
+                         }: { froms: string[], to: string, amount: string, tokenInfo: TokenInfoWithAddress, feeRate: number }): Promise<ccc.Transaction> => {
 
         // const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc)
 
@@ -32,7 +32,7 @@ export default function useXudtTransfer() {
 
 
         const ckbHelper = new CkbHelper(network === 'mainnet')
-        const _tx = createTransferXudtTransaction({
+        const _tx = await createTransferXudtTransaction({
             xudtArgs: tokenInfo.address.script_args,
             receivers: [{toAddress: to, transferAmount: BigInt(amount)}],
             ckbAddresses: froms,
@@ -40,11 +40,7 @@ export default function useXudtTransfer() {
             isMainnet: network === 'mainnet'
         }, undefined, BigInt(feeRate))
 
-        const cccLib = ccc as any
-        const __tx = cccLib.Transaction.fromLumosSkeleton(_tx)
-
-        console.log(__tx)
-        return __tx
+        return ccc.Transaction.from(JSON.parse(JSON.stringify(_tx)))
     }
 
 
