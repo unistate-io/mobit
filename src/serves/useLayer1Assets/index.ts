@@ -12,8 +12,7 @@ const queryAssets = async (btcAddress: string, isMainnet: boolean = true): Promi
     dobs: SporesWithChainInfo[],
     btc: TokenBalance
 }> => {
-
-    const sdk = new RgbppSDK(isMainnet)
+    const sdk = new RgbppSDK(isMainnet, isMainnet ? undefined : 'Testnet3')
     const json = await sdk.fetchAssetsAndQueryDetails(btcAddress)
 
     const list = {
@@ -41,11 +40,12 @@ const queryAssets = async (btcAddress: string, isMainnet: boolean = true): Promi
         tokens.forEach((t) => {
             const cells = json.assets.xudtCells.filter((c: any) => c.type_id === t)
             const balance = cells.reduce((acc: BigNumber, c: any) => acc.plus(c.amount), new BigNumber(0))
+            const info = cells[0].addressByTypeId.token_info || cells[0].addressByTypeId.inscription_infos[0] || undefined
 
             list.xudts.push({
-                name: cells[0].addressByTypeId.token_info?.name || 'unknown',
-                symbol: cells[0].addressByTypeId.token_info?.symbol || '',
-                decimal: cells[0].addressByTypeId.token_info?.decimal || 0,
+                name: info?.name || 'unknown',
+                symbol: info.symbol || '',
+                decimal: info?.decimal || 0,
                 type_id: cells[0].type_id,
                 amount: balance.toString(),
                 type: 'xudt',
@@ -106,7 +106,7 @@ export default function useLayer1Assets(btcAddress?: string, polling?: boolean) 
     const pollingInterval = 1000 * 30 // 30s 一次
 
     useEffect(() => {
-        if (!btcAddress || network === 'testnet') {
+        if (!btcAddress) {
             setStatus('complete')
             setXudts([])
             setDobs([])
