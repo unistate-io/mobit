@@ -2,7 +2,6 @@ import {commons, helpers, Indexer, config as lumosConfig} from '@ckb-lumos/lumos
 import {useContext, useMemo} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
-import { predefined } from "@ckb-lumos/config-manager"
 
 export default function useCkbTransfer() {
     const {signer, config, network} = useContext(CKBContext)

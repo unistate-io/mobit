@@ -1,6 +1,6 @@
 import {useEffect, useState, useContext} from "react"
 import {queryClustersByIds, querySporesById} from "@/utils/graphql"
-import {Clusters, Spores} from "@/utils/graphql/types"
+import {Clusters} from "@/utils/graphql/types"
 import {bufferToRawString} from "@spore-sdk/core"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {SporesWithChainInfo} from "@/serves/useSpores"

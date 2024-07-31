@@ -1,4 +1,4 @@
-import {useEffect, useState, useContext, useRef} from "react"
+import {useEffect, useState, useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {TransactionHistory} from "@/components/ListHistory/ListHistory"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
