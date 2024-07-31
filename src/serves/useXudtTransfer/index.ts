@@ -2,19 +2,25 @@ import {useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
-import {CkbHelper, createTransferXudtTransaction} from 'mobit-sdk'
+import {CkbHelper, convertToTxSkeleton, createTransferXudtTransaction} from "mobit-sdk"
+import { helpers } from "@ckb-lumos/lumos"
 
 export default function useXudtTransfer() {
     const {signer, network} = useContext(CKBContext)
 
     const build = async ({
-                             froms,
-                             to,
-                             amount,
-                             feeRate,
-                             tokenInfo
-                         }: { froms: string[], to: string, amount: string, tokenInfo: TokenInfoWithAddress, feeRate: number }) => {
-
+        froms,
+        to,
+        amount,
+        feeRate,
+        tokenInfo
+    }: {
+        froms: string[]
+        to: string
+        amount: string
+        tokenInfo: TokenInfoWithAddress
+        feeRate: number
+    }): Promise<helpers.TransactionSkeletonType> => {
         // const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc)
 
         // const txInfo = await transferTokenToAddress(
@@ -30,33 +36,46 @@ export default function useXudtTransfer() {
         // console.log('txInfo', txInfo)
         // return txInfo
 
+        console.log(`${tokenInfo.address.script_args}`)
 
-        const ckbHelper = new CkbHelper(network === 'mainnet')
-        const _tx = createTransferXudtTransaction({
-            xudtArgs: tokenInfo.address.script_args,
-            receivers: [{toAddress: to, transferAmount: BigInt(amount)}],
-            ckbAddresses: froms,
-            collector: ckbHelper.collector,
-            isMainnet: network === 'mainnet'
-        }, undefined, BigInt(feeRate))
+        const ckbHelper = new CkbHelper(network === "mainnet")
+        const tx = await createTransferXudtTransaction(
+            {
+                xudtArgs: tokenInfo.address.script_args.replace('\\', '0'),
+                receivers: [{toAddress: to, transferAmount: BigInt(amount)}],
+                ckbAddresses: froms,
+                collector: ckbHelper.collector,
+                isMainnet: network === "mainnet"
+            },
+            undefined,
+            BigInt(feeRate)
+        )
 
-        const cccLib = ccc as any
-        const __tx = cccLib.Transaction.fromLumosSkeleton(_tx)
+        console.log(tx);
 
-        console.log(__tx)
-        return __tx
+
+        const skeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
+
+        console.log(skeleton);
+
+        return skeleton;
     }
 
-
     const signAndSend = async ({
-                                   froms,
-                                   to,
-                                   amount,
-                                   feeRate,
-                                   tokenInfo
-                               }: { froms: string[], to: string, amount: string, tokenInfo: TokenInfoWithAddress, feeRate: number }) => {
+        froms,
+        to,
+        amount,
+        feeRate,
+        tokenInfo
+    }: {
+        froms: string[]
+        to: string
+        amount: string
+        tokenInfo: TokenInfoWithAddress
+        feeRate: number
+    }) => {
         if (!signer) {
-            throw new Error('Please connect wallet first')
+            throw new Error("Please connect wallet first")
         }
 
         const tx = await build({
@@ -66,9 +85,9 @@ export default function useXudtTransfer() {
             feeRate,
             tokenInfo
         })
-        return await signer.sendTransaction(tx)
-    }
 
+        return await signer.sendTransaction(ccc.Transaction.fromLumosSkeleton(tx))
+    }
 
     return {
         build,

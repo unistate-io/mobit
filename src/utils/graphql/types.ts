@@ -8,6 +8,28 @@ export interface XudtCell {
     xudt_data_lock: string
     xudt_owner_lock_script_hash: string
     transaction_hash: string
+    addressByTypeId?: {
+        id: string
+        script_args: string
+        script_code_hash: string
+        script_hash_type: string
+        token_info: {
+            decimal: number
+            name: string
+            symbol: string
+            transaction_hash?: string
+            transaction_index?: string
+        }
+        token_infos: {
+            decimal: number
+            name: string
+            symbol: string
+            expected_supply: string
+            mint_limit: string
+            mint_status: string
+            udt_hash: string
+        }[]
+    }
 }
 
 export interface TokenInfo {

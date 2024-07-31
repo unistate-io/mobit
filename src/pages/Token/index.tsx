@@ -87,7 +87,7 @@ export default function TokenPage() {
             {infoStatus === 'loading' ?
                 <div className={'loading-bg h-[30px] mb-3 rounded-lg'}/>
                 : <div className="text-lg mb-4">
-                    <div className="font-semibold mr-3 text-2xl"> {tokenInfo?.symbol}</div>
+                    <div className="font-semibold mr-3 text-2xl"> {tokenInfo?.symbol || "Inscription"}</div>
                     <div className="text-sm"> {tokenInfo?.name}</div>
                 </div>
             }

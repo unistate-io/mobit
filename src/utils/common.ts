@@ -1,6 +1,6 @@
 import {helpers, config as lumosConfig} from "@ckb-lumos/lumos"
 import {ccc} from "@ckb-ccc/connector-react"
-import {Client} from "@ckb-ccc/core/dist.commonjs";
+import {Client} from "@ckb-ccc/core"
 import {getBtcTransactionsHistory} from "@/serves/useBtcTransactionsHistory"
 import {ripemd160} from '@noble/hashes/ripemd160'
 import {sha256} from '@noble/hashes/sha256'

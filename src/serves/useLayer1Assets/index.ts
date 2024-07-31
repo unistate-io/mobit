@@ -4,26 +4,16 @@ import {useEffect, useState, useContext} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {SporesWithChainInfo} from "@/serves/useSpores"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import * as net from "net";
+import {RgbppSDK} from "mobit-sdk"
 
 
-interface AssetDetails {
-    xudtCell?: any;
-    sporeActions?: any;
-}
-
-interface QueryResult {
-    balance: any;
-    assets: AssetDetails;
-}
-
-const queryAssets = async (btcAddress: string): Promise<{
+const queryAssets = async (btcAddress: string, isMainnet: boolean = true): Promise<{
     xudts: TokenBalance[],
     dobs: SporesWithChainInfo[],
     btc: TokenBalance
 }> => {
-    const res = await fetch(`https://ckb-btc-api.deno.dev/?btcAddress=${btcAddress}`)
-    const json = await res.json() as QueryResult
+    const sdk = new RgbppSDK(isMainnet, isMainnet ? undefined : 'Testnet3')
+    const json = await sdk.fetchAssetsAndQueryDetails(btcAddress)
 
     const list = {
         xudts: [] as TokenBalance[],
@@ -33,28 +23,29 @@ const queryAssets = async (btcAddress: string): Promise<{
             name: 'Bitcoin',
             symbol: 'BTC',
             type_id: '',
-            amount: json.balance.total_satoshi,
+            amount: json.balance.total_satoshi.toString(),
             type: 'btc',
             chain: 'btc'
         } as TokenBalance
     }
 
-    if (json.assets.xudtCell && json.assets.xudtCell.length) {
+    if (json.assets.xudtCells.length) {
         let tokens: string[] = []
-        json.assets.xudtCell.forEach((t: any) => {
+        json.assets.xudtCells.forEach((t: any) => {
             if (!tokens.includes(t.type_id)) {
                 tokens.push(t.type_id)
             }
         })
 
         tokens.forEach((t) => {
-            const cells = json.assets.xudtCell.filter((c: any) => c.type_id === t)
+            const cells = json.assets.xudtCells.filter((c: any) => c.type_id === t)
             const balance = cells.reduce((acc: BigNumber, c: any) => acc.plus(c.amount), new BigNumber(0))
+            const info = cells[0].addressByTypeId.token_info || cells[0].addressByTypeId.inscription_infos[0] || undefined
 
             list.xudts.push({
-                name: cells[0].addressByTypeId.token_info.name,
-                symbol: cells[0].addressByTypeId.token_info.symbol,
-                decimal: cells[0].addressByTypeId.token_info.decimal,
+                name: info?.name || 'Inscription',
+                symbol: info.symbol || '',
+                decimal: info?.decimal || 0,
                 type_id: cells[0].type_id,
                 amount: balance.toString(),
                 type: 'xudt',
@@ -116,7 +107,7 @@ export default function useLayer1Assets(btcAddress?: string, polling?: boolean) 
     const pollingInterval = 1000 * 30 // 30s 一次
 
     useEffect(() => {
-        if (!btcAddress || network === 'testnet') {
+        if (!btcAddress) {
             setStatus('complete')
             setXudts([])
             setDobs([])
@@ -126,7 +117,7 @@ export default function useLayer1Assets(btcAddress?: string, polling?: boolean) 
 
         setStatus('loading')
         setXudts([])
-        queryAssets(btcAddress)
+        queryAssets(btcAddress, network === 'mainnet')
             .then(res => {
                 setXudts(res.xudts)
                 setDobs(res.dobs)

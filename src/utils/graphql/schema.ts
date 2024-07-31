@@ -9,6 +9,28 @@ const xudt_cell = `xudt_cell(){
         xudt_owner_lock_script_hash
         transaction_hash
         is_consumed
+        addressByTypeId {
+            id
+            script_args
+            script_code_hash
+            script_hash_type
+            token_info {
+              decimal
+              name
+              symbol
+              transaction_hash
+              transaction_index
+            }
+            token_infos {
+              decimal
+              name
+              symbol
+              expected_supply
+              mint_limit
+              mint_status
+              udt_hash
+            }
+        }
     }`
 
 const token_info = `token_info(){
@@ -27,8 +49,18 @@ const token_info_address = `token_info(){
         transaction_hash
         transaction_index
         type_id
+        inscription_id {
+            token_infos {
+                decimal
+                name
+                symbol
+                transaction_hash
+                transaction_index
+                type_id
+            }
+        }
         address {
-            id
+          id
           script_args
           script_code_hash
           script_hash_type
