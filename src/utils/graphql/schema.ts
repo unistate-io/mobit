@@ -51,10 +51,6 @@ const spores = `spores(){
          content_type
          created_at
          updated_at
-         spore_actions {
-              tx
-              to_address_id
-         }
       }`
 
 

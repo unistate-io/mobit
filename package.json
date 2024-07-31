@@ -2,6 +2,9 @@
   "name": "mobit",
   "version": "0.1.0",
   "private": true,
+  "resolutions": {
+    "@ckb-lumos/lumos": "0.0.0-canary-d279b87-20240624101315"
+  },
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@ckb-ccc/connector-react": "0.0.10-alpha.3",
@@ -18,7 +21,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
     "@rgbpp-sdk/ckb": "^0.3.0",
-    "@spore-sdk/core": "^0.1.0",
+    "@spore-sdk/core": "latest",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

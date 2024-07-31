@@ -81,11 +81,11 @@ const queryAssets = async (btcAddress: string): Promise<{
                 created_at: t.spore.created_at,
                 updated_at: t.spore.updated_at,
                 chain: 'btc',
-                spore_actions: []
             })
         })
     }
 
+    console.log('list', list)
     return list
 }
 
