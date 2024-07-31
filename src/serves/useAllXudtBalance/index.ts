@@ -1,9 +1,10 @@
-import {queryAddressInfoWithAddress, queryXudtCell} from "@/utils/graphql"
+import {queryXudtCell} from "@/utils/graphql"
 // @ts-ignore
 import BigNumber from "bignumber.js"
 import {useEffect, useState, useRef, useContext} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import {XudtCell} from "@/utils/graphql/types"
 
 export const balance = async (addresses: string[], isMainnet: boolean): Promise<TokenBalance[]> => {
     const cells = await queryXudtCell(addresses, isMainnet)
@@ -13,41 +14,44 @@ export const balance = async (addresses: string[], isMainnet: boolean): Promise<
         return []
     }
 
-    let typed_ids: string[] = []
+    let list:XudtCell[] = []
     cells.forEach(c => {
-        if (!typed_ids.includes(c.type_id)) {
-            typed_ids.push(c.type_id)
+        const exist = list.find(l => l.type_id === c.type_id)
+        if (!exist) {
+            c.amount = c.amount.toString()
+            list.push(c)
+        } else {
+            exist.amount = BigNumber(exist.amount).plus(BigNumber(c.amount)).toString()
         }
     })
 
-    const tokensInfo = await queryAddressInfoWithAddress(typed_ids, isMainnet)
-
-    const res = typed_ids.map(t => {
-        const target_cells = cells.filter(vc => {
-            return vc.type_id === t
-        })
-
-        const target_token = tokensInfo.find(token => {
-            return token.type_id === t
-        })
-
-        if (!target_token) {
-            return null
-        }
-
-        const sum = target_cells.reduce((prev, cur, index,) => {
-            return prev.plus(BigNumber(cur.amount))
-        }, BigNumber(0))
+    const _list = list.map(_l => {
+        const info = _l.addressByTypeId?.token_info || _l.addressByTypeId?.token_infos[0] || undefined
 
         return {
-            ...target_token!,
-            amount: sum.toString(),
+            amount: _l.amount,
             type: 'xudt',
-            chain: 'ckb'
-        }
+            chain: 'ckb',
+
+            decimal: info?.decimal || 8,
+            name: info?.name || '',
+            symbol: info?.symbol || 'Inscription',
+            type_id: _l.type_id,
+            transaction_hash: (info as any)?.transaction_hash || '',
+            transaction_index: (info as any)?.transaction_hash || '',
+
+            address: {
+                id: _l.addressByTypeId?.id || '',
+                script_args: _l.addressByTypeId?.script_args || '',
+                script_code_hash: _l.addressByTypeId?.script_code_hash || '',
+                script_hash_type: _l.addressByTypeId?.script_hash_type || ''
+            }
+
+        } as TokenBalance
     })
 
-    return res.filter(t =>!!t) as TokenBalance[]
+    console.log('_list', _list)
+    return _list
 }
 
 export default function useAllXudtBalance(addresses: string[]) {
