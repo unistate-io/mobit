@@ -152,7 +152,7 @@ export default function useLayer1Assets(btcAddress?: string, polling?: boolean) 
             }, pollingInterval)
             return () => clearInterval(interval)
         }
-    }, [polling])
+    }, [polling, network])
 
     return {
         status,
