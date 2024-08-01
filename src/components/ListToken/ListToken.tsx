@@ -175,13 +175,13 @@ export default function ListToken({
                                     {item.chain === 'btc' && !!internalAddress ?
                                         <DialogXudtReceive address={internalAddress}>
                                             <div
-                                                className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
+                                                className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center md:inline-flex hidden">
                                                 {lang['Receive']}
                                             </div>
                                         </DialogXudtReceive>
                                         : <DialogXudtReceive address={addresses[0]}>
                                             <div
-                                                className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
+                                                className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center md:inline-flex hidden">
                                                 {lang['Receive']}
                                             </div>
                                         </DialogXudtReceive>

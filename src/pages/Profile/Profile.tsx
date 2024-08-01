@@ -21,6 +21,7 @@ import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
 import {isBtcAddress} from "@/utils/common"
 import useDotbit from "@/serves/useDotbit"
 import ListDotBit from "@/components/ListDotBit/ListDotBit"
+import DialogReceive from "@/components/Dialogs/DialogReceive/DialogReceive"
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -152,6 +153,11 @@ export default function Profile() {
     return <div>
         <Background gradient={theme.bg}/>
         <div className="max-w-[1044px] mx-auto px-3 pb-10">
+            { !!addresses && !!addresses.length && !!internalAddress && isOwner &&
+                <DialogReceive addresses={[...addresses, internalAddress]}>
+                    <div className="absolute right-6 border rounded-3xl top-[70px] z-10 cursor-pointer px-6 py-2 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex">{lang['Receive']}</div>
+                </DialogReceive>
+            }
             <div
                 className="w-[200px] h-[200px] rounded-full overflow-hidden mt-[-100px] border-4 border-white hidden md:block">
                 <Avatar size={200} name={address || 'default'} colors={theme.colors}/>
