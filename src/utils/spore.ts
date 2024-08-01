@@ -1,5 +1,4 @@
 import { toBigEndian, hexToBytes } from '@nervosnetwork/ckb-sdk-utils'
-import BigNumber from 'bignumber.js'
 
 export const hexToUtf8 = (value: string = '') => {
     try {
