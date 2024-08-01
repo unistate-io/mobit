@@ -58,7 +58,7 @@ export default function useSpores(addresses: string[]) {
                 setError(e)
             }
         })()
-    }, [page])
+    }, [page, addresses])
 
     return {
         setPage: handleNextPage,

@@ -66,6 +66,12 @@ export interface Spores {
     content_type: string
     created_at: string
     updated_at: string
+    addressByTypeId: {
+        id: string
+        script_args: string
+        script_code_hash: string
+        script_hash_type: string
+    }
 }
 
 export interface Clusters {

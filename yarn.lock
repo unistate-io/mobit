@@ -1318,20 +1318,6 @@
     blake2b "^2.1.3"
     js-xxhash "^1.0.4"
 
-"@ckb-lumos/base@0.21.1", "@ckb-lumos/base@^0.21.0-next.0":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/base/-/base-0.21.1.tgz#1faf7909b5a68a124256d937cfb0fa03bb6b5457"
-  integrity sha512-7O+jBl7pqMsRbYTMNnbpamgaQzvaLZq+ftMtnKZ3A+Zbs6hZcGbz/6nfbRZnyJitPXQHRPT5KAQz6g+TiYqJGg==
-  dependencies:
-    "@ckb-lumos/bi" "0.21.1"
-    "@ckb-lumos/codec" "0.21.1"
-    "@ckb-lumos/toolkit" "0.21.1"
-    "@types/blake2b" "^2.1.0"
-    "@types/lodash.isequal" "^4.5.5"
-    blake2b "^2.1.3"
-    js-xxhash "^1.0.4"
-    lodash.isequal "^4.5.0"
-
 "@ckb-lumos/base@0.22.2", "@ckb-lumos/base@^0.22.2":
   version "0.22.2"
   resolved "https://registry.yarnpkg.com/@ckb-lumos/base/-/base-0.22.2.tgz#337dac666bf3b20eb78b3545fbeb3249292e7bf7"
@@ -1350,13 +1336,6 @@
   version "0.0.0-canary-d279b87-20240624101315"
   resolved "https://registry.yarnpkg.com/@ckb-lumos/bi/-/bi-0.0.0-canary-d279b87-20240624101315.tgz#1db9d37273bfa2d139a9296422227b56220ead09"
   integrity sha512-X6kj+H0ClaYVFEo6QNztii0jFtY819Ymrf5g4AxDs+AeBU15MDv+dTY+1oSK++yiokKTSLk0/ahODl8au4sOcQ==
-  dependencies:
-    jsbi "^4.1.0"
-
-"@ckb-lumos/bi@0.21.1", "@ckb-lumos/bi@^0.21.0-next.0":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/bi/-/bi-0.21.1.tgz#dfaa0968a9ffd990c1c4fcfc0711f20f09eb0485"
-  integrity sha512-6q8uesvu3DAM7GReei9H5seino4tnakTeg8uXtZBPDC6rboMohLCPQvEwhl1iHmsybXvBYVQt4Te1BPPZtuaRw==
   dependencies:
     jsbi "^4.1.0"
 
@@ -1380,32 +1359,12 @@
     cross-fetch "^3.1.5"
     events "^3.3.0"
 
-"@ckb-lumos/ckb-indexer@0.21.1":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/ckb-indexer/-/ckb-indexer-0.21.1.tgz#a0e0ac3261c98181dc8c72e9e726030bb210779d"
-  integrity sha512-592pMVP3lwTXF7TmlOcayvGYKOhkYpjbLHUDo7By4yWbm7ZpdexaN5hn0X1sjJgMuee5prxGr9/fY684VTpJQw==
-  dependencies:
-    "@ckb-lumos/base" "0.21.1"
-    "@ckb-lumos/bi" "0.21.1"
-    "@ckb-lumos/codec" "0.21.1"
-    "@ckb-lumos/rpc" "0.21.1"
-    "@ckb-lumos/toolkit" "0.21.1"
-    cross-fetch "^3.1.5"
-    events "^3.3.0"
-
 "@ckb-lumos/codec@0.0.0-canary-d279b87-20240624101315":
   version "0.0.0-canary-d279b87-20240624101315"
   resolved "https://registry.yarnpkg.com/@ckb-lumos/codec/-/codec-0.0.0-canary-d279b87-20240624101315.tgz#bf73c89c1d7bece6a4c52517ef2062dbb04f9f7a"
   integrity sha512-UIraDuMNpuRUDzXREsOQdRqak/osYxmZW4gQsepTpJyO9hKPPuex0mn+MjD3dM6ROe5l6bkvz1qNmvwnfajTXQ==
   dependencies:
     "@ckb-lumos/bi" "0.0.0-canary-d279b87-20240624101315"
-
-"@ckb-lumos/codec@0.21.1", "@ckb-lumos/codec@^0.21.0-next.0":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/codec/-/codec-0.21.1.tgz#160f21efa0cded6ea461eb6476f9af6010b682e0"
-  integrity sha512-z6IUUxVZrx663iC7VM9CmaQZL8jsdM3ybgz0UCS24JgBXTNec+Uz0/Zrl7yeH6fBpVls44C2wObcHKigKaNVAA==
-  dependencies:
-    "@ckb-lumos/bi" "0.21.1"
 
 "@ckb-lumos/codec@0.22.2", "@ckb-lumos/codec@^0.22.2":
   version "0.22.2"
@@ -1430,20 +1389,6 @@
     bs58 "^5.0.0"
     immutable "^4.3.0"
 
-"@ckb-lumos/common-scripts@0.21.1", "@ckb-lumos/common-scripts@^0.21.0-next.0":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/common-scripts/-/common-scripts-0.21.1.tgz#64776b5ce55d8c66898a3ab592c7f77fe13d865e"
-  integrity sha512-EfZQ9wdxPmEsxVVwtBjhpZVKbYCm1FJkMt59ABsIO1Ub7yi0qap7AQl0MMbuLwWIGKwS2w0U3wx/oJPm7z1RXg==
-  dependencies:
-    "@ckb-lumos/base" "0.21.1"
-    "@ckb-lumos/bi" "0.21.1"
-    "@ckb-lumos/codec" "0.21.1"
-    "@ckb-lumos/config-manager" "0.21.1"
-    "@ckb-lumos/helpers" "0.21.1"
-    "@ckb-lumos/rpc" "0.21.1"
-    "@ckb-lumos/toolkit" "0.21.1"
-    immutable "^4.3.0"
-
 "@ckb-lumos/config-manager@0.0.0-canary-d279b87-20240624101315":
   version "0.0.0-canary-d279b87-20240624101315"
   resolved "https://registry.yarnpkg.com/@ckb-lumos/config-manager/-/config-manager-0.0.0-canary-d279b87-20240624101315.tgz#8e1a10dc0a18d006c2fd27f17d51a5641cdf9ea1"
@@ -1453,17 +1398,6 @@
     "@ckb-lumos/bi" "0.0.0-canary-d279b87-20240624101315"
     "@ckb-lumos/codec" "0.0.0-canary-d279b87-20240624101315"
     "@ckb-lumos/rpc" "0.0.0-canary-d279b87-20240624101315"
-    "@types/deep-freeze-strict" "^1.1.0"
-    deep-freeze-strict "^1.1.1"
-
-"@ckb-lumos/config-manager@0.21.1", "@ckb-lumos/config-manager@^0.21.0-next.0":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/config-manager/-/config-manager-0.21.1.tgz#857050ebf2ca38096d8fae26b6a8927164798ca3"
-  integrity sha512-BmrNqYyaksdCKHWagyC8+R8GUxhIO+sOM5S925jlkpjju2sUbH0Id2/zmdb7I9KxdKnbx3WsR+hqy7/bYqw1lA==
-  dependencies:
-    "@ckb-lumos/base" "0.21.1"
-    "@ckb-lumos/bi" "0.21.1"
-    "@ckb-lumos/codec" "0.21.1"
     "@types/deep-freeze-strict" "^1.1.0"
     deep-freeze-strict "^1.1.1"
 
@@ -1492,19 +1426,6 @@
     sha3 "^2.1.3"
     uuid "^8.3.0"
 
-"@ckb-lumos/hd@0.21.1":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/hd/-/hd-0.21.1.tgz#406026ac2b570f72b4407149cb941d09bb8a0ab6"
-  integrity sha512-BnfpJf/sx/dJzL5BrOxPeKbKgv2x74KWd0xwjw1/gBQ2IMhu0S1mLwFsOT3Zu2nuhpQYvZGvr0cd3vD/SoMDow==
-  dependencies:
-    "@ckb-lumos/base" "0.21.1"
-    "@ckb-lumos/bi" "0.21.1"
-    bn.js "^5.1.3"
-    elliptic "^6.5.4"
-    scrypt-js "^3.0.1"
-    sha3 "^2.1.3"
-    uuid "^8.3.0"
-
 "@ckb-lumos/helpers@0.0.0-canary-d279b87-20240624101315":
   version "0.0.0-canary-d279b87-20240624101315"
   resolved "https://registry.yarnpkg.com/@ckb-lumos/helpers/-/helpers-0.0.0-canary-d279b87-20240624101315.tgz#5c022075cfee7a8245dc5b90c9caebf1ffd17b24"
@@ -1515,19 +1436,6 @@
     "@ckb-lumos/codec" "0.0.0-canary-d279b87-20240624101315"
     "@ckb-lumos/config-manager" "0.0.0-canary-d279b87-20240624101315"
     "@ckb-lumos/toolkit" "0.0.0-canary-d279b87-20240624101315"
-    bech32 "^2.0.0"
-    immutable "^4.3.0"
-
-"@ckb-lumos/helpers@0.21.1":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/helpers/-/helpers-0.21.1.tgz#fffd455071f51556b2cd2539a255b3759893da08"
-  integrity sha512-jFN6DtWzwVNEY4kmnzczRaQqtyRJQwzAEuHRUQ0LqTiIGM+SlfgjH/l/InAG4cIhDOurMudnUJ4ex68wmbkhVw==
-  dependencies:
-    "@ckb-lumos/base" "0.21.1"
-    "@ckb-lumos/bi" "0.21.1"
-    "@ckb-lumos/codec" "0.21.1"
-    "@ckb-lumos/config-manager" "0.21.1"
-    "@ckb-lumos/toolkit" "0.21.1"
     bech32 "^2.0.0"
     immutable "^4.3.0"
 
@@ -1573,21 +1481,6 @@
     "@ckb-lumos/toolkit" "0.0.0-canary-d279b87-20240624101315"
     "@ckb-lumos/transaction-manager" "0.0.0-canary-d279b87-20240624101315"
 
-"@ckb-lumos/lumos@^0.21.0-next.0":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/lumos/-/lumos-0.21.1.tgz#ff5a9a10859b305530026668bd14cdc12e5e7532"
-  integrity sha512-a5n8xaIUvmaPsw2fBki8Jamy6/6uQnLWDZM9SQX29cZ1YVoAk/slnBmEbCIGXmxDhcuAlLkTeJaiLDKEGrZ6pg==
-  dependencies:
-    "@ckb-lumos/base" "0.21.1"
-    "@ckb-lumos/bi" "0.21.1"
-    "@ckb-lumos/ckb-indexer" "0.21.1"
-    "@ckb-lumos/common-scripts" "0.21.1"
-    "@ckb-lumos/config-manager" "0.21.1"
-    "@ckb-lumos/hd" "0.21.1"
-    "@ckb-lumos/helpers" "0.21.1"
-    "@ckb-lumos/rpc" "0.21.1"
-    "@ckb-lumos/toolkit" "0.21.1"
-
 "@ckb-lumos/rpc@0.0.0-canary-d279b87-20240624101315":
   version "0.0.0-canary-d279b87-20240624101315"
   resolved "https://registry.yarnpkg.com/@ckb-lumos/rpc/-/rpc-0.0.0-canary-d279b87-20240624101315.tgz#cca2422ad715c71bcbc55dd5f177ed1a292addd2"
@@ -1595,16 +1488,6 @@
   dependencies:
     "@ckb-lumos/base" "0.0.0-canary-d279b87-20240624101315"
     "@ckb-lumos/bi" "0.0.0-canary-d279b87-20240624101315"
-    abort-controller "^3.0.0"
-    cross-fetch "^3.1.5"
-
-"@ckb-lumos/rpc@0.21.1", "@ckb-lumos/rpc@^0.21.0-next.0":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/rpc/-/rpc-0.21.1.tgz#f6a6b3ed6d76adfb84c148e4b4acadb7fbaa7d7a"
-  integrity sha512-gZWXYCyQ98s84Pb+buOiYL3HOIxQPLHQdCyo96GFerNw9lB1XsbaGWzfHPYpZvOQqYtnJ1GUfTkQkADrQ7hmew==
-  dependencies:
-    "@ckb-lumos/base" "0.21.1"
-    "@ckb-lumos/bi" "0.21.1"
     abort-controller "^3.0.0"
     cross-fetch "^3.1.5"
 
@@ -1624,13 +1507,6 @@
   integrity sha512-1aFtT4YfhaQWILH5ksGB3ZcBPf4HVogJOdJ7Sttu5EUMgf5uIlvWVJjCSm5ShcF8HfhtuWrF14KYB1R712j33g==
   dependencies:
     "@ckb-lumos/bi" "0.0.0-canary-d279b87-20240624101315"
-
-"@ckb-lumos/toolkit@0.21.1":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/toolkit/-/toolkit-0.21.1.tgz#bcf4bf05615375087e3dd02fb087b797a8c67f37"
-  integrity sha512-awrFos7uQXEVGbqKSv/8Fc8B8XAfxdYoyYak4zFyAAmxxA0NiTTvk9V8TsOA7zVXpxct4Jal22+qUe+4Jg8T/g==
-  dependencies:
-    "@ckb-lumos/bi" "0.21.1"
 
 "@ckb-lumos/toolkit@0.22.2":
   version "0.22.2"
@@ -3491,25 +3367,15 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@spore-sdk/core@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@spore-sdk/core/-/core-0.1.0.tgz#70489351a9ed7534ffccccd736f8cf89481a4fa1"
-  integrity sha512-+qrct1IKUFgrAzhp9yFeV/xbxQJJnl9BYNRwf4yZA+ItQPJkADvewAGOdHrlCT6y66mYRb+NNvsE6bCAU6A99g==
-  dependencies:
-    "@ckb-lumos/base" "^0.21.0-next.0"
-    "@ckb-lumos/bi" "^0.21.0-next.0"
-    "@ckb-lumos/codec" "^0.21.0-next.0"
-    "@ckb-lumos/common-scripts" "^0.21.0-next.0"
-    "@ckb-lumos/config-manager" "^0.21.0-next.0"
-    "@ckb-lumos/lumos" "^0.21.0-next.0"
-    "@ckb-lumos/rpc" "^0.21.0-next.0"
-    lodash "^4.17.21"
-    whatwg-mimetype "^3.0.0"
-
 "@spore-sdk/core@^0.2.0-beta.6":
   version "0.2.0-beta.8"
   resolved "https://registry.yarnpkg.com/@spore-sdk/core/-/core-0.2.0-beta.8.tgz#eb528372c6c571f93261c6adda6a6b03e262d963"
   integrity sha512-2u0e544JDQMVnJOcO3QK9G7yNrbj6nju8PH78k7+/cf9EbOltDudZCpU3YpgffsdMOKhfmpY8xCAq4w/+Jjm1Q==
+
+"@spore-sdk/core@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.npmmirror.com/@spore-sdk/core/-/core-0.2.1.tgz#726d39045f8b778b4bd80339dbea7f4fef783899"
+  integrity sha512-mNUxoQu4h6H4DIEwBxUzntFf6HFG5xXOsSwnN9jF0+oL+fIjOTNt4erwZeeJo1H7H6AS4S9OkDFikykYVIzZSg==
 
 "@surma/rollup-plugin-off-main-thread@^2.2.3":
   version "2.2.3"
@@ -9698,10 +9564,10 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mobit-sdk@^1.5.5:
-  version "1.5.5"
-  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.5.5.tgz#944afea341b3566d49a23870607256356b790a70"
-  integrity sha512-KyRFO+AApLNVlh0uWZdjmwpe6lbsAWn3Uo2G/LZ9DBIrmV6CJcdCwBj7vPu1hfUNwabqpaeuJG3xRly3BxbWUA==
+mobit-sdk@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.6.0.tgz#cc9b1a60eaa6ad0ec0eb101696a4bc4141275310"
+  integrity sha512-YrMBK8LFNeMF8LddhJ1QZ+CABeWFX9zjbeOKkovavIclLvz1zrXrrq0pZDDLuJ5IG7gNUbO6Y+QSrOF5Zx046Q==
   dependencies:
     "@apollo/client" "^3.11.1"
     "@ckb-ccc/core" "0.0.5-alpha.2"

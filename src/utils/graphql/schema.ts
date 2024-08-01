@@ -83,6 +83,12 @@ const spores = `spores(){
          content_type
          created_at
          updated_at
+         addressByTypeId {
+              id
+              script_args
+              script_code_hash
+              script_hash_type
+            }
       }`
 
 

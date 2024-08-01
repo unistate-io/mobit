@@ -12,6 +12,7 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import * as dayjsLib from "dayjs"
 import {helpers} from "@ckb-lumos/lumos";
 import useSporeTransfer from "@/serves/useSporeTransfer";
+import {Spores} from "@/utils/graphql/types";
 
 const dayjs: any = dayjsLib
 
@@ -24,15 +25,20 @@ export interface XudtTransferProps {
 export default function DialogSporeTransfer({
                                                 children,
                                                 froms,
-                                                sporeId,
+                                                spore,
                                                 className
-                                            }: { children: ReactNode, froms: string[], sporeId: string, className?: string }) {
+                                            }: {
+    children: ReactNode,
+    froms: string[],
+    spore: Spores,
+    className?: string
+}) {
     const {build, send} = useSporeTransfer()
     const {network, config} = useContext(CKBContext)
 
 
     const [open, setOpen] = useState(false);
-    const [step, setStep] = useState<1 | 2 | 3>(1)
+    const [step, setStep] = useState<1 | 2>(1)
     const [feeRate, setFeeRate] = useState<1000 | 2000 | 3000>(1000)
     const [sending, setSending] = useState(false)
     const [txHash, setTxHash] = useState<null | string>(null)
@@ -40,8 +46,8 @@ export default function DialogSporeTransfer({
     const [to, setTo] = useState<string>('')
 
 
-    const fee = (feeRate: number) => {
-        return BigNumber(fee1000).multipliedBy(feeRate / 1000).dividedBy(10 ** 8).toString()
+    const fee = (showFeeRate: number) => {
+        return BigNumber(fee1000).multipliedBy(showFeeRate / 1000).dividedBy(10 ** 8).toString()
     }
 
     //errors
@@ -58,36 +64,49 @@ export default function DialogSporeTransfer({
             hasError = true
         }
 
-        let tx: helpers.TransactionSkeletonType | null = null
-        if (!hasError) {
-            tx = await build({
-                payeeAddresses: froms,
-                feeRate,
-                to,
-                sporeId
-            })
+        try {
+            let tx: helpers.TransactionSkeletonType | null = null
+            if (!hasError) {
+                tx = await build({
+                    payeeAddresses: froms,
+                    to,
+                    spore,
+                    feeRate
+                })
 
-            if (!!tx) {
-                try {
-                    const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-                    const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-                    const fee = inputCap - outCap
-                    setFee1000(fee.toString())
-                } catch (e) {
-                    console.error(e)
+                if (!!tx) {
+                    try {
+                        const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+                        const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+                        const fee = (inputCap - outCap) / (feeRate / 1000)
+                        setFee1000(fee.toString())
+                    } catch (e) {
+                        console.error(e)
+                    }
                 }
             }
-        }
 
-        return !hasError ? tx : null
+            return !hasError ? tx : null
+        } catch (e: any) {
+            console.trace(e)
+            setTransactionError(e.message || '')
+        }
     }
 
     useEffect(() => {
         setStep(1)
         setToError('')
+        setFeeRate(1000)
         setTransactionError('')
-        open && checkErrorsAndBuild()
-    }, [to, sporeId, feeRate, open])
+        open && !!to && (async () => {
+            try {
+                setSending(true)
+                await checkErrorsAndBuild()
+            } finally {
+                setSending(false)
+            }
+        })()
+    }, [to, spore, open])
 
     const handleSignAndSend = async () => {
         setSending(true)
@@ -98,9 +117,9 @@ export default function DialogSporeTransfer({
                 return
             }
 
-            const txHash = await send({txSkeleton: tx!, feeRate, payeeAddresses: froms})
+            const txHash = await send(tx!)
             setTxHash(txHash)
-            setStep(3)
+            setStep(2)
         } catch (e: any) {
             console.error(e)
             setTransactionError(e.message)
@@ -165,10 +184,12 @@ export default function DialogSporeTransfer({
                             <div className="text-red-400 min-h-6 mb-2 break-words">{transactionError}</div>
 
                             <div className="mt-4">
-                                <Button btntype={'primary'}
-                                        loading={sending}
-                                        onClick={handleSignAndSend}>
-                                    Continue
+                                <Button
+                                    disabled={!to || !!toError}
+                                    btntype={'primary'}
+                                    loading={sending}
+                                    onClick={handleSignAndSend}>
+                                    Transfer
                                 </Button>
                             </div>
                         </>

@@ -112,9 +112,9 @@ export default function DobPage() {
                 }
 
                 {
-                     isOwner && chain === 'btc' &&
+                     isOwner && chain !== 'btc' && !!data &&
                         <div className="mt-3">
-                            <DialogSporeTransfer froms={addresses!} sporeId={tokenid!} className="w-full">
+                            <DialogSporeTransfer froms={addresses!} spore={data} className="w-full">
                                 <div className="bg-black text-white font-semibold px-4 py-3 rounded-lg flex flex-row flex-nowrap justify-center hover:opacity-80">Transfer</div>
                             </DialogSporeTransfer>
                         </div>

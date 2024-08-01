@@ -15,6 +15,8 @@ const queryAssets = async (btcAddress: string, isMainnet: boolean = true): Promi
     const sdk = new RgbppSDK(isMainnet, isMainnet ? undefined : 'Testnet3')
     const json = await sdk.fetchAssetsAndQueryDetails(btcAddress)
 
+    console.log('layer 1 assets', json)
+
     const list = {
         xudts: [] as TokenBalance[],
         dobs: [] as SporesWithChainInfo[],
@@ -72,7 +74,13 @@ const queryAssets = async (btcAddress: string, isMainnet: boolean = true): Promi
                 created_at: t.spore.created_at,
                 updated_at: t.spore.updated_at,
                 chain: 'btc',
-            })
+                addressByTypeId: {
+                    id: '',
+                    script_args: t.spore.addressByTypeId.script_args,
+                    script_code_hash: t.spore.addressByTypeId.script_code_hash,
+                    script_hash_type: t.spore.addressByTypeId.script_hash_type
+                }
+            } as any)
         })
     }
 
