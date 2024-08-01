@@ -1463,7 +1463,7 @@
     cross-fetch "^3.1.5"
     events "^3.3.0"
 
-"@ckb-lumos/lumos@0.0.0-canary-d279b87-20240624101315":
+"@ckb-lumos/lumos@0.0.0-canary-d279b87-20240624101315", "@ckb-lumos/lumos@^0.23.0":
   version "0.0.0-canary-d279b87-20240624101315"
   resolved "https://registry.yarnpkg.com/@ckb-lumos/lumos/-/lumos-0.0.0-canary-d279b87-20240624101315.tgz#511ffe279534b18b227a6b2fed787c0f363f83d6"
   integrity sha512-bi2GuBUWlv7bJnDJO/NOyHkyJx5azUZvs2+o4iQhyDSqQwCOldrNAIiAuH4lUT7EVE7urQ01unAaxl23tk5b4Q==
@@ -2562,7 +2562,7 @@
     satori "^0.10.13"
     typescript "^5.2.2"
 
-"@nervosnetwork/ckb-sdk-core@^0.109.1":
+"@nervosnetwork/ckb-sdk-core@0.109.1", "@nervosnetwork/ckb-sdk-core@^0.109.1":
   version "0.109.1"
   resolved "https://registry.yarnpkg.com/@nervosnetwork/ckb-sdk-core/-/ckb-sdk-core-0.109.1.tgz#9da22c2f936fcae7cc72771c70b2115e9d048dcc"
   integrity sha512-YU3yJZvz69WU6Bw//vRxzxLGcIj74CwGffdp6GYZbQpZwFaACT6FCojvOMjHIyJ8Rw32r114LhMKHvyBwagWjw==
@@ -4048,6 +4048,20 @@
   integrity sha512-LkxCDY0AlEodcc/tU6YCzI1vDfdzVeMqgA3tOF3MI6fvjXGyNR4cv/DYo+VLVt9bNqqYyNdiClwlUXxujPXZOQ==
   dependencies:
     bitcore-lib "^10.0.0"
+
+"@utxoswap/swap-sdk-js@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.npmjs.org/@utxoswap/swap-sdk-js/-/swap-sdk-js-0.1.3.tgz#d5f425d6ba3c2a75f707e0548f0d40d9a6f225f4"
+  integrity sha512-kGVGucpxgiOle+Yx5AKS64ITCpXeaIU1/MRt7WMwhBml915hqgjA+/nK08zyP46Ao2rryN+6LRcs2hZbMw+EBQ==
+  dependencies:
+    "@ckb-lumos/lumos" "^0.23.0"
+    "@nervosnetwork/ckb-sdk-core" "0.109.1"
+    "@nervosnetwork/ckb-sdk-rpc" "0.109.1"
+    "@nervosnetwork/ckb-sdk-utils" "0.109.1"
+    "@nervosnetwork/ckb-types" "0.109.1"
+    "@rgbpp-sdk/ckb" "^0.4.0"
+    axios "^1.7.2"
+    bignumber.js "^9.1.2"
 
 "@webassemblyjs/ast@1.12.1", "@webassemblyjs/ast@^1.12.1":
   version "1.12.1"
@@ -12287,6 +12301,11 @@ tiny-inflate@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tiny-inflate/-/tiny-inflate-1.0.3.tgz#122715494913a1805166aaf7c93467933eea26c4"
   integrity sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==
+
+tiny-invariant@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.npmmirror.com/tiny-invariant/-/tiny-invariant-1.3.3.tgz#46680b7a873a0d5d10005995eb90a70d74d60127"
+  integrity sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==
 
 tmpl@1.0.5:
   version "1.0.5"
