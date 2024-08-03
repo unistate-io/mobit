@@ -57,7 +57,8 @@ const queryAssets = async (btcAddress: string, isMainnet: boolean = true): Promi
                     script_args: cells[0].addressByTypeId.script_args.replace('\\', '0'),
                     script_code_hash: '',
                     script_hash_type: ''
-                }
+                },
+                addressByInscriptionId: null
             })
         })
     }
@@ -101,7 +102,8 @@ const btcEmpty: TokenBalance = {
         script_args: '',
         script_code_hash: '',
         script_hash_type: ''
-    }
+    },
+    addressByInscriptionId: null
 }
 
 export default function useLayer1Assets(btcAddress?: string, polling?: boolean) {

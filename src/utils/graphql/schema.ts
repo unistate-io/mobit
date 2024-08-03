@@ -49,7 +49,7 @@ const token_info_address = `token_info(){
         transaction_hash
         transaction_index
         type_id
-        inscription_id {
+        addressByInscriptionId {
             token_infos {
                 decimal
                 name

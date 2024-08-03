@@ -42,7 +42,8 @@ export default function useCkbBalance(addresses?: string[]) {
                     script_args: '',
                     script_code_hash: '',
                     script_hash_type: ''
-                }
+                },
+                addressByInscriptionId: null
             })
             setStatus('complete')
         } catch (e: any) {

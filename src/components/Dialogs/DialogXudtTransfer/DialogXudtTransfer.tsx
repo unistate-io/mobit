@@ -128,8 +128,10 @@ export default function DialogXudtTransfer({
         setSending(true)
         try {
             const tx = await checkErrorsAndBuild()
-            setTx(tx)
-            setStep(2)
+            if (!!tx) {
+                setTx(tx)
+                setStep(2)
+            }
         } catch (e: any) {
             console.error(e)
         } finally {
