@@ -20,7 +20,8 @@ const emptyToken: TokenInfoWithAddress = {
         script_args: '',
         script_code_hash: '',
         script_hash_type: '',
-    }
+    },
+    addressByInscriptionId: null
 }
 
 export const getXudtBalance = async (addresses: string[], tokenType: CKBComponents.Script, collector: Collector) => {

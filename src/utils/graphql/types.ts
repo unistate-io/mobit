@@ -48,6 +48,16 @@ export interface TokenInfoWithAddress extends TokenInfo {
         script_code_hash: string
         script_hash_type: string
     }
+    addressByInscriptionId : {
+        token_infos: {
+            decimal: number
+            name: string
+            symbol: string
+            type_id: string
+            transaction_hash?: string
+            transaction_index?: string
+        }
+    } | null
 }
 
 export interface XudtStatusCell {
