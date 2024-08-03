@@ -23,7 +23,7 @@ const emptyToken: TokenInfoWithAddress = {
     }
 }
 
-const getXudtBalance = async (addresses: string[], tokenType: CKBComponents.Script, collector: Collector) => {
+export const getXudtBalance = async (addresses: string[], tokenType: CKBComponents.Script, collector: Collector) => {
     const _locks = addresses.map(address => addressToScript(address))
     let _sum = BigInt(0)
 

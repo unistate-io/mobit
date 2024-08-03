@@ -18,6 +18,29 @@ function getStrHash(name: string) {
     return "0x" + node;
 }
 
+export function stringToColor(str: string) {
+    // 使用一个简单的哈希函数将字符串转换为数值
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = (str.charCodeAt(i) + ((hash << 5) - hash)) * 2;
+    }
+    // 转换为颜色代码
+    let color = '#';
+    for (let i = 0; i < 3; i++) {
+        const value = (hash >> (i * 8)) & 0xFF;
+        color += ('00' + value.toString(16)).substr(-2);
+    }
+    return color;
+}
+
+function IconUnknown (props: {str: string, size: number}) {
+    const bg = stringToColor(props.str)
+
+    return <div style={{background: bg}} className={`w-[${props.size}px] h-[${props.size}px]  rounded-full text-white flex flex-row justify-center items-center`}>
+        {props.str[0] ? props.str[0].toUpperCase() :  ''}
+    </div>
+}
+
 
 export default function TokenIcon({symbol='default', size, chain, rounded=true} : {symbol: string, size: number, chain?: string, rounded?: boolean}) {
     const options = {
@@ -35,7 +58,12 @@ export default function TokenIcon({symbol='default', size, chain, rounded=true} 
 
 
     return <div className={`relative mr-3`} style={{width: size + 'px', height: size + 'px'}}>
-        <img src={tokenIcon} className={`bg-gray-200 ${rounded ? 'rounded-full' : 'rounded-lg'}`} alt="icon" width={size} height={size}/>
+        {!!TokenIcons[symbol.toUpperCase()] ?
+            <img src={tokenIcon} className={`bg-gray-200 ${rounded ? 'rounded-full' : 'rounded-lg'}`} alt="icon"
+                 width={size} height={size}/>
+            : <IconUnknown str={symbol} size={size} />
+
+        }
         {
             chainIcon &&
             <img src={chainIcon}

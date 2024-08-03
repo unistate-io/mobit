@@ -37,7 +37,7 @@ export default function DialogSporeTransfer({
     const {network, config} = useContext(CKBContext)
 
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
     const [step, setStep] = useState<1 | 2>(1)
     const [feeRate, setFeeRate] = useState<1000 | 2000 | 3000>(1000)
     const [sending, setSending] = useState(false)

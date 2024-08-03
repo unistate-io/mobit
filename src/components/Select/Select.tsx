@@ -1,5 +1,5 @@
 import * as RadixSelect from '@radix-ui/react-select';
-import {forwardRef, LegacyRef, RefAttributes, useRef} from 'react';
+import {forwardRef, LegacyRef, RefAttributes, useRef, ReactNode} from 'react';
 import * as React from "react";
 import {SelectItemProps, SelectProps} from "@radix-ui/react-select";
 
@@ -7,14 +7,17 @@ import {SelectItemProps, SelectProps} from "@radix-ui/react-select";
 export interface SelectOption {
     id: string;
     label: string;
+    [index: string]: any
 }
 
 export interface SelectOptionProps extends SelectProps {
-    options: SelectOption[];
+    options: (SelectOption & {[key: string]: any})[];
     placeholder?: string;
     className?: string;
     hideDropIcon?: boolean;
     containerWidthPrefix?: number;
+    getValueLabel?: () => ReactNode | string | undefined;
+    getOptionLabel?: (opt: SelectOption) => ReactNode | string;
 }
 
 
@@ -31,7 +34,7 @@ const SelectItem = forwardRef(({children, className, ...props} : SelectItemProps
 
 
 
-export default function Select ({options, placeholder, className='', hideDropIcon=false, ...props}: SelectOptionProps) {
+export default function Select ({options, placeholder, className='', hideDropIcon=false, getValueLabel, getOptionLabel, ...props}: SelectOptionProps) {
     const [open, setOpen] = React.useState(false)
     const [menuWidth, setMenuWidth] = React.useState('auto')
     const id = useRef(Math.floor(Math.random() * (100000 - 10000 + 1)) + 10000)
@@ -47,7 +50,11 @@ export default function Select ({options, placeholder, className='', hideDropIco
     return <RadixSelect.Root {...props} open={open} onOpenChange={(open) => {toggleOpen(open)}}>
         <RadixSelect.Trigger
             className={`SelectTrigger-${id.current} flex flex-row items-center justify-between w-full outline-0 ${className}`} aria-label={props.name || 'Select'}>
-            <RadixSelect.Value placeholder={placeholder || 'Select ...'} />
+            { !!getValueLabel ?
+                <RadixSelect.Value placeholder={placeholder || 'Select ...'} >{getValueLabel()}</RadixSelect.Value>
+                : <RadixSelect.Value placeholder={placeholder || 'Select ...'} />
+            }
+
             { !hideDropIcon &&
                 <RadixSelect.Icon className="SelectIcon">
                     <i className="uil-angle-down text-2xl" />
@@ -59,19 +66,19 @@ export default function Select ({options, placeholder, className='', hideDropIco
                 minWidth: menuWidth,
                 marginLeft: props.containerWidthPrefix ? `${props.containerWidthPrefix * -1}px` : 'initial'
             }} position={'popper'}>
-                <RadixSelect.ScrollUpButton className="SelectScrollButton">
+                <RadixSelect.ScrollUpButton className="SelectScrollButton flex flex-row justify-center">
                     <i className="uil-angle-up text-2xl" />
                 </RadixSelect.ScrollUpButton>
                 <RadixSelect.Viewport className="SelectViewport">
-                    <RadixSelect.Group>
+                    <RadixSelect.Group className="max-h-[200px]">
                         {
                             options.map((opt) => {
-                                return <SelectItem key={opt.id} value={opt.id}>{opt.label}</SelectItem>
+                                return <SelectItem key={opt.id} value={opt.id}>{getOptionLabel ? getOptionLabel(opt) : opt.label}</SelectItem>
                             })
                         }
                     </RadixSelect.Group>
                 </RadixSelect.Viewport>
-                <RadixSelect.ScrollDownButton className="SelectScrollButton">
+                <RadixSelect.ScrollDownButton className="SelectScrollButton flex flex-row justify-center">
                     <i className="uil-angle-down text-2xl" />
                 </RadixSelect.ScrollDownButton>
             </RadixSelect.Content>

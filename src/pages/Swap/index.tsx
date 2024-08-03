@@ -1,10 +1,13 @@
-import {useUtxoSwap} from "@/serves/useUtxoSwap"
+import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
 
 export default function SwapPage() {
-    const {pools} = useUtxoSwap()
+
     return <div>
-        <div>
-            {JSON.stringify(pools)}
-        </div>
+        <DialogSwap>
+            <div>
+                swap
+            </div>
+        </DialogSwap>
+
     </div>
 }
