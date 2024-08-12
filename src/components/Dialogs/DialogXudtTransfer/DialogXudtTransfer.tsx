@@ -202,6 +202,7 @@ export default function DialogXudtTransfer({
                                     Send to
                                 </div>
                                 <Input value={formData.to}
+                                       placeholder={'Recipient address'}
                                        type={"text"}
                                        onChange={e => {
                                            setFormData({...formData, to: e.target.value})
@@ -228,6 +229,7 @@ export default function DialogXudtTransfer({
                                 </div>
                                 <Input value={formData.amount}
                                        type={"number"}
+                                       placeholder={'Transfer amount'}
                                        onChange={e => {
                                            setFormData({...formData, amount: e.target.value})
                                        }}

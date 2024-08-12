@@ -36,7 +36,7 @@ export function stringToColor(str: string) {
 function IconUnknown (props: {str: string, size: number}) {
     const bg = stringToColor(props.str)
 
-    return <div style={{background: bg}} className={`w-[${props.size}px] h-[${props.size}px]  rounded-full text-white flex flex-row justify-center items-center`}>
+    return <div style={{background: bg, width: `${props.size}px`, height: `${props.size}px`, fontSize: `${props.size / 2}px`}} className={`rounded-full text-white flex flex-row justify-center items-center`}>
         {props.str[0] ? props.str[0].toUpperCase() :  ''}
     </div>
 }
@@ -51,11 +51,8 @@ export default function TokenIcon({symbol='default', size, chain, rounded=true} 
         format: 'svg'
     }
 
-
-
     const tokenIcon = TokenIcons[symbol.toUpperCase()] || 'data:image/svg+xml;base64,' + new Identicon(getStrHash(symbol), (options as any)).toString()
     const chainIcon = chain ? ChainIcons[chain]: undefined
-
 
     return <div className={`relative mr-3`} style={{width: size + 'px', height: size + 'px'}}>
         {!!TokenIcons[symbol.toUpperCase()] ?

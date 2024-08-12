@@ -194,6 +194,7 @@ export default function DialogBtcXudtTransfer({
                                     Send to
                                 </div>
                                 <Input value={formData.to}
+                                       placeholder={'Recipient address'}
                                        type={"text"}
                                        onChange={e => {
                                            setFormData({...formData, to: e.target.value})
@@ -219,6 +220,7 @@ export default function DialogBtcXudtTransfer({
                                     </div>
                                 </div>
                                 <Input value={formData.amount}
+                                       placeholder={'Transfer amount'}
                                        type={"number"}
                                        onChange={e => {
                                            setFormData({...formData, amount: e.target.value})

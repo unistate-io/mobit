@@ -50,7 +50,6 @@ export const balance = async (addresses: string[], isMainnet: boolean): Promise<
         } as TokenBalance
     })
 
-    console.log('_list', _list)
     return _list
 }
 

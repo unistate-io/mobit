@@ -1,4 +1,4 @@
-import {Client, Collector, Pool, PoolInfo} from '@utxoswap/swap-sdk-js'
+import {Client, Collector, Pool, PoolInfo, Token} from '@utxoswap/swap-sdk-js'
 import {useContext, useEffect, useMemo, useState} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
@@ -11,6 +11,7 @@ export function useUtxoSwap() {
 
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [pools, setPools] = useState<PoolInfo[]>([])
+    const [supportTokens, setSupportTokens] = useState<Token[]>([])
 
     useEffect(() => {
         (async () => {
@@ -20,11 +21,17 @@ export function useUtxoSwap() {
                 searchKey: "0x0000000000000000000000000000000000000000000000000000000000000000",
             })
 
-            console.log(pools)
             setPools(pools)
             setStatus('complete')
+            const set = new Set<Token>()
+            pools.forEach(pool => {
+                set.add(pool.assetX)
+                set.add(pool.assetY)
+            })
+
+            setSupportTokens(Array.from(set))
         })()
     }, [collector, client])
 
-    return {client, collector, pools, status}
+    return {client, supportTokens, collector, pools, status}
 }

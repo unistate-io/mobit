@@ -212,6 +212,7 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
                                     Send to
                                 </div>
                                 <Input value={formData.to}
+                                       placeholder={'Recipient address'}
                                        type={"text"}
                                        onChange={e => {
                                            setFormData({...formData, to: e.target.value})
@@ -240,6 +241,7 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
                                 </div>
                                 <Input value={formData.amount}
                                        type={"number"}
+                                       placeholder={'Transfer amount'}
                                        onChange={e => {
                                            setFormData({...formData, amount: e.target.value})
                                        }}
