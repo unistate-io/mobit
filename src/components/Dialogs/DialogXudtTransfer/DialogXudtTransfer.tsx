@@ -50,7 +50,7 @@ export default function DialogXudtTransfer({
 
 
     const fee = (feeRate: number) => {
-        return BigNumber(fee1000).multipliedBy(feeRate / 1000).dividedBy(10 ** token.decimal).toString()
+        return toDisplay(BigNumber(fee1000).multipliedBy(feeRate / 1000).toString(), 0, true)
     }
 
     //errors
@@ -121,7 +121,6 @@ export default function DialogXudtTransfer({
         const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
         const fee = inputCap - outCap
         return BigNumber(fee).multipliedBy(feeRate / 1000).dividedBy(10 ** token.decimal).toString()
-
     }, [tx, feeRate, token.decimal])
 
     const handleTransfer = async () => {
