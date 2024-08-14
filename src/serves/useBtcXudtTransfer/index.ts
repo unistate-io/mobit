@@ -2,7 +2,6 @@ import {BtcHelper, CkbHelper, transferCombined} from "mobit-sdk"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {useContext} from "react"
 
-
 let unisat = (window as any).unisat
 
 export default function useBtcXudtTransfer() {
@@ -19,7 +18,7 @@ export default function useBtcXudtTransfer() {
             throw new Error('unisat not found')
         }
 
-        const btcHelper = new BtcHelper(unisat, network === 'mainnet' ? 0 : 1)
+        const btcHelper = new BtcHelper(unisat, network === 'mainnet' ? 0 : 1, network !== 'mainnet' ? 'Testnet3' : undefined)
         const ckbHelper = new CkbHelper(network === 'mainnet')
 
         try {
@@ -32,7 +31,7 @@ export default function useBtcXudtTransfer() {
                 fromBtcAccount: from,
                 btcService: btcHelper.btcService,
                 btcDataSource: btcHelper.btcDataSource,
-                unisat: btcHelper.unisat
+                wallet: unisat
             })
 
             return btcTxId

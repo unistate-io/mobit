@@ -143,7 +143,7 @@ export default function DialogXudtCellMerge({
                                             </div>
                                         </div>
                                     })
-                                   : <div className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">Not Data</div>
+                                   : <div className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">No Data</div>
                                 }
                             </div>
                         }
