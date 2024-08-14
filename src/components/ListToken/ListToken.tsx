@@ -179,7 +179,7 @@ export default function ListToken({
                                                                 !!el && el.click()
                                                                 close()
                                                             }}
-                                                            className=" mt-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
+                                                            className=" mt-1 text-red-400 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
                                                             {lang['Burn']}
                                                         </div>
                                                     </div>

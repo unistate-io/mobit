@@ -84,7 +84,7 @@ export default function DialogXudtCellMerge({
         try {
             const inputCap = data.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
             const outCap = rawTx.outputs.reduce((sum, input: any) => sum + Number(input.capacity), 0)
-            return (inputCap - outCap) / 10 ** xudt!.decimal + ''
+            return (inputCap - outCap) / 10 ** 8 + ''
         } catch (e) {
             console.error(e)
             return '0'
