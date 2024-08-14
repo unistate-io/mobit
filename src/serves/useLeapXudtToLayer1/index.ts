@@ -43,7 +43,7 @@ export default function useLeapXudtToLayer1() {
             throw new Error('unisat not found')
         }
 
-        const txid = await unisat.sendBitcoin(props.btcAddress, 546)
+        const txid = await unisat.sendBitcoin(props.btcAddress, 546, {feeRate : 10})
         console.log(txid)
         return txid as string
     }

@@ -114,7 +114,8 @@ export default function DialogXudtLeapToLayer1({
                 outIndex: selectedUtxo!.vout,
                 btcTxId: selectedUtxo!.txid,
                 transferAmount: BigInt(BigNumber(leapAmount).times(10 ** token.decimal).toString()),
-                xudtTypeArgs: token.address.script_args.replace('\\', '0')
+                xudtTypeArgs: token.address.script_args.replace('\\', '0'),
+                feeRate: BigInt(5000)
             })
             console.log('txHash', txHash)
             setStep(4)
