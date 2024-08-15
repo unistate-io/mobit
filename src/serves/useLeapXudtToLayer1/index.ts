@@ -1,7 +1,9 @@
-import {BtcHelper, CkbHelper, leapFromCkbToBtc} from "mobit-sdk"
+import {BtcHelper, CkbHelper, convertToTxSkeleton, leapFromCkbToBtc} from "mobit-sdk"
 import {CKBContext,} from "@/providers/CKBProvider/CKBProvider"
 import {useContext, useMemo} from "react"
 import {BtcApiUtxo} from '@rgbpp-sdk/service'
+import {ccc} from "@ckb-ccc/connector-react";
+import {helpers} from "@ckb-lumos/lumos";
 
 export type BtcUtxo =  BtcApiUtxo
 
@@ -48,7 +50,7 @@ export default function useLeapXudtToLayer1() {
         return txid as string
     }
 
-    const confirmLeap = async (props: {
+    const buildLeapTx = async (props: {
         outIndex: number,
         btcTxId: string,
         transferAmount: bigint,
@@ -65,7 +67,7 @@ export default function useLeapXudtToLayer1() {
 
         const ckbHelper = new CkbHelper(network === 'mainnet')
 
-        const txHash = await leapFromCkbToBtc({
+        const tx = await leapFromCkbToBtc({
             outIndex: props.outIndex,
             btcTxId: props.btcTxId,
             xudtTypeArgs: props.xudtTypeArgs,
@@ -77,9 +79,19 @@ export default function useLeapXudtToLayer1() {
             cccSigner: signer as any,
         }, props.feeRate)
 
-        console.log('txHash', txHash)
-        return txHash
+        const skeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
+
+        console.log('tx', skeleton)
+        return skeleton
     }
 
-    return {supportedWallet, confirmLeap, getUTXO, prepareUTXO}
+    const leap = async (tx:helpers.TransactionSkeletonType) => {
+        if (!signer) {
+            throw new Error('Please connect wallet')
+        }
+
+        return await signer.sendTransaction(ccc.Transaction.fromLumosSkeleton(tx))
+    }
+
+    return {supportedWallet, buildLeapTx, getUTXO, leap, prepareUTXO}
 }

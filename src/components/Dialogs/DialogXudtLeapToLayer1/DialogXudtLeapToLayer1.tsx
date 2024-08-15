@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useState} from "react"
+import React, {ReactNode, useContext, useEffect, useMemo, useState} from "react"
 import * as Dialog from '@radix-ui/react-dialog'
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
@@ -13,7 +13,8 @@ import BigNumber from "bignumber.js"
 import useXudtBalance from "@/serves/useXudtBalance"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import dayjs from "dayjs";
-import CopyText from "@/components/CopyText/CopyText";
+import CopyText from "@/components/CopyText/CopyText"
+import {helpers} from "@ckb-lumos/lumos";
 
 export default function DialogXudtLeapToLayer1({
                                                    token,
@@ -22,7 +23,7 @@ export default function DialogXudtLeapToLayer1({
                                                }: { token: TokenBalance, children: ReactNode, className?: string }) {
     const {address, addresses, internalAddress, config} = useContext(CKBContext)
     const {lang} = useContext(LangContext)
-    const {getUTXO, supportedWallet, confirmLeap, prepareUTXO} = useLeapXudtToLayer1()
+    const {getUTXO, supportedWallet, buildLeapTx, prepareUTXO, leap} = useLeapXudtToLayer1()
 
     const [step, setStep] = useState(1)
     const [open, setOpen] = useState(false)
@@ -32,6 +33,7 @@ export default function DialogXudtLeapToLayer1({
     const [toBtcAddress, setToBtcAddress] = useState(internalAddress || '')
     const [leapAmount, setLeapAmount] = useState('')
     const [txHash, setTxHash] = useState('')
+    const [tx, setTx] = useState<null | helpers.TransactionSkeletonType>(null)
 
     const [amountError, setAmountError] = useState('')
     const [toAddressError, setToAddressError] = useState('')
@@ -74,6 +76,19 @@ export default function DialogXudtLeapToLayer1({
         }
     }
 
+    const handleStep3 = async () => {
+        const tx = await buildLeapTx({
+            outIndex: selectedUtxo!.vout,
+            btcTxId: selectedUtxo!.txid,
+            transferAmount: BigInt(BigNumber(leapAmount).times(10 ** token.decimal).toString()),
+            xudtTypeArgs: token.address.script_args.replace('\\', '0'),
+            feeRate: BigInt(5000)
+        })
+
+        setTx(tx)
+        setStep(3)
+    }
+
     const handleStep2 = async () => {
         setToAddressError('')
         setAmountError('')
@@ -109,14 +124,10 @@ export default function DialogXudtLeapToLayer1({
     const handleLeap = async () => {
         setBusy(true)
         setTxError('')
+        if (!tx) return
+
         try {
-            const txHash = await confirmLeap({
-                outIndex: selectedUtxo!.vout,
-                btcTxId: selectedUtxo!.txid,
-                transferAmount: BigInt(BigNumber(leapAmount).times(10 ** token.decimal).toString()),
-                xudtTypeArgs: token.address.script_args.replace('\\', '0'),
-                feeRate: BigInt(5000)
-            })
+            const txHash = await leap(tx)
             console.log('txHash', txHash)
             setStep(4)
             setTxHash(txHash)
@@ -143,6 +154,14 @@ export default function DialogXudtLeapToLayer1({
             setBusy(false)
         }
     }
+
+    const fee = useMemo(() => {
+        if (!tx) return '0'
+
+        const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+        const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+        return (inputCap - outCap).toString()
+    }, [tx])
 
 
     return <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -292,9 +311,7 @@ export default function DialogXudtLeapToLayer1({
                             </Button>
                             <Button btntype={'primary'}
                                     disabled={busy || xudtBalenceStatus === 'loading' || !selectedUtxo}
-                                    onClick={e => {
-                                        setStep(3)
-                                    }}>
+                                    onClick={handleStep3}>
                                 Next
                             </Button>
                         </div>
@@ -335,9 +352,15 @@ export default function DialogXudtLeapToLayer1({
                         </div>
                         <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
                             <div className="flex flex-row flex-nowrap items-center">
+                                {lang['Network_Fee']}
+                            </div>
+                            <div>{toDisplay(fee, 8, true)} CKB</div>
+                        </div>
+                        <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
+                            <div className="flex flex-row flex-nowrap items-center">
                                 {lang['Capacity_Fee']}
                             </div>
-                            <div>254 CKB</div>
+                            <div>253 CKB</div>
                         </div>
 
                         <div className="font-normal text-red-400 mt-1 break-words mb-1">{txError}</div>
@@ -415,6 +438,13 @@ export default function DialogXudtLeapToLayer1({
                                 <div className="font-semibold">
                                     {leapAmount ?
                                         toDisplay(leapAmount, token.decimal, true) : '--'} {token.symbol}
+                                </div>
+                            </div>
+
+                            <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
+                                <div className="text-gray-500">{lang['Network_Fee']}</div>
+                                <div className="font-semibold">
+                                    {toDisplay(fee, 8, true)} CKB
                                 </div>
                             </div>
 

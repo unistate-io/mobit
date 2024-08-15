@@ -48,7 +48,8 @@ const langCN: LangConfig = {
     It_Is_Recommended_To_Use_546_Satoshi_UTXO_To_Avoid_Being_Accidentally_Spent_And_wasted: '建议使用546聪的UTXO以避免被意外花费和浪费',
     Create_A_New_UTXO: '创建一个新的UTXO',
     Create_UTXO: '创建UTXO',
-    Create_An_UTXO_To_Leap_Assets: '创建一个UTXO用来资产跨链'
+    Create_An_UTXO_To_Leap_Assets: '创建一个UTXO用来资产跨链',
+    Network_Fee: '网络费',
 }
 
 
