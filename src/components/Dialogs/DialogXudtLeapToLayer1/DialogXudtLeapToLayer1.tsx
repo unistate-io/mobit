@@ -21,7 +21,7 @@ export default function DialogXudtLeapToLayer1({
                                                    children,
                                                    className
                                                }: { token: TokenBalance, children: ReactNode, className?: string }) {
-    const {address, addresses, internalAddress, config} = useContext(CKBContext)
+    const {address, addresses, internalAddress, config, network} = useContext(CKBContext)
     const {lang} = useContext(LangContext)
     const {getUTXO, supportedWallet, buildLeapTx, prepareUTXO, leap} = useLeapXudtToLayer1()
 
@@ -98,7 +98,7 @@ export default function DialogXudtLeapToLayer1({
             return
         }
 
-        if (!isBtcAddress(toBtcAddress)) {
+        if (!isBtcAddress(toBtcAddress, network === 'mainnet')) {
             setToAddressError('Invalid address')
             return
         }

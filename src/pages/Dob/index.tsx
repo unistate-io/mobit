@@ -19,7 +19,7 @@ export default function DobPage() {
     }
 
     const {status, data} = useSporeDetail(tokenid)
-    const {addresses, internalAddress} = useContext(CKBContext)
+    const {addresses, internalAddress, network} = useContext(CKBContext)
 
 
     const [searchParams] = useSearchParams()
@@ -35,8 +35,7 @@ export default function DobPage() {
         return chain
     }, [searchParams])
 
-    const {dobs, status:l1DataStatus} = useLayer1Assets(chain === 'btc' && !!internalAddress && isBtcAddress(internalAddress) ? internalAddress : undefined)
-
+    const {dobs, status:l1DataStatus} = useLayer1Assets(chain === 'btc' && !!internalAddress && isBtcAddress(internalAddress, network === 'mainnet') ? internalAddress : undefined)
 
     const isOwner = useMemo(() => {
         if (!data || !addresses || !addresses.length || !internalAddress) return false

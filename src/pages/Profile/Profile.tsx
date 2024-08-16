@@ -26,7 +26,7 @@ import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
-    const {internalAddress, address: loginAddress, addresses} = useContext(CKBContext)
+    const {internalAddress, address: loginAddress, addresses, network} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
     const {lang} = useContext(LangContext)
 
@@ -49,7 +49,7 @@ export default function Profile() {
             return undefined
         }
 
-        return isBtcAddress(internalAddress) ? internalAddress : undefined
+        return isBtcAddress(internalAddress, network === 'mainnet') ? internalAddress : undefined
     }, [internalAddress, address, addresses])
 
 

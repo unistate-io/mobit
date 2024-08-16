@@ -30,12 +30,12 @@ export default function DialogBtcXudtTransfer({
                                                   token
                                               }: { children: React.ReactNode,  token: TokenInfoWithAddress, className?: string }) {
     const {signAndSend} = useBtcXudtTransfer()
-    const {config, internalAddress} = useContext(CKBContext)
+    const {config, internalAddress, network} = useContext(CKBContext)
     const [open, setOpen] = React.useState(false)
 
     const btcAddress = useMemo(() => {
         if (!internalAddress) return undefined
-        return isBtcAddress(internalAddress) ? internalAddress : undefined
+        return isBtcAddress(internalAddress, network === 'mainnet') ? internalAddress : undefined
     }, [internalAddress])
 
     const {xudts, status} = useLayer1Assets((open && !!btcAddress ? btcAddress : undefined))
@@ -72,7 +72,7 @@ export default function DialogBtcXudtTransfer({
         if (!internalAddress) {
             setFromError('Invalid from address')
             hasError = true
-        } else if (!isBtcAddress(internalAddress)) {
+        } else if (!isBtcAddress(internalAddress, network === 'mainnet')) {
             setFromError('Invalid from address')
             hasError = true
         } else {
@@ -82,7 +82,7 @@ export default function DialogBtcXudtTransfer({
         if (formData.to === '') {
             setToError('Please enter a valid address')
             hasError = true
-        } else if (!isBtcAddress(formData.to)) {
+        } else if (!isBtcAddress(formData.to, network === 'mainnet')) {
             setToError('Invalid BTC address')
             hasError = true
         } else {

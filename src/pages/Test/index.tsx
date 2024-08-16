@@ -95,7 +95,7 @@ export default function Test() {
 
     useEffect(() => {
         (async () => {
-            if (!!internalAddress && isBtcAddress(internalAddress)) {
+            if (!!internalAddress && isBtcAddress(internalAddress, network === 'mainnet')) {
                 const utxos = await getUTXO({btcAddress: internalAddress}).then(console.log)
                 console.log(utxos)
             }
