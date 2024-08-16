@@ -50,6 +50,7 @@ const langCN: LangConfig = {
     Create_UTXO: '创建UTXO',
     Create_An_UTXO_To_Leap_Assets: '创建一个UTXO用来资产跨链',
     Network_Fee: '网络费',
+    Unconfirmed: '未确认',
 }
 
 

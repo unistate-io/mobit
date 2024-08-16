@@ -17,6 +17,7 @@ import {useUtxoSwap} from "@/serves/useUtxoSwap"
 import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
 import DialogXudtLeapToLayer1 from "@/components/Dialogs/DialogXudtLeapToLayer1/DialogXudtLeapToLayer1"
 import useLeapXudtToLayer1 from "@/serves/useLeapXudtToLayer1"
+import useBtcXudtTransfer from "@/serves/useBtcXudtTransfer";
 
 
 export interface TokenBalance extends TokenInfoWithAddress {
@@ -42,6 +43,7 @@ export default function ListToken({
     const {lang} = useContext(LangContext)
     const {supportTokens} = useUtxoSwap()
     const {supportedWallet} = useLeapXudtToLayer1()
+    const {supportedWallet: supportL1XudtTransfer} = useBtcXudtTransfer()
 
     const isSupportToken = useCallback((token: TokenBalance) => {
         if (token.chain === 'btc') return  ''
@@ -233,7 +235,7 @@ export default function ListToken({
                                     }
 
                                     {
-                                        item.chain === 'btc' && item.symbol !== 'BTC' &&
+                                        item.chain === 'btc' && item.symbol !== 'BTC' && supportL1XudtTransfer &&
                                         <>
                                             <DialogBtcXudtTransfer token={item}>
                                                 <div

@@ -4,7 +4,8 @@ import * as dayjsLib from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {useContext} from "react"
-import {BtcTransaction} from "@/serves/useBtcTransactionsHistory";
+import {BtcTransaction} from "@/serves/useBtcTransactionsHistory"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 const dayjs: any = dayjsLib
 const relativeTime = require('dayjs/plugin/relativeTime')
@@ -16,6 +17,7 @@ export default function ListBtcTokenHistory({
                                         address
                                     }: { data: BtcTransaction[], status: string, address?: string }) {
     const {config} = useContext(CKBContext)
+    const {lang} = useContext(LangContext)
 
     return <div className="">
         <div className="flex flex-col">
@@ -43,8 +45,9 @@ export default function ListBtcTokenHistory({
             {
                 data.map((item, index) => {
                     return <Link
-                        target="blank"
-                        to={`${config.btc_explorer}/tx/${item.txid}`} key={item.txid}
+                        key={index}
+                        target="_blank"
+                        to={`${config.btc_explorer}/tx/${item.txid}`}
                         className="bg-[#fffbf5] rounded p-4 mt-3">
                         <div className="flex flex-row text-sm mb-4 justify-between">
                             <div
@@ -53,7 +56,10 @@ export default function ListBtcTokenHistory({
                                     {shortTransactionHash(item.txid, 10)}
                                 </CopyText>
                             </div>
-                            <div className="text-neutral-500">{dayjs(item.status.block_time * 1000).fromNow()}</div>
+                            { item.status.confirmed ?
+                                <div className="text-neutral-500">{dayjs(item.status.block_time * 1000).fromNow()}</div>
+                                : <div className="text-blue-300">{lang['Unconfirmed']}</div>
+                            }
                         </div>
                         <div className="flex flex-row flex-col sm:flex-row sm:items-start items-center">
                             <div className="sm:flex-1 w-full">

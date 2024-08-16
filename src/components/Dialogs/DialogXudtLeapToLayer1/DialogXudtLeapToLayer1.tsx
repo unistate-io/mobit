@@ -12,9 +12,9 @@ import Input from "@/components/Form/Input/Input"
 import BigNumber from "bignumber.js"
 import useXudtBalance from "@/serves/useXudtBalance"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
-import dayjs from "dayjs";
+import dayjs from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
-import {helpers} from "@ckb-lumos/lumos";
+import {helpers} from "@ckb-lumos/lumos"
 
 export default function DialogXudtLeapToLayer1({
                                                    token,
@@ -500,7 +500,8 @@ export default function DialogXudtLeapToLayer1({
                                 From
                             </div>
                             <div>{!!internalAddress ?
-                                <ProfileAddresses addresses={[internalAddress]} defaultAddress={internalAddress}/> : '--'}</div>
+                                <ProfileAddresses addresses={[internalAddress]}
+                                                  defaultAddress={internalAddress}/> : '--'}</div>
                         </div>
                         <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
                             <div className="flex flex-row flex-nowrap items-center">
@@ -518,10 +519,17 @@ export default function DialogXudtLeapToLayer1({
                             <div>{BigNumber(546).div(10 ** 8).toFormat(8)} BTC</div>
                         </div>
 
+                        <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
+                            <div className="flex flex-row flex-nowrap items-center">
+                                {lang['Fee_Rate']}
+                            </div>
+                            <div>5 Sat/vB</div>
+                        </div>
+
                         <div className="font-normal text-red-400 mt-1 break-words mb-1">{txError}</div>
 
                         <div className="flex mt-8">
-                        <Button btntype={'secondary'}
+                            <Button btntype={'secondary'}
                                     className={"mr-4"}
                                     onClick={e => {
                                         setTxError('')
@@ -541,10 +549,10 @@ export default function DialogXudtLeapToLayer1({
                 {
                     step === 6 &&
                     <>
-                    <div className="flex flex-row justify-center items-center mb-4 mt-2">
-                        <svg width="73" height="72" viewBox="0 0 73 72" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <g clipPath="url(#clip0_699_1259)">
+                        <div className="flex flex-row justify-center items-center mb-4 mt-2">
+                            <svg width="73" height="72" viewBox="0 0 73 72" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <g clipPath="url(#clip0_699_1259)">
                                 <circle cx="36.5" cy="36" r="36" fill="#41D195" fillOpacity="0.12"/>
                                 <path
                                     d="M37 19.3335C27.8167 19.3335 20.3333 26.8168 20.3333 36.0002C20.3333 45.1835 27.8167 52.6668 37 52.6668C46.1833 52.6668 53.6667 45.1835 53.6667 36.0002C53.6667 26.8168 46.1833 19.3335 37 19.3335ZM44.9667 32.1668L35.5167 41.6168C35.2833 41.8502 34.9667 41.9835 34.6333 41.9835C34.3 41.9835 33.9833 41.8502 33.75 41.6168L29.0333 36.9002C28.55 36.4168 28.55 35.6168 29.0333 35.1335C29.5167 34.6502 30.3167 34.6502 30.8 35.1335L34.6333 38.9668L43.2 30.4002C43.6833 29.9168 44.4833 29.9168 44.9667 30.4002C45.45 30.8835 45.45 31.6668 44.9667 32.1668Z"

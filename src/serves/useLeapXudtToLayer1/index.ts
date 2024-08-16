@@ -1,4 +1,4 @@
-import {BtcHelper, CkbHelper, convertToTxSkeleton, leapFromCkbToBtc} from "mobit-sdk"
+import {BtcHelper, CkbHelper, convertToTxSkeleton, leapFromCkbToBtcTransaction} from "mobit-sdk"
 import {CKBContext,} from "@/providers/CKBProvider/CKBProvider"
 import {useContext, useMemo} from "react"
 import {BtcApiUtxo} from '@rgbpp-sdk/service'
@@ -67,7 +67,7 @@ export default function useLeapXudtToLayer1() {
 
         const ckbHelper = new CkbHelper(network === 'mainnet')
 
-        const tx = await leapFromCkbToBtc({
+        const tx = await leapFromCkbToBtcTransaction({
             outIndex: props.outIndex,
             btcTxId: props.btcTxId,
             xudtTypeArgs: props.xudtTypeArgs,
@@ -76,7 +76,6 @@ export default function useLeapXudtToLayer1() {
             btcTestnetType: network !== 'mainnet' ?  'Testnet3' : undefined,
             collector: ckbHelper.collector,
             ckbAddress: address!,
-            cccSigner: signer as any,
         }, props.feeRate)
 
         const skeleton = await convertToTxSkeleton(tx, ckbHelper.collector)

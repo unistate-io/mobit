@@ -1,12 +1,19 @@
 import {BtcHelper, CkbHelper, transferCombined} from "mobit-sdk"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {useContext} from "react"
+import {useContext, useMemo} from "react"
 
 let unisat = (window as any).unisat
 
 export default function useBtcXudtTransfer() {
 
-    const {network} = useContext(CKBContext)
+    const {network, wallet} = useContext(CKBContext)
+
+    const supportedWallet = useMemo(() => {
+        return !!wallet
+            && wallet.name === 'UniSat'
+            && !!wallet.signers[0]
+            && !!wallet.signers[0].name?.includes('BTC')
+    }, [wallet])
 
     const signAndSend = async ({from, to, args, amount}: {
         from: string;
@@ -41,5 +48,5 @@ export default function useBtcXudtTransfer() {
     }
 
 
-    return {signAndSend}
+    return {signAndSend, supportedWallet}
 }
