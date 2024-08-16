@@ -23,8 +23,12 @@ export const checksumCkbAddress = (address: string, network: 'mainnet' | 'testne
     }
 }
 
-export const isBtcAddress = (address: string): boolean => {
-    return address.startsWith('bc1') || address.startsWith('tb1')
+export const isBtcAddress = (address: string, isMainnet = true): boolean => {
+    if (isMainnet) {
+        return address.startsWith('bc1')
+    } else {
+        return address.startsWith('tb1')
+    }
 }
 
 export const isEvmAddress = (address: string): boolean => {
@@ -50,8 +54,8 @@ export async function getCkbAddressFromEvm(address: string, client: any): Promis
     }
 }
 
-export async function getCkbAddressFromBTC(address: string, client: any): Promise<string | null> {
-    const txs = await getBtcTransactionsHistory(address)
+export async function getCkbAddressFromBTC(address: string, client: any, isMainnet=true): Promise<string | null> {
+    const txs = await getBtcTransactionsHistory(address, isMainnet)
     if (!txs.length) return null
 
     const utxo = txs[0].vin.find(v => {

@@ -55,7 +55,7 @@ export default function HeaderMenu() {
                     }
                 }
 
-                if (isBtcAddress(keyword)) {
+                if (isBtcAddress(keyword, network === 'mainnet')) {
                     navigate(`/address/${keyword}`)
                     searchRef.current?.blur()
                     setShowSearchInput(false)

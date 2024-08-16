@@ -42,9 +42,9 @@ export default function ProfilePage() {
             }
 
             // btc address
-            if (!!client && isBtcAddress(address)) {
+            if (!!client && isBtcAddress(address, network === 'mainnet')) {
                 console.log('btc profile')
-                const res = await getCkbAddressFromBTC(address, client)
+                const res = await getCkbAddressFromBTC(address, client, network === 'mainnet')
                 if (!!res) {
                     setDisplayAddress(res!)
                     setDisplayInternalAddress(address)
