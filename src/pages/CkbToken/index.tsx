@@ -30,7 +30,7 @@ export default function TokenPage() {
         <div
             className="sm:w-[320px] w-full shadow rounded-lg overflow-hidden bg-[url('./assets/token_bg.png')] bg-[length:100%_auto] bg-no-repeat p-5">
             <div className="mt-10 mb-4">
-                <TokenIcon symbol={tokenInfo?.symbol || 'default'} size={90} rounded={false}/>
+                <TokenIcon symbol={tokenInfo?.symbol || 'default'} size={90} />
             </div>
             <div className="text-lg mb-4 flex flex-row items-baseline">
                 <div className="font-semibold mr-3 text-2xl"> {tokenInfo.symbol}</div>

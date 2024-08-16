@@ -68,7 +68,7 @@
     "jest-watch-typeahead": "^1.0.0",
     "js-sha3": "^0.9.3",
     "mini-css-extract-plugin": "^2.4.5",
-    "mobit-sdk": "^1.6.0",
+    "mobit-sdk": "^1.7.0",
     "node-polyfill-webpack-plugin": "^4.0.0",
     "path-browserify": "^1.0.1",
     "postcss": "^8.4.4",

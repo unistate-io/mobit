@@ -36,6 +36,21 @@ const langCN: LangConfig = {
     Cancel: '取消',
     Input: '输入',
     Output: '输出',
+    Leap: '跨链',
+    Select_An_UTXO_To_Leap: '选择一个UTXO进行跨链',
+    Leap_To: '跨链至',
+    Bitcoin_Address: '比特币地址',
+    Amount: '数量',
+    Leap_Amount: '跨链数量',
+    Fee_Rate: '费率',
+    Capacity_Fee: '容量费',
+    Leap_l2_to_l1: '从L2跨链至L1',
+    It_Is_Recommended_To_Use_546_Satoshi_UTXO_To_Avoid_Being_Accidentally_Spent_And_wasted: '建议使用546聪的UTXO以避免被意外花费和浪费',
+    Create_A_New_UTXO: '创建一个新的UTXO',
+    Create_UTXO: '创建UTXO',
+    Create_An_UTXO_To_Leap_Assets: '创建一个UTXO用来资产跨链',
+    Network_Fee: '网络费',
+    Unconfirmed: '未确认',
 }
 
 

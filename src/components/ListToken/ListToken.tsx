@@ -15,6 +15,9 @@ import {scriptToHash} from '@nervosnetwork/ckb-sdk-utils'
 import {hashType} from "@/serves/useXudtTransfer/lib"
 import {useUtxoSwap} from "@/serves/useUtxoSwap"
 import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
+import DialogXudtLeapToLayer1 from "@/components/Dialogs/DialogXudtLeapToLayer1/DialogXudtLeapToLayer1"
+import useLeapXudtToLayer1 from "@/serves/useLeapXudtToLayer1"
+import useBtcXudtTransfer from "@/serves/useBtcXudtTransfer";
 
 
 export interface TokenBalance extends TokenInfoWithAddress {
@@ -39,6 +42,8 @@ export default function ListToken({
     const [compact, setCompact] = useState(true)
     const {lang} = useContext(LangContext)
     const {supportTokens} = useUtxoSwap()
+    const {supportedWallet} = useLeapXudtToLayer1()
+    const {supportedWallet: supportL1XudtTransfer} = useBtcXudtTransfer()
 
     const isSupportToken = useCallback((token: TokenBalance) => {
         if (token.chain === 'btc') return  ''
@@ -139,6 +144,13 @@ export default function ListToken({
                                                     <div id={`swap-${index}`}/>
                                                 </DialogSwap>
                                             }
+
+                                            {supportedWallet &&
+                                                <DialogXudtLeapToLayer1 token={item}>
+                                                    <div id={`leap-${index}`}/>
+                                                </DialogXudtLeapToLayer1>
+                                            }
+
                                             <DialogXudtCellMerge
                                                 xudt={item}
                                                 addresses={addresses}>
@@ -161,6 +173,17 @@ export default function ListToken({
                                                             }}
                                                                  className="mb-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
                                                                 {'Swap'}
+                                                            </div>
+                                                        }
+
+                                                        { supportedWallet &&
+                                                            <div onClick={e => {
+                                                                const el = document.getElementById(`leap-${index}`)
+                                                                !!el && el.click()
+                                                                close()
+                                                            }}
+                                                                 className="mb-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
+                                                                {lang['Leap']}
                                                             </div>
                                                         }
 
@@ -212,7 +235,7 @@ export default function ListToken({
                                     }
 
                                     {
-                                        item.chain === 'btc' && item.symbol !== 'BTC' &&
+                                        item.chain === 'btc' && item.symbol !== 'BTC' && supportL1XudtTransfer &&
                                         <>
                                             <DialogBtcXudtTransfer token={item}>
                                                 <div

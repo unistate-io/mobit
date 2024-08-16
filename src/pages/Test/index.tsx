@@ -1,16 +1,20 @@
-import {useContext} from "react"
+import {useContext, useEffect} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {bytifyRawString, createSpore, createCluster, predefinedSporeConfigs} from '@spore-sdk/core'
+import {bytifyRawString, createCluster, createSpore, predefinedSporeConfigs} from '@spore-sdk/core'
 import {config as lumsCoinfg, helpers} from "@ckb-lumos/lumos";
 import {BI} from '@ckb-lumos/bi';
 import {getInfoFromOmnilockArgs} from "@/pages/Test/wallet";
 import {ccc} from "@ckb-ccc/connector-react"
+import useLeapXudtToLayer1 from "@/serves/useLeapXudtToLayer1";
+import {isBtcAddress} from "@/utils/common";
+import DialogXudtLeapToLayer1 from "@/components/Dialogs/DialogXudtLeapToLayer1/DialogXudtLeapToLayer1";
 
 export default function Test() {
     const {
         network,
         address,
         addresses,
+        internalAddress,
         signer, // 没链接钱包是undefined
     } = useContext(CKBContext) // ccc 的 api
 
@@ -87,8 +91,24 @@ export default function Test() {
     }
 
 
+    const {getUTXO, prepareUTXO} = useLeapXudtToLayer1()
+
+    useEffect(() => {
+        (async () => {
+            if (!!internalAddress && isBtcAddress(internalAddress)) {
+                const utxos = await getUTXO({btcAddress: internalAddress}).then(console.log)
+                console.log(utxos)
+            }
+        })()
+    }, [internalAddress]);
     return <div>
         <div onClick={handleCreateSpore}>create spore</div>
         <div onClick={handleCreateCluster}>handleCreateCluster</div>
+        <div onClick={e => {
+            if (!!internalAddress) {
+                prepareUTXO({btcAddress: internalAddress})
+            }
+        }}>prepareUTXO
+        </div>
     </div>
 }

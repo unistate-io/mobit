@@ -216,7 +216,7 @@ export default function DialogBtcXudtTransfer({
                                 <div className="mb-2 flex-row flex items-center justify-between">
                                     <div>Amount</div>
                                     <div className="font-normal"><span
-                                        className="text-gray-500"> Balance:</span> {xudtBalance ? toDisplay(xudtBalance.amount, xudtBalance.decimal, true) : '--'}
+                                        className="text-gray-500">Balance:</span> {xudtBalance ? toDisplay(xudtBalance.amount, xudtBalance.decimal, true) : '--'}
                                     </div>
                                 </div>
                                 <Input value={formData.amount}

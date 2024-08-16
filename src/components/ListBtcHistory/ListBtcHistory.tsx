@@ -46,7 +46,10 @@ export default function ListBtcHistory({
                         <div className="flex  flex-row text-xs">
                             <div
                                 className="text-[#f7931a] mr-2">{shortTransactionHash(item.txid)}</div>
-                            <div className="text-neutral-500">{dayjs(item.status.block_time * 1000).fromNow()}</div>
+                            { item.status.confirmed ?
+                                <div className="text-neutral-500">{dayjs(item.status.block_time * 1000).fromNow()}</div>
+                                : <div className="text-blue-300">{lang['Unconfirmed']}</div>
+                            }
                         </div>
                         {
                             calculateTotalAmount(item, internalAddress).map((res) => {
