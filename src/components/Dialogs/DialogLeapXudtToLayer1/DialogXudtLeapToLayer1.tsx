@@ -15,15 +15,17 @@ import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import dayjs from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
 import {helpers} from "@ckb-lumos/lumos"
+import useBtcWallet from "@/serves/useBtcWallet"
 
-export default function DialogXudtLeapToLayer1({
+export default function DialogLeapXudtToLayer1({
                                                    token,
                                                    children,
                                                    className
                                                }: { token: TokenBalance, children: ReactNode, className?: string }) {
     const {address, addresses, internalAddress, config, network} = useContext(CKBContext)
     const {lang} = useContext(LangContext)
-    const {getUTXO, supportedWallet, buildLeapTx, prepareUTXO, leap} = useLeapXudtToLayer1()
+    const {isBtcWallet, allowCreateUTXO, createUTXO} = useBtcWallet()
+    const {getUTXO, buildLeapTx, leap} = useLeapXudtToLayer1()
 
     const [step, setStep] = useState(1)
     const [open, setOpen] = useState(false)
@@ -43,7 +45,7 @@ export default function DialogXudtLeapToLayer1({
 
     useEffect(() => {
         (async () => {
-            if (step !== 2 || !supportedWallet || !toBtcAddress) {
+            if (step !== 2 || !isBtcWallet || !toBtcAddress) {
                 setUtxos([])
                 return
             }
@@ -56,7 +58,7 @@ export default function DialogXudtLeapToLayer1({
                 setBusy(false)
             }
         })()
-    }, [toBtcAddress, supportedWallet, step])
+    }, [toBtcAddress, isBtcWallet, step])
 
     useEffect(() => {
         if (open) {
@@ -142,13 +144,14 @@ export default function DialogXudtLeapToLayer1({
         setBusy(true)
         setTxError('')
         try {
-            const txHash = await prepareUTXO({
+            const txHash = await createUTXO({
                 btcAddress: toBtcAddress
             })
             console.log('txHash', txHash)
             setStep(6)
             setTxHash(txHash)
         } catch (e: any) {
+            console.error(e)
             setTxError(e.message)
         } finally {
             setBusy(false)
@@ -246,13 +249,15 @@ export default function DialogXudtLeapToLayer1({
                             <i className="uil-info-circle mr-2 text-2xl align-middle text-orange-300"/>
                             <div className="text-xs">
                                 {lang['It_Is_Recommended_To_Use_546_Satoshi_UTXO_To_Avoid_Being_Accidentally_Spent_And_wasted']}
-                                <span className='cursor-pointer text-blue-500 ml-2 hover:underline'
-                                      onClick={e => {
-                                          setStep(5)
-                                      }}>
+                                { allowCreateUTXO &&
+                                    <span className='cursor-pointer text-blue-500 ml-2 hover:underline'
+                                          onClick={e => {
+                                              setStep(5)
+                                          }}>
                                     {lang['Create_A_New_UTXO']}
-                                    <i className="uil-arrow-right"/>
+                                        <i className="uil-arrow-right"/>
                                 </span>
+                                }
                             </div>
                         </div>
                         {busy &&

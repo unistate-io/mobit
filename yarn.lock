@@ -2415,6 +2415,13 @@
     "@types/yargs" "^17.0.8"
     chalk "^4.0.0"
 
+"@joyid/bitcoin@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.npmmirror.com/@joyid/bitcoin/-/bitcoin-0.1.5.tgz#81a187e7fc957330460d716049af7e4413605fb7"
+  integrity sha512-zbzZGIcgOw4geyEdguAyOTbVZUTTwoIRqpIC5tldamEMy0T4nDfxEL5qy/lL1Styeu1r5pjpbmipTFG2/OP9pg==
+  dependencies:
+    "@joyid/common" "0.2.0"
+
 "@joyid/ckb@^0.0.11":
   version "0.0.11"
   resolved "https://registry.yarnpkg.com/@joyid/ckb/-/ckb-0.0.11.tgz#562dbdad6305fefa09f2f43500e18efd483dbf66"
@@ -9573,10 +9580,10 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mobit-sdk@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.7.0.tgz#5e93acbcd45647e821cd1a6a89223c4e28733a2a"
-  integrity sha512-PFMs6Y+lmVr+VxOVRSlLbU/2tKu8UbM6QO/aIuCyHgrHcoNzwuo7pwhhSWzdX0EaXiCDB9nLqFolK6Wqjl8jjA==
+mobit-sdk@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.7.2.tgz#2883dcd52f665af8b2f028eb894ef95b11edcd94"
+  integrity sha512-+sy7icOmabUw0UF8HRbR6yH2LePFqNuIdLAqSwZmGE5vRddiPHEb7PJ0Y1XLIrAkfqtq3dnPlT8kbPbgTQne6g==
   dependencies:
     "@apollo/client" "^3.11.4"
     "@ckb-ccc/core" "0.0.11-alpha.3"
@@ -9590,6 +9597,13 @@ mobit-sdk@^1.7.0:
     "@rgbpp-sdk/ckb" "^0.5.0"
     "@rgbpp-sdk/service" "^0.5.0"
     rgbpp "^0.5.0"
+
+mobit-wallet@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.npmmirror.com/mobit-wallet/-/mobit-wallet-0.1.0.tgz#6e8f62126dce4c1fc05dcce7df5c4d7b57073c74"
+  integrity sha512-8MK+rXM/snHQKGIr1wXNK8lWBgT2u2JO6XogRmWgmtPSfx9qQ0GEz34U9jXXAZfNnmlMjdZBtw+pFVJ7nyUezw==
+  dependencies:
+    "@joyid/bitcoin" "^0.1.5"
 
 ms@2.0.0:
   version "2.0.0"

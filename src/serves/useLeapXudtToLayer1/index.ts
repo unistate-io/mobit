@@ -2,30 +2,25 @@ import {BtcHelper, CkbHelper, convertToTxSkeleton, leapFromCkbToBtcTransaction} 
 import {CKBContext,} from "@/providers/CKBProvider/CKBProvider"
 import {useContext, useMemo} from "react"
 import {BtcApiUtxo} from '@rgbpp-sdk/service'
-import {ccc} from "@ckb-ccc/connector-react";
-import {helpers} from "@ckb-lumos/lumos";
+import {ccc} from "@ckb-ccc/connector-react"
+import {helpers} from "@ckb-lumos/lumos"
+import useBtcWallet from '@/serves/useBtcWallet'
 
 export type BtcUtxo =  BtcApiUtxo
 
 export default function useLeapXudtToLayer1() {
-    const {network, wallet, address, signer} = useContext(CKBContext)
-
-    const supportedWallet = useMemo(() => {
-        return !!wallet
-            && wallet.name === 'UniSat'
-            && !!wallet.signers[0]
-            && !!wallet.signers[0].name?.includes('BTC')
-    }, [wallet])
+    const {network, address, signer} = useContext(CKBContext)
+    const {isBtcWallet, getSignPsbtWallet} = useBtcWallet()
 
     const btcHelper = useMemo(() => {
-        let unisat = (window as any).unisat
-        if (!supportedWallet || !unisat) return null
-        return new BtcHelper(unisat, network === 'mainnet' ? 0 : 1, network !== 'mainnet' ? 'Testnet3' : undefined)
-    }, [network, supportedWallet])
+        if (!isBtcWallet) return null
+        const wallet = getSignPsbtWallet()!
+        return new BtcHelper(wallet, network === 'mainnet' ? 0 : 1, network !== 'mainnet' ? 'Testnet3' : undefined)
+    }, [network, isBtcWallet])
 
     const getUTXO = async (props: { btcAddress: string }) => {
         if (!btcHelper) {
-            console.warn('unisat not found')
+            console.warn('not supported wallet')
             return []
         }
 
@@ -36,18 +31,6 @@ export default function useLeapXudtToLayer1() {
         })
 
         return utxos as BtcUtxo[]
-    }
-
-    const prepareUTXO = async (props: { btcAddress: string }) => {
-        let unisat = (window as any).unisat
-
-        if (!unisat) {
-            throw new Error('unisat not found')
-        }
-
-        const txid = await unisat.sendBitcoin(props.btcAddress, 546, {feeRate : 10})
-        console.log(txid)
-        return txid as string
     }
 
     const buildLeapTx = async (props: {
@@ -61,7 +44,7 @@ export default function useLeapXudtToLayer1() {
             throw new Error('Please connect wallet')
         }
 
-        if (!supportedWallet) {
+        if (!isBtcWallet) {
             throw new Error('Unsupported wallet')
         }
 
@@ -92,5 +75,5 @@ export default function useLeapXudtToLayer1() {
         return await signer.sendTransaction(ccc.Transaction.fromLumosSkeleton(tx))
     }
 
-    return {supportedWallet, buildLeapTx, getUTXO, leap, prepareUTXO}
+    return {buildLeapTx, getUTXO, leap}
 }

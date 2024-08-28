@@ -49,6 +49,7 @@ const langEN = {
     Create_An_UTXO_To_Leap_Assets: 'Create a UTXO to leap assets',
     Network_Fee: 'Network Fee',
     Unconfirmed: 'Unconfirmed',
+    Leap_l1_to_l2: 'Leap from L1 to L2',
 }
 
 

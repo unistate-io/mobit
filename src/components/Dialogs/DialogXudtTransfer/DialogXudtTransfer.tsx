@@ -10,7 +10,7 @@ import Select from "@/components/Select/Select"
 import CopyText from "@/components/CopyText/CopyText"
 import useXudtTransfer from "@/serves/useXudtTransfer"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider";
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 
 import * as dayjsLib from "dayjs"
@@ -32,7 +32,7 @@ export default function DialogXudtTransfer({
                                                token
                                            }: { children: React.ReactNode, froms: string[], token: TokenInfoWithAddress, className?: string }) {
     const {build, signAndSend} = useXudtTransfer()
-    const {network} = useContext(CKBContext)
+    const {network, config} = useContext(CKBContext)
     const [open, setOpen] = React.useState(false);
     const {data: xudtBalance, status, refresh} = useXudtBalance((open ? froms : undefined), token)
 
@@ -373,7 +373,6 @@ export default function DialogXudtTransfer({
                                         <CopyText copyText={txHash || ''}>
                                             {txHash ? shortTransactionHash(txHash) : '--'}
                                         </CopyText>
-
                                     </div>
                                 </div>
                             </div>
@@ -383,7 +382,7 @@ export default function DialogXudtTransfer({
                                         className={"mr-4 text-xs"}
                                         loading={sending}
                                         onClick={e => {
-                                            window.open(`https://explorer.nervos.org/transaction/${txHash}`, '_blank')
+                                            window.open(`${config.explorer}/transaction/${txHash}`, '_blank')
                                         }}>
                                     View on Explorer
                                 </Button>

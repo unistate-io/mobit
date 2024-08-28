@@ -1,19 +1,14 @@
 import {BtcHelper, CkbHelper, transferCombined} from "mobit-sdk"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {useContext, useMemo} from "react"
+import {useContext} from "react"
+import useBtcWallet from "@/serves/useBtcWallet"
 
 let unisat = (window as any).unisat
 
 export default function useBtcXudtTransfer() {
 
-    const {network, wallet} = useContext(CKBContext)
-
-    const supportedWallet = useMemo(() => {
-        return !!wallet
-            && wallet.name === 'UniSat'
-            && !!wallet.signers[0]
-            && !!wallet.signers[0].name?.includes('BTC')
-    }, [wallet])
+    const {network} = useContext(CKBContext)
+    const {isBtcWallet, getSignPsbtWallet} = useBtcWallet()
 
     const signAndSend = async ({from, to, args, amount}: {
         from: string;
@@ -21,8 +16,8 @@ export default function useBtcXudtTransfer() {
         args: string;
         amount: string;
     }) => {
-        if (!unisat) {
-            throw new Error('unisat not found')
+        if (!isBtcWallet) {
+            throw new Error('not supported wallet')
         }
 
         const btcHelper = new BtcHelper(unisat, network === 'mainnet' ? 0 : 1, network !== 'mainnet' ? 'Testnet3' : undefined)
@@ -38,7 +33,7 @@ export default function useBtcXudtTransfer() {
                 fromBtcAccount: from,
                 btcService: btcHelper.btcService,
                 btcDataSource: btcHelper.btcDataSource,
-                wallet: unisat
+                wallet: getSignPsbtWallet()!,
             })
 
             return btcTxId
@@ -48,5 +43,5 @@ export default function useBtcXudtTransfer() {
     }
 
 
-    return {signAndSend, supportedWallet}
+    return {signAndSend}
 }

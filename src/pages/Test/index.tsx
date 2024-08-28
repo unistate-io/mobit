@@ -7,7 +7,7 @@ import {getInfoFromOmnilockArgs} from "@/pages/Test/wallet";
 import {ccc} from "@ckb-ccc/connector-react"
 import useLeapXudtToLayer1 from "@/serves/useLeapXudtToLayer1";
 import {isBtcAddress} from "@/utils/common";
-import DialogXudtLeapToLayer1 from "@/components/Dialogs/DialogXudtLeapToLayer1/DialogXudtLeapToLayer1";
+import DialogLeapXudtToLayer2 from "@/components/Dialogs/DialogLeapXudtToLayer2/DialogLeapXudtToLayer2";
 
 export default function Test() {
     const {
@@ -91,7 +91,7 @@ export default function Test() {
     }
 
 
-    const {getUTXO, prepareUTXO} = useLeapXudtToLayer1()
+    const {getUTXO} = useLeapXudtToLayer1()
 
     useEffect(() => {
         (async () => {
@@ -105,10 +105,28 @@ export default function Test() {
         <div onClick={handleCreateSpore}>create spore</div>
         <div onClick={handleCreateCluster}>handleCreateCluster</div>
         <div onClick={e => {
-            if (!!internalAddress) {
-                prepareUTXO({btcAddress: internalAddress})
-            }
+
         }}>prepareUTXO
+        </div>
+        <div>
+            <DialogLeapXudtToLayer2 token={{
+                type_id: '',
+                symbol: 'XUDT',
+                name: 'XUDT',
+                amount: '0',
+                decimal: 8,
+                type: 'xudt',
+                chain: 'ckb',
+                address: {
+                    id: '',
+                    script_args: '',
+                    script_code_hash: '',
+                    script_hash_type: ''
+                },
+                addressByInscriptionId: null
+            }}>
+                <div>test</div>
+            </DialogLeapXudtToLayer2>
         </div>
     </div>
 }

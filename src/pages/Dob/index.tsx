@@ -7,7 +7,6 @@ import CopyText from "@/components/CopyText/CopyText"
 import {isBtcAddress, shortTransactionHash} from "@/utils/common"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import useLayer1Assets from "@/serves/useLayer1Assets"
-import Button from "@/components/Form/Button/Button"
 import DialogSporeTransfer from "@/components/Dialogs/DialogSporeTransfer/DialogSporeTransfer"
 import {getImgFromSporeCell} from "@/utils/spore";
 

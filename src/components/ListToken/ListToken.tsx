@@ -15,9 +15,10 @@ import {scriptToHash} from '@nervosnetwork/ckb-sdk-utils'
 import {hashType} from "@/serves/useXudtTransfer/lib"
 import {useUtxoSwap} from "@/serves/useUtxoSwap"
 import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
-import DialogXudtLeapToLayer1 from "@/components/Dialogs/DialogXudtLeapToLayer1/DialogXudtLeapToLayer1"
-import useLeapXudtToLayer1 from "@/serves/useLeapXudtToLayer1"
-import useBtcXudtTransfer from "@/serves/useBtcXudtTransfer";
+import DialogXudtLeapToLayer1 from "@/components/Dialogs/DialogLeapXudtToLayer1/DialogXudtLeapToLayer1"
+import useBtcXudtTransfer from "@/serves/useBtcXudtTransfer"
+import DialogLeapXudtToLayer2 from "@/components/Dialogs/DialogLeapXudtToLayer2/DialogLeapXudtToLayer2"
+import useBtcWallet from "@/serves/useBtcWallet"
 
 
 export interface TokenBalance extends TokenInfoWithAddress {
@@ -42,10 +43,9 @@ export default function ListToken({
     const [compact, setCompact] = useState(true)
     const {lang} = useContext(LangContext)
     const {supportTokens} = useUtxoSwap()
-    const {supportedWallet} = useLeapXudtToLayer1()
-    const {supportedWallet: supportL1XudtTransfer} = useBtcXudtTransfer()
+    const {isBtcWallet} = useBtcWallet()
 
-    const isSupportToken = useCallback((token: TokenBalance) => {
+    const isSupportSwap = useCallback((token: TokenBalance) => {
         if (token.chain === 'btc') return  ''
 
         if (token.symbol === 'CKB') {
@@ -119,7 +119,7 @@ export default function ListToken({
 
             {status !== 'loading' &&
                 list.map((item, index) => {
-                    const supportSwap = isSupportToken(item)
+                    const typeHash = isSupportSwap(item)
 
                     return <Link to={getLink(item)} key={index}
                                  className="flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100">
@@ -139,13 +139,13 @@ export default function ListToken({
 
                                     {item.symbol !== 'CKB' && item.chain === 'ckb' &&
                                         <>
-                                            {!!supportSwap &&
-                                                <DialogSwap sellToken={supportSwap}>
+                                            {!!typeHash &&
+                                                <DialogSwap sellToken={typeHash}>
                                                     <div id={`swap-${index}`}/>
                                                 </DialogSwap>
                                             }
 
-                                            {supportedWallet &&
+                                            {isBtcWallet &&
                                                 <DialogXudtLeapToLayer1 token={item}>
                                                     <div id={`leap-${index}`}/>
                                                 </DialogXudtLeapToLayer1>
@@ -165,7 +165,7 @@ export default function ListToken({
                                             <Dropdown
                                                 content={(close) => {
                                                     return <div className="flex flex-col">
-                                                        {!!supportSwap &&
+                                                        {!!typeHash &&
                                                             <div onClick={e => {
                                                                 const el = document.getElementById(`swap-${index}`)
                                                                 !!el && el.click()
@@ -176,7 +176,7 @@ export default function ListToken({
                                                             </div>
                                                         }
 
-                                                        { supportedWallet &&
+                                                        { isBtcWallet &&
                                                             <div onClick={e => {
                                                                 const el = document.getElementById(`leap-${index}`)
                                                                 !!el && el.click()
@@ -219,7 +219,7 @@ export default function ListToken({
                                     {
                                         item.symbol === 'CKB' &&
                                         <>
-                                            <DialogSwap sellToken={supportSwap}>
+                                            <DialogSwap sellToken={typeHash}>
                                                 <div
                                                     className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
                                                     {'Swap'}
@@ -235,8 +235,14 @@ export default function ListToken({
                                     }
 
                                     {
-                                        item.chain === 'btc' && item.symbol !== 'BTC' && supportL1XudtTransfer &&
+                                        item.chain === 'btc' && item.symbol !== 'BTC' && isBtcWallet &&
                                         <>
+                                            <DialogLeapXudtToLayer2 token={item} >
+                                                <div
+                                                    className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                    {lang['Leap']}
+                                                </div>
+                                            </DialogLeapXudtToLayer2>
                                             <DialogBtcXudtTransfer token={item}>
                                                 <div
                                                     className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
@@ -249,7 +255,7 @@ export default function ListToken({
                                     {
                                         item.symbol !== 'CKB' && item.chain !== 'btc' &&
                                         <DialogXudtTransfer froms={addresses} token={item}>
-                                            <div
+                                        <div
                                                 className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
                                                 {lang['Send']}
                                             </div>
