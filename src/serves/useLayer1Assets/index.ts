@@ -149,7 +149,6 @@ export default function useLayer1Assets(btcAddress?: string, polling?: boolean) 
     useEffect(() => {
         if (polling) {
             const interval = setInterval(() => {
-                console.log('intervalinterval', btcAddress)
                 if (btcAddress) {
                     queryAssets(btcAddress, network === 'mainnet')
                         .then(res => {
