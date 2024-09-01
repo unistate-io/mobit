@@ -368,11 +368,6 @@ export default function DialogLeapXudtToLayer2({children, token, className}: {
                                     <CopyText copyText={btctxHash || ''}>
                                         {btctxHash ? shortTransactionHash(btctxHash) : '--'}
                                     </CopyText>
-
-                                    <a href={`${config.btc_explorer}/tx/${btctxHash}`} target="_blank"
-                                       className='ml-3 py-1 px-2 rounded font-normal bg-gray-200 text-xs hover:bg-gray-300' rel="noreferrer">
-                                        View on Explorer
-                                    </a>
                                 </div>
                             </div>
                         </div>
