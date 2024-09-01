@@ -378,6 +378,13 @@ export default function DialogLeapXudtToLayer2({children, token, className}: {
                         </div>
 
                         <div className="flex">
+                            <Button btntype={'secondary'}
+                                    className={"mr-4 text-xs"}
+                                    onClick={e => {
+                                        window.open(`${config.btc_explorer}/tx/${btctxHash}`, '_blank')
+                                    }}>
+                                View on Explorer
+                            </Button>
                             <Button btntype={'primary'}
                                     onClick={e => {
                                         setOpen(false)
