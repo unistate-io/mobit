@@ -4,9 +4,8 @@ import { BtcApiTransaction } from "@rgbpp-sdk/service"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 export const getBtcTransactionsHistory = async (address: string, isMainnet: boolean = true) => {
-
     const sdk = new RgbppSDK(isMainnet, isMainnet ? undefined : 'Testnet3')
-    return await sdk.fetchTxsDetails(address)
+    return await sdk.fetchTxsDetails(address) as BtcApiTransaction[]
 }
 
 export default function useBtcTransactionsHistory(address?: string, pageSize?: number) {

@@ -24,7 +24,7 @@ export default function DialogLeapXudtToLayer1({
                                                }: { token: TokenBalance, children: ReactNode, className?: string }) {
     const {address, addresses, internalAddress, config, network} = useContext(CKBContext)
     const {lang} = useContext(LangContext)
-    const {isBtcWallet, allowCreateUTXO, createUTXO} = useBtcWallet()
+    const {isBtcWallet, createUTXO, feeRate} = useBtcWallet()
     const {getUTXO, buildLeapTx, leap} = useLeapXudtToLayer1()
 
     const [step, setStep] = useState(1)
@@ -36,6 +36,7 @@ export default function DialogLeapXudtToLayer1({
     const [leapAmount, setLeapAmount] = useState('')
     const [txHash, setTxHash] = useState('')
     const [tx, setTx] = useState<null | helpers.TransactionSkeletonType>(null)
+    const [btcFeeRate, setBtcFeeRate] = useState(feeRate)
 
     const [amountError, setAmountError] = useState('')
     const [toAddressError, setToAddressError] = useState('')
@@ -145,7 +146,8 @@ export default function DialogLeapXudtToLayer1({
         setTxError('')
         try {
             const txHash = await createUTXO({
-                btcAddress: toBtcAddress
+                btcAddress: toBtcAddress,
+                feeRate: btcFeeRate
             })
             console.log('txHash', txHash)
             setStep(6)
@@ -249,7 +251,7 @@ export default function DialogLeapXudtToLayer1({
                             <i className="uil-info-circle mr-2 text-2xl align-middle text-orange-300"/>
                             <div className="text-xs">
                                 {lang['It_Is_Recommended_To_Use_546_Satoshi_UTXO_To_Avoid_Being_Accidentally_Spent_And_wasted']}
-                                { allowCreateUTXO &&
+                                { isBtcWallet &&
                                     <span className='cursor-pointer text-blue-500 ml-2 hover:underline'
                                           onClick={e => {
                                               setStep(5)
@@ -441,8 +443,7 @@ export default function DialogLeapXudtToLayer1({
                             <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                 <div className="text-gray-500">{lang['Leap_Amount']}</div>
                                 <div className="font-semibold">
-                                    {leapAmount ?
-                                        toDisplay(leapAmount, token.decimal, true) : '--'} {token.symbol}
+                                    {leapAmount || '--' } {token.symbol}
                                 </div>
                             </div>
 
@@ -499,8 +500,15 @@ export default function DialogLeapXudtToLayer1({
 
                         <div>{lang['Create_An_UTXO_To_Leap_Assets']}</div>
 
+                        <div className="flex flex-row flex-nowrap justify-between items-center mb-4 mt-8 text-sm">
+                            <div className="flex flex-row flex-nowrap items-center">
+                                <TokenIcon size={18} symbol={'BTC'}/>
+                                BTC
+                            </div>
+                            <div>{BigNumber(546).div(10 ** 8).toFormat(8)} BTC</div>
+                        </div>
 
-                        <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm mt-8">
+                        <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
                             <div className="flex flex-row flex-nowrap items-center">
                                 From
                             </div>
@@ -516,19 +524,22 @@ export default function DialogLeapXudtToLayer1({
                                 <ProfileAddresses addresses={[toBtcAddress]}
                                                   defaultAddress={toBtcAddress}/> : '--'}</div>
                         </div>
-                        <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
-                            <div className="flex flex-row flex-nowrap items-center">
-                                <TokenIcon size={18} symbol={'BTC'}/>
-                                BTC
-                            </div>
-                            <div>{BigNumber(546).div(10 ** 8).toFormat(8)} BTC</div>
-                        </div>
 
                         <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
                             <div className="flex flex-row flex-nowrap items-center">
                                 {lang['Fee_Rate']}
                             </div>
-                            <div>5 Sat/vB</div>
+                            <div className="flex flex-row items-center">
+                                <Input value={btcFeeRate}
+                                       className={'w-[100px] text-center font-semibold'}
+                                       type={"number"}
+                                       placeholder={'fee rate'}
+                                       onChange={e => {
+                                           setBtcFeeRate(Number(e.target.value))
+                                       }}
+                                />
+                                <span className="ml-2">Sat/vB</span>
+                            </div>
                         </div>
 
                         <div className="font-normal text-red-400 mt-1 break-words mb-1">{txError}</div>

@@ -16,6 +16,7 @@ import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import useLeapXudtToLayer2 from "@/serves/useLeapXudtToLayer2"
 import * as dayjsLib from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
+import useBtcWallet from "@/serves/useBtcWallet"
 
 const dayjs: any = dayjsLib
 
@@ -24,9 +25,10 @@ export default function DialogLeapXudtToLayer2({children, token, className}: {
     token: TokenBalance,
     className?: string
 }) {
-    const {network, addresses, internalAddress, config} = useContext(CKBContext)
+    const {network, internalAddress, config} = useContext(CKBContext)
     const {build, leap} = useLeapXudtToLayer2()
     const {lang} = useContext(LangContext)
+    const {feeRate} = useBtcWallet()
 
 
     const [open, setOpen] = React.useState(false)
@@ -34,6 +36,7 @@ export default function DialogLeapXudtToLayer2({children, token, className}: {
     const [btctxHash, setBtCtxHash] = React.useState<string>('')
     const [tx, setTx] = React.useState<bitcoin.Psbt | null>(null)
     const [busy, setBusy] = React.useState(false)
+    const [btcFeeRate, setBtcFeeRate] = React.useState(feeRate)
 
     const [formData, setFormData] = React.useState<XudtTransferProps>({
         form: "",
@@ -123,12 +126,14 @@ export default function DialogLeapXudtToLayer2({children, token, className}: {
 
     const handleLeap = async () => {
         setBusy(true)
+        setTransactionError('')
         try {
             const txResult = await leap({
                 fromBtcAccount: internalAddress!,
                 toCkbAddress: formData.to,
                 xudtArgs: token.address.script_args.replace('\\', '0'),
-                amount: BigNumber(formData.amount).multipliedBy(10 ** token.decimal).toString()
+                amount: BigNumber(formData.amount).multipliedBy(10 ** token.decimal).toString(),
+                feeRate: btcFeeRate
             })
             console.log('txResult', txResult)
 
@@ -233,7 +238,7 @@ export default function DialogLeapXudtToLayer2({children, token, className}: {
                         </div>
 
                         <div className="mb-10 mt-10">
-                            <div className="flex flex-row flex-nowrap justify-between items-center mb-2 text-sm">
+                            <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
                                 <div className="flex flex-row flex-nowrap items-center">
                                     <TokenIcon size={18} symbol={token.symbol}/>
                                     {token.symbol}
@@ -241,7 +246,7 @@ export default function DialogLeapXudtToLayer2({children, token, className}: {
                                 <div>{formData.amount} {token.symbol}</div>
                             </div>
 
-                            <div className="flex flex-row flex-nowrap justify-between items-center mb-2 text-sm">
+                            <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
                                 <div className="flex flex-row flex-nowrap items-center">
                                     From
                                 </div>
@@ -253,7 +258,7 @@ export default function DialogLeapXudtToLayer2({children, token, className}: {
                                 }
                             </div>
 
-                            <div className="flex flex-row flex-nowrap justify-between items-center mb-2 text-sm">
+                            <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
                                 <div className="flex flex-row flex-nowrap items-center">
                                     Leap To
                                 </div>
@@ -264,11 +269,21 @@ export default function DialogLeapXudtToLayer2({children, token, className}: {
                                 }
                             </div>
 
-                            <div className="flex flex-row flex-nowrap justify-between items-center mb-2 text-sm">
+                            <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
                                 <div className="flex flex-row flex-nowrap items-center">
                                     {lang['Fee_Rate']}
                                 </div>
-                                <div>10 Sat/vb</div>
+                                <div className="flex flex-row items-center">
+                                    <Input value={btcFeeRate}
+                                           className={'w-[100px] text-center font-semibold'}
+                                           type={"number"}
+                                           placeholder={'fee rate'}
+                                           onChange={e => {
+                                               setBtcFeeRate(Number(e.target.value))
+                                           }}
+                                    />
+                                    <span className="ml-2">Sat/vB</span>
+                                </div>
                             </div>
                         </div>
 

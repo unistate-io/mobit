@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useMemo} from 'react'
+import React, {useContext, useEffect, useMemo, useState, ReactNode} from 'react'
 import Input from "@/components/Form/Input/Input"
 import * as Dialog from '@radix-ui/react-dialog'
 import Button from "@/components/Form/Button/Button"
@@ -9,6 +9,7 @@ import CopyText from "@/components/CopyText/CopyText"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import useBtcXudtTransfer from "@/serves/useBtcXudtTransfer"
+import useBtcWallet from "@/serves/useBtcWallet"
 
 
 import * as dayjsLib from "dayjs"
@@ -28,10 +29,11 @@ export default function DialogBtcXudtTransfer({
                                                   children,
                                                   className,
                                                   token
-                                              }: { children: React.ReactNode,  token: TokenInfoWithAddress, className?: string }) {
+                                              }: { children: ReactNode,  token: TokenInfoWithAddress, className?: string }) {
     const {signAndSend} = useBtcXudtTransfer()
     const {config, internalAddress, network} = useContext(CKBContext)
-    const [open, setOpen] = React.useState(false)
+    const [open, setOpen] = useState(false)
+    const {feeRate} = useBtcWallet()
 
     const btcAddress = useMemo(() => {
         if (!internalAddress) return undefined
@@ -50,21 +52,22 @@ export default function DialogBtcXudtTransfer({
         }
     }, [token, xudts])
 
-    const [formData, setFormData] = React.useState<XudtTransferProps>({
+    const [formData, setFormData] = useState<XudtTransferProps>({
         form: "",
         amount: "",
         to: "",
     });
 
-    const [step, setStep] = React.useState<1 | 2 | 3>(1)
-    const [sending, setSending] = React.useState(false)
-    const [txHash, setTxHash] = React.useState<null | string>(null)
+    const [step, setStep] = useState<1 | 2 | 3>(1)
+    const [sending, setSending] = useState(false)
+    const [txHash, setTxHash] = useState<null | string>(null)
+    const [btcFeeRate, setBtcFeeRate] = useState<number>(feeRate)
 
     //errors
-    const [toError, setToError] = React.useState<string>('')
-    const [fromError, setFromError] = React.useState<string>('')
-    const [amountError, setAmountError] = React.useState<string>('')
-    const [transactionError, setTransactionError] = React.useState<string>('')
+    const [toError, setToError] = useState<string>('')
+    const [fromError, setFromError] = useState<string>('')
+    const [amountError, setAmountError] = useState<string>('')
+    const [transactionError, setTransactionError] = useState<string>('')
 
     const checkErrorsAndBuild = async () => {
         let hasError = false
@@ -127,12 +130,14 @@ export default function DialogBtcXudtTransfer({
     const HandleSignAndSend = async () => {
         const amount = BigNumber(formData.amount).multipliedBy(10 ** token.decimal).toString()
         setSending(true)
+        setTransactionError('')
         try {
           const tx = await signAndSend({
                 from: btcAddress!,
                 to: formData.to,
                 amount: amount,
-                args: token.address.script_args
+                args: token.address.script_args,
+                feeRate: btcFeeRate
             })
             setTxHash(tx)
             setStep(3)
@@ -258,7 +263,7 @@ export default function DialogBtcXudtTransfer({
                                     Send Token
                                 </div>
                                 <div
-                                    className="flex flex-row flex-nowrap justify-between items-center mb-2 text-sm mb-4">
+                                    className="flex flex-row flex-nowrap justify-between items-center text-sm mb-4">
                                     <div className="flex flex-row flex-nowrap items-center">
                                         <TokenIcon size={18} symbol={token.symbol}/>
                                         {token.symbol}
@@ -273,11 +278,28 @@ export default function DialogBtcXudtTransfer({
                                     <div>{shortTransactionHash(internalAddress!)}</div>
                                 </div>
 
-                                <div className="flex flex-row flex-nowrap justify-between items-center text-sm">
+                                <div className="flex flex-row flex-nowrap justify-between items-center text-sm mb-4">
                                     <div className="flex flex-row flex-nowrap items-center">
                                         To Address
                                     </div>
                                     <div>{shortTransactionHash(formData.to)}</div>
+                                </div>
+
+                                <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
+                                    <div className="flex flex-row flex-nowrap items-center">
+                                        BTC Fee Rate
+                                    </div>
+                                    <div className="flex flex-row items-center">
+                                        <Input value={btcFeeRate}
+                                               className={'w-[100px] text-center font-semibold'}
+                                               type={"number"}
+                                               placeholder={'fee rate'}
+                                               onChange={e => {
+                                                   setBtcFeeRate(Number(e.target.value))
+                                               }}
+                                        />
+                                        <span className="ml-2">Sat/vB</span>
+                                    </div>
                                 </div>
                             </div>
 

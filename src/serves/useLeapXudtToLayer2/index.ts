@@ -6,7 +6,7 @@ import useBtcWallet from '@/serves/useBtcWallet'
 
 export default function useLeapXudtToLayer2() {
     const {network, internalAddress} = useContext(CKBContext)
-    const {isBtcWallet, getSignPsbtWallet} = useBtcWallet()
+    const {isBtcWallet, getSignPsbtWallet, feeRate} = useBtcWallet()
 
     const btcHelper = useMemo(() => {
         if (!isBtcWallet) return null
@@ -25,9 +25,8 @@ export default function useLeapXudtToLayer2() {
         }
 
         const ckbHelper = new CkbHelper(network === 'mainnet')
-        const pubKey = await (window as any).unisat.getPublicKey()
         const btcDataSource = new DataSource(btcHelper?.btcService, network === 'mainnet' ? NetworkType.MAINNET : NetworkType.TESTNET)
-
+        const wallet = getSignPsbtWallet()!
         return await prepareLeapUnsignedPsbt({
                 btcService: btcHelper.btcService,
                 toCkbAddress: props.toCkbAddress,
@@ -37,9 +36,9 @@ export default function useLeapXudtToLayer2() {
                 btcTestnetType: network !== 'mainnet' ?  'Testnet3' : undefined,
                 collector: ckbHelper.collector,
                 fromBtcAccount: internalAddress!,
-                fromBtcAccountPubkey: pubKey,
+                fromBtcAccountPubkey: await wallet.getPublicKey(),
                 btcDataSource,
-                btcFeeRate: 10
+                btcFeeRate: feeRate
         })
     }
 
@@ -47,13 +46,14 @@ export default function useLeapXudtToLayer2() {
         fromBtcAccount: string,
         toCkbAddress: string
         xudtArgs: string,
-        amount: string
+        amount: string,
+        feeRate: number
     }) => {
         if (!btcHelper) {
             throw new Error('Not supported wallet')
         }
 
-        const pubKey = await (window as any).unisat.getPublicKey()
+        const wallet = getSignPsbtWallet()!
         return await leapFromBtcToCkbCombined({
             toCkbAddress: props.toCkbAddress,
             xudtTypeArgs: props.xudtArgs,
@@ -63,10 +63,10 @@ export default function useLeapXudtToLayer2() {
             btcTestnetType: network !== 'mainnet' ?  'Testnet3' : undefined,
             isMainnet: network === 'mainnet',
             fromBtcAccount: internalAddress!,
-            fromBtcAccountPubkey: pubKey,
-            wallet: getSignPsbtWallet()!,
+            fromBtcAccountPubkey: await wallet.getPublicKey(),
+            wallet: wallet,
             btcService: btcHelper.btcService
-        }, 10)
+        }, props.feeRate)
     }
 
     return {

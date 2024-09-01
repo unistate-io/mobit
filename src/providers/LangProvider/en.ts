@@ -43,7 +43,7 @@ const langEN = {
     Fee_Rate: 'Fee Rate',
     Capacity_Fee: 'Capacity Fee',
     Leap_l2_to_l1: 'Leap from L2 to L1',
-    It_Is_Recommended_To_Use_546_Satoshi_UTXO_To_Avoid_Being_Accidentally_Spent_And_wasted: 'It is recommended to use 546 satoshi UTXO to avoid being accidentally spent and wasted.',
+    It_Is_Recommended_To_Use_546_Satoshi_UTXO_To_Avoid_Being_Accidentally_Spent_And_wasted: 'It is recommended to use 546 satoshi(0.00000546 BTC) UTXO to avoid being accidentally spent and wasted.',
     Create_A_New_UTXO: 'Create a new UTXO',
     Create_UTXO: 'Create UTXO',
     Create_An_UTXO_To_Leap_Assets: 'Create a UTXO to leap assets',
