@@ -18,7 +18,7 @@ export interface CKBContextType {
     internalAddress?: string
     address?: string
     addresses?: string[]
-    signer?: Signer | undefined
+    signer?: ccc.Signer | undefined
     setNetwork: (network: Network) => any
     config: NetworkConfig,
     client?: Client

@@ -312,11 +312,11 @@ export default function DialogSwap({children, className, sellToken, onOpen}: {
     }, [open, sellToken, supportTokens])
 
     const signTxFunc = async (rawTx: CKBComponents.RawTransactionToSign) => {
-        const txLike = await signer!.signTransaction(rawTx as TransactionLike);
+        const txLike = await signer!.signTransaction(rawTx as any);
         return transactionFormatter(txLike);
     }
 
-    const hadnleSwap = async () => {
+    const handleSwap = async () => {
         if (!signer) return
 
         setTxErr('')
@@ -534,7 +534,7 @@ export default function DialogSwap({children, className, sellToken, onOpen}: {
                     {!!address &&
                         <Button
                             disabled={disableSwap}
-                            onClick={hadnleSwap}
+                            onClick={handleSwap}
                             loading={busy || ckbBalenceStatus === 'loading'}
                             btntype={'primary'}>Swap</Button>
                     }

@@ -1268,6 +1268,24 @@
     cross-fetch "^4.0.0"
     ethers "^6.13.1"
 
+"@ckb-ccc/core@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.npmmirror.com/@ckb-ccc/core/-/core-0.0.15.tgz#ad85335d0c9a11609a647121d59475767dc2e681"
+  integrity sha512-+x1ESD3X9/89g0pNJgxB1gOFEToVJ2/ebnR+XETyRj69aOkmz7NTilEXayemP/ko09nLIw6wnZOW1zDatmBOQQ==
+  dependencies:
+    "@joyid/ckb" "^1.0.1"
+    "@noble/ciphers" "^0.5.3"
+    "@noble/curves" "^1.4.2"
+    "@noble/hashes" "^1.4.0"
+    abort-controller "^3.0.0"
+    bech32 "^2.0.0"
+    bitcoinjs-message "^2.2.0"
+    buffer "^6.0.3"
+    cross-fetch "^4.0.0"
+    ethers "^6.13.1"
+    isomorphic-ws "^5.0.0"
+    ws "^8.18.0"
+
 "@ckb-ccc/eip6963@0.0.10-alpha.0":
   version "0.0.10-alpha.0"
   resolved "https://registry.yarnpkg.com/@ckb-ccc/eip6963/-/eip6963-0.0.10-alpha.0.tgz#ad9839b030a093a2b360e2fe6d0744d1d4cdbaae"
@@ -8334,6 +8352,11 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
 
+isomorphic-ws@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.npmmirror.com/isomorphic-ws/-/isomorphic-ws-5.0.0.tgz#e5529148912ecb9b451b46ed44d53dae1ce04bbf"
+  integrity sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==
+
 istanbul-lib-coverage@^3.0.0, istanbul-lib-coverage@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/istanbul-lib-coverage/-/istanbul-lib-coverage-3.2.2.tgz#2d166c4b0644d43a39f04bf6c2edd1e585f31756"
@@ -9599,10 +9622,10 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mobit-sdk@1.7.3-test.20240828190858:
-  version "1.7.3-test.20240828190858"
-  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.7.3-test.20240828190858.tgz#e9385b286ef73026e8822f61f48e4033d15dfa66"
-  integrity sha512-yqhwL02h1V2BBHLE2r4Xgm5nKo/zx3Ms1QKxOSNcO85rDcNKC+0XVr2YWof8NQYrZrecx5mL4qh4mDpk2Ol41w==
+mobit-sdk@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.8.1.tgz#a839e55f0af681fa7f40306d84908029fe0c5c8a"
+  integrity sha512-jtLqGIKjbnJKyIaTo2NFiW2UnFmD6SqnqDfOgY4+MEz/mdx9lPVOnAFeo/InbGS5fYMEa864ur/Ispz7PjsciQ==
   dependencies:
     "@apollo/client" "^3.11.4"
     "@ckb-ccc/core" "0.0.11-alpha.3"
@@ -9617,33 +9640,15 @@ mobit-sdk@1.7.3-test.20240828190858:
     "@rgbpp-sdk/service" "^0.6.0"
     rgbpp "^0.6.0"
 
-mobit-sdk@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.8.0.tgz#88332233afbca1db4cba2af68bee7ed3bc27924b"
-  integrity sha512-lxtOl5sGiW74+fQ7wwmeBWJ66l+iH8tmNXOCD0NojYVZbd534eC/4ZeaTqliUtVxh5WjQBY6U+Ir9LuLdtvKlg==
-  dependencies:
-    "@apollo/client" "^3.11.4"
-    "@ckb-ccc/core" "0.0.11-alpha.3"
-    "@ckb-lumos/base" "0.0.0-canary-d279b87-20240624101315"
-    "@ckb-lumos/codec" "0.0.0-canary-d279b87-20240624101315"
-    "@ckb-lumos/common-scripts" "0.0.0-canary-d279b87-20240624101315"
-    "@ckb-lumos/helpers" "0.0.0-canary-d279b87-20240624101315"
-    "@ckb-lumos/lumos" "0.0.0-canary-d279b87-20240624101315"
-    "@nervosnetwork/ckb-sdk-utils" "^0.109.3"
-    "@rgbpp-sdk/btc" "^0.6.0"
-    "@rgbpp-sdk/ckb" "^0.6.0"
-    "@rgbpp-sdk/service" "^0.6.0"
-    rgbpp "^0.6.0"
-
-mobit-wallet@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.npmmirror.com/mobit-wallet/-/mobit-wallet-0.3.1.tgz#fb8712e174828edec49a5fef80b0af7790e06791"
-  integrity sha512-FYnxor9umL2SY6tVzPcUavemxSxOUvz2mpvPrb4cOTQ7rbzQK7Q9bo4seVigTEM2kZ4c+0qcELsiWmkS/fI3Iw==
+mobit-wallet@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.npmmirror.com/mobit-wallet/-/mobit-wallet-0.4.2.tgz#b51e4180afb5d7b1d848bb32b4dde1ef6a25fabc"
+  integrity sha512-DtjcW6dY3xXESgbHRMsFUA4D2+D0QQ4kBvMWp4MStoY6yGpUbd4/qCxe2z9JgZW3UJRD3hBDLqyPP2MGqNy5rQ==
   dependencies:
     "@joyid/bitcoin" "^0.1.5"
     "@rgbpp-sdk/btc" "^0.6.0"
     "@rgbpp-sdk/service" "^0.6.0"
-    mobit-sdk "1.7.3-test.20240828190858"
+    mobit-sdk "^1.8.1"
 
 ms@2.0.0:
   version "2.0.0"
@@ -13391,6 +13396,11 @@ ws@^8.11.0, ws@^8.13.0:
   version "8.17.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.17.0.tgz#d145d18eca2ed25aaf791a183903f7be5e295fea"
   integrity sha512-uJq6108EgZMAl20KagGkzCKfMEjxmKvZHG7Tlq0Z6nOky7YF7aq4mOx6xK8TJ/i1LeK4Qus7INktacctDgY8Ow==
+
+ws@^8.18.0:
+  version "8.18.0"
+  resolved "https://registry.npmmirror.com/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
+  integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
 
 xml-name-validator@^3.0.0:
   version "3.0.0"
