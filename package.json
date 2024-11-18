@@ -8,8 +8,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
-    "@ckb-ccc/connector-react": "0.0.10-alpha.3",
-    "@ckb-ccc/core": "^0.0.15",
+    "@ckb-ccc/connector-react": "^0.0.17-alpha.9",
     "@ckb-lumos/lumos": "0.0.0-canary-d279b87-20240624101315",
     "@joyid/ckb": "^0.0.8",
     "@nervina-labs/dob-render": "^0.0.0",
@@ -122,20 +121,20 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@types/identicon.js": "^2.3.4",
-    "cross-env": "^7.0.3",
-    "sass": "1.77.8",
-    "sass-loader": "^14.2.1",
-    "tailwindcss": "^3.4.3",
-    "typescript": "^5.5.4",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/identicon.js": "^2.3.4",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.97",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0"
+    "@types/react-dom": "^18.3.0",
+    "cross-env": "^7.0.3",
+    "sass": "1.77.8",
+    "sass-loader": "^14.2.1",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.5.4"
   },
   "jest": {
     "roots": [
