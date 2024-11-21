@@ -47,7 +47,7 @@ export default function ListHistory({
                            <div className="flex flex-row">
                                <div
                                    className="text-[#6CD7B2] mr-2">{shortTransactionHash(item.attributes.transaction_hash)}</div>
-                               <div className="text-neutral-500">{dayjs(item.attributes.created_at).fromNow()}</div>
+                               <div className="text-neutral-500">{dayjs(item.attributes.created_at.replace(/-/g, '/')).fromNow()}</div>
                            </div>
                             {
                                 item.attributes.rgb_txid &&

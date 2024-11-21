@@ -53,7 +53,7 @@ export default function ListTokenHistory({
                                     {shortTransactionHash(item.attributes.transaction_hash, 10)}
                                 </CopyText>
                             </div>
-                            <div className="text-neutral-500">{dayjs(item.attributes.created_at).fromNow()}</div>
+                            <div className="text-neutral-500">{dayjs(item.attributes.created_at.replace(/-/g, '/')).fromNow()}</div>
                         </div>
                         <div className="flex flex-row flex-col sm:flex-row sm:items-start items-center">
                             <div className="sm:flex-1 w-full">
