@@ -111,7 +111,7 @@ export default function HeaderMenu() {
                             </svg>:
                         <img src={'/images/icon_esc.svg'} alt={""}/>
                     }
-                        className={'h-30 w-[250px] !py-2'}
+                        className={'h-30 !pr-0 !py-2'}
                         placeholder="Search..."
                     />
                 </div>

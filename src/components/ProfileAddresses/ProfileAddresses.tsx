@@ -4,6 +4,7 @@ import {forwardRef, LegacyRef, RefAttributes, useRef, useContext, useEffect} fro
 import * as React from "react"
 import {SelectItemProps} from "@radix-ui/react-select"
 import {shortTransactionHash} from "@/utils/common"
+import copy from 'copy-to-clipboard'
 
 export interface SelectOptionProps {
     addresses: string[]
@@ -45,8 +46,12 @@ export default function ProfileAddresses ({addresses, defaultAddress, onChoose, 
 
     const handleCopy = (text: string) => {
         if (clickable) {
-            navigator.clipboard.writeText(text)
-            showToast('Copied to clipboard !', ToastType.success)
+            const success = copy(text)
+            if (success) {
+                showToast('Copied to clipboard !', ToastType.success)
+            } else {
+                showToast('Copied to clipboard !', ToastType.warning)
+            }
         }
     }
 

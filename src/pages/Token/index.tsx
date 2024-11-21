@@ -110,7 +110,7 @@ export default function TokenPage() {
                             <div>
                                 <ProfileAddresses addresses={[address]} defaultAddress={address}/>
                                 <div className="font-semibold text-xl">
-                                    {toDisplay(xudtBalance?.amount || '0', 8, true)} {tokenInfo.symbol}
+                                    {toDisplay(xudtBalance?.amount || '0', tokenInfo!.decimal, true)} {tokenInfo.symbol}
                                 </div>
                             </div>
                         }

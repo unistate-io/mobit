@@ -20,7 +20,7 @@ import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
 
 export default function InternalProfile({internalAddress}: { internalAddress: string }) {
     const {address, theme, isOwner} = useContext(UserContext)
-    const {internalAddress: loginInternalAddress, address: loginAddress, addresses} = useContext(CKBContext)
+    const {addresses} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
     const {lang} = useContext(LangContext)
 

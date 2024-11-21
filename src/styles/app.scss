@@ -15,6 +15,10 @@ body {
   background: #fff;
 }
 
+button, input, textarea {
+  outline: none!important;
+}
+
 ccc-connector {
   z-index: 9;
 }

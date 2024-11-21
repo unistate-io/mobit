@@ -2,6 +2,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ReactNode, useContext, useState} from "react"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 export default function DialogTransferFromAddressSelect({
                                                             children,
@@ -10,6 +11,7 @@ export default function DialogTransferFromAddressSelect({
                                                         }: { children: ReactNode, onSelect?: (address: string) => any, className?: string }) {
     const {address, internalAddress} = useContext(CKBContext)
     const [open, setOpen] = useState(false);
+    const {lang} = useContext(LangContext)
 
     return <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger className={className}>
@@ -20,7 +22,7 @@ export default function DialogTransferFromAddressSelect({
             <Dialog.Content
                 className="data-[state=open]:animate-contentShow z-50 fixed top-[50%] left-[50%] max-h-[85vh]  max-w-[90vw] w-full translate-x-[-50%] md:max-w-[450px] translate-y-[-50%] rounded-xl bg-white p-4 shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
                 <div className="flex flex-row justify-between items-center mb-4">
-                    <div className="font-semibold text-2xl">Select A Wallet</div>
+                    <div className="font-semibold text-2xl">{lang['Select A Wallet']}</div>
                     <div onClick={e => {
                         setOpen(false)
                     }}
@@ -30,7 +32,7 @@ export default function DialogTransferFromAddressSelect({
                 </div>
 
                 {!address && !internalAddress &&
-                    <div>Not Wallet founded</div>
+                    <div>{lang['Not Wallet founded']}</div>
 
                 }
 
