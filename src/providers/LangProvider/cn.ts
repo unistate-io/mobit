@@ -94,6 +94,8 @@ const langCN: LangConfig = {
     'Fee': '费用',
     'Select A Wallet': '选择一个钱包',
     'Burn UDT': '销毁UDT',
+    'Effortlessly and securely transfer assets between Bitcoin and CKB': '轻松安全地在比特币和CKB之间转移资产',
+    'Enjoying a seamless cross-chain experience with RGB++ Leap functionality!': '通过RGB++ Leap功能享受无缝的跨链体验！',
 }
 
 

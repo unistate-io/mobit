@@ -91,7 +91,9 @@ const langEN = {
     'Max slippage': 'Max slippage',
     'Fee': 'Fee',
     'Select A Wallet': 'Select A Wallet',
-    'Burn UDT': 'Burn UDT'
+    'Burn UDT': 'Burn UDT',
+    'Effortlessly and securely transfer assets between Bitcoin and CKB': 'Effortlessly and securely transfer assets <br />between Bitcoin and CKB',
+    'Enjoying a seamless cross-chain experience with RGB++ Leap functionality!': 'Enjoying a seamless cross-chain experience with RGB++ Leap functionality!'
 }
 
 

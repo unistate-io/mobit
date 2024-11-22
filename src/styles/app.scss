@@ -32,6 +32,10 @@ ccc-connector {
   outline: none;
 }
 
+.shadow {
+  box-shadow: 0px 0px 18px 0px #00000014;
+}
+
 .SelectContent {
   @apply bg-white rounded-lg shadow-md py-1;
 }
