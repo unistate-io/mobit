@@ -10,14 +10,17 @@ import {Link} from "react-router-dom";
 const dayjs: any = dayjsLib
 const relativeTime = require('dayjs/plugin/relativeTime')
 dayjsLib.extend(relativeTime)
+require('dayjs/locale/zh-cn')
 
 export default function ListBtcHistory({
                                            data,
                                            status,
                                            internalAddress
                                        }: { data: BtcTransaction[], status: string, internalAddress: string }) {
-    const {lang} = useContext(LangContext)
+    const {lang, langType} = useContext(LangContext)
     const {config} = useContext(CKBContext)
+
+    dayjs.locale(langType === 'cn' ? 'zh-cn': 'en')
 
     return <div>
         <div className="flex flex-col px-3">

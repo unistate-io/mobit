@@ -9,6 +9,7 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 const dayjs: any = dayjsLib
 const relativeTime = require('dayjs/plugin/relativeTime')
 dayjsLib.extend(relativeTime)
+require('dayjs/locale/zh-cn')
 
 export default function ListHistory({
                                         data,
@@ -16,8 +17,10 @@ export default function ListHistory({
                                         addresses,
                                         internalAddress,
                                     }: { data: TransactionHistory[], status: string, addresses?: string[], internalAddress?: string }) {
-    const {lang} = useContext(LangContext)
+    const {lang, langType} = useContext(LangContext)
     const {config} = useContext(CKBContext)
+
+    dayjs.locale(langType === 'cn' ? 'zh-cn': 'en')
 
     return <div>
         <div className="flex flex-col px-3">
