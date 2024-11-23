@@ -4,6 +4,7 @@ import * as dayjsLib from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {useContext} from "react"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 const dayjs: any = dayjsLib
 const relativeTime = require('dayjs/plugin/relativeTime')
@@ -15,6 +16,7 @@ export default function ListTokenHistory({
                                         address
                                     }: { data: TransactionHistory[], status: string, address?: string }) {
     const {config} = useContext(CKBContext)
+    const {lang} = useContext(LangContext)
 
 
     return <div className="">
@@ -36,7 +38,7 @@ export default function ListTokenHistory({
                 data.length === 0 && status !== 'loading' &&
                 <div
                     className="h-[202px] flex flex-row justify-center items-center bg-gray-100 text-gray-300 rounded-xl">
-                    No transaction found
+                    {lang['No transaction found']}
                 </div>
             }
 

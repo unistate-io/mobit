@@ -93,7 +93,24 @@ const langEN = {
     'Select A Wallet': 'Select A Wallet',
     'Burn UDT': 'Burn UDT',
     'Effortlessly and securely transfer assets between Bitcoin and CKB': 'Effortlessly and securely transfer assets <br />between Bitcoin and CKB',
-    'Enjoying a seamless cross-chain experience with RGB++ Leap functionality!': 'Enjoying a seamless cross-chain experience with RGB++ Leap functionality!'
+    'Enjoying a seamless cross-chain experience with RGB++ Leap functionality!': 'Enjoying a seamless cross-chain experience with RGB++ Leap functionality!',
+    'Select...': 'Select...',
+    'View More': 'View More',
+    'No assets found': 'No assets found',
+    'No transaction found': 'No transaction found',
+    'items': 'items',
+    'Information': 'Information',
+    'Owner': 'Owner',
+    'Token ID': 'Token ID',
+    'Cluster': 'Cluster',
+    'Traits': 'Traits',
+    'No data to show': 'No data to show',
+    'Chain': 'Chain',
+    'Type': 'Type',
+    'Manager': 'Manager',
+    'Create At': 'Create At',
+    'Expired At': 'Expired At',
+    'Records': 'Records'
 }
 
 

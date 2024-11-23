@@ -6,11 +6,14 @@ import dayjs from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
 import {TokenIcons} from "@/components/TokenIcon/icons"
 import coin_types from "@/libs/coin_types"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
+import {useContext} from "react"
 
 export default function DotBit() {
     const {domain} = useParams<{ domain: string }>()
 
     const {data, status} = useDotbitDetail(domain)
+    const {lang} = useContext(LangContext)
 
     return <div className="max-w-[1044px] mx-auto px-3 py-8 flex md:flex-row flex-col flex-nowrap items-start mb-10">
         <div className="md:w-[320px] w-full shadow rounded-lg overflow-hidden">
@@ -32,7 +35,7 @@ export default function DotBit() {
         </div>
 
         <div className="shadow flex-1 md:ml-6 rounded-lg px-5 py-3 w-full mt-4 md:mt-0">
-            <div className="font-semibold text-lg mb-4">Information</div>
+            <div className="font-semibold text-lg mb-4">{lang['Information']}</div>
 
             {status === 'loading' &&
                 <>
@@ -51,7 +54,7 @@ export default function DotBit() {
                 status !== 'loading' && data &&
                 <>
                     <div className="text-sm mb-6">
-                        <div className="text-sm mb-3">Chain</div>
+                        <div className="text-sm mb-3">{lang['Chain']}</div>
                         <div className="flex flex-row items-center text-sm font-semibold">
                             <TokenIcon symbol={'CKB'} size={24}/>
                             CKB
@@ -59,21 +62,21 @@ export default function DotBit() {
                     </div>
 
                     <div className="text-sm mb-6">
-                        <div className="text-sm mb-3">Type</div>
+                        <div className="text-sm mb-3">{lang['Type']}</div>
                         <div className="flex flex-row items-center text-sm font-semibold break-all">
                             DID
                         </div>
                     </div>
 
                     <div className="text-sm mb-6">
-                        <div className="text-sm mb-3">Owner</div>
+                        <div className="text-sm mb-3">{lang['Owner']}</div>
                         <div className="flex flex-row items-center text-sm font-semibold break-all">
                             <CopyText copyText={data.owner_key}>{shortTransactionHash(data.owner_key, 10)}</CopyText>
                         </div>
                     </div>
 
                     <div className="text-sm mb-6">
-                        <div className="text-sm mb-3">Manager</div>
+                        <div className="text-sm mb-3">{lang['Manager']}</div>
                         <div className="flex flex-row items-center text-sm font-semibold break-all">
                             <CopyText
                                 copyText={data.manager_key}>{shortTransactionHash(data.manager_key, 10)}</CopyText>
@@ -81,14 +84,14 @@ export default function DotBit() {
                     </div>
 
                     <div className="text-sm mb-6">
-                        <div className="text-sm mb-3">Create At</div>
+                        <div className="text-sm mb-3">{lang['Create At']}</div>
                         <div className="flex flex-row items-center text-sm font-semibold break-all">
                             {dayjs(data.create_at_unix * 1000).format('YYYY-MM-DD HH:mm')}
                         </div>
                     </div>
 
                     <div className="text-sm mb-6">
-                        <div className="text-sm mb-3">Expired At</div>
+                        <div className="text-sm mb-3">{lang['Expired At']}</div>
                         <div className="flex flex-row items-center text-sm font-semibold break-all">
                             {dayjs(data.expired_at_unix * 1000).format('YYYY-MM-DD HH:mm')}
                         </div>
@@ -97,7 +100,7 @@ export default function DotBit() {
                     {
                         !!data.records.length &&
                         <>
-                            <div className="font-semibold text-lg mb-4">Records</div>
+                            <div className="font-semibold text-lg mb-4">{lang['Records']}</div>
                             {
                                 data.records.map((record, index) => {
                                     if (record.key.includes('address')) {

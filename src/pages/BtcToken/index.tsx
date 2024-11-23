@@ -6,6 +6,7 @@ import {toDisplay} from "@/utils/number_display"
 import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
 import useLayer1Assets from "@/serves/useLayer1Assets"
 import ListBtcTokenHistory from "@/components/ListBtcTokenHistory/ListBtcTokenHistory"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 const BtcInfo: TokenInfo = {
     decimal: 8,
@@ -34,6 +35,7 @@ export default function BitcoinPage() {
     const [tokenInfo] = useState(BtcInfo)
     const {btc, status: btcBalanceStatue} = useLayer1Assets(btcAddress)
     const {data: historyData, status: historyDataStatus} = useBtcTransactionsHistory(btcAddress, 10)
+    const {lang} = useContext(LangContext)
 
     return <div className="max-w-[1044px] mx-auto px-3 py-8 flex flex-col sm:flex-row items-start mb-10">
         <div
@@ -54,7 +56,7 @@ export default function BitcoinPage() {
 
                     {btcBalanceStatue === 'complete' &&
                         <div className={'flex flex-row justify-between h-[30px] mb-3'}>
-                            <div>Balance</div>
+                            <div>{lang['Balance']}</div>
                             <div className="font-semibold text-xl">{toDisplay(btc?.amount || '0', 8, true, 8)} BTC
                             </div>
                         </div>
@@ -63,7 +65,7 @@ export default function BitcoinPage() {
             }
         </div>
         <div className="shadow flex-1 w-full mt-6 sm:mt-0 sm:ml-6 rounded-lg px-5 py-3">
-            <div className="font-semibold text-lg mb-4">Transactions</div>
+            <div className="font-semibold text-lg mb-4">{lang['Transactions']}</div>
 
             <ListBtcTokenHistory data={historyData} status={historyDataStatus} address={btcAddress}/>
         </div>

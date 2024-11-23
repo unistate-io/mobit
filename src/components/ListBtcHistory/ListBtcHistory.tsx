@@ -33,7 +33,7 @@ export default function ListBtcHistory({
                 data.length === 0 && status !== 'loading' &&
                 <div
                     className="h-[120px] flex flex-row justify-center items-center bg-gray-100 text-gray-300 rounded-xl">
-                    No transaction found
+                    {lang['No transaction found']}
                 </div>
             }
 

@@ -1,10 +1,14 @@
-import {ChainIcons} from "@/components/TokenIcon/icons";
+import {ChainIcons} from "@/components/TokenIcon/icons"
 import {Link} from "react-router-dom"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
+import {useContext} from "react"
 
 export default function ListDotBit({
                                        data,
                                        status,
                                    }: { data: string[], status: string}) {
+
+    const {lang} = useContext(LangContext)
 
     return <div className="shadow rounded-lg bg-white py-4">
         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
@@ -24,7 +28,7 @@ export default function ListDotBit({
                 data.length === 0 && status !== 'loading' &&
                 <div
                     className="mx-4 h-[120px] flex flex-row justify-center items-center bg-gray-100 text-gray-300 rounded-xl">
-                    No assets found
+                    {lang['No assets found']}
                 </div>
             }
 

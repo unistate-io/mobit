@@ -38,7 +38,7 @@ export default function ListBtcTokenHistory({
                 data.length === 0 && status !== 'loading' &&
                 <div
                     className="h-[202px] flex flex-row justify-center items-center bg-gray-100 text-gray-300 rounded-xl">
-                    No transaction found
+                    {lang['No transaction found']}
                 </div>
             }
 
@@ -94,7 +94,7 @@ export default function ListBtcTokenHistory({
                                         </div>})
                                 }
                                 {item.vout.length > 5 &&
-                                    <div className="text-xs">... total {item.vout.length} items</div>
+                                    <div className="text-xs">... total {item.vout.length} {lang['items']}</div>
                                 }
                             </div>
                         </div>

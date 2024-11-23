@@ -8,7 +8,8 @@ import {isBtcAddress, shortTransactionHash} from "@/utils/common"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import useLayer1Assets from "@/serves/useLayer1Assets"
 import DialogSporeTransfer from "@/components/Dialogs/DialogSporeTransfer/DialogSporeTransfer"
-import {getImgFromSporeCell} from "@/utils/spore";
+import {getImgFromSporeCell} from "@/utils/spore"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 export default function DobPage() {
     const {tokenid} = useParams()
@@ -19,6 +20,7 @@ export default function DobPage() {
 
     const {status, data} = useSporeDetail(tokenid)
     const {addresses, internalAddress, network} = useContext(CKBContext)
+    const {lang} = useContext(LangContext)
 
 
     const [searchParams] = useSearchParams()
@@ -122,7 +124,7 @@ export default function DobPage() {
         </div>
 
         <div className="shadow flex-1 md:ml-6 rounded-lg px-5 py-3 w-full mt-4 md:mt-0">
-            <div className="font-semibold text-lg mb-4">Information</div>
+            <div className="font-semibold text-lg mb-4">{lang['Information']}</div>
 
             {status === 'loading' &&
                 <>
@@ -141,7 +143,7 @@ export default function DobPage() {
                 status !== 'loading' && data &&
                 <>
                     <div className="text-sm mb-6">
-                        <div className="text-sm mb-3">Chain</div>
+                        <div className="text-sm mb-3">{lang['Chain']}</div>
                         <div className="flex flex-row items-center text-sm font-semibold">
                             <TokenIcon symbol={chain === 'ckb' ? 'CKB' : 'BTC'} size={24}/>
                             {chain.toUpperCase()}
@@ -149,14 +151,14 @@ export default function DobPage() {
                     </div>
 
                     <div className="text-sm mb-6">
-                        <div className="text-sm mb-3">Type</div>
+                        <div className="text-sm mb-3">{lang['Type']}</div>
                         <div className="flex flex-row items-center text-sm font-semibold break-all">
                             {data.content_type}
                         </div>
                     </div>
 
                     <div className="text-sm mb-6">
-                        <div className="text-sm mb-3">Token ID</div>
+                        <div className="text-sm mb-3">{lang['Token ID']}</div>
                         <div className="flex flex-row items-center text-sm font-semibold break-all"
                              title={`0x${tokenid}`}>
                             <CopyText copyText={`0x${tokenid}`}>{shortTransactionHash(`0x${tokenid}`, 10)}</CopyText>
@@ -164,7 +166,7 @@ export default function DobPage() {
                     </div>
 
                     <div className="text-sm mb-6">
-                        <div className="text-sm mb-3">Owner</div>
+                        <div className="text-sm mb-3">{lang['Owner']}</div>
                         <div className="flex flex-row items-center text-sm font-semibold break-all"
                              title={`0x${data.owner_address}`}>
                             <CopyText
@@ -182,7 +184,7 @@ export default function DobPage() {
 
                     {data.cluster_id &&
                         <div className="text-sm mb-6">
-                            <div className="text-sm mb-3">Cluster ID</div>
+                            <div className="text-sm mb-3">{lang['Cluster']} ID</div>
                             <div className="flex flex-row items-center text-sm font-semibold break-all"
                                  title={'0' + data.cluster_id.replace('\\', '')}>
                                 <CopyText copyText={'0' + data.cluster_id.replace('\\', '')}>
@@ -208,7 +210,7 @@ export default function DobPage() {
 
                             {!!data.dob0?.render_output?.length &&
                                 <div className="text-sm mb-6">
-                                    <div className="text-sm mb-3">Traits</div>
+                                    <div className="text-sm mb-3">{lang['Traits']}</div>
                                     <div className="flex flex-row items-center flex-wrap justify-between">
                                         {
                                             data.dob0?.render_output.map((traits, index) => {
@@ -235,7 +237,7 @@ export default function DobPage() {
                 status === 'complete' && !data &&
                 <div
                     className="rounded flex flex-row items-center justify-center h-[280px] bg-gray-100 font-semibold text-gray-400">
-                    No data to show
+                    {lang['No data to show']}
                 </div>
             }
         </div>

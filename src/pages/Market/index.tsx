@@ -5,7 +5,6 @@ import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {useContext, useEffect, useState} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
-
 const showChange = [
     'CKB', 'BTC', 'ETH'
 ]
@@ -62,10 +61,10 @@ export default function MarketPage() {
                 <table className="table w-full">
                     <thead>
                     <tr className="border-b-[1px]">
-                        <th className="text-base font-normal pt-2 text-left pb-3">Tokens</th>
-                        <th className="text-base font-normal pt-2 text-center px-4 pb-3">Price</th>
-                        <th className="text-base font-normal pt-2 text-left pb-3">Market Cap</th>
-                        <th className="text-base font-normal pt-2 text-right pb-3">Change 24h</th>
+                        <th className="text-base font-normal pt-2 text-left pb-3">{lang['Tokens']}</th>
+                        <th className="text-base font-normal pt-2 text-center px-4 pb-3">{lang['Price']}</th>
+                        <th className="text-base font-normal pt-2 text-left pb-3">{lang['MarketCap']}</th>
+                        <th className="text-base font-normal pt-2 text-right pb-3">{lang['Change24h']}</th>
                     </tr>
                     </thead>
                     <tbody>

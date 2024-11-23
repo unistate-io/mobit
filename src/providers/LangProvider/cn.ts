@@ -96,6 +96,24 @@ const langCN: LangConfig = {
     'Burn UDT': '销毁UDT',
     'Effortlessly and securely transfer assets between Bitcoin and CKB': '轻松安全地在比特币和CKB之间转移资产',
     'Enjoying a seamless cross-chain experience with RGB++ Leap functionality!': '通过RGB++ Leap功能享受无缝的跨链体验！',
+    'Select...': '选择币种',
+    'View More': '查看更多',
+    'No assets found': '没有找到资产',
+    'No transaction found': '没有找到交易',
+    'items': '条',
+    'Information': '信息',
+    'Owner': '所有者',
+    'Token ID': 'Token ID',
+    'Cluster': '集群',
+    'Traits': '特征',
+    'No data to show': '没有数据',
+    'Chain': '链',
+    'Type': '类型',
+    'Manager': '管理员',
+    'Create At': '创建时间',
+    'Expired At': '过期时间',
+    'Records': '记录',
+
 }
 
 

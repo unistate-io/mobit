@@ -419,7 +419,7 @@ export default function DialogSwap({children, className, sellToken, onOpen}: {
                                             className="bg-gray-100 px-3 py-3 rounded-xl"
                                             value={swapForm.selectedX?.typeHash}
                                             options={swapFromOptions}
-                                            placeholder={'Select...'}
+                                            placeholder={lang['Select...']}
                                             getValueLabel={() => {
                                                 if (!swapForm.selectedX) return undefined
                                                 return <div className="flex flex-row items-center flex-1 text-nowrap">
@@ -484,7 +484,7 @@ export default function DialogSwap({children, className, sellToken, onOpen}: {
                                             className="bg-gray-100 px-3 py-3 rounded-xl"
                                             value={swapForm.selectedY?.typeHash}
                                             options={swapToOptions}
-                                            placeholder={'Select...'}
+                                            placeholder={lang['Select...']}
                                             getValueLabel={() => {
                                                 if (!swapForm.selectedY) return undefined
                                                 return <div className="flex flex-row items-center flex-1 text-nowrap">

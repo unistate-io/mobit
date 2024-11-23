@@ -37,7 +37,7 @@ export default function ListDOBs({
                 data.length === 0 && status !== 'loading' &&
                 <div
                     className="mx-4 h-[120px] flex flex-row justify-center items-center bg-gray-100 text-gray-300 rounded-xl">
-                    No assets found
+                    {lang[`No assets found`]}
                 </div>
             }
 
@@ -57,7 +57,7 @@ export default function ListDOBs({
                         onChangePage && onChangePage(page + 1)
                     }}
                     className="cursor-pointer hover:bg-gray-300 bg-gray-200 h-[40px] rounded-lg flex flex-row items-center justify-center mx-4 mt-2 text-xs">
-                    {`View More`}
+                    {lang[`View More`]}
                 </div>
             }
         </div>
