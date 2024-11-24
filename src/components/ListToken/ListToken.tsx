@@ -122,7 +122,7 @@ export default function ListToken({
                     const typeHash = isSupportSwap(item)
 
                     return <Link to={getLink(item)} key={index}
-                                 className="flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100">
+                                 className="whitespace-nowrap flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100">
                         <div className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center">
                             <TokenIcon symbol={item.symbol!} size={24} chain={item.chain}/>{item.symbol!}
                         </div>

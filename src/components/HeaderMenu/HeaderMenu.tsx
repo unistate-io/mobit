@@ -48,7 +48,7 @@ export default function HeaderMenu() {
                 if (isEvmAddress(keyword)) {
                     const ckbAddressFromEvm = await getCkbAddressFromEvm(keyword, client)
                     if (ckbAddressFromEvm) {
-                        navigate(`/address/${keyword}`)
+                        navigate(`/address/${ckbAddressFromEvm}`)
                         searchRef.current?.blur()
                         setShowSearchInput(false)
                         return
@@ -139,11 +139,9 @@ export default function HeaderMenu() {
         <i className="w-[1px] h-[14px] bg-black mx-3 scale-x-50"/>
         {
             address ?
-                <DialogProfileInfo>
-                    <div className="flex flex-row items-center">
-                        <Avatar size={18} colors={getTheme(address).colors} name={address}/>
-                    </div>
-                </DialogProfileInfo>
+                <div className="flex flex-row items-center cursor-pointer" onClick={open}>
+                    <Avatar size={18} colors={getTheme(address).colors} name={address}/>
+                </div>
                 :
                 <div className="text-xs cursor-pointer hover:text-[#6CD7B2]"
                      onClick={open}

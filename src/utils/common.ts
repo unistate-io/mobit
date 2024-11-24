@@ -4,13 +4,29 @@ import {getBtcTransactionsHistory} from "@/serves/useBtcTransactionsHistory"
 import {ripemd160} from '@noble/hashes/ripemd160'
 import {sha256} from '@noble/hashes/sha256'
 
-enum KnownScript {
-    Secp256k1Blake160,
-    Secp256k1Multisig,
-    AnyoneCanPay,
-    JoyId,
-    COTA,
-    OmniLock,
+export enum KnownScript {
+    NervosDao = "NervosDao",
+    Secp256k1Blake160 = "Secp256k1Blake160",
+    Secp256k1Multisig = "Secp256k1Multisig",
+    AnyoneCanPay = "AnyoneCanPay",
+    TypeId = "TypeId",
+    XUdt = "XUdt",
+    JoyId = "JoyId",
+    COTA = "COTA",
+    PWLock = "PWLock",
+    OmniLock = "OmniLock",
+    NostrLock = "NostrLock",
+    UniqueType = "UniqueType",
+
+    // ckb-proxy-locks https://github.com/ckb-devrel/ckb-proxy-locks
+    AlwaysSuccess = "AlwaysSuccess",
+    InputTypeProxyLock = "InputTypeProxyLock",
+    OutputTypeProxyLock = "OutputTypeProxyLock",
+    LockProxyLock = "LockProxyLock",
+    SingleUseLock = "SingleUseLock",
+    TypeBurnLock = "TypeBurnLock",
+    EasyToDiscoverType = "EasyToDiscoverType",
+    TimeLock = "TimeLock",
 }
 
 export const checksumCkbAddress = (address: string, network: 'mainnet' | 'testnet'): boolean => {
@@ -42,10 +58,10 @@ export function shortTransactionHash(hash: string, keep?: number): string {
 
 export async function getCkbAddressFromEvm(address: string, client: any): Promise<string | null> {
     try {
-        const _a = await (ccc as any).Address.fromKnownScript(
+        const _a = await ccc.Address.fromKnownScript(
+            client,
             KnownScript.OmniLock as any,
             (ccc as any).hexFrom([0x12, ...(ccc as any).bytesFrom(address), 0x00]),
-            client,
         )
         return _a.toString()
     } catch (e: any) {

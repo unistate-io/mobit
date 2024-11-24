@@ -10,7 +10,7 @@ import Select from "@/components/Select/Select"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 export default function DialogProfileInfo({children, className}: {children: React.ReactNode, className?: string}) {
-    const {address, internalAddress, wallet, disconnect, setNetwork, network} = useContext(CKBContext)
+    const {address, internalAddress, wallet, disconnect, network} = useContext(CKBContext)
     const [open, setOpen] = React.useState(false)
     const {lang} = useContext(LangContext)
 
@@ -68,7 +68,7 @@ export default function DialogProfileInfo({children, className}: {children: Reac
                                     value={network || 'mainnet'}
                                     containerWidthPrefix={8}
                                     onValueChange={(value) => {
-                                        setNetwork(value as Network)
+                                       // setNetwork(value as Network)
                                     }}
                                 />
                             </div>

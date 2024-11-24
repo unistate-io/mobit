@@ -7,23 +7,22 @@ import {ccc} from "@ckb-ccc/connector-react"
 const cccLib: any = ccc
 
 export default function useCkbBalance(addresses?: string[]) {
-    const {network, client} = useContext(CKBContext)
+    const {client} = useContext(CKBContext)
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
 
     const historyRef = useRef('')
 
-    const scriptConfig = useMemo(() => {
-        return network === 'testnet' ? lumosConfig.TESTNET : lumosConfig.MAINNET
-    }, [network])
-
-    const refresh = useCallback(async () => {
+    const refresh = async () => {
         if (!addresses || !addresses.length || !client) {
+            setStatus('complete')
             return
         }
 
         try {
+            const network = addresses[0].startsWith('ckt') ? 'testnet' : 'mainnet'
+            const scriptConfig = network === 'testnet' ? lumosConfig.TESTNET : lumosConfig.MAINNET
             const client = network === 'testnet' ? new cccLib.ClientPublicTestnet() : new cccLib.ClientPublicMainnet()
             const _balance = await client.getBalance(addresses.map((address) => {
                 return helpers.addressToScript(address, {config: scriptConfig})
@@ -50,16 +49,18 @@ export default function useCkbBalance(addresses?: string[]) {
             setError(e)
             setStatus('error')
         }
-    }, [addresses, network])
+    }
 
     useEffect(() => {
-        if (!!addresses && addresses.length > 0 && historyRef.current !== addresses.join(',')) {
+        if (!!addresses && addresses.length > 0
+            && historyRef.current !== addresses.join(',')
+        ) {
             historyRef.current = addresses.join(',')
             setStatus('loading')
             setData(undefined)
             refresh()
         }
-    }, [refresh, addresses, network])
+    }, [addresses])
 
 
     return {
