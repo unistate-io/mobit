@@ -111,7 +111,16 @@ const langEN = {
     'Create At': 'Create At',
     'Expired At': 'Expired At',
     'Records': 'Records',
-    'We value your feedback! Share any issues on Github.': 'We value your feedback! Share any issues on Github.'
+    'We value your feedback! Share any issues on Github or Telegram.': 'We value your feedback! Share any issues on Github or Telegram.',
+    'Swap tokens via UTXO Swap': 'Swap tokens via UTXO Swap',
+    'Send CKB to Others': 'Send CKB to others',
+    'Receive assets from others': 'Receive assets from others',
+    'Leap tokens to CKB chain': 'Leap tokens to CKB chain',
+    'Send tokens to others': 'Send tokens to others',
+    'Leap tokens to BTC chain': 'Leap tokens to BTC chain',
+    'Use multiple cells to merge into a single cell and release capacity': 'Use multiple cells to merge into a single cell and release capacity',
+    'Burn XUDT and release capacity': 'Burn XUDT and release capacity',
+    'CKB/BTC/EVM address...': 'CKB/BTC/EVM address...'
 }
 
 

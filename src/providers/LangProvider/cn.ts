@@ -113,7 +113,16 @@ const langCN: LangConfig = {
     'Create At': '创建时间',
     'Expired At': '过期时间',
     'Records': '记录',
-    'We value your feedback! Share any issues on Github.': '我们重视您的反馈！请在Github上分享任何问题。',
+    'We value your feedback! Share any issues on Github or Telegram.': '我们重视您的反馈！请在Github或Telegram上分享任何问题。',
+    'Swap tokens via UTXO Swap': '通过UTXO Swap交换代币',
+    'Send CKB to Others': '向他人发送CKB',
+    'Receive assets from others': '接收他人的资产',
+    'Leap tokens to CKB chain': '跨链代币到CKB链',
+    'Send tokens to others': '向他人发送代币',
+    'Leap tokens to BTC chain': '跨链代币到BTC链',
+    'Use multiple cells to merge into a single cell and release capacity': '使用多个Cell合并为一个Cell并释放容量',
+    'Burn XUDT and release capacity': '销毁XUDT并释放容量',
+    'CKB/BTC/EVM address...': 'CKB/BTC/EVM地址...',
 }
 
 

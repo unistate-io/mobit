@@ -112,13 +112,13 @@ export default function HeaderMenu() {
                         <img src={'/images/icon_esc.svg'} alt={""}/>
                     }
                         className={'h-30 !pr-0 !py-2'}
-                        placeholder="Search..."
+                        placeholder={lang['CKB/BTC/EVM address...']}
                     />
                 </div>
             }
             {
                 !showSearchInput &&
-                <i className="uil-search" onClick={showSearch}/>
+                <i className="uil-search cursor-pointer" onClick={showSearch}/>
             }
         </div>
         <i className="w-[1px] h-[14px] bg-black mx-3 scale-x-50 hidden sm:block "/>

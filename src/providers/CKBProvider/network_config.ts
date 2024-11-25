@@ -6,7 +6,7 @@ export interface NetworkConfig {
     btc_explorer: string
 }
 
-const network_config: {
+export const network_config: {
     mainnet: NetworkConfig,
     testnet: NetworkConfig
 } = {

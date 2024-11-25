@@ -4,7 +4,7 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 
 export default function useCkbBalance(addresses?: string[]) {
-    const {client} = useContext(CKBContext)
+    const {client, network} = useContext(CKBContext)
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [data, setData] = useState<TokenBalance | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
@@ -13,6 +13,11 @@ export default function useCkbBalance(addresses?: string[]) {
 
     const refresh = async () => {
         if (!addresses || !addresses.length || !client) {
+            setStatus('complete')
+            return
+        }
+
+        if (addresses[0].startsWith('ckb') && network !== 'mainnet' || addresses[0].startsWith('ckt') && network !== 'testnet') {
             setStatus('complete')
             return
         }

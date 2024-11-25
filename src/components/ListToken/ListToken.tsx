@@ -16,9 +16,9 @@ import {hashType} from "@/serves/useXudtTransfer/lib"
 import {useUtxoSwap} from "@/serves/useUtxoSwap"
 import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
 import DialogXudtLeapToLayer1 from "@/components/Dialogs/DialogLeapXudtToLayer1/DialogXudtLeapToLayer1"
-import useBtcXudtTransfer from "@/serves/useBtcXudtTransfer"
 import DialogLeapXudtToLayer2 from "@/components/Dialogs/DialogLeapXudtToLayer2/DialogLeapXudtToLayer2"
 import useBtcWallet from "@/serves/useBtcWallet"
+import {TooltipItem} from "@/components/Tooltip"
 
 
 export interface TokenBalance extends TokenInfoWithAddress {
@@ -166,45 +166,55 @@ export default function ListToken({
                                                 content={(close) => {
                                                     return <div className="flex flex-col">
                                                         {!!typeHash &&
-                                                            <div onClick={e => {
-                                                                const el = document.getElementById(`swap-${index}`)
-                                                                !!el && el.click()
-                                                                close()
-                                                            }}
-                                                                 className="mb-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
-                                                                {'Swap'}
-                                                            </div>
+                                                            <TooltipItem tip={lang['Swap tokens via UTXO Swap']}>
+                                                                <div onClick={e => {
+                                                                    const el = document.getElementById(`swap-${index}`)
+                                                                    !!el && el.click()
+                                                                    close()
+                                                                }}
+                                                                     className="mb-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
+                                                                    {'Swap'}
+                                                                </div>
+                                                            </TooltipItem>
                                                         }
 
-                                                        { isBtcWallet &&
-                                                            <div onClick={e => {
-                                                                const el = document.getElementById(`leap-${index}`)
-                                                                !!el && el.click()
-                                                                close()
-                                                            }}
-                                                                 className="mb-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
-                                                                {lang['Leap']}
-                                                            </div>
+                                                        {isBtcWallet &&
+                                                            <TooltipItem tip={lang['Leap tokens to BTC chain']}>
+                                                                <div onClick={e => {
+                                                                    const el = document.getElementById(`leap-${index}`)
+                                                                    !!el && el.click()
+                                                                    close()
+                                                                }}
+                                                                     className="mb-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
+                                                                    {lang['Leap']}
+                                                                </div>
+                                                            </TooltipItem>
                                                         }
 
-                                                        <div
-                                                            onClick={e => {
-                                                                const el = document.getElementById(`merge-${index}`)
-                                                                !!el && el.click()
-                                                                close()
-                                                            }}
-                                                            className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
-                                                            {lang['Merge']}
-                                                        </div>
-                                                        <div
-                                                            onClick={e => {
-                                                                const el = document.getElementById(`burn-${index}`)
-                                                                !!el && el.click()
-                                                                close()
-                                                            }}
-                                                            className=" mt-1 text-red-400 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
-                                                            {lang['Burn']}
-                                                        </div>
+                                                        <TooltipItem tip={lang['Use multiple cells to merge into a single cell and release capacity']}>
+                                                            <div
+                                                                onClick={e => {
+                                                                    const el = document.getElementById(`merge-${index}`)
+                                                                    !!el && el.click()
+                                                                    close()
+                                                                }}
+                                                                className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
+                                                                {lang['Merge']}
+                                                            </div>
+                                                        </TooltipItem>
+
+                                                        <TooltipItem
+                                                            tip={lang['Burn XUDT and release capacity']}>
+                                                            <div
+                                                                onClick={e => {
+                                                                    const el = document.getElementById(`burn-${index}`)
+                                                                    !!el && el.click()
+                                                                    close()
+                                                                }}
+                                                                className=" mt-1 text-red-400 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
+                                                                {lang['Burn']}
+                                                            </div>
+                                                        </TooltipItem>
                                                     </div>
                                                 }}
                                                 className="p-2">
@@ -217,19 +227,22 @@ export default function ListToken({
                                     }
 
                                     {
-                                        item.symbol === 'CKB' &&
+                                    item.symbol === 'CKB' &&
                                         <>
                                             <DialogSwap sellToken={typeHash}>
-                                                <div
-                                                    className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
-                                                    {'Swap'}
-                                                </div>
+                                                <TooltipItem tip={lang['Swap tokens via UTXO Swap']}>
+                                                    <div className="tooltip cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                        {'Swap'}
+                                                    </div>
+                                                </TooltipItem>
                                             </DialogSwap>
                                             <DialogCkbTransfer froms={addresses}>
-                                                <div
-                                                    className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
-                                                    {lang['Send']}
-                                                </div>
+                                                <TooltipItem tip={lang['Send CKB to Others']}>
+                                                    <div
+                                                        className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                        {lang['Send']}
+                                                    </div>
+                                                </TooltipItem>
                                             </DialogCkbTransfer>
                                         </>
                                     }
@@ -238,16 +251,20 @@ export default function ListToken({
                                         item.chain === 'btc' && item.symbol !== 'BTC' && isBtcWallet &&
                                         <>
                                             <DialogLeapXudtToLayer2 token={item} >
-                                                <div
-                                                    className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
-                                                    {lang['Leap']}
-                                                </div>
+                                                <TooltipItem tip={lang['Leap tokens to CKB chain']}>
+                                                    <div
+                                                        className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                        {lang['Leap']}
+                                                    </div>
+                                                </TooltipItem>
                                             </DialogLeapXudtToLayer2>
                                             <DialogBtcXudtTransfer token={item}>
-                                                <div
-                                                    className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
-                                                    {lang['Send']}
-                                                </div>
+                                                <TooltipItem tip={lang['Send tokens to others']}>
+                                                    <div
+                                                        className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                        {lang['Send']}
+                                                    </div>
+                                                </TooltipItem>
                                             </DialogBtcXudtTransfer>
                                         </>
                                     }
@@ -255,26 +272,32 @@ export default function ListToken({
                                     {
                                         item.symbol !== 'CKB' && item.chain !== 'btc' &&
                                         <DialogXudtTransfer froms={addresses} token={item}>
-                                        <div
-                                                className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
-                                                {lang['Send']}
-                                            </div>
+                                            <TooltipItem tip={lang['Send tokens to others']}>
+                                                <div
+                                                    className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                    {lang['Send']}
+                                                </div>
+                                            </TooltipItem>
                                         </DialogXudtTransfer>
                                     }
 
 
                                     {item.chain === 'btc' && !!internalAddress ?
                                         <DialogXudtReceive address={internalAddress}>
-                                            <div
-                                                className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center md:inline-flex hidden">
-                                                {lang['Receive']}
-                                            </div>
+                                            <TooltipItem tip={lang['Receive assets from others']}>
+                                                <div
+                                                    className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center md:inline-flex hidden">
+                                                    {lang['Receive']}
+                                                </div>
+                                            </TooltipItem>
                                         </DialogXudtReceive>
                                         : <DialogXudtReceive address={addresses[0]}>
-                                            <div
-                                                className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center md:inline-flex hidden">
-                                                {lang['Receive']}
-                                            </div>
+                                            <TooltipItem tip={lang['Receive assets from others']}>
+                                                <div
+                                                    className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center md:inline-flex hidden">
+                                                    {lang['Receive']}
+                                                </div>
+                                            </TooltipItem>
                                         </DialogXudtReceive>
                                     }
 
