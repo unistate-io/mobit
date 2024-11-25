@@ -79,8 +79,9 @@ export default function ProfileAddresses ({addresses, defaultAddress, onChoose, 
         }}
         onOpenChange={(open) => {toggleOpen(open)}}>
         <div className="flex flex-row items-center mr-1 cursor-pointer hover:text-[#6cd7b2]">
-            <div onClick={e => {e.preventDefault();handleCopy(value)}} >
+            <div className="flex flex-row" onClick={e => {e.preventDefault();handleCopy(value)}} >
                 <RadixSelect.Value placeholder={'Select ...'}/>
+                <i className="uil-copy ml-1" />
             </div>
             <RadixSelect.Trigger
                 className={`SelectTrigger-${id.current} flex flex-row items-center justify-between w-full outline-0`} aria-label={'Select'}>
