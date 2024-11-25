@@ -2,6 +2,7 @@ import React, {useLayoutEffect} from 'react'
 import {useLocation} from "react-router-dom"
 import Header from "@/components/Header/Header"
 import CKBProvider from "@/providers/CKBProvider/CKBProvider"
+import Feedback from "@/components/Feedback"
 // @ts-ignore
 import {KeepAliveOutlet} from 'react-alive-outlet'
 
@@ -21,6 +22,7 @@ function Home() {
                 <div>
                     <KeepAliveOutlet/>
                 </div>
+                <Feedback />
             </div>
         </CKBProvider>
     )
