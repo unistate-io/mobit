@@ -67,7 +67,10 @@ export default function CKBProvider({children}: { children: any }) {
             setAddress(address)
             setAddresses(addresses)
 
-            navigate(`/address/${address}`)
+            if (needRedirect) {
+                needRedirect.current = false
+                navigate(`/address/${address}`)
+            }
         })()
     }, [signer])
 

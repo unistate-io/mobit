@@ -12,9 +12,9 @@ import Select from "@/components/Select/Select"
 import CopyText from "@/components/CopyText/CopyText"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
+import {ccc} from '@ckb-ccc/connector-react'
 
 import * as dayjsLib from "dayjs"
-import {helpers} from "@ckb-lumos/lumos";
 const dayjs: any = dayjsLib
 
 export interface XudtTransferProps {
@@ -36,7 +36,7 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
         to: "",
     });
 
-    const {data: CkbBalance, status, refresh} = useCkbBalance(open ? froms: undefined)
+    const {data: CkbBalance, status, refresh} = useCkbBalance(open ? froms : undefined)
     const [step, setStep] = React.useState<1 | 2 | 3>(1)
     const [feeRate, setFeeRate] = React.useState<1000 | 2000 | 3000>(1000)
     const [sending, setSending] = React.useState(false)
@@ -85,16 +85,15 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
         const amount = BigNumber(BigNumber(formData.amount)).multipliedBy(10 ** 8)
         const balance = BigNumber(CkbBalance ? CkbBalance.amount : 0)
 
-        let tx:helpers.TransactionSkeletonType | null = null
+        let tx: ccc.Transaction | null = null
         if (!hasError) {
             if (amount.eq(balance)) {
                 try {
                   tx = await build({
-                        froms,
                         to: formData.to,
                         amount: amount.toString(),
-                        payeeAddresses: [formData.to],
                         feeRate: 1000,
+                        sendAll: amount.eq(CkbBalance ? CkbBalance.amount : 0)
                     })
                     console.log('max amount tx', tx)
                     setAmountError('')
@@ -106,10 +105,8 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
             } else {
                 try {
                  tx = await build({
-                        froms,
                         to: formData.to,
                         amount: amount.toString(),
-                        payeeAddresses: froms,
                         feeRate: 1000,
                     })
                     setAmountError('')
@@ -137,8 +134,8 @@ export default function DialogCkbTransfer({children, froms, className}: { childr
         console.log('tx =>', tx)
         if (!!tx) {
             try {
-                const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-                const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+                const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput?.capacity || '0'), 0)
+                const outCap = tx.outputs.reduce((sum, output) => sum + Number(output.capacity), 0)
                 const fee = inputCap - outCap
                 setFee1000(fee.toString())
                 setStep(2)

@@ -1,10 +1,7 @@
-import {config as lumosConfig, config as lumosCoinfig, helpers} from '@ckb-lumos/lumos'
-import {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react"
+import {useContext, useEffect, useRef, useState} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
-
-const cccLib: any = ccc
 
 export default function useCkbBalance(addresses?: string[]) {
     const {client} = useContext(CKBContext)
@@ -21,12 +18,12 @@ export default function useCkbBalance(addresses?: string[]) {
         }
 
         try {
-            const network = addresses[0].startsWith('ckt') ? 'testnet' : 'mainnet'
-            const scriptConfig = network === 'testnet' ? lumosConfig.TESTNET : lumosConfig.MAINNET
-            const client = network === 'testnet' ? new cccLib.ClientPublicTestnet() : new cccLib.ClientPublicMainnet()
-            const _balance = await client.getBalance(addresses.map((address) => {
-                return helpers.addressToScript(address, {config: scriptConfig})
+            let locks: ccc.Script[] = await Promise.all(addresses.map(async (address) => {
+                const {script: toLock} = await ccc.Address.fromString(address, client)
+                return toLock
             }))
+
+            const _balance = await client.getBalance(locks)
 
             setData({
                 name: 'Nervos CKB',
