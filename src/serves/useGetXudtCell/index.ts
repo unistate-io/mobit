@@ -1,13 +1,13 @@
 import {useContext, useEffect, useState} from "react"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
-import {Cell, config as lumosConfig, helpers, Indexer, commons} from "@ckb-lumos/lumos"
+import {Cell, config as lumosConfig, helpers, Indexer} from "@ckb-lumos/lumos"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {hashType} from "@/serves/useXudtTransfer/lib"
 import {CkbHelper, convertToTxSkeleton, createMergeXudtTransaction, createBurnXudtTransaction} from "mobit-sdk"
 import {ccc} from "@ckb-ccc/connector-react"
 
 export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, addresses?: string[]) {
-    const {config, network, signer} = useContext(CKBContext)
+    const {config, network, signer, wallet} = useContext(CKBContext)
     const [data, setData] = useState<Cell[]>([])
     const [status, setStatus] = useState<'loading' | 'error' | 'complete'>('loading')
     const [error, setError] = useState<any | null>(null)
@@ -62,13 +62,13 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
         if (!tokenInfo || !addresses || !addresses.length) return null
 
         const ckbHelper = new CkbHelper(network === 'mainnet')
-
+        const witnessLockPlaceholderSize = wallet?.name.includes('JoyID')? 1052 : undefined
         let tx = await createMergeXudtTransaction({
             xudtArgs: tokenInfo.address.script_args.replace('\\', '0'),
             ckbAddresses: addresses,
             collector: ckbHelper.collector,
-            isMainnet: network === 'mainnet'
-        })
+            isMainnet: network === 'mainnet',
+        }, addresses[0], undefined, undefined, witnessLockPlaceholderSize)
 
         // const OMNILOCK = lumosConfig.MAINNET.SCRIPTS.OMNILOCK;
         //
@@ -96,14 +96,14 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
     const createBurnXudtCellTx = async (burnAmount: bigint) => {
         if (!tokenInfo || !addresses || !addresses.length || burnAmount === BigInt(0)) return null
         const ckbHelper = new CkbHelper(network === 'mainnet')
-
+        const witnessLockPlaceholderSize = wallet?.name.includes('JoyID')? 1052 : undefined
         let tx = await createBurnXudtTransaction({
             xudtArgs: tokenInfo.address.script_args.replace('\\', '0'),
             ckbAddress: addresses[0],
             burnAmount: burnAmount,
             collector: ckbHelper.collector,
             isMainnet: network === 'mainnet'
-        })
+        }, undefined, undefined, witnessLockPlaceholderSize)
 
         let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
         const cccLib = ccc as any

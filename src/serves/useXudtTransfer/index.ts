@@ -6,7 +6,7 @@ import {CkbHelper, convertToTxSkeleton, createTransferXudtTransaction} from "mob
 import { helpers } from "@ckb-lumos/lumos"
 
 export default function useXudtTransfer() {
-    const {signer, network} = useContext(CKBContext)
+    const {signer, network, wallet} = useContext(CKBContext)
 
     const build = async ({
         froms,
@@ -21,24 +21,8 @@ export default function useXudtTransfer() {
         tokenInfo: TokenInfoWithAddress
         feeRate: number
     }): Promise<helpers.TransactionSkeletonType> => {
-        // const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc)
-
-        // const txInfo = await transferTokenToAddress(
-        //     froms,
-        //     amount,
-        //     to,
-        //     tokenInfo,
-        //     indexer,
-        //     feeRate,
-        //     network
-        // )
-
-        // console.log('txInfo', txInfo)
-        // return txInfo
-
-        console.log(`${tokenInfo.address.script_args}`)
-
         const ckbHelper = new CkbHelper(network === "mainnet")
+        const witnessLockPlaceholderSize = wallet?.name.includes('JoyID')? 1052 : undefined
         const tx = await createTransferXudtTransaction(
             {
                 xudtArgs: tokenInfo.address.script_args.replace('\\', '0'),
@@ -47,17 +31,15 @@ export default function useXudtTransfer() {
                 collector: ckbHelper.collector,
                 isMainnet: network === "mainnet"
             },
+            froms[0],
+            BigInt(feeRate),
             undefined,
-            BigInt(feeRate)
+            witnessLockPlaceholderSize,
         )
 
         console.log(tx);
-
-
         const skeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
-
         console.log(skeleton);
-
         return skeleton;
     }
 
