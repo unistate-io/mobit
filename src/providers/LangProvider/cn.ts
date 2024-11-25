@@ -113,7 +113,7 @@ const langCN: LangConfig = {
     'Create At': '创建时间',
     'Expired At': '过期时间',
     'Records': '记录',
-
+    'We value your feedback! Share any issues on Github.': '我们重视您的反馈！请在Github上分享任何问题。',
 }
 
 

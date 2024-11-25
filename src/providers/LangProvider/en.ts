@@ -110,7 +110,8 @@ const langEN = {
     'Manager': 'Manager',
     'Create At': 'Create At',
     'Expired At': 'Expired At',
-    'Records': 'Records'
+    'Records': 'Records',
+    'We value your feedback! Share any issues on Github.': 'We value your feedback! Share any issues on Github.'
 }
 
 
