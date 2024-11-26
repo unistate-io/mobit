@@ -49,7 +49,7 @@ function DOBItem({item}: { item: string }) {
         <div
             className="relative w-full h-[140px] sm:h-[200px] md:h-[250px] lg:h-[180px]  overflow-hidden rounded-sm relative border border-1">
             <img className="object-cover w-full h-full"
-                 src={'https://d.id/favicon.png'} alt=""/>
+                 src={'/images/dotbit.png'} alt=""/>
             <img src={ChainIcons['ckb']} alt={'ckb'} height={24} width={24} className="absolute top-3 right-3"/>
 
         </div>
