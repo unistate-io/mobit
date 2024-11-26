@@ -19,7 +19,7 @@ export default function DotBit() {
         <div className="md:w-[320px] w-full shadow rounded-lg overflow-hidden">
             <div className="w-full h-[320px] relative">
                 <img className="w-full h-full object-cover"
-                     src={'https://d.id/favicon.png'} alt=""/>
+                     src={'/images/dotbit.png'} alt=""/>
             </div>
             <div className="p-4">
                 {status === 'loading' &&
