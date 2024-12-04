@@ -20,6 +20,7 @@ export default function DialogTransferFromAddressSelect({
         <Dialog.Portal>
             <Dialog.Overlay className="bg-[rgba(0,0,0,0.6)] z-40 data-[state=open]:animate-overlayShow fixed inset-0"/>
             <Dialog.Content
+                onPointerDownOutside={e=> {e.preventDefault()}}
                 className="data-[state=open]:animate-contentShow z-50 fixed top-[50%] left-[50%] max-h-[85vh]  max-w-[90vw] w-full translate-x-[-50%] md:max-w-[450px] translate-y-[-50%] rounded-xl bg-white p-4 shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
                 <div className="flex flex-row justify-between items-center mb-4">
                     <div className="font-semibold text-2xl">{lang['Select A Wallet']}</div>

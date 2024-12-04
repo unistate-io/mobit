@@ -25,6 +25,7 @@ export default function DialogReceive(props: { children: React.ReactNode, addres
                 <Dialog.Overlay
                     className="bg-[rgba(0,0,0,0.6)] z-40 data-[state=open]:animate-overlayShow fixed inset-0"/>
                 <Dialog.Content
+                    onPointerDownOutside={e=> {e.preventDefault()}}
                     className="data-[state=open]:animate-contentShow z-50 fixed top-[50%] left-[50%] p-4 max-w-[360px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-white shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
                     <div className="h-full overflow-auto max-h-[88vh] w-full">
                         <div className="flex flex-row justify-between items-center mb-4">
