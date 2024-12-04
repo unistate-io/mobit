@@ -77,7 +77,7 @@ export default function HeaderMenu() {
         <div className="text-sm relative flex flex-row items-center">
             {
                 showSearchInput &&
-                <div className="absolute right-0">
+                <div className="absolute right-0 min-w-[310px]">
                     <Input
                         onBlur={() => setShowSearchInput(false)}
                         onKeyUp={(e) => {
