@@ -4,7 +4,7 @@ import {Cell, config as lumosConfig, helpers, Indexer} from "@ckb-lumos/lumos"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {hashType} from "@/serves/useXudtTransfer/lib"
 import {CkbHelper, convertToTxSkeleton, createMergeXudtTransaction, createBurnXudtTransaction} from "mobit-sdk"
-import {ccc} from "@ckb-ccc/connector-react"
+import {ccc as cccLib} from "@ckb-ccc/connector-react"
 
 export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, addresses?: string[]) {
     const {config, network, signer, wallet} = useContext(CKBContext)
@@ -70,24 +70,8 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
             isMainnet: network === 'mainnet',
         }, addresses[0], undefined, undefined, witnessLockPlaceholderSize)
 
-        // const OMNILOCK = lumosConfig.MAINNET.SCRIPTS.OMNILOCK;
-        //
-        // tx.cellDeps.push({
-        //     outPoint: {
-        //         txHash: OMNILOCK.TX_HASH,
-        //         index: OMNILOCK.INDEX,
-        //     },
-        //     depType: OMNILOCK.DEP_TYPE,
-        // })
-
         let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
-        const cccLib = ccc as any
         txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
-        // txSkeleton =  await commons.common.payFeeByFeeRate(txSkeleton, addresses,1000)
-
-        //
-        // (txSkeleton as any).outputs[1].capacity = (txSkeleton as any).outputs[1].capacity - BigInt(100);
-
 
         console.log('txSkeleton', txSkeleton)
         return txSkeleton
@@ -106,7 +90,6 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
         }, undefined, undefined, witnessLockPlaceholderSize)
 
         let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
-        const cccLib = ccc as any
         txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
 
         console.log('txSkeleton', txSkeleton)

@@ -47,7 +47,7 @@ export default function DialogXudtCellBurn({
 
     const balance = useMemo(() => {
         const total = data.reduce((sum, input) => sum + leToU128(input.data), BigInt(0))
-        return toDisplay(total.toString(), xudt?.decimal || 0, true)
+        return total.toString()
     }, [data, xudt?.decimal])
 
 
@@ -140,16 +140,18 @@ export default function DialogXudtCellBurn({
                                    onChange={(e) => {
                                        setAmount((Number(e.target.value) * 10 ** xudt!.decimal).toString())
                                    }}
+
                                    endIcon={<div className="cursor-pointer text-[#6CD7B2]"
                                                  onClick={e => {
                                                      if (status === 'complete') {
-                                                         setAmount((Number(balance) * 10 ** xudt!.decimal).toString())
+                                                         console.log(Number(balance), xudt!.decimal)
+                                                         setAmount(balance)
                                                      }
                                                  }}>Max</div>}
                             />
 
                             <div
-                                className="mt-4">{lang['Balance']}: {status === 'complete' ? balance : '--'} {xudt?.symbol}</div>
+                                className="mt-4">{lang['Balance']}: {status === 'complete' ? toDisplay(balance, xudt?.decimal || 0, true) : '--'} {xudt?.symbol}</div>
                             <div className="text-red-400 min-h-6 break-words mt-1 mb-2">{amountError}</div>
                             <div className="flex flex-row mt-4">
                                 <Button btntype={'secondary'}
