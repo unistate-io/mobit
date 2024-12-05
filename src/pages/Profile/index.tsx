@@ -2,11 +2,18 @@ import UserProvider from "@/providers/UserProvider/UserProvider"
 import {useParams} from "react-router-dom"
 import Profile from "@/pages/Profile/Profile"
 import InternalProfile from "./InternalProfile"
-import {useEffect, useState, useContext} from "react"
-import {checksumCkbAddress, getCkbAddressFromBTC, getCkbAddressFromEvm, isEvmAddress, isBtcAddress} from "@/utils/common"
+import {useContext, useEffect, useState} from "react"
+import {
+    checksumCkbAddress,
+    getCkbAddressFromBTC,
+    getCkbAddressFromEvm,
+    isBtcAddress,
+    isEvmAddress
+} from "@/utils/common"
 import {ccc} from "@ckb-ccc/connector-react"
 import BtcProfile from "@/pages/Profile/BtcProfile"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import {MarketProvider} from "@/providers/MarketProvider/MarketProvider"
 
 export default function ProfilePage() {
     const {address} = useParams()
@@ -61,18 +68,20 @@ export default function ProfilePage() {
     }, [address, client])
 
     return <>
-        { ready && !!displayAddress &&
-            <UserProvider address={displayAddress!}>
-                {
-                    displayInternalAddress
-                        ? <InternalProfile internalAddress={displayInternalAddress}/>
-                        : <Profile/>
-                }
-            </UserProvider>
-        }
+        <MarketProvider>
+            {ready && !!displayAddress &&
+                <UserProvider address={displayAddress!}>
+                    {
+                        displayInternalAddress
+                            ? <InternalProfile internalAddress={displayInternalAddress}/>
+                            : <Profile/>
+                    }
+                </UserProvider>
+            }
 
-        { ready && !displayAddress && !!displayInternalAddress &&
-             <BtcProfile internalAddress={displayInternalAddress} />
-        }
+            {ready && !displayAddress && !!displayInternalAddress &&
+                <BtcProfile internalAddress={displayInternalAddress}/>
+            }
+        </MarketProvider>
     </>
 }

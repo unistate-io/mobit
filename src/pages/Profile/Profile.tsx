@@ -23,12 +23,17 @@ import useDotbit from "@/serves/useDotbit"
 import ListDotBit from "@/components/ListDotBit/ListDotBit"
 import DialogReceive from "@/components/Dialogs/DialogReceive/DialogReceive"
 import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
+import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
+import BigNumber from "bignumber.js"
+import {toDisplay} from "@/utils/number_display"
+import NetWorth from "@/components/NetWorth"
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
     const {internalAddress, address: loginAddress, addresses, network} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
     const {lang} = useContext(LangContext)
+    const {prices, status:marketStatus} = useContext(MarketContext)
 
     // ui state
     const [selectedAddress, setSelectedAddress] = useState<string | undefined>(address)
@@ -151,30 +156,50 @@ export default function Profile() {
         }]
     }, [lang])
 
+    const netWorthData = useMemo(() => {
+        const total = tokenData.reduce((acc, cur) => {
+            const amount = BigNumber(cur.amount).div(10**cur.decimal)
+            console.log(cur, cur.symbol, amount.toString(), cur.decimal, prices[cur.symbol])
+            return acc.plus(amount.times(prices[cur.symbol] || 0))
+        }, BigNumber(0))
+
+        return total.toString()
+
+    }, [tokenData, prices])
+
     return <div>
-        <Background gradient={theme.bg}/>
-        <div className="max-w-[1044px] mx-auto px-3 pb-10">
-            { !!addresses && !!addresses.length && !!internalAddress && isOwner &&
-                <div className="absolute right-3 top-[70px]">
+        <div className="max-w-[1044px] mx-auto relative">
+            {!!addresses && !!addresses.length && !!internalAddress && isOwner &&
+                <div className="absolute right-3 top-[12px]">
                     <DialogSwap>
                         <div
-                            className="mr-4 border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex">Swap</div>
+                            className="mr-4 border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex">Swap
+                        </div>
                     </DialogSwap>
-                    <DialogReceive addresses={addresses.includes(internalAddress) ? addresses : [...addresses, internalAddress]}>
-                        <div className="border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex">{lang['Receive']}</div>
+                    <DialogReceive
+                        addresses={addresses.includes(internalAddress) ? addresses : [...addresses, internalAddress]}>
+                        <div
+                            className="border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex">{lang['Receive']}</div>
                     </DialogReceive>
                 </div>
             }
+        </div>
+        <Background gradient={theme.bg}/>
+        <div className="max-w-[1044px] mx-auto px-3 pb-10 relative">
+
+            <div className="absolute right-3 top-[40px] md:top-[80px]">
+                <NetWorth usd={netWorthData} status={marketStatus}/>
+            </div>
 
             <div
                 className="w-[200px] h-[200px] rounded-full overflow-hidden mt-[-100px] border-4 border-white hidden md:block">
                 <Avatar size={200} name={address || 'default'} colors={theme.colors}/>
             </div>
             <div
-                className="w-[128px] h-[128px] rounded-full overflow-hidden mt-[-64px] mx-auto border-4 border-white md:hidden">
+                className="w-[128px] h-[128px] rounded-full overflow-hidden mt-[-64px] border-4 border-white md:hidden">
                 <Avatar size={128} name={address || 'default'} colors={theme.colors}/>
             </div>
-            <div className="mt-4 flex flex-col items-center md:flex-row">
+            <div className="mt-4 flex flex-col md:items-center md:flex-row">
                 {
                     isOwner && internalAddress && internalAddress !== address && addresses ?
                         <>
@@ -231,7 +256,7 @@ export default function Profile() {
                                 <ListDotBit
                                     data={domains}
                                     status={domainStatus}
-                                   />
+                                />
                             </div>
                         </Tabs.Content>
                         <Tabs.Content

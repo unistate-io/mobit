@@ -123,6 +123,7 @@ const langCN: LangConfig = {
     'Use multiple cells to merge into a single cell and release capacity': '使用多个Cell合并为一个Cell并释放容量',
     'Burn XUDT and release capacity': '销毁XUDT并释放容量',
     'CKB/BTC/EVM address...': 'CKB/BTC/EVM地址...',
+    'Net Worth': '净值',
 }
 
 

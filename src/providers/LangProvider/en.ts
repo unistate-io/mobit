@@ -120,7 +120,8 @@ const langEN = {
     'Leap tokens to BTC chain': 'Leap tokens to BTC chain',
     'Use multiple cells to merge into a single cell and release capacity': 'Use multiple cells to merge into a single cell and release capacity',
     'Burn XUDT and release capacity': 'Burn XUDT and release capacity',
-    'CKB/BTC/EVM address...': 'CKB/BTC/EVM address...'
+    'CKB/BTC/EVM address...': 'CKB/BTC/EVM address...',
+    'Net Worth': 'Net Worth',
 }
 
 

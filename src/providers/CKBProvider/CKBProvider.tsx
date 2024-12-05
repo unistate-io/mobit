@@ -1,12 +1,9 @@
-import {ccc} from "@ckb-ccc/connector-react"
+import {ccc as cccLib} from "@ckb-ccc/connector-react"
 import {createContext, useEffect, useMemo, useRef, useState} from "react"
-import {Signer} from "@ckb-ccc/core"
 import {NetworkConfig} from "@/providers/CKBProvider/network_config"
 import network_config from "@/providers/CKBProvider/network_config"
 import {Client} from '@ckb-ccc/core'
 import {redirect, useNavigate} from "react-router-dom"
-
-const cccLib = ccc
 
 export type Network = 'mainnet' | 'testnet'
 
@@ -18,7 +15,7 @@ export interface CKBContextType {
     internalAddress?: string
     address?: string
     addresses?: string[]
-    signer?: ccc.Signer | undefined
+    signer?: cccLib.Signer | undefined
     config: NetworkConfig,
     client?: Client
 }
@@ -34,7 +31,7 @@ export const CKBContext = createContext<CKBContextType>({
 
 export default function CKBProvider({children}: { children: any }) {
     const {open, disconnect, wallet, setClient, client} = cccLib.useCcc()
-    const signer = ccc.useSigner()
+    const signer = cccLib.useSigner()
     const navigate = useNavigate()
 
     const [internalAddress, setInternalAddress] = useState<undefined | string>(undefined)

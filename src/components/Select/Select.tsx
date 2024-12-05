@@ -18,6 +18,7 @@ export interface SelectOptionProps extends SelectProps {
     containerWidthPrefix?: number;
     getValueLabel?: () => ReactNode | string | undefined;
     getOptionLabel?: (opt: SelectOption) => ReactNode | string;
+    icon?: ReactNode;
 }
 
 
@@ -34,7 +35,7 @@ const SelectItem = forwardRef(({children, className, ...props} : SelectItemProps
 
 
 
-export default function Select ({options, placeholder, className='', hideDropIcon=false, getValueLabel, getOptionLabel, ...props}: SelectOptionProps) {
+export default function Select ({icon, options, placeholder, className='', hideDropIcon=false, getValueLabel, getOptionLabel, ...props}: SelectOptionProps) {
     const [open, setOpen] = React.useState(false)
     const [menuWidth, setMenuWidth] = React.useState('auto')
     const id = useRef(Math.floor(Math.random() * (100000 - 10000 + 1)) + 10000)
@@ -57,7 +58,7 @@ export default function Select ({options, placeholder, className='', hideDropIco
 
             { !hideDropIcon &&
                 <RadixSelect.Icon className="SelectIcon">
-                    <i className="uil-angle-down text-2xl" />
+                    {icon || <i className="uil-angle-down text-2xl"/>}
                 </RadixSelect.Icon>
             }
         </RadixSelect.Trigger>
