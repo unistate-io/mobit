@@ -7,7 +7,7 @@ export default function AppsPage() {
     const {data} = useApps()
     const {lang, langType} = useContext(LangContext)
 
-    return <div className="max-w-[1044px] mx-auto mt-4 md:mt-10 mb-10">
+    return <div className="max-w-[--page-with] mx-auto mt-4 md:mt-10 mb-10">
        <div className="font-semibold text-2xl mb:4 md:mb-9 px-3 ">CKB {lang['Apps']}</div>
         <div className="flex flex-row flex-wrap w-full">
            {

@@ -1,7 +1,6 @@
 import TokenIcon from '../TokenIcon/TokenIcon'
 import {useCallback, useContext, useState} from "react"
 import {toDisplay} from "@/utils/number_display"
-import DialogXudtReceive from "@/components/Dialogs/DialogXudtReceive/DialogXudtReceive"
 import DialogCkbTransfer from "@/components/Dialogs/DialogCkbTransfer/DialogCkbTransfer"
 import {Link} from "react-router-dom"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
@@ -19,6 +18,8 @@ import DialogXudtLeapToLayer1 from "@/components/Dialogs/DialogLeapXudtToLayer1/
 import DialogLeapXudtToLayer2 from "@/components/Dialogs/DialogLeapXudtToLayer2/DialogLeapXudtToLayer2"
 import useBtcWallet from "@/serves/useBtcWallet"
 import {TooltipItem} from "@/components/Tooltip"
+import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
+import BigNumber from "bignumber.js";
 
 
 export interface TokenBalance extends TokenInfoWithAddress {
@@ -44,6 +45,7 @@ export default function ListToken({
     const {lang} = useContext(LangContext)
     const {supportTokens} = useUtxoSwap()
     const {isBtcWallet} = useBtcWallet()
+    const {prices, currCurrency, rates, currencySymbol} = useContext(MarketContext)
 
     const isSupportSwap = useCallback((token: TokenBalance) => {
         if (token.chain === 'btc') return  ''
@@ -82,12 +84,19 @@ export default function ListToken({
         }
     }
 
+    const calculateValue = (token: TokenBalance) => {
+        return currencySymbol + toDisplay(BigNumber(toDisplay(token.amount, token.decimal!)).times(prices[token.symbol].toString()).times(rates[currCurrency.toUpperCase()]).toString(), 0, true, 2)
+    }
+
+    const calculatePrice = (token: TokenBalance) => {
+        return currencySymbol + toDisplay(BigNumber('1').times(prices[token.symbol].toString()).times(rates[currCurrency.toUpperCase()]).toString(), 0, true, 4)
+    }
+
     return <div className="shadow rounded-lg bg-white py-4">
         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
             <div className="text-xl font-semibold">{lang['Tokens']}</div>
         </div>
         <div className="flex flex-col">
-
             {status === 'loading' &&
                 <div className="mx-4 my-2">
                     <div className="loading-bg rounded-lg h-[30px] my-2"/>
@@ -105,14 +114,13 @@ export default function ListToken({
             }
 
             {data.length !== 0 && status !== 'loading' &&
-                <div className="flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border">
-                    <div className="shrink-0 basis-1/3 md:basis-1/4">{lang['Assets']}</div>
-                    {
-                        !!addresses ?
-                            <>
-                                <div className="shrink-0 flex-1">{lang['Balance']}</div>
-                                <div className="shrink-0 basis-1/3 md:basis-1/4 text-right">{lang['Actions']}</div>
-                            </> : <div className="shrink-0 flex-1 text-right">{lang['Balance']}</div>
+                <div className={`grid ${!!addresses ? 'sm:grid-cols-5 grid-cols-3' : 'sm:grid-cols-4 grid-cols-2'} px-2 md:px-4 py-3 text-xs box-border`}>
+                    <div>{lang['Assets']}</div>
+                    <div className="hidden sm:block">{lang['Price']}</div>
+                    <div className={`${!!addresses ? 'text-left': 'sm:text-left text-right'}`}>{lang['Balance']}</div>
+                    <div className={`hidden sm:block${!!addresses ? '' : ' text-right'}`}>{lang['Value']}</div>
+                    {!!addresses &&
+                        <div className="text-right">{lang['Actions']}</div>
                     }
                 </div>
             }
@@ -122,20 +130,23 @@ export default function ListToken({
                     const typeHash = isSupportSwap(item)
 
                     return <Link to={getLink(item)} key={index}
-                                 className="whitespace-nowrap flex flex-row flex-nowrap px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100">
+                                 className={`whitespace-nowrap grid ${!!addresses ? 'sm:grid-cols-5 grid-cols-3' : 'sm:grid-cols-4 grid-cols-2'} px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100`}>
                         <div className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center">
                             <TokenIcon symbol={item.symbol!} size={24} chain={item.chain}/>{item.symbol!}
                         </div>
-
-                        {!!addresses && addresses.length > 0 ?
-                            <>
-                                <div
-                                    className="shrink-0 flex-1 flex-row flex items-center">{toDisplay(item.amount, item.decimal!, true)}</div>
+                        <>
+                            <div
+                                className="flex-row hidden items-center sm:flex">{prices[item.symbol] ? calculatePrice(item) : '--'}</div>
+                            <div
+                                className={`flex items-center ${!!addresses ? 'justify-start' : 'justify-end sm:justify-start'}`}>{toDisplay(item.amount, item.decimal!, true)}</div>
+                            <div
+                                className={`flex-row hidden items-center sm:flex ${!!addresses ? 'justify-start' : 'justify-end'}`}>{prices[item.symbol] ? calculateValue(item): '--'}</div>
+                            { !!addresses && addresses.length &&
                                 <div
                                     onClick={e => {
                                         e.preventDefault()
                                     }}
-                                    className="shrink-0 basis-1/3 text-right flex-row items-center flex flex-nowrap justify-end">
+                                    className="text-right flex-row items-center flex flex-nowrap justify-end">
 
                                     {item.symbol !== 'CKB' && item.chain === 'ckb' &&
                                         <>
@@ -167,7 +178,7 @@ export default function ListToken({
                                                     return <div className="flex flex-col">
                                                         {!!typeHash &&
                                                             <TooltipItem tip={lang['Swap tokens via UTXO Swap']}>
-                                                                <div onClick={e => {
+                                                                <div onClick={() => {
                                                                     const el = document.getElementById(`swap-${index}`)
                                                                     !!el && el.click()
                                                                     close()
@@ -180,7 +191,7 @@ export default function ListToken({
 
                                                         {isBtcWallet &&
                                                             <TooltipItem tip={lang['Leap tokens to BTC chain']}>
-                                                                <div onClick={e => {
+                                                                <div onClick={() => {
                                                                     const el = document.getElementById(`leap-${index}`)
                                                                     !!el && el.click()
                                                                     close()
@@ -191,9 +202,10 @@ export default function ListToken({
                                                             </TooltipItem>
                                                         }
 
-                                                        <TooltipItem tip={lang['Use multiple cells to merge into a single cell and release capacity']}>
+                                                        <TooltipItem
+                                                            tip={lang['Use multiple cells to merge into a single cell and release capacity']}>
                                                             <div
-                                                                onClick={e => {
+                                                                onClick={() => {
                                                                     const el = document.getElementById(`merge-${index}`)
                                                                     !!el && el.click()
                                                                     close()
@@ -206,7 +218,7 @@ export default function ListToken({
                                                         <TooltipItem
                                                             tip={lang['Burn XUDT and release capacity']}>
                                                             <div
-                                                                onClick={e => {
+                                                                onClick={() => {
                                                                     const el = document.getElementById(`burn-${index}`)
                                                                     !!el && el.click()
                                                                     close()
@@ -227,11 +239,12 @@ export default function ListToken({
                                     }
 
                                     {
-                                    item.symbol === 'CKB' &&
+                                        item.symbol === 'CKB' &&
                                         <>
                                             <DialogSwap sellToken={typeHash}>
                                                 <TooltipItem tip={lang['Swap tokens via UTXO Swap']}>
-                                                    <div className="tooltip cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                    <div
+                                                        className="tooltip cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
                                                         {'Swap'}
                                                     </div>
                                                 </TooltipItem>
@@ -239,7 +252,7 @@ export default function ListToken({
                                             <DialogCkbTransfer froms={addresses}>
                                                 <TooltipItem tip={lang['Send CKB to Others']}>
                                                     <div
-                                                        className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                        className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
                                                         {lang['Send']}
                                                     </div>
                                                 </TooltipItem>
@@ -250,7 +263,7 @@ export default function ListToken({
                                     {
                                         item.chain === 'btc' && item.symbol !== 'BTC' && isBtcWallet &&
                                         <>
-                                            <DialogLeapXudtToLayer2 token={item} >
+                                            <DialogLeapXudtToLayer2 token={item}>
                                                 <TooltipItem tip={lang['Leap tokens to CKB chain']}>
                                                     <div
                                                         className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
@@ -261,7 +274,7 @@ export default function ListToken({
                                             <DialogBtcXudtTransfer token={item}>
                                                 <TooltipItem tip={lang['Send tokens to others']}>
                                                     <div
-                                                        className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                        className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
                                                         {lang['Send']}
                                                     </div>
                                                 </TooltipItem>
@@ -274,37 +287,15 @@ export default function ListToken({
                                         <DialogXudtTransfer froms={addresses} token={item}>
                                             <TooltipItem tip={lang['Send tokens to others']}>
                                                 <div
-                                                    className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                    className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
                                                     {lang['Send']}
                                                 </div>
                                             </TooltipItem>
                                         </DialogXudtTransfer>
                                     }
-
-
-                                    {item.chain === 'btc' && !!internalAddress ?
-                                        <DialogXudtReceive address={internalAddress}>
-                                            <TooltipItem tip={lang['Receive assets from others']}>
-                                                <div
-                                                    className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center md:inline-flex hidden">
-                                                    {lang['Receive']}
-                                                </div>
-                                            </TooltipItem>
-                                        </DialogXudtReceive>
-                                        : <DialogXudtReceive address={addresses[0]}>
-                                            <TooltipItem tip={lang['Receive assets from others']}>
-                                                <div
-                                                    className="cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center md:inline-flex hidden">
-                                                    {lang['Receive']}
-                                                </div>
-                                            </TooltipItem>
-                                        </DialogXudtReceive>
-                                    }
-
                                 </div>
-                            </> : <div
-                                className="shrink-0 flex-1 flex-row flex items-center justify-end font-semibold">{toDisplay(item.amount, item.decimal!, true)}</div>
-                        }
+                            }
+                        </>
                     </Link>
                 })
             }

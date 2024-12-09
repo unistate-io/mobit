@@ -86,7 +86,7 @@ export default function DobPage() {
     }, [data, tokenid])
 
 
-    return <div className="max-w-[1044px] mx-auto px-3 py-8 flex md:flex-row flex-col flex-nowrap items-start mb-10">
+    return <div className="max-w-[--page-with] mx-auto px-3 py-8 flex md:flex-row flex-col flex-nowrap items-start mb-10">
         <div className="md:w-[320px] w-full shadow rounded-lg overflow-hidden shrink-0">
             <div className="w-full h-[320px] relative">
                 <img className="w-full h-full object-cover"

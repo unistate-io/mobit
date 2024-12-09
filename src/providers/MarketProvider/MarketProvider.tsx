@@ -5,29 +5,62 @@ export interface TokenPrice {
     [index: string]: number
 }
 
+export type Currencies = 'usd' | 'cny'
+
 export interface MarketContextType {
     prices: TokenPrice,
     status: 'loading' | 'complete' | 'error'
+    rates: {[index: string]: number},
+    currCurrency: Currencies,
+    setCurrCurrency: (currency: Currencies) => void
+    currencySymbol: string
 }
 
-export const MarketContext = createContext<MarketContextType>({prices: {}, status: 'loading'})
+export const MarketContext = createContext<MarketContextType>({
+    prices: {},
+    status: 'loading',
+    rates: {},
+    currCurrency: 'usd',
+    setCurrCurrency: (currency: Currencies) => {},
+    currencySymbol: '$'
+})
+
+export const CurrencySymbol = {
+    usd: '$',
+    cny: '¥'
+}
 
 export function MarketProvider({children}: {children: ReactNode}) {
     const [prices, setPrices] = useState<TokenPrice>({})
-
-    const {data, status} = useMarket()
+    const [rates, setRates] = useState<{[index: string]: number}>({})
+    const [currCurrency, setCurrCurrency] = useState<'usd' | 'cny'>('usd')
+    const {data, status:marketStatus} = useMarket()
 
     useEffect(() => {
-        if (status === 'complete') {
+        fetch('https://api.exchangerate-api.com/v4/latest/USD')
+            .then(res => res.json())
+            .then(res => {
+               setRates(res.rates)
+            })
+            .catch((e) => {
+                console.error(e)
+            })
+    }, []);
+
+    useEffect(() => {
+        if (marketStatus === 'complete') {
             const res = {} as TokenPrice
             data.forEach(i => {
                 res[i.symbol] = i.price
             })
             setPrices(res)
         }
-    }, [status, data]);
+    }, [marketStatus, data]);
 
-    return <MarketContext.Provider value={{prices, status}}>
+    const currencySymbol = CurrencySymbol[currCurrency]
+
+
+    return <MarketContext.Provider value={{prices, status: marketStatus, rates, currCurrency, setCurrCurrency, currencySymbol}}>
         {children}
     </MarketContext.Provider>
 }

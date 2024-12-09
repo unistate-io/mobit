@@ -3,34 +3,22 @@ import Select from "@/components/Select/Select"
 import BigNumber from "bignumber.js"
 import {toDisplay} from "@/utils/number_display"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
+import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
+import {TokenBalance} from "@/components/ListToken/ListToken"
 
-export default function NetWorth(props: { usd: string, status: 'loading' | 'complete' | 'error' }) {
-    const [currency, setCurrency] = useState<'usd' | 'cny'>('usd')
-    const [cnyRate, setCnyRate] = useState(0)
-    const [queryStatus, setQueryStatus] = useState<'loading' | 'complete' | 'error'>('loading')
+export default function NetWorth(props: {balances:  TokenBalance[]}) {
     const {lang} = useContext(LangContext)
-
-    useEffect(() => {
-        setQueryStatus('loading')
-        fetch('https://api.exchangerate-api.com/v4/latest/USD')
-            .then(res => res.json())
-            .then(res => {
-                setCnyRate(res.rates.CNY)
-                setQueryStatus('complete')
-            })
-            .catch(() => {
-                setQueryStatus('error')
-            })
-    }, []);
-
-
-    const symbol = useMemo(() => {
-        return currency === 'usd' ? '$' : '¥'
-    }, [currency])
+    const {prices, rates, currCurrency: currency, setCurrCurrency, status, currencySymbol} = useContext(MarketContext)
 
     const value = useMemo(() => {
-        return currency === 'usd' ? toDisplay(BigNumber(props.usd).toString(), 0, true, 2) : toDisplay(BigNumber(props.usd).times(cnyRate).toString(), 0, true, 2)
-    }, [currency, props.usd, cnyRate])
+        const total = props.balances.reduce((acc, cur) => {
+            const amount = BigNumber(cur.amount).div(10**cur.decimal)
+            return acc.plus(amount.times(prices[cur.symbol] || 0))
+        }, BigNumber(0))
+
+        return currency === 'usd' ? toDisplay(total.toString(), 0, true, 2) : toDisplay(total.times(rates.CNY).toString(), 0, true, 2)
+
+    }, [props.balances, currency, rates, prices])
 
     return <div className='min-w-[190px] shadow bg-white p-4 rounded-lg'>
         <div className="text-xs mb-2 flex flex-row items-center justify-between">
@@ -48,13 +36,13 @@ export default function NetWorth(props: { usd: string, status: 'loading' | 'comp
                         {id: 'cny', label: `CNY`},
                     ]}
                     onValueChange={(value: any) => {
-                        setCurrency(value)
+                        setCurrCurrency(value)
                     }}
                 />
             </div>
         </div>
-        {props.status !== 'loading' && queryStatus !== 'loading'
-            ? <div className="text-lg sm:text-2xl font-semibold">{symbol}{value}</div>
+        {status !== 'loading'
+            ? <div className="text-lg sm:text-2xl font-semibold">{currencySymbol}{value}</div>
             : <div className="loading-bg h-[32px] rounded-lg"/>
         }
     </div>

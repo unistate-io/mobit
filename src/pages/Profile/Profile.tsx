@@ -23,17 +23,13 @@ import useDotbit from "@/serves/useDotbit"
 import ListDotBit from "@/components/ListDotBit/ListDotBit"
 import DialogReceive from "@/components/Dialogs/DialogReceive/DialogReceive"
 import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
-import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
-import BigNumber from "bignumber.js"
-import {toDisplay} from "@/utils/number_display"
 import NetWorth from "@/components/NetWorth"
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
-    const {internalAddress, address: loginAddress, addresses, network} = useContext(CKBContext)
+    const {internalAddress, addresses, network} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
     const {lang} = useContext(LangContext)
-    const {prices, status:marketStatus} = useContext(MarketContext)
 
     // ui state
     const [selectedAddress, setSelectedAddress] = useState<string | undefined>(address)
@@ -86,7 +82,7 @@ export default function Profile() {
 
     const {data: rgbppHistory, status: rgbppHistoryStatus} = useTransactionsHistory(btcAddress)
 
-    const {domains, bondingDomain, status: domainStatus} = useDotbit(address)
+    const {domains, status: domainStatus} = useDotbit(address)
 
     const tokensStatus = useMemo(() => {
         if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' || layer1DataStatus === 'loading') {
@@ -156,19 +152,8 @@ export default function Profile() {
         }]
     }, [lang])
 
-    const netWorthData = useMemo(() => {
-        const total = tokenData.reduce((acc, cur) => {
-            const amount = BigNumber(cur.amount).div(10**cur.decimal)
-            console.log(cur, cur.symbol, amount.toString(), cur.decimal, prices[cur.symbol])
-            return acc.plus(amount.times(prices[cur.symbol] || 0))
-        }, BigNumber(0))
-
-        return total.toString()
-
-    }, [tokenData, prices])
-
     return <div>
-        <div className="max-w-[1044px] mx-auto relative">
+        <div className="max-w-[--page-with] mx-auto relative">
             {!!addresses && !!addresses.length && !!internalAddress && isOwner &&
                 <div className="absolute right-3 top-[12px]">
                     <DialogSwap>
@@ -185,10 +170,10 @@ export default function Profile() {
             }
         </div>
         <Background gradient={theme.bg}/>
-        <div className="max-w-[1044px] mx-auto px-3 pb-10 relative">
+        <div className="max-w-[--page-with] mx-auto px-3 pb-10 relative">
 
             <div className="absolute right-3 top-[40px] md:top-[80px]">
-                <NetWorth usd={netWorthData} status={marketStatus}/>
+                <NetWorth balances={tokenData} />
             </div>
 
             <div
@@ -222,9 +207,9 @@ export default function Profile() {
             </div>
 
             <div className="flex mt-3 lg:mt-9 justify-between flex-col lg:flex-row">
-                <div className="flex-1 overflow-auto lg:max-w-[624px]">
+                <div className="flex-1 lg:max-w-[780px]">
                     <Tabs.Root
-                        className="flex flex-col overflow-auto"
+                        className="flex flex-col"
                         defaultValue="All">
                         <Tabs.List className="shrink-0 flex flex-row overflow-auto" aria-label="Assets">
                             {
@@ -301,17 +286,17 @@ export default function Profile() {
                         </div>
                         {!!internalAddress && btcAddress &&
                             <div className="flex flex-row items-center px-2">
-                                <div onClick={e => {
+                                <div onClick={() => {
                                     setActiveTab('ckb')
                                 }}
                                      className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'ckb' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>CKB
                                 </div>
-                                <div onClick={e => {
+                                <div onClick={() => {
                                     setActiveTab('btc')
                                 }}
                                      className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'btc' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>BTC
                                 </div>
-                                <div onClick={e => {
+                                <div onClick={() => {
                                     setActiveTab('rgbpp')
                                 }}
                                      className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'rgbpp' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>RGB++

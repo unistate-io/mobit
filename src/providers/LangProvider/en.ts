@@ -122,6 +122,7 @@ const langEN = {
     'Burn XUDT and release capacity': 'Burn XUDT and release capacity',
     'CKB/BTC/EVM address...': 'CKB/BTC/EVM address...',
     'Net Worth': 'Net Worth',
+    'Value': 'Value',
 }
 
 

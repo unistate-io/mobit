@@ -129,7 +129,7 @@ export default function useLayer1Assets(btcAddress?: string, polling?: boolean) 
         setXudts([])
         queryAssets(btcAddress, network === 'mainnet')
             .then(res => {
-                setXudts(res.xudts)
+                setXudts(res.xudts.map(x => ({...x, symbol: x.symbol.toUpperCase()})))
                 setDobs(res.dobs)
                 setBtc(res.btc)
                 setStatus('complete')
@@ -152,7 +152,7 @@ export default function useLayer1Assets(btcAddress?: string, polling?: boolean) 
                 if (btcAddress) {
                     queryAssets(btcAddress, network === 'mainnet')
                         .then(res => {
-                            setXudts(res.xudts)
+                            setXudts(res.xudts.map(x => ({...x, symbol: x.symbol.toUpperCase()})))
                             setDobs(res.dobs)
                             setBtc(res.btc)
                         })

@@ -124,6 +124,7 @@ const langCN: LangConfig = {
     'Burn XUDT and release capacity': '销毁XUDT并释放容量',
     'CKB/BTC/EVM address...': 'CKB/BTC/EVM地址...',
     'Net Worth': '净值',
+    'Value': '价值',
 }
 
 

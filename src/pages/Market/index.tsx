@@ -29,7 +29,7 @@ export default function MarketPage() {
         }
     }, []);
 
-    return <div className="max-w-[1044px] mx-auto px-3 mt-4 md:mt-10 mb-10">
+    return <div className="max-w-[--page-with] mx-auto px-3 mt-4 md:mt-10 mb-10">
         <div className="py-9 mb-4 px-4 flex flex-col justify-center items-center shadow rounded-lg overflow-hidden"
              style={{background: 'url("/images/market_image.png") center bottom no-repeat', backgroundSize: '100% 200px'}}>
             <img src="/images/logo.png" className="w-[114px] h-[32px] mb-3" alt=""/>

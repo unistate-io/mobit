@@ -3,7 +3,7 @@ import {useContext} from "react"
 
 export default function Feedback() {
    const {lang} = useContext(LangContext)
-    return <div className="sm:flex-row flex-col p-4 rounded-lg bg-[#F3FBFF] flex items-center max-w-[1044px] my-5 mx-auto justify-between">
+    return <div className="sm:flex-row flex-col p-4 rounded-lg bg-[#F3FBFF] flex items-center max-w-[--page-with] my-5 mx-auto justify-between">
         <div className="text-sm text-center sm:text-left mb-3 sm:mb-0">{lang['We value your feedback! Share any issues on Github or Telegram.']}</div>
         <div className="flex flex-row items-center">
             <a href="https://github.com/unistate-io/mobit/issues"  className="mr-3">

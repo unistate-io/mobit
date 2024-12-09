@@ -28,7 +28,7 @@ export default function TokenPage() {
     const {data: ckbBalabce, status: ckbBalanceStatue} = useCkbBalance(addresses)
     const {data: historyData, status: historyDataStatus} = useTransactions(addresses?.[0], 10)
 
-    return <div className="max-w-[1044px] mx-auto px-3 py-8 flex flex-col sm:flex-row items-start mb-10">
+    return <div className="max-w-[--page-with] mx-auto px-3 py-8 flex flex-col sm:flex-row items-start mb-10">
         <div
             className="sm:w-[320px] w-full shadow rounded-lg overflow-hidden bg-[url('./assets/token_bg.png')] bg-[length:100%_auto] bg-no-repeat p-5">
             <div className="mt-10 mb-4">

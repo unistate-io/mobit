@@ -85,7 +85,7 @@ export default function BtcProfile({internalAddress}: { internalAddress: string 
 
     return <div>
         <Background gradient={themes[0].bg}/>
-        <div className="max-w-[1044px] mx-auto px-3 pb-10">
+        <div className="max-w-[--page-with] mx-auto px-3 pb-10">
             <div
                 className="w-[200px] h-[200px] rounded-full overflow-hidden mt-[-100px] border-4 border-white hidden md:block">
                 <Avatar size={200} name={internalAddress || 'default'} colors={themes[0].colors}/>

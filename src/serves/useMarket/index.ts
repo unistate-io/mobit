@@ -26,9 +26,17 @@ export default function useMarket() {
                 setStatus('error')
             })
             .then(res => {
-                setData(res.data.sort((a: TokenMarket, b: TokenMarket) => {
+                setData(res.data
+                    .sort((a: TokenMarket, b: TokenMarket) => {
                     return a.symbol < b.symbol ? -1 : 1
-                }))
+                })
+                    .map((a: TokenMarket) => {
+                        return {
+                            ...a,
+                            symbol: a.symbol.toUpperCase()
+                        }
+                    } )
+                )
                 setStatus('complete')
             })
             .catch((e: any) => {
