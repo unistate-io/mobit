@@ -54,6 +54,26 @@
     tslib "^2.3.0"
     zen-observable-ts "^1.2.5"
 
+"@apollo/client@^3.12.2":
+  version "3.12.2"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.12.2.tgz#28cf4a0c07c42ace566dc17e2647ff011424ece8"
+  integrity sha512-dkacsdMgVsrrQhLpN4JqZTIEfnNsPVwny+4vccSRqheWZElzUz1Xi0h39p2+TieS1f+wwvyzwpoJEV57vwzT9Q==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.1"
+    "@wry/caches" "^1.0.0"
+    "@wry/equality" "^0.5.6"
+    "@wry/trie" "^0.5.0"
+    graphql-tag "^2.12.6"
+    hoist-non-react-statics "^3.3.2"
+    optimism "^0.18.0"
+    prop-types "^15.7.2"
+    rehackt "^0.1.0"
+    response-iterator "^0.2.6"
+    symbol-observable "^4.0.0"
+    ts-invariant "^0.10.3"
+    tslib "^2.3.0"
+    zen-observable-ts "^1.2.5"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.16.0", "@babel/code-frame@^7.24.6", "@babel/code-frame@^7.8.3":
   version "7.24.6"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.24.6.tgz#ab88da19344445c3d8889af2216606d3329f3ef2"
@@ -1257,6 +1277,24 @@
   version "0.1.0-alpha.5"
   resolved "https://registry.npmmirror.com/@ckb-ccc/core/-/core-0.1.0-alpha.5.tgz#90ff2c8e21a63311675dc5fb46ea172f073de4e2"
   integrity sha512-SaRo31E7cCmT+YZYsebK+2qWF/xyHiyCjOB6hylTpiGQIyx5L3Y1a5ILYR7ew6qjzxLYXxmBIG/baiE56ifY8A==
+  dependencies:
+    "@joyid/ckb" "^1.0.1"
+    "@noble/ciphers" "^0.5.3"
+    "@noble/curves" "^1.4.2"
+    "@noble/hashes" "^1.4.0"
+    abort-controller "^3.0.0"
+    bech32 "^2.0.0"
+    bitcoinjs-message "^2.2.0"
+    buffer "^6.0.3"
+    cross-fetch "^4.0.0"
+    ethers "^6.13.1"
+    isomorphic-ws "^5.0.0"
+    ws "^8.18.0"
+
+"@ckb-ccc/core@0.1.0-alpha.7":
+  version "0.1.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/core/-/core-0.1.0-alpha.7.tgz#bc41877fc9bb11e5c274ed05865c5332564e9a0d"
+  integrity sha512-uTNZWGGc6WNknVvZXnlQJe20FHmRHlBXh9XGkWEJXjbCDunNzRQ9aM38goJjcNvSNLHHo6gGgwEITl8dvq1zLw==
   dependencies:
     "@joyid/ckb" "^1.0.1"
     "@noble/ciphers" "^0.5.3"
@@ -9683,6 +9721,24 @@ mobit-sdk@^1.8.1:
     "@rgbpp-sdk/service" "^0.6.0"
     rgbpp "^0.6.0"
 
+mobit-sdk@^1.9.2-test.20241210164841:
+  version "1.9.2-test.20241210164841"
+  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-1.9.2-test.20241210164841.tgz#b9e8520abe6d9f26cf573325f987c03c9736a7a7"
+  integrity sha512-89lzwZmVXRGPVJOOzvWXptBslYVkRzyidm0jASaNdHdE6aGmrl7DxPVLqXGk6snEsl489XPTKjLfAbVqWJVSiA==
+  dependencies:
+    "@apollo/client" "^3.12.2"
+    "@ckb-ccc/core" "0.1.0-alpha.7"
+    "@ckb-lumos/base" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/codec" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/common-scripts" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/helpers" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/lumos" "0.0.0-canary-d279b87-20240624101315"
+    "@nervosnetwork/ckb-sdk-utils" "0.109.3"
+    "@rgbpp-sdk/btc" "^0.6.0"
+    "@rgbpp-sdk/ckb" "^0.6.0"
+    "@rgbpp-sdk/service" "^0.6.0"
+    rgbpp "^0.6.0"
+
 mobit-wallet@^0.4.2:
   version "0.4.2"
   resolved "https://registry.npmmirror.com/mobit-wallet/-/mobit-wallet-0.4.2.tgz#b51e4180afb5d7b1d848bb32b4dde1ef6a25fabc"
@@ -12017,7 +12073,16 @@ string-natural-compare@^3.0.1:
   resolved "https://registry.yarnpkg.com/string-natural-compare/-/string-natural-compare-3.0.1.tgz#7a42d58474454963759e8e8b7ae63d71c1e7fdf4"
   integrity sha512-n3sPwynL1nwKi3WJ6AIsClwBMa0zTi54fn2oLU6ndfTSIO05xaznjSf15PcBZU6FNWbmN5Q6cxT4V5hGvB4taw==
 
-"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0:
+"string-width-cjs@npm:string-width@^4.2.0":
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
+  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
+  dependencies:
+    emoji-regex "^8.0.0"
+    is-fullwidth-code-point "^3.0.0"
+    strip-ansi "^6.0.1"
+
+string-width@^4.1.0, string-width@^4.2.0:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -12109,7 +12174,14 @@ stringify-object@^3.3.0:
     is-obj "^1.0.1"
     is-regexp "^1.0.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
+  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
+  dependencies:
+    ansi-regex "^5.0.1"
+
+strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -13388,7 +13460,7 @@ workbox-window@6.6.1:
     "@types/trusted-types" "^2.0.2"
     workbox-core "6.6.1"
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
@@ -13401,6 +13473,15 @@ wrap-ansi@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-6.2.0.tgz#e9393ba07102e6c91a3b221478f0257cd2856e53"
   integrity sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==
+  dependencies:
+    ansi-styles "^4.0.0"
+    string-width "^4.1.0"
+    strip-ansi "^6.0.0"
+
+wrap-ansi@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
+  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
   dependencies:
     ansi-styles "^4.0.0"
     string-width "^4.1.0"

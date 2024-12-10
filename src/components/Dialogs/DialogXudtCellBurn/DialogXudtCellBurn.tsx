@@ -14,6 +14,7 @@ import {helpers} from "@ckb-lumos/lumos"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import Input from "@/components/Form/Input/Input"
 import {leToU128} from "@rgbpp-sdk/ckb"
+import { ccc } from "@ckb-ccc/connector-react"
 
 export interface DialogXudtCellMergeProps {
     children: ReactNode
@@ -37,7 +38,7 @@ export default function DialogXudtCellBurn({
     const [step, setStep] = useState(1)
     const [open, setOpen] = useState(false)
     const [sending, setSending] = useState(false)
-    const [rawTx, setRawTx] = useState<helpers.TransactionSkeletonType | null>(null)
+    const [rawTx, setRawTx] = useState<ccc.TransactionLike | null>(null)
     const [txHash, setTxHash] = useState<string | null>(null)
     const [txError, setTxError] = useState<string>('')
     const [amount, setAmount] = useState<string>('0')
@@ -100,18 +101,44 @@ export default function DialogXudtCellBurn({
         }
     }
 
-    const fee = useMemo(() => {
-        if (!rawTx) return '0'
+    // const fee = useMemo(() => {
+    //     if (!rawTx) return '0'
 
+    //     try {
+    //         const inputCap = rawTx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+    //         const outCap = rawTx.outputs.reduce((sum, input: any) => sum + Number(input.capacity), 0)
+    //         return (inputCap - outCap) / 10 ** 8 + ''
+    //     } catch (e) {
+    //         console.error(e)
+    //         return '0'
+    //     }
+    // }, [rawTx, xudt])
+    const fee = useMemo(() => {
+        if (!rawTx) return '0';
+    
         try {
-            const inputCap = rawTx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-            const outCap = rawTx.outputs.reduce((sum, input: any) => sum + Number(input.capacity), 0)
-            return (inputCap - outCap) / 10 ** 8 + ''
+            // 检查 rawTx.inputs 是否存在并且是一个数组
+            const inputs = rawTx.inputs ? rawTx.inputs : [];
+            const inputCap = inputs.reduce((sum, input) => {
+                // 检查 input.cellOutput 是否存在
+                const capacity = input.cellOutput ? Number(input.cellOutput.capacity) : 0;
+                return sum + capacity;
+            }, 0);
+    
+            // 检查 rawTx.outputs 是否存在并且是一个数组
+            const outputs = rawTx.outputs ? rawTx.outputs : [];
+            const outCap = outputs.reduce((sum, output) => {
+                // 检查 output.cellOutput 是否存在
+                const capacity = output.capacity ? Number(output.capacity) : 0;
+                return sum + capacity;
+            }, 0);
+    
+            return (inputCap - outCap) / 10 ** 8 + '';
         } catch (e) {
-            console.error(e)
-            return '0'
+            console.error(e);
+            return '0';
         }
-    }, [rawTx, xudt])
+    }, [rawTx, xudt]);
 
     return <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger className={className}>
@@ -188,44 +215,40 @@ export default function DialogXudtCellBurn({
                             {status === 'complete' &&
                                 <div
                                     className="flex flex-row w-full flex-wrap mb-4 max-h-[208px] overflow-auto [&>*:nth-child(2n)]:mr-0">
-                                    {!!rawTx ?
-                                        rawTx.inputs.map((cell, index) => {
-                                            return <div key={index}
-                                                        className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden">
-                                                <div
-                                                    className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
-                                                    {toDisplay(Number(cell.cellOutput.capacity).toString(), xudt?.decimal || 0, true)} CKB
-                                                </div>
-                                                {
-                                                    !!cell.cellOutput.type &&
-                                                    <div className="flex flex-row items-center p-2">
-                                                        <TokenIcon size={28} symbol={xudt?.symbol || ''}/>
-                                                        <div className="text-sm">
-                                                            <div>{xudt?.symbol}</div>
-                                                            <div className="font-semibold">
-                                                                {toDisplay(number.Uint128LE.unpack((cell as any).outputData).toString(), xudt?.decimal || 0, true)}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                }
+                            {!!rawTx && rawTx.inputs ? 
+                                rawTx.inputs.map((cell, index) => {
+                                    if (!cell || !cell.cellOutput) return null; // 如果 cell 或 cell.cellOutput 为空，则跳过此 cell
 
-                                                {
-                                                    !cell.cellOutput.type &&
-                                                    <div className="flex flex-row items-center p-2">
-                                                        <TokenIcon size={28} symbol="CKB"/>
-                                                        <div className="text-sm">
-                                                            <div>CKB</div>
-                                                            <div
-                                                                className="font-semibold">{toDisplay(cell.cellOutput.capacity.toString(), 8, true)}</div>
+                                    return (
+                                        <div key={index} className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden">
+                                            <div className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
+                                                {toDisplay(Number(cell.cellOutput.capacity).toString(), xudt?.decimal || 0, true)} CKB
+                                            </div>
+                                            {cell.cellOutput.type && (
+                                                <div className="flex flex-row items-center p-2">
+                                                    <TokenIcon size={28} symbol={xudt?.symbol || ''} />
+                                                    <div className="text-sm">
+                                                        <div>{xudt?.symbol}</div>
+                                                        <div className="font-semibold">
+                                                            {toDisplay(number.Uint128LE.unpack((cell as any).outputData).toString(), xudt?.decimal || 0, true)}
                                                         </div>
                                                     </div>
-                                                }
-                                            </div>
-                                        })
-                                        : <div
-                                            className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">Not
-                                            Data</div>
-                                    }
+                                                </div>
+                                            )}
+                                            {!cell.cellOutput.type && (
+                                                <div className="flex flex-row items-center p-2">
+                                                    <TokenIcon size={28} symbol="CKB" />
+                                                    <div className="text-sm">
+                                                        <div>CKB</div>
+                                                        <div className="font-semibold">{toDisplay(cell.cellOutput.capacity.toString(), 8, true)}</div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                }) : 
+                                <div className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">Not Data</div>
+                            }
                                 </div>
                             }
 
@@ -242,7 +265,7 @@ export default function DialogXudtCellBurn({
 
                             {status !== 'loading' &&
                                 <div className="flex flex-row w-full flex-wrap h-[104px] [&>*:nth-child(2n)]:mr-0">
-                                    {!!rawTx ?
+                                    {!!rawTx && rawTx.outputs ?
                                         rawTx.outputs.map((cellOutput: any, index) => {
                                             return <div key={index}
                                                         className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden">

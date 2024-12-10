@@ -16,6 +16,7 @@ import dayjs from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
 import {helpers} from "@ckb-lumos/lumos"
 import useBtcWallet from "@/serves/useBtcWallet"
+import { ccc } from "@ckb-ccc/connector-react"
 
 export default function DialogLeapXudtToLayer1({
                                                    token,
@@ -35,7 +36,7 @@ export default function DialogLeapXudtToLayer1({
     const [toBtcAddress, setToBtcAddress] = useState(internalAddress || '')
     const [leapAmount, setLeapAmount] = useState('')
     const [txHash, setTxHash] = useState('')
-    const [tx, setTx] = useState<null | helpers.TransactionSkeletonType>(null)
+    const [tx, setTx] = useState<null | ccc.TransactionLike>(null)
     const [btcFeeRate, setBtcFeeRate] = useState(feeRate)
 
     const [amountError, setAmountError] = useState('')
@@ -160,14 +161,34 @@ export default function DialogLeapXudtToLayer1({
         }
     }
 
+    // const fee = useMemo(() => {
+    //     if (!tx) return '0'
+
+    //     const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+    //     const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+    //     return (inputCap - outCap).toString()
+    // }, [tx])
     const fee = useMemo(() => {
-        if (!tx) return '0'
-
-        const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-        const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-        return (inputCap - outCap).toString()
-    }, [tx])
-
+        if (!tx) return '0';
+    
+        // 检查 tx.inputs 是否存在并且是一个数组
+        const inputs = tx.inputs ? tx.inputs : [];
+        const inputCap = inputs.reduce((sum, input) => {
+            // 检查 input.cellOutput 是否存在
+            const capacity = input.cellOutput ? Number(input.cellOutput.capacity) : 0;
+            return sum + capacity;
+        }, 0);
+    
+        // 检查 tx.outputs 是否存在并且是一个数组
+        const outputs = tx.outputs ? tx.outputs : [];
+        const outCap = outputs.reduce((sum, output) => {
+            // 检查 output.cellOutput 是否存在
+            const capacity = output.capacity ? Number(output.capacity) : 0;
+            return sum + capacity;
+        }, 0);
+    
+        return (inputCap - outCap).toString();
+    }, [tx]);
 
     return <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger className={className}>

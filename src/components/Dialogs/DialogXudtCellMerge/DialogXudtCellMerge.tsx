@@ -12,6 +12,7 @@ import dayjs from "dayjs"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {helpers} from "@ckb-lumos/lumos"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
+import { ccc } from "@ckb-ccc/connector-react"
 
 export interface DialogXudtCellMergeProps {
     children: ReactNode
@@ -35,7 +36,7 @@ export default function DialogXudtCellMerge({
     const [step, setStep] = useState(1)
     const [open, setOpen] = useState(false)
     const [sending, setSending] = useState(false)
-    const [rawTx, setRawTx] = useState<helpers.TransactionSkeletonType | null>(null)
+    const [rawTx, setRawTx] = useState<ccc.TransactionLike | null>(null)
     const [txHash, setTxHash] = useState<string | null>(null)
     const [txError, setTxError] = useState<string>('')
 
@@ -79,17 +80,28 @@ export default function DialogXudtCellMerge({
         }
     }
 
+    // const fee = useMemo(() => {
+    //     if (!rawTx || !data.length) return '0'
+    //     try {
+    //         const inputCap = data.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
+    //         const outCap = rawTx.outputs.reduce((sum, input: any) => sum + Number(input.capacity), 0)
+    //         return (inputCap - outCap) / 10 ** 8 + ''
+    //     } catch (e) {
+    //         console.error(e)
+    //         return '0'
+    //     }
+    // }, [rawTx, data, xudt])
     const fee = useMemo(() => {
-        if (!rawTx || !data.length) return '0'
+        if (!rawTx || !data.length) return '0';
         try {
-            const inputCap = data.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-            const outCap = rawTx.outputs.reduce((sum, input: any) => sum + Number(input.capacity), 0)
-            return (inputCap - outCap) / 10 ** 8 + ''
+            const inputCap = data.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0);
+            const outCap = rawTx.outputs ? rawTx.outputs.reduce((sum, output: any) => sum + Number(output.capacity), 0) : 0;
+            return ((inputCap - outCap) / 10 ** 8).toFixed(8);
         } catch (e) {
-            console.error(e)
-            return '0'
+            console.error(e);
+            return '0';
         }
-    }, [rawTx, data, xudt])
+    }, [rawTx, data, xudt]);
 
     return <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger className={className}>
@@ -164,7 +176,7 @@ export default function DialogXudtCellMerge({
 
                             {status !== 'loading' &&
                                 <div className="flex flex-row w-full flex-wrap h-[104px] [&>*:nth-child(2n)]:mr-0">
-                                    {!!rawTx ?
+                                    {!!rawTx && rawTx.outputs ?
                                         rawTx.outputs.map((cellOutput: any, index) => {
                                             return <div key={index}
                                                         className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden">

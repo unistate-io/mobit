@@ -3,8 +3,8 @@ import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import {Cell, config as lumosConfig, helpers, Indexer} from "@ckb-lumos/lumos"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {hashType} from "@/serves/useXudtTransfer/lib"
-import {CkbHelper, convertToTxSkeleton, createMergeXudtTransaction, createBurnXudtTransaction} from "mobit-sdk"
-import {ccc as cccLib} from "@ckb-ccc/connector-react"
+import {CkbHelper, convertToTransactionLike, createMergeXudtTransaction, createBurnXudtTransaction} from "mobit-sdk"
+import {ccc, ccc as cccLib} from "@ckb-ccc/connector-react"
 
 export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, addresses?: string[]) {
     const {config, network, signer, wallet} = useContext(CKBContext)
@@ -70,8 +70,8 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
             isMainnet: network === 'mainnet',
         }, addresses[0], undefined, undefined, witnessLockPlaceholderSize)
 
-        let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
-        txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
+        let txSkeleton = convertToTransactionLike(tx)
+        txSkeleton = cccLib.Transaction.from(txSkeleton)
 
         console.log('txSkeleton', txSkeleton)
         return txSkeleton
@@ -89,14 +89,14 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
             isMainnet: network === 'mainnet'
         }, undefined, undefined, witnessLockPlaceholderSize)
 
-        let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
-        txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
+        let txSkeleton = convertToTransactionLike(tx);
+        txSkeleton = cccLib.Transaction.from(txSkeleton);
 
         console.log('txSkeleton', txSkeleton)
         return txSkeleton
     }
 
-    const signAndSend = async (tx: helpers.TransactionSkeletonType) => {
+    const signAndSend = async (tx: ccc.TransactionLike) => {
         if (!tokenInfo || !addresses || !addresses.length) return null
 
         if (!signer) {
@@ -105,7 +105,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
 
         console.log('signer', signer)
 
-        const hash = await signer.sendTransaction(tx as any)
+        const hash = await signer.sendTransaction(tx)
         return hash
     }
 

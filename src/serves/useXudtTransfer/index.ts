@@ -2,8 +2,7 @@ import {useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
-import {CkbHelper, convertToTxSkeleton, createTransferXudtTransaction} from "mobit-sdk"
-import { helpers } from "@ckb-lumos/lumos"
+import {CkbHelper, convertToTransactionLike, createTransferXudtTransaction} from "mobit-sdk"
 
 export default function useXudtTransfer() {
     const {signer, network, wallet} = useContext(CKBContext)
@@ -20,7 +19,7 @@ export default function useXudtTransfer() {
         amount: string
         tokenInfo: TokenInfoWithAddress
         feeRate: number
-    }): Promise<helpers.TransactionSkeletonType> => {
+    }): Promise<ccc.TransactionLike> => {
         const ckbHelper = new CkbHelper(network === "mainnet")
         const witnessLockPlaceholderSize = wallet?.name.includes('JoyID')? 1052 : undefined
         const tx = await createTransferXudtTransaction(
@@ -38,7 +37,7 @@ export default function useXudtTransfer() {
         )
 
         console.log(tx);
-        const skeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
+        const skeleton = convertToTransactionLike(tx);        
         console.log(skeleton);
         return skeleton;
     }
@@ -68,7 +67,7 @@ export default function useXudtTransfer() {
             tokenInfo
         })
 
-        return await signer.sendTransaction(ccc.Transaction.fromLumosSkeleton(tx))
+        return await signer.sendTransaction(ccc.Transaction.from(tx))
     }
 
     return {
