@@ -3,13 +3,13 @@ import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import {Cell, config as lumosConfig, helpers, Indexer} from "@ckb-lumos/lumos"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {hashType} from "@/serves/useXudtTransfer/lib"
-import {CkbHelper, convertToTxSkeleton, createMergeXudtTransaction, createBurnXudtTransaction} from "mobit-sdk"
-import {ccc as cccLib} from "@ckb-ccc/connector-react"
+import {CkbHelper, convertToTransaction, createMergeXudtTransaction, createBurnXudtTransaction} from "mobit-sdk"
+import {ccc} from "@ckb-ccc/connector-react"
 
 export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, addresses?: string[]) {
     const {config, network, signer, wallet} = useContext(CKBContext)
     const [data, setData] = useState<Cell[]>([])
-    const [status, setStatus] = useState<'loading' | 'error' | 'complete'>('loading')
+    const [status, setStatus] = useState<"loading" | "error" | "complete">("loading")
     const [error, setError] = useState<any | null>(null)
 
     useEffect(() => {
@@ -20,26 +20,26 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
             return
         }
 
-        (async () => {
+        ;(async () => {
             setStatus("loading")
 
             const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc)
-            const scriptConfig = network === 'mainnet' ? lumosConfig.MAINNET : lumosConfig.TESTNET
-            const senderLocks = addresses.map((address) => {
+            const scriptConfig = network === "mainnet" ? lumosConfig.MAINNET : lumosConfig.TESTNET
+            const senderLocks = addresses.map(address => {
                 return helpers.addressToScript(address, {config: scriptConfig})
             })
 
             const typeScript: any = {
-                codeHash: tokenInfo.address.script_code_hash.replace('\\', '0'),
+                codeHash: tokenInfo.address.script_code_hash.replace("\\", "0"),
                 hashType: hashType[tokenInfo.address.script_hash_type],
-                args: tokenInfo.address.script_args.replace('\\', '0'),
+                args: tokenInfo.address.script_args.replace("\\", "0")
             }
 
             let collected: Cell[] = []
 
             try {
                 for (const lock of senderLocks) {
-                    const collector = indexer.collector({lock: lock, type: typeScript});
+                    const collector = indexer.collector({lock: lock, type: typeScript})
                     for await (const cell of collector.collect()) {
                         collected.push(cell)
                     }
@@ -54,61 +54,67 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
                 setError(e)
             }
         })()
-
     }, [tokenInfo?.type_id, addresses, config.ckb_indexer, config.ckb_rpc, network])
-
 
     const createMergeXudtCellTx = async () => {
         if (!tokenInfo || !addresses || !addresses.length) return null
 
-        const ckbHelper = new CkbHelper(network === 'mainnet')
-        const witnessLockPlaceholderSize = wallet?.name.includes('JoyID')? 1052 : undefined
-        let tx = await createMergeXudtTransaction({
-            xudtArgs: tokenInfo.address.script_args.replace('\\', '0'),
-            ckbAddresses: addresses,
-            collector: ckbHelper.collector,
-            isMainnet: network === 'mainnet',
-        }, addresses[0], undefined, undefined, witnessLockPlaceholderSize)
+        const ckbHelper = new CkbHelper(network === "mainnet")
+        const witnessLockPlaceholderSize = wallet?.name.includes("JoyID") ? 1052 : undefined
+        let tx = await createMergeXudtTransaction(
+            {
+                xudtArgs: tokenInfo.address.script_args.replace("\\", "0"),
+                ckbAddresses: addresses,
+                collector: ckbHelper.collector,
+                isMainnet: network === "mainnet"
+            },
+            addresses[0],
+            undefined,
+            undefined,
+            witnessLockPlaceholderSize
+        )
 
-        let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
-        txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
+        let txSkeleton = convertToTransaction(tx)
 
-        console.log('txSkeleton', txSkeleton)
+        console.log("txSkeleton", txSkeleton)
         return txSkeleton
     }
 
     const createBurnXudtCellTx = async (burnAmount: bigint) => {
         if (!tokenInfo || !addresses || !addresses.length || burnAmount === BigInt(0)) return null
-        const ckbHelper = new CkbHelper(network === 'mainnet')
-        const witnessLockPlaceholderSize = wallet?.name.includes('JoyID')? 1052 : undefined
-        let tx = await createBurnXudtTransaction({
-            xudtArgs: tokenInfo.address.script_args.replace('\\', '0'),
-            ckbAddress: addresses[0],
-            burnAmount: burnAmount,
-            collector: ckbHelper.collector,
-            isMainnet: network === 'mainnet'
-        }, undefined, undefined, witnessLockPlaceholderSize)
+        const ckbHelper = new CkbHelper(network === "mainnet")
+        const witnessLockPlaceholderSize = wallet?.name.includes("JoyID") ? 1052 : undefined
+        let tx = await createBurnXudtTransaction(
+            {
+                xudtArgs: tokenInfo.address.script_args.replace("\\", "0"),
+                ckbAddress: addresses[0],
+                burnAmount: burnAmount,
+                collector: ckbHelper.collector,
+                isMainnet: network === "mainnet"
+            },
+            undefined,
+            undefined,
+            witnessLockPlaceholderSize
+        )
 
-        let txSkeleton = await convertToTxSkeleton(tx, ckbHelper.collector)
-        txSkeleton = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
+        const txSkeleton = convertToTransaction(tx)
 
-        console.log('txSkeleton', txSkeleton)
+        console.log("txSkeleton", txSkeleton)
         return txSkeleton
     }
 
-    const signAndSend = async (tx: helpers.TransactionSkeletonType) => {
+    const signAndSend = async (tx: ccc.Transaction) => {
         if (!tokenInfo || !addresses || !addresses.length) return null
 
         if (!signer) {
-            throw new Error('Please connect wallet first.')
+            throw new Error("Please connect wallet first.")
         }
 
-        console.log('signer', signer)
+        console.log("signer", signer)
 
-        const hash = await signer.sendTransaction(tx as any)
+        const hash = await signer.sendTransaction(tx)
         return hash
     }
-
 
     return {
         data,
