@@ -231,7 +231,7 @@ export default function DialogXudtCellBurn({
                                                          className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden">
                                                         <div
                                                             className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
-                                                            {toDisplay(Number(cell.cellOutput?.capacity).toString(), xudt?.decimal || 0, true)} CKB
+                                                            {toDisplay(Number(cell.cellOutput?.capacity).toString(), 8, true)} CKB
                                                         </div>
                                                         {!cell.cellOutput?.type && (
                                                             <div className="flex flex-row items-center p-2">
@@ -241,7 +241,7 @@ export default function DialogXudtCellBurn({
                                                                     <div className="font-semibold">
                                                                         {toDisplay(
                                                                             Number(cell.cellOutput!.capacity).toString(),
-                                                                            xudt?.decimal || 0,
+                                                                            8,
                                                                             true
                                                                         )}
                                                                     </div>
@@ -299,10 +299,9 @@ export default function DialogXudtCellBurn({
                                                             className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
                                                             {toDisplay(
                                                                 Number(cellOutput.capacity).toString(),
-                                                                xudt?.decimal || 0,
+                                                                8,
                                                                 true
-                                                            )}{" "}
-                                                            CKB
+                                                            )} CKB
                                                         </div>
                                                         {!!cellOutput.type && (
                                                             <div className="flex flex-row items-center p-2">
