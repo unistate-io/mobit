@@ -109,7 +109,7 @@ export default function TokenPage() {
                             <div className={'loading-bg h-[30px] mb-3 rounded-lg mt-3'}/> :
                             <div>
                                 <ProfileAddresses addresses={[address]} defaultAddress={address}/>
-                                <div className="font-semibold text-xl">
+                                <div className="font-semibold">
                                     {toDisplay(xudtBalance?.amount || '0', tokenInfo!.decimal, true)} {tokenInfo.symbol}
                                 </div>
                             </div>
@@ -122,7 +122,7 @@ export default function TokenPage() {
                         {!!btcAddress && rgbppXudtsStatus === 'complete' &&
                             <div className="mt-4">
                                 <ProfileAddresses addresses={[btcAddress]} defaultAddress={btcAddress}/>
-                                <div className="font-semibold text-xl">
+                                <div className="font-semibold">
                                     {toDisplay(rgbppBalance || '0', tokenInfo!.decimal, true)} {tokenInfo.symbol}
                                 </div>
                             </div>

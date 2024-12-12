@@ -55,9 +55,9 @@ export default function BitcoinPage() {
                     }
 
                     {btcBalanceStatue === 'complete' &&
-                        <div className={'flex flex-row justify-between h-[30px] mb-3'}>
+                        <div className={'flex flex-col justify-between mb-3'}>
                             <div>{lang['Balance']}</div>
-                            <div className="font-semibold text-xl">{toDisplay(btc?.amount || '0', 8, true, 8)} BTC
+                            <div className="font-semibold">{toDisplay(btc?.amount || '0', 8, true, 8)} BTC
                             </div>
                         </div>
                     }

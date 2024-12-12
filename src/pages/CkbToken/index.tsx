@@ -54,9 +54,9 @@ export default function TokenPage() {
                     }
 
                     {ckbBalanceStatue === 'complete' &&
-                        <div className={'flex flex-row justify-between h-[30px] mb-3'}>
+                        <div className={'flex flex-col justify-between mb-3'}>
                             <div>{lang['Balance']}</div>
-                            <div className="font-semibold text-xl">{toDisplay(ckbBalabce?.amount || '0', 8, true)} CKB
+                            <div className="font-semibold">{toDisplay(ckbBalabce?.amount || '0', 8, true)} CKB
                             </div>
                         </div>
                     }
