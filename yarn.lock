@@ -34,26 +34,6 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@apollo/client@^3.11.4":
-  version "3.11.4"
-  resolved "https://registry.npmmirror.com/@apollo/client/-/client-3.11.4.tgz#8b0fed2d091d47597e8ddafca85776bf612ae3aa"
-  integrity sha512-bmgYKkULpym8wt8aXlAZ1heaYo0skLJ5ru0qJ+JCRoo03Pe+yIDbBCnqlDw6Mjj76hFkDw3HwFMgZC2Hxp30Mg==
-  dependencies:
-    "@graphql-typed-document-node/core" "^3.1.1"
-    "@wry/caches" "^1.0.0"
-    "@wry/equality" "^0.5.6"
-    "@wry/trie" "^0.5.0"
-    graphql-tag "^2.12.6"
-    hoist-non-react-statics "^3.3.2"
-    optimism "^0.18.0"
-    prop-types "^15.7.2"
-    rehackt "^0.1.0"
-    response-iterator "^0.2.6"
-    symbol-observable "^4.0.0"
-    ts-invariant "^0.10.3"
-    tslib "^2.3.0"
-    zen-observable-ts "^1.2.5"
-
 "@apollo/client@^3.12.2":
   version "3.12.2"
   resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.12.2.tgz#28cf4a0c07c42ace566dc17e2647ff011424ece8"
@@ -1255,24 +1235,6 @@
     "@ckb-ccc/ccc" "0.0.16-alpha.9"
     lit "^3.1.3"
 
-"@ckb-ccc/core@0.0.11-alpha.3":
-  version "0.0.11-alpha.3"
-  resolved "https://registry.npmmirror.com/@ckb-ccc/core/-/core-0.0.11-alpha.3.tgz#586f22714cd27b92e5c9272a3d3c7a0e2a704d88"
-  integrity sha512-2+K6D7rdEFhDSqaiw4Crbe75p0urPOQ8hePJl/FTqGhengOOcBqp4G14+NXPHhS/S58r+V0kmg3zrRIRXBKPGQ==
-  dependencies:
-    "@ckb-lumos/helpers" "^0.22.2"
-    "@joyid/ckb" "^1.0.1"
-    "@noble/ciphers" "^0.5.3"
-    "@noble/curves" "^1.4.2"
-    "@noble/hashes" "^1.4.0"
-    abort-controller "^3.0.0"
-    bech32 "^2.0.0"
-    bitcoinjs-message "^2.2.0"
-    blake2b "^2.1.4"
-    buffer "^6.0.3"
-    cross-fetch "^4.0.0"
-    ethers "^6.13.1"
-
 "@ckb-ccc/core@0.1.0-alpha.7":
   version "0.1.0-alpha.7"
   resolved "https://registry.yarnpkg.com/@ckb-ccc/core/-/core-0.1.0-alpha.7.tgz#bc41877fc9bb11e5c274ed05865c5332564e9a0d"
@@ -1448,18 +1410,6 @@
     "@types/deep-freeze-strict" "^1.1.0"
     deep-freeze-strict "^1.1.1"
 
-"@ckb-lumos/config-manager@0.22.2":
-  version "0.22.2"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/config-manager/-/config-manager-0.22.2.tgz#03f04dedf413a5bcfefa98e71f11dd4da7779fba"
-  integrity sha512-LJ4p80VrCHh178Ks4wW1rEyHC/JWtZxrFiwHinA9aG6aOm2Z9hbZO0/ZKoS5pLfW0gxP2+ZHA3oMVt0UJhlTKA==
-  dependencies:
-    "@ckb-lumos/base" "0.22.2"
-    "@ckb-lumos/bi" "0.22.2"
-    "@ckb-lumos/codec" "0.22.2"
-    "@ckb-lumos/rpc" "0.22.2"
-    "@types/deep-freeze-strict" "^1.1.0"
-    deep-freeze-strict "^1.1.1"
-
 "@ckb-lumos/hd@0.0.0-canary-d279b87-20240624101315":
   version "0.0.0-canary-d279b87-20240624101315"
   resolved "https://registry.yarnpkg.com/@ckb-lumos/hd/-/hd-0.0.0-canary-d279b87-20240624101315.tgz#b29cffb929aafa7924a289f94cc4da9dacf5db7f"
@@ -1483,19 +1433,6 @@
     "@ckb-lumos/codec" "0.0.0-canary-d279b87-20240624101315"
     "@ckb-lumos/config-manager" "0.0.0-canary-d279b87-20240624101315"
     "@ckb-lumos/toolkit" "0.0.0-canary-d279b87-20240624101315"
-    bech32 "^2.0.0"
-    immutable "^4.3.0"
-
-"@ckb-lumos/helpers@^0.22.2":
-  version "0.22.2"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/helpers/-/helpers-0.22.2.tgz#4f7365b8196cac4a690fae754dfa81f52503925b"
-  integrity sha512-6ztXwxsaCuoHjkbclAnfAv9BYl02t+/XxNtl3Et4Sl09xIp9HJ9/vyJouC9JjdQdnfkv1zVGN9tLiKwc6QudaQ==
-  dependencies:
-    "@ckb-lumos/base" "0.22.2"
-    "@ckb-lumos/bi" "0.22.2"
-    "@ckb-lumos/codec" "0.22.2"
-    "@ckb-lumos/config-manager" "0.22.2"
-    "@ckb-lumos/toolkit" "0.22.2"
     bech32 "^2.0.0"
     immutable "^4.3.0"
 
@@ -1535,16 +1472,6 @@
   dependencies:
     "@ckb-lumos/base" "0.0.0-canary-d279b87-20240624101315"
     "@ckb-lumos/bi" "0.0.0-canary-d279b87-20240624101315"
-    abort-controller "^3.0.0"
-    cross-fetch "^3.1.5"
-
-"@ckb-lumos/rpc@0.22.2":
-  version "0.22.2"
-  resolved "https://registry.yarnpkg.com/@ckb-lumos/rpc/-/rpc-0.22.2.tgz#5c8030ae2d5bf1fa4b7e118216a74ec7129e09ef"
-  integrity sha512-c2SX0ooDJO3dV2JOTTQtKZs0k+dHst+NHfbYJ6mYWApcZWx2nG4bQR3CQFMIKnd5CKYP/r2JuaonDkcRH9vmzw==
-  dependencies:
-    "@ckb-lumos/base" "0.22.2"
-    "@ckb-lumos/bi" "0.22.2"
     abort-controller "^3.0.0"
     cross-fetch "^3.1.5"
 
@@ -2647,7 +2574,7 @@
     jsbi "3.1.3"
     tslib "2.3.1"
 
-"@nervosnetwork/ckb-sdk-utils@0.109.3", "@nervosnetwork/ckb-sdk-utils@^0.109.3":
+"@nervosnetwork/ckb-sdk-utils@0.109.3":
   version "0.109.3"
   resolved "https://registry.npmmirror.com/@nervosnetwork/ckb-sdk-utils/-/ckb-sdk-utils-0.109.3.tgz#19dafa7608d703456043d1f24cce8256ff1bc28d"
   integrity sha512-sV3WXlZmd765qtFsXpwl0Bl3hOgGev15Og810acO6iC0cVHEVvv/Uiabd8a2xkqyfziRDI0tfWC0DewOJB28rg==
@@ -9702,10 +9629,10 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mobit-sdk@^1.11.0-test.20241212174617:
-  version "1.11.0-test.20241212174617"
-  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-1.11.0-test.20241212174617.tgz#7fde237ab829397e9867545d4cb3bf177222f771"
-  integrity sha512-X67ATIg4NOva94VQckl3nMNuiqAKUQkOYH0pQQKfW2F9Vl8gD/xmROAbOyLt9ohRzVX4eNrFwPAkaQzO7nCKjQ==
+mobit-sdk@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-1.11.0.tgz#a1c5dbd34299cc1b5ea9c7debc76e0a868ada90a"
+  integrity sha512-Rk7dqfRuTY6hAAlg/h/U08nuTbSarcSAvQpZYjVPeAYiwNBw7GcFkKxH8F9E8wKLbvw+GqCIyONQ7kjoUPp12w==
   dependencies:
     "@apollo/client" "^3.12.2"
     "@ckb-ccc/core" "0.1.0-alpha.7"
@@ -9720,33 +9647,15 @@ mobit-sdk@^1.11.0-test.20241212174617:
     "@rgbpp-sdk/service" "^0.6.0"
     rgbpp "^0.6.0"
 
-mobit-sdk@^1.8.1:
-  version "1.8.1"
-  resolved "https://registry.npmmirror.com/mobit-sdk/-/mobit-sdk-1.8.1.tgz#a839e55f0af681fa7f40306d84908029fe0c5c8a"
-  integrity sha512-jtLqGIKjbnJKyIaTo2NFiW2UnFmD6SqnqDfOgY4+MEz/mdx9lPVOnAFeo/InbGS5fYMEa864ur/Ispz7PjsciQ==
-  dependencies:
-    "@apollo/client" "^3.11.4"
-    "@ckb-ccc/core" "0.0.11-alpha.3"
-    "@ckb-lumos/base" "0.0.0-canary-d279b87-20240624101315"
-    "@ckb-lumos/codec" "0.0.0-canary-d279b87-20240624101315"
-    "@ckb-lumos/common-scripts" "0.0.0-canary-d279b87-20240624101315"
-    "@ckb-lumos/helpers" "0.0.0-canary-d279b87-20240624101315"
-    "@ckb-lumos/lumos" "0.0.0-canary-d279b87-20240624101315"
-    "@nervosnetwork/ckb-sdk-utils" "^0.109.3"
-    "@rgbpp-sdk/btc" "^0.6.0"
-    "@rgbpp-sdk/ckb" "^0.6.0"
-    "@rgbpp-sdk/service" "^0.6.0"
-    rgbpp "^0.6.0"
-
-mobit-wallet@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.npmmirror.com/mobit-wallet/-/mobit-wallet-0.4.2.tgz#b51e4180afb5d7b1d848bb32b4dde1ef6a25fabc"
-  integrity sha512-DtjcW6dY3xXESgbHRMsFUA4D2+D0QQ4kBvMWp4MStoY6yGpUbd4/qCxe2z9JgZW3UJRD3hBDLqyPP2MGqNy5rQ==
+mobit-wallet@^0.4.5:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/mobit-wallet/-/mobit-wallet-0.4.5.tgz#40ba90d30f0d14eb4affc30935dbfe3bf72b3e7c"
+  integrity sha512-tAqzqPMkDCb4XRImR7dguIKvlL3xbjOD7MeMOd7QMLySHkLrFDr1tHGFD6Rv3eChSlYY79M0gxb4feB/x/tUvg==
   dependencies:
     "@joyid/bitcoin" "^0.1.5"
     "@rgbpp-sdk/btc" "^0.6.0"
     "@rgbpp-sdk/service" "^0.6.0"
-    mobit-sdk "^1.8.1"
+    mobit-sdk "^1.11.0"
 
 ms@2.0.0:
   version "2.0.0"
