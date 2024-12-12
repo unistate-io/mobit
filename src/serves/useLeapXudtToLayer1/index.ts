@@ -60,7 +60,8 @@ export default function useLeapXudtToLayer1() {
             ckbAddress: address!
         })
 
-        const skeleton = await convertToTransaction(tx, signer, props.feeRate)
+        const skeleton = convertToTransaction(tx)
+        await skeleton.completeFeeBy(signer, props.feeRate)
 
         console.log("tx", skeleton)
         return skeleton

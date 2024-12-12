@@ -3,7 +3,6 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import {CkbHelper, convertToTransaction, createTransferXudtTransaction} from "mobit-sdk"
-import JSONbig from "json-bigint"
 
 export default function useXudtTransfer() {
     const {signer, network, wallet} = useContext(CKBContext)
@@ -35,7 +34,10 @@ export default function useXudtTransfer() {
         )
 
         console.log(tx)
-        const skeleton = await convertToTransaction(tx, signer, feeRate)
+      
+        const skeleton = convertToTransaction(tx)
+        await skeleton.completeFeeBy(signer, feeRate)
+
         console.log(skeleton)
         return skeleton
     }
