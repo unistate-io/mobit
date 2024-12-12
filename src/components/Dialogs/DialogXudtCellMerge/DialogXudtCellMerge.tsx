@@ -12,7 +12,8 @@ import dayjs from "dayjs"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {helpers} from "@ckb-lumos/lumos"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
-import {ccc} from "@ckb-ccc/connector-react"
+import {ccc, useCcc} from "@ckb-ccc/connector-react"
+import BigNumber from "bignumber.js"
 
 export interface DialogXudtCellMergeProps {
     children: ReactNode
@@ -79,16 +80,24 @@ export default function DialogXudtCellMerge({
         }
     }
 
-    const fee = useMemo(() => {
-        if (!rawTx || !data.length) return "0"
-        try {
-            const inputCap = data.reduce((sum, input) => sum + Number(input.cellOutput.capacity), 0)
-            const outCap = Number(rawTx.getOutputsCapacity())
-            return (inputCap - outCap) / 10 ** 8 + ""
-        } catch (e) {
-            console.error(e)
-            return "0"
+    const [fee, setFee1000] = useState("0")
+    const {client} = useCcc()
+    useEffect(() => {
+        const calculateFee = async () => {
+            if (!rawTx) return
+            const inputCap = await rawTx.getInputsCapacity(client)
+            const outCap = rawTx.getOutputsCapacity()
+            const fee = inputCap - outCap
+            const feeBigNumber = new BigNumber(fee.toString())
+            const divisor = new BigNumber(10 ** 8)
+            const fee1000BigNumber = feeBigNumber.dividedBy(divisor)
+
+            console.log("Setting fee1000...")
+            setFee1000(fee1000BigNumber.toString())
+            console.log(`Fee1000 set to: ${fee1000BigNumber.toString()}`)
         }
+
+        calculateFee()
     }, [rawTx, data, xudt])
 
     return (
