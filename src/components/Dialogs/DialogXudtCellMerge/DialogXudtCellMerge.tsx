@@ -49,7 +49,7 @@ export default function DialogXudtCellMerge({
 
         ;(async () => {
             try {
-                const tx = await createMergeXudtCellTx()
+                const tx = await createMergeXudtCellTx(1000)
                 console.log("tx: ", tx)
                 setRawTx(tx)
             } catch (e: any) {

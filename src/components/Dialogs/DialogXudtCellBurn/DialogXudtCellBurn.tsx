@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useMemo, useState} from "react"
+import {ReactNode, useContext, useEffect, useMemo, useState} from "react"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import * as Dialog from "@radix-ui/react-dialog"
 import useGetXudtCell from "@/serves/useGetXudtCell"
@@ -10,7 +10,6 @@ import {shortTransactionHash} from "@/utils/common"
 import CopyText from "@/components/CopyText/CopyText"
 import dayjs from "dayjs"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {helpers} from "@ckb-lumos/lumos"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import Input from "@/components/Form/Input/Input"
 import {leToU128} from "@rgbpp-sdk/ckb"
@@ -73,7 +72,7 @@ export default function DialogXudtCellBurn({
         ;(async () => {
             setSending(true)
             try {
-                const tx = await createBurnXudtCellTx(BigInt(amount))
+                const tx = await createBurnXudtCellTx(BigInt(amount), 1000)
                 console.log("tx: ", tx)
                 setRawTx(tx)
                 setStep(2)

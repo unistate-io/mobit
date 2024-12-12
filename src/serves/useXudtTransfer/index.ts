@@ -3,10 +3,10 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import {CkbHelper, convertToTransaction, createTransferXudtTransaction} from "mobit-sdk"
+import JSONbig from "json-bigint"
 
 export default function useXudtTransfer() {
     const {signer, network, wallet} = useContext(CKBContext)
-
     const build = async ({
         froms,
         to,
@@ -19,9 +19,10 @@ export default function useXudtTransfer() {
         amount: string
         tokenInfo: TokenInfoWithAddress
         feeRate: number
-    }): Promise<ccc.Transaction> => {
+    }): Promise<ccc.Transaction | null> => {
+        if (!signer) return null
+
         const ckbHelper = new CkbHelper(network === "mainnet")
-        const witnessLockPlaceholderSize = wallet?.name.includes("JoyID") ? 1052 : undefined
         const tx = await createTransferXudtTransaction(
             {
                 xudtArgs: tokenInfo.address.script_args.replace("\\", "0"),
@@ -30,14 +31,11 @@ export default function useXudtTransfer() {
                 collector: ckbHelper.collector,
                 isMainnet: network === "mainnet"
             },
-            froms[0],
-            BigInt(feeRate),
-            undefined,
-            witnessLockPlaceholderSize
+            froms[0]
         )
 
         console.log(tx)
-        const skeleton = convertToTransaction(tx)
+        const skeleton = convertToTransaction(tx, signer, feeRate)
         console.log(skeleton)
         return skeleton
     }
@@ -67,7 +65,9 @@ export default function useXudtTransfer() {
             tokenInfo
         })
 
-        return await signer.sendTransaction(tx)
+        const signedTx = await signer.signTransaction(tx!)
+
+        return await signer.client.sendTransaction(signedTx)
     }
 
     return {

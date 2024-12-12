@@ -49,21 +49,18 @@ export default function useLeapXudtToLayer1() {
 
         const ckbHelper = new CkbHelper(network === "mainnet")
 
-        const tx = await leapFromCkbToBtcTransaction(
-            {
-                outIndex: props.outIndex,
-                btcTxId: props.btcTxId,
-                xudtTypeArgs: props.xudtTypeArgs,
-                transferAmount: props.transferAmount,
-                isMainnet: network === "mainnet",
-                btcTestnetType: network !== "mainnet" ? "Testnet3" : undefined,
-                collector: ckbHelper.collector,
-                ckbAddress: address!
-            },
-            props.feeRate
-        )
+        const tx = await leapFromCkbToBtcTransaction({
+            outIndex: props.outIndex,
+            btcTxId: props.btcTxId,
+            xudtTypeArgs: props.xudtTypeArgs,
+            transferAmount: props.transferAmount,
+            isMainnet: network === "mainnet",
+            btcTestnetType: network !== "mainnet" ? "Testnet3" : undefined,
+            collector: ckbHelper.collector,
+            ckbAddress: address!
+        })
 
-        const skeleton = convertToTransaction(tx)
+        const skeleton = await convertToTransaction(tx, signer, props.feeRate)
 
         console.log("tx", skeleton)
         return skeleton

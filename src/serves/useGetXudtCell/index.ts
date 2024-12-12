@@ -56,11 +56,10 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
         })()
     }, [tokenInfo?.type_id, addresses, config.ckb_indexer, config.ckb_rpc, network])
 
-    const createMergeXudtCellTx = async () => {
-        if (!tokenInfo || !addresses || !addresses.length) return null
+    const createMergeXudtCellTx = async (feeRate: ccc.NumLike) => {
+        if (!tokenInfo || !addresses || !addresses.length || !signer) return null
 
         const ckbHelper = new CkbHelper(network === "mainnet")
-        const witnessLockPlaceholderSize = wallet?.name.includes("JoyID") ? 1052 : undefined
         let tx = await createMergeXudtTransaction(
             {
                 xudtArgs: tokenInfo.address.script_args.replace("\\", "0"),
@@ -68,36 +67,27 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
                 collector: ckbHelper.collector,
                 isMainnet: network === "mainnet"
             },
-            addresses[0],
-            undefined,
-            undefined,
-            witnessLockPlaceholderSize
+            addresses[0]
         )
 
-        let txSkeleton = convertToTransaction(tx)
+        let txSkeleton = await convertToTransaction(tx, signer, feeRate)
 
         console.log("txSkeleton", txSkeleton)
         return txSkeleton
     }
 
-    const createBurnXudtCellTx = async (burnAmount: bigint) => {
-        if (!tokenInfo || !addresses || !addresses.length || burnAmount === BigInt(0)) return null
+    const createBurnXudtCellTx = async (burnAmount: bigint, feeRate: ccc.NumLike) => {
+        if (!tokenInfo || !addresses || !addresses.length || burnAmount === BigInt(0) || !signer) return null
         const ckbHelper = new CkbHelper(network === "mainnet")
-        const witnessLockPlaceholderSize = wallet?.name.includes("JoyID") ? 1052 : undefined
-        let tx = await createBurnXudtTransaction(
-            {
-                xudtArgs: tokenInfo.address.script_args.replace("\\", "0"),
-                ckbAddress: addresses[0],
-                burnAmount: burnAmount,
-                collector: ckbHelper.collector,
-                isMainnet: network === "mainnet"
-            },
-            undefined,
-            undefined,
-            witnessLockPlaceholderSize
-        )
+        let tx = await createBurnXudtTransaction({
+            xudtArgs: tokenInfo.address.script_args.replace("\\", "0"),
+            ckbAddress: addresses[0],
+            burnAmount: burnAmount,
+            collector: ckbHelper.collector,
+            isMainnet: network === "mainnet"
+        })
 
-        const txSkeleton = convertToTransaction(tx)
+        const txSkeleton = convertToTransaction(tx, signer, feeRate)
 
         console.log("txSkeleton", txSkeleton)
         return txSkeleton
