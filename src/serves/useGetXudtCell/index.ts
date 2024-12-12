@@ -87,7 +87,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
             isMainnet: network === "mainnet"
         })
 
-        const txSkeleton = convertToTransaction(tx, signer, feeRate)
+        const txSkeleton = await convertToTransaction(tx, signer, feeRate)
 
         console.log("txSkeleton", txSkeleton)
         return txSkeleton
