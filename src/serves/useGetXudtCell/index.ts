@@ -89,6 +89,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
 
         const txSkeleton = convertToTransaction(tx)
         await txSkeleton.completeFeeBy(signer, feeRate)
+
         console.log("txSkeleton", txSkeleton)
         return txSkeleton
     }
