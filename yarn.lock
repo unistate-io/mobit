@@ -9647,6 +9647,24 @@ mobit-sdk@^1.11.0:
     "@rgbpp-sdk/service" "^0.6.0"
     rgbpp "^0.6.0"
 
+mobit-sdk@^1.11.1:
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-1.11.1.tgz#e3a21364f27c9d0ab60e044df6f9648560d64d59"
+  integrity sha512-KOxnbU4/WYwFLg2vkanR8zKOGL5UCPqBAhwseJxa+rXqf8t/2FqLIYMn/3hNFdpRdtUvBUFZ5l2ZFdmZqjtpvA==
+  dependencies:
+    "@apollo/client" "^3.12.2"
+    "@ckb-ccc/core" "0.1.0-alpha.7"
+    "@ckb-lumos/base" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/codec" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/common-scripts" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/helpers" "0.0.0-canary-d279b87-20240624101315"
+    "@ckb-lumos/lumos" "0.0.0-canary-d279b87-20240624101315"
+    "@nervosnetwork/ckb-sdk-utils" "0.109.3"
+    "@rgbpp-sdk/btc" "^0.6.0"
+    "@rgbpp-sdk/ckb" "^0.6.0"
+    "@rgbpp-sdk/service" "^0.6.0"
+    rgbpp "^0.6.0"
+
 mobit-wallet@^0.4.5:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/mobit-wallet/-/mobit-wallet-0.4.5.tgz#40ba90d30f0d14eb4affc30935dbfe3bf72b3e7c"
