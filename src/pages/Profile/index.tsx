@@ -1,7 +1,7 @@
 import UserProvider from "@/providers/UserProvider/UserProvider"
 import {useParams} from "react-router-dom"
 import Profile from "@/pages/Profile/Profile"
-import InternalProfile from "./InternalProfile"
+import EvmProfile from "./EvmProfile"
 import {useContext, useEffect, useState} from "react"
 import {
     checksumCkbAddress,
@@ -46,6 +46,7 @@ export default function ProfilePage() {
                 setDisplayAddress(res!)
                 setDisplayInternalAddress(address)
                 setReady(true)
+                return
             }
 
             // btc address
@@ -73,7 +74,7 @@ export default function ProfilePage() {
                 <UserProvider address={displayAddress!}>
                     {
                         displayInternalAddress
-                            ? <InternalProfile internalAddress={displayInternalAddress}/>
+                            ? <EvmProfile internalAddress={displayInternalAddress}/>
                             : <Profile/>
                     }
                 </UserProvider>

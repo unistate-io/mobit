@@ -7,7 +7,13 @@ export default function useTransactions(address?: string, pageSize?: number) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [error, setError] = useState<undefined | any>(undefined)
     const [page, setPage] = useState(1)
+    const [loadAll, setLoadAll] = useState(false)
     const size = pageSize || 5
+
+    useEffect(() => {
+        setPage(1)
+        setLoadAll(false)
+    }, [address]);
 
     useEffect(() => {
         if (!address) {
@@ -16,7 +22,6 @@ export default function useTransactions(address?: string, pageSize?: number) {
             setError(undefined)
         } else {
             setStatus('loading')
-            setData([])
             const config = address.startsWith('ckt') ? network_config['testnet'] : network_config['mainnet']
             fetch(`${config.explorer_api}/address_transactions/${address}?page=${page}&page_size=${size}&sort=time.desc`, {
                 method: 'GET',
@@ -28,8 +33,12 @@ export default function useTransactions(address?: string, pageSize?: number) {
                 .then(async (res) => {
                     const json = await res.json()
                     if (json.data) {
-                        setData(json.data)
+                        setData([...data, ...json.data])
                         setStatus('complete')
+
+                        if (json.data.length < size) {
+                            setLoadAll(true)
+                        }
                     } else {
                         setData([])
                         setStatus('complete')
@@ -42,14 +51,14 @@ export default function useTransactions(address?: string, pageSize?: number) {
                     setError(e)
                 })
         }
-    }, [address, page])
-
+    }, [page])
 
     return {
         setPage,
         page,
         data,
         status,
-        error
+        error,
+        loadAll
     }
 }

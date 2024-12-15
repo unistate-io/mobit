@@ -3,7 +3,6 @@ import {useContext, useEffect, useMemo, useState} from "react"
 import Background from "@/components/Background/Background"
 import Avatar from "@/components/Avatar/Avatar"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import * as Tabs from '@radix-ui/react-tabs'
 import ListToken, {TokenBalance} from "@/components/ListToken/ListToken"
 import useAllXudtBalance from "@/serves/useAllXudtBalance"
 import useCkbBalance from "@/serves/useCkbBalance"
@@ -24,6 +23,7 @@ import ListDotBit from "@/components/ListDotBit/ListDotBit"
 import DialogReceive from "@/components/Dialogs/DialogReceive/DialogReceive"
 import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
 import NetWorth from "@/components/NetWorth"
+import Button from "@/components/Form/Button/Button";
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -60,7 +60,13 @@ export default function Profile() {
 
     const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useAllXudtBalance(queryAddress)
     const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(queryAddress)
-    const {data: historyData, status: historyDataStatus} = useTransactions(selectedAddress!)
+    const {
+        data: historyData,
+        status: historyDataStatus,
+        page: historyDataPage,
+        setPage: setHistoryDataPage,
+        loadAll: historyDataLoadAll
+    } = useTransactions(selectedAddress!)
     const {
         data: sporesData,
         status: sporesDataStatus,
@@ -78,9 +84,15 @@ export default function Profile() {
     const {
         data: btcHistory,
         status: btcHistoryStatus
-    } = useBtcTransactionsHistory(btcAddress, 5)
+    } = useBtcTransactionsHistory(btcAddress)
 
-    const {data: rgbppHistory, status: rgbppHistoryStatus} = useTransactionsHistory(btcAddress)
+    const {
+        data: rgbppHistory,
+        status: rgbppHistoryStatus,
+        setPage: rgbppHistorySetPage,
+        page: rgbppHistoryPage,
+        loadAll: rgbppHistoryLoadAll
+    } = useTransactionsHistory(btcAddress)
 
     const {domains, status: domainStatus} = useDotbit(address)
 
@@ -149,8 +161,13 @@ export default function Profile() {
         }, {
             value: '.bit',
             label: '.bit'
+        }, {
+            value: 'Activity',
+            label: lang['Activity']
         }]
     }, [lang])
+
+    const [currtab, setCurrTab] = useState('All')
 
     return <div>
         <div className="max-w-[--page-with] mx-auto relative">
@@ -173,7 +190,7 @@ export default function Profile() {
         <div className="max-w-[--page-with] mx-auto px-3 pb-10 relative">
 
             <div className="absolute right-3 top-[40px] md:top-[80px]">
-                <NetWorth balances={tokenData} />
+                <NetWorth balances={tokenData}/>
             </div>
 
             <div
@@ -206,80 +223,44 @@ export default function Profile() {
                 }
             </div>
 
-            <div className="flex mt-3 lg:mt-9 justify-between flex-col lg:flex-row">
-                <div className="flex-1 lg:max-w-[780px]">
-                    <Tabs.Root
-                        className="flex flex-col"
-                        defaultValue="All">
-                        <Tabs.List className="shrink-0 flex flex-row overflow-auto" aria-label="Assets">
-                            {
-                                tabs.map((tab) => <Tabs.Trigger key={tab.value}
-                                                                className="h-10 mr-4 font-bold outline-none cursor-pointer py-2 px-4 rounded-lg data-[state=active]:text-white data-[state=active]:bg-black"
-                                                                value={tab.value}>{tab.label}</Tabs.Trigger>)
-                            }
-                        </Tabs.List>
+            <div className="flex flex-row items-center mt-3 lg:mt-9 w-full overflow-auto">
+                {tabs.map((tab) => {
+                    return <Button
+                        key={tab.value}
+                        onClick={() => setCurrTab(tab.value)}
+                        className={`w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg ${tab.value === currtab ? ' text-white !bg-black' : ''}`}
+                        value={tab.value}>{tab.label}</Button>
+                })}
+            </div>
+            <div className="flex justify-between flex-col lg:flex-row">
+                <div className={`flex-1 lg:max-w-[780px] ${currtab !== 'Activity' ? 'block' : 'hidden'}`}>
+                    <div className={`mt-4 ${currtab === 'All' || currtab === 'Tokens' ? 'block' : 'hidden'}`}>
+                        <ListToken
+                            data={tokenData}
+                            status={tokensStatus}
+                            internalAddress={internalAddress}
+                            addresses={isOwner ? addresses : undefined}/>
+                    </div>
 
+                    <div className={`mt-6 ${currtab === 'All' || currtab === 'DOBs' ? 'block' : 'hidden'}`}>
+                        <ListDOBs
+                            data={[...layer1Dobs, ...sporesData]}
+                            status={dobsListStatue}
+                            loaded={sporesDataLoaded}
+                            onChangePage={(page) => {
+                                setSporesDataPage(page)
+                            }}/>
+                    </div>
 
-                        <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
-                            value="All">
-                            <ListToken
-                                data={tokenData}
-                                status={tokensStatus}
-                                internalAddress={internalAddress}
-                                addresses={isOwner ? addresses : undefined}/>
-                            <div className="mt-6">
-                                <ListDOBs
-                                    data={[...layer1Dobs, ...sporesData]}
-                                    status={dobsListStatue}
-                                    loaded={sporesDataLoaded}
-                                    onChangePage={(page) => {
-                                        setSporesDataPage(page)
-                                    }}/>
-                            </div>
-                            <div className="mt-6">
-                                <ListDotBit
-                                    data={domains}
-                                    status={domainStatus}
-                                />
-                            </div>
-                        </Tabs.Content>
-                        <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
-                            value="Tokens"
-                        >
-                            <ListToken
-                                data={tokenData}
-                                status={tokensStatus}
-                                internalAddress={internalAddress}
-                                addresses={isOwner ? addresses : undefined}/>
-                        </Tabs.Content>
-                        <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
-                            value="DOBs"
-                        >
-                            <ListDOBs
-                                data={[...layer1Dobs, ...sporesData]}
-                                status={dobsListStatue}
-                                loaded={sporesDataLoaded}
-                                onChangePage={(page) => {
-                                    setSporesDataPage(page)
-                                }}/>
-                        </Tabs.Content>
-                        <Tabs.Content
-                            className="py-4 px-1 grow bg-white rounded-b-md outline-none"
-                            value=".bit"
-                        >
-                            <ListDotBit
-                                data={domains}
-                                status={domainStatus}
-                            />
-                        </Tabs.Content>
-
-                    </Tabs.Root>
+                    <div className={`mt-6 ${currtab === 'All' || currtab === '.bit' ? 'block' : 'hidden'}`}>
+                        <ListDotBit
+                            data={domains}
+                            status={domainStatus}
+                        />
+                    </div>
                 </div>
 
-                <div className="lg:max-w-[380px] flex-1 lg:ml-4 lg:pt-[56px]">
+                <div className={`w-full mt-4 ${currtab === 'Activity' ? 'block' : 'hidden'}`}>
                     <div className="shadow rounded-lg bg-white py-4">
                         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
                             <div className="text-xl font-semibold">{lang['Activity']}</div>
@@ -305,12 +286,76 @@ export default function Profile() {
                         }
 
                         {activeTab === 'ckb' &&
-                            <ListHistory addresses={queryAddress} data={historyData} status={historyDataStatus}/>
+                            <ListHistory
+                                page={historyDataPage}
+                                loadAll={historyDataLoadAll}
+                                onNextPage={() => {
+                                    setHistoryDataPage(historyDataPage + 1)
+                                }}
+                                addresses={queryAddress}
+                                data={historyData}
+                                status={historyDataStatus}/>
                         }
 
                         {activeTab === 'btc' && btcAddress &&
-                            <ListBtcHistory internalAddress={internalAddress!} data={btcHistory}
-                                            status={btcHistoryStatus}/>
+                            <ListBtcHistory
+                                showExplorerLink={true}
+                                internalAddress={internalAddress!}
+                                data={btcHistory}
+                                status={btcHistoryStatus}
+                            />
+                        }
+
+                        {activeTab === 'rgbpp' && btcAddress &&
+                            <ListHistory internalAddress={internalAddress!}
+                                         data={rgbppHistory}
+                                         status={rgbppHistoryStatus}
+                                         page={rgbppHistoryPage}
+                                         onNextPage={() => {
+                                             rgbppHistorySetPage(rgbppHistoryPage + 1)
+                                         }}
+                                         loadAll={rgbppHistoryLoadAll}
+                            />
+                        }
+                    </div>
+                </div>
+
+                <div className={`lg:max-w-[380px] flex-1 mt-4 ${currtab !== 'Activity' ? 'block' : 'hidden'}`}>
+                    <div className="shadow rounded-lg bg-white py-4">
+                        <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
+                            <div className="text-xl font-semibold">{lang['Activity']}</div>
+                        </div>
+                        {!!internalAddress && btcAddress &&
+                            <div className="flex flex-row items-center px-2">
+                                <div onClick={() => {
+                                    setActiveTab('ckb')
+                                }}
+                                     className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'ckb' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>CKB
+                                </div>
+                                <div onClick={() => {
+                                    setActiveTab('btc')
+                                }}
+                                     className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'btc' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>BTC
+                                </div>
+                                <div onClick={() => {
+                                    setActiveTab('rgbpp')
+                                }}
+                                     className={`select-none cursor-pointer relative h-8 px-4 ${activeTab === 'rgbpp' ? 'after:content-[\'\'] after:block after:absolute after:h-2 after:w-4 after:bg-[#9EFEDD] after:rounded-full after:left-[50%] after:ml-[-8px]' : ''}`}>RGB++
+                                </div>
+                            </div>
+                        }
+
+                        {activeTab === 'ckb' &&
+                            <ListHistory maxShow={5} addresses={queryAddress} data={historyData}
+                                         status={historyDataStatus}/>
+                        }
+
+                        {activeTab === 'btc' && btcAddress &&
+                            <ListBtcHistory
+                                pageSize={5}
+                                internalAddress={internalAddress!}
+                                data={btcHistory}
+                                status={btcHistoryStatus}/>
                         }
 
                         {activeTab === 'rgbpp' && btcAddress &&

@@ -1,73 +1,107 @@
+import {UserContext} from '@/providers/UserProvider/UserProvider'
 import {useContext, useEffect, useMemo, useState} from "react"
 import Background from "@/components/Background/Background"
 import Avatar from "@/components/Avatar/Avatar"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import * as Tabs from '@radix-ui/react-tabs'
 import ListToken, {TokenBalance} from "@/components/ListToken/ListToken"
+import useAllXudtBalance from "@/serves/useAllXudtBalance"
+import useCkbBalance from "@/serves/useCkbBalance"
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
+import useTransactions from "@/serves/useTransactionsHistory"
+import ListHistory from "@/components/ListHistory/ListHistory"
+import useSpores from "@/serves/useSpores"
 import ListDOBs from "@/components/ListDOBs/ListDOBs"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import useLayer1Assets from "@/serves/useLayer1Assets"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
 import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
-import {themes} from "@/providers/UserProvider/themes";
 import Button from "@/components/Form/Button/Button";
 
-export default function BtcProfile({internalAddress}: { internalAddress: string }) {
+export default function EvmProfile({internalAddress}: { internalAddress: string }) {
+    const {address, theme, isOwner} = useContext(UserContext)
+    const {addresses} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
     const {lang} = useContext(LangContext)
 
     // ui state
-    const isBtc = useMemo(() => {
-        if (!internalAddress) {
-            return false
-        }
+    const [selectedAddress, setSelectedAddress] = useState<string | undefined>(address)
+    const [activeTab, setActiveTab] = useState<'ckb' | 'btc'>('ckb')
 
-        return internalAddress.startsWith('bc1') || internalAddress.startsWith('tb1')
+    useEffect(() => {
+        if (!internalAddress) {
+            setActiveTab('ckb')
+        }
     }, [internalAddress])
 
-    const {
-        xudts: layer1Xudt,
-        dobs: layer1Dobs,
-        btc: layer1Btc,
-        status: layer1DataStatus,
-        error: layer1DataErr
-    } = useLayer1Assets(
-        internalAddress && isBtc ? internalAddress : undefined)
+    const queryAddress = useMemo(() => {
+        if (!!addresses && addresses?.includes(address!)) {
+            return addresses
+        }
 
+        return [address!]
+    }, [address, addresses])
+
+    const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useAllXudtBalance(queryAddress)
+    const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(queryAddress)
     const {
-        data: btcHistory,
-        status: btcHistoryStatus
-    } = useBtcTransactionsHistory(isBtc ? internalAddress : undefined)
+        data: historyData,
+        status: historyDataStatus,
+        page: historyDataPage,
+        setPage: setHistoryDataPage,
+        loadAll: historyDataLoadAll
+    } = useTransactions(selectedAddress!)
+    const {
+        data: sporesData,
+        status: sporesDataStatus,
+        loaded: sporesDataLoaded,
+        setPage: setSporesDataPage
+    } = useSpores(queryAddress)
 
     const tokensStatus = useMemo(() => {
-        if (layer1DataStatus === 'loading') {
+        if (xudtDataStatus === 'loading' || ckbDataStatus === 'loading' ) {
             return 'loading'
-        } else if (layer1DataStatus === 'error') {
+        } else if (xudtDataStatus === 'error' || ckbDataStatus === 'error') {
             return 'error'
-        } else if (layer1DataStatus === 'complete') {
+        } else if (xudtDataStatus === 'complete' && ckbDataStatus === 'complete' && ckbData) {
             return 'complete'
         }
 
         return 'loading'
-    }, [layer1DataStatus])
+    }, [xudtDataStatus, ckbDataStatus, ckbData])
+
+    const dobsListStatue = useMemo(() => {
+        if (sporesDataStatus === 'loading') {
+            return 'loading'
+        } else if (sporesDataStatus === 'error') {
+            return 'error'
+        } else if (sporesDataStatus === 'complete') {
+            return 'complete'
+        }
+
+        return 'loading'
+    }, [sporesDataStatus])
 
     const tokenData = useMemo(() => {
         if (tokensStatus === 'loading' || tokensStatus === 'error') {
             return [] as TokenBalance[]
         } else {
-            return layer1Btc
-                ? [layer1Btc, ...layer1Xudt]
-                : [...layer1Xudt]
+            return [ckbData!, ...xudtData]
         }
-    }, [layer1Btc, layer1Xudt, tokensStatus])
-
+    }, [ckbData, tokensStatus, xudtData])
 
     useEffect(() => {
-        if (layer1DataErr) {
-            console.error('layer1DataErr', layer1DataErr)
-            showToast(layer1DataErr.message, ToastType.error)
+        if (xudtDataErr) {
+            console.error(xudtDataErr)
+            showToast(xudtDataErr.message, ToastType.error)
         }
-    }, [layer1DataErr])
+
+        if (ckbDataErr) {
+            console.error(ckbDataErr)
+            showToast(ckbDataErr.message, ToastType.error)
+        }
+    }, [xudtDataErr, ckbDataErr])
 
 
     const tabs = useMemo(() => {
@@ -80,7 +114,7 @@ export default function BtcProfile({internalAddress}: { internalAddress: string 
         }, {
             value: 'DOBs',
             label: lang['DOBs']
-        }, {
+        },{
             value: 'Activity',
             label: lang['Activity']
         }]
@@ -89,19 +123,27 @@ export default function BtcProfile({internalAddress}: { internalAddress: string 
     const [currtab, setCurrTab] = useState('All')
 
     return <div>
-        <Background gradient={themes[0].bg}/>
+        <Background gradient={theme.bg}/>
         <div className="max-w-[--page-with] mx-auto px-3 pb-10">
             <div
                 className="w-[200px] h-[200px] rounded-full overflow-hidden mt-[-100px] border-4 border-white hidden md:block">
-                <Avatar size={200} name={internalAddress || 'default'} colors={themes[0].colors}/>
+                <Avatar size={200} name={address || 'default'} colors={theme.colors}/>
             </div>
             <div
                 className="w-[128px] h-[128px] rounded-full overflow-hidden mt-[-64px] mx-auto border-4 border-white md:hidden">
-                <Avatar size={128} name={internalAddress || 'default'} colors={themes[0].colors}/>
+                <Avatar size={128} name={address || 'default'} colors={theme.colors}/>
             </div>
             <div className="mt-4 flex flex-col items-center md:flex-row">
                 <div className="mb-4 md:mr-6">
-                    <ProfileAddresses addresses={[internalAddress]} defaultAddress={internalAddress!}/>
+                    <ProfileAddresses addresses={[internalAddress!]} defaultAddress={internalAddress!}/>
+                </div>
+                <div className="mb-4">
+                    <ProfileAddresses
+                        onChoose={(e) => {
+                            setSelectedAddress(e)
+                        }}
+                        addresses={queryAddress}
+                        defaultAddress={address!}/>
                 </div>
             </div>
 
@@ -121,14 +163,16 @@ export default function BtcProfile({internalAddress}: { internalAddress: string 
                             data={tokenData}
                             status={tokensStatus}
                             internalAddress={internalAddress}
-                            addresses={undefined}/>
+                            addresses={isOwner ? addresses : undefined}/>
                     </div>
+
                     <div className={`mt-6 ${currtab === 'All' || currtab === 'DOBs' ? 'block' : 'hidden'}`}>
                         <ListDOBs
-                            data={[...layer1Dobs]}
-                            status={tokensStatus}
-                            loaded={true}
+                            data={sporesData}
+                            status={dobsListStatue}
+                            loaded={sporesDataLoaded}
                             onChangePage={(page) => {
+                                setSporesDataPage(page)
                             }}/>
                     </div>
                 </div>
@@ -137,8 +181,15 @@ export default function BtcProfile({internalAddress}: { internalAddress: string 
                         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
                             <div className="text-xl font-semibold">{lang['Activity']}</div>
                         </div>
-                        <ListBtcHistory internalAddress={internalAddress!} data={btcHistory}
-                                        status={btcHistoryStatus}/>
+                        <ListHistory
+                            page={historyDataPage}
+                            loadAll={historyDataLoadAll}
+                            onNextPage={() => {
+                                setHistoryDataPage(historyDataPage + 1)
+                            }}
+                            addresses={queryAddress}
+                            data={historyData}
+                            status={historyDataStatus}/>
                     </div>
                 </div>
 
@@ -147,13 +198,13 @@ export default function BtcProfile({internalAddress}: { internalAddress: string 
                         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
                             <div className="text-xl font-semibold">{lang['Activity']}</div>
                         </div>
-
-
-                        <ListBtcHistory
-                            pageSize={5}
-                            internalAddress={internalAddress!}
-                            data={btcHistory}
-                            status={btcHistoryStatus}/>
+                        {activeTab === 'ckb' &&
+                            <ListHistory
+                                maxShow={5}
+                                addresses={queryAddress}
+                                data={historyData}
+                                status={historyDataStatus}/>
+                        }
                     </div>
                 </div>
             </div>

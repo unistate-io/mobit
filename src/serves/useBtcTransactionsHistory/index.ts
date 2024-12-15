@@ -8,13 +8,12 @@ export const getBtcTransactionsHistory = async (address: string, isMainnet: bool
     return await sdk.fetchTxsDetails(address) as BtcApiTransaction[]
 }
 
-export default function useBtcTransactionsHistory(address?: string, pageSize?: number) {
+export default function useBtcTransactionsHistory(address?: string) {
     const [data, setData] = useState<BtcTransaction[]>([])
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [error, setError] = useState<undefined | any>(undefined)
     const {network} = useContext(CKBContext)
     const [page, setPage] = useState(1)
-    const size = pageSize || 5
 
     useEffect(() => {
         if (!address) {
@@ -27,8 +26,7 @@ export default function useBtcTransactionsHistory(address?: string, pageSize?: n
         (async () => {
             try {
                 const res = await getBtcTransactionsHistory(address, network === 'mainnet')
-                const _res = res.slice(0, size)
-                setData(_res)
+                setData(res)
                 setStatus('complete')
             } catch (e: any) {
                 console.warn(e)

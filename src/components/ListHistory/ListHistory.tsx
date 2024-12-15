@@ -3,28 +3,48 @@ import {shortTransactionHash} from "@/utils/number_display"
 import * as dayjsLib from "dayjs"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
-import {useContext} from "react"
+import {useContext, useMemo} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import Button from "@/components/Form/Button/Button";
 
 const dayjs: any = dayjsLib
 const relativeTime = require('dayjs/plugin/relativeTime')
 dayjsLib.extend(relativeTime)
 require('dayjs/locale/zh-cn')
 
+export interface ListHistoryProps {
+    data: TransactionHistory[],
+    status: string,
+    addresses?: string[],
+    internalAddress?: string,
+    onNextPage?: () => void,
+    loadAll?: boolean,
+    page?: number,
+    maxShow?: number
+}
+
 export default function ListHistory({
                                         data,
                                         status,
                                         addresses,
                                         internalAddress,
-                                    }: { data: TransactionHistory[], status: string, addresses?: string[], internalAddress?: string }) {
+                                        onNextPage,
+                                        loadAll,
+                                        maxShow,
+                                        page=1
+                                    }: ListHistoryProps) {
     const {lang, langType} = useContext(LangContext)
     const {config} = useContext(CKBContext)
 
     dayjs.locale(langType === 'cn' ? 'zh-cn': 'en')
 
+    const showData = useMemo(() => {
+        return maxShow ? data.slice(0, maxShow) : data
+    }, [maxShow, data])
+
     return <div>
         <div className="flex flex-col px-3">
-            {status === 'loading' &&
+            {status === 'loading' && page === 1 &&
                 <div className="my-2">
                     <div className="loading-bg rounded-lg h-[30px] my-2"/>
                     <div className="loading-bg rounded-lg h-[30px] my-2"/>
@@ -41,7 +61,7 @@ export default function ListHistory({
             }
 
             {
-                data.map((item, index) => {
+                showData.map((item, index) => {
                     return <Link
                         target="blank"
                         to={`${config.explorer}/transaction/${item.attributes.transaction_hash}`} key={item.id}
@@ -95,7 +115,7 @@ export default function ListHistory({
             }
         </div>
         {
-            status === 'complete' && (!!addresses?.[0] || internalAddress) &&
+           !onNextPage && status === 'complete' && (!!addresses?.[0] || internalAddress) &&
             <Link
                 to={`${config.explorer}/address/${addresses?.[0]|| internalAddress}`}
                 className="cursor-pointer hover:bg-gray-300 bg-gray-200 h-[40px] rounded-lg flex flex-row items-center justify-center mx-3 mt-2 text-xs">
@@ -106,6 +126,14 @@ export default function ListHistory({
                         fill="#7492EF"/>
                 </svg>
             </Link>
+        }
+
+        {!!onNextPage && !loadAll &&
+            <div
+                onClick={onNextPage}
+                className={`${status === 'loading' ? 'opacity-50 pointer-events-none ' : ''}cursor-pointer hover:bg-gray-300 bg-gray-200 h-[40px] rounded-lg flex flex-row items-center justify-center mx-3 mt-2 text-xs`}>
+                <div className="mr-2">{lang['ShowMoreRecords']}</div>
+            </div>
         }
     </div>
 }
@@ -181,8 +209,6 @@ function calculateTotalAmountRgbpp(data: TransactionHistory, internalAddress: st
     const outputs = data.attributes.display_outputs.filter((output) => output.rgb_info && output.rgb_info!.address === internalAddress)
     const total = [...inputs, ...outputs]
 
-    console.log('inputs', inputs)
-    console.log('outputs', outputs)
     let tokens: { symbol: string, decimal: string }[] = []
     total.forEach((input) => {
         if (input.xudt_info && !tokens.some((token) => token.symbol === input.xudt_info!.symbol)) {

@@ -1,6 +1,6 @@
 import * as dayjsLib from "dayjs"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
-import {useContext} from "react"
+import {useContext, useMemo} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {BtcTransaction} from "@/serves/useBtcTransactionsHistory";
 import {shortTransactionHash} from "@/utils/number_display";
@@ -15,12 +15,19 @@ require('dayjs/locale/zh-cn')
 export default function ListBtcHistory({
                                            data,
                                            status,
-                                           internalAddress
-                                       }: { data: BtcTransaction[], status: string, internalAddress: string }) {
+                                           internalAddress,
+                                           pageSize,
+                                           showExplorerLink=true
+                                       }: {pageSize?: number,  data: BtcTransaction[], status: string, internalAddress: string, showExplorerLink?: boolean }) {
     const {lang, langType} = useContext(LangContext)
     const {config} = useContext(CKBContext)
+    const pageSizeConfig = pageSize || 50
 
     dayjs.locale(langType === 'cn' ? 'zh-cn': 'en')
+
+    const showData = useMemo(() => {
+        return data.slice(0, pageSizeConfig)
+    }, [data, pageSize])
 
     return <div>
         <div className="flex flex-col px-3">
@@ -41,7 +48,7 @@ export default function ListBtcHistory({
             }
 
             {
-                data.map((item, index) => {
+                showData.map((item, index) => {
                     return <Link
                         target="blank"
                         to={`${config.btc_explorer}/tx/${item.txid}`} key={item.txid}
@@ -76,7 +83,7 @@ export default function ListBtcHistory({
         </div>
 
         {
-            status === 'complete' &&
+            status === 'complete' && showExplorerLink && !!pageSize &&
             <Link
                 to={`${config.btc_explorer}/address/${internalAddress}`}
                 className="cursor-pointer hover:bg-gray-300 bg-gray-200 h-[40px] rounded-lg flex flex-row items-center justify-center mx-3 mt-2 text-xs">

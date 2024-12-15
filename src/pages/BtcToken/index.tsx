@@ -34,7 +34,7 @@ export default function BitcoinPage() {
 
     const [tokenInfo] = useState(BtcInfo)
     const {btc, status: btcBalanceStatue} = useLayer1Assets(btcAddress)
-    const {data: historyData, status: historyDataStatus} = useBtcTransactionsHistory(btcAddress, 10)
+    const {data: historyData, status: historyDataStatus} = useBtcTransactionsHistory(btcAddress)
     const {lang} = useContext(LangContext)
 
     return <div className="max-w-[--page-with] mx-auto px-3 py-8 flex flex-col sm:flex-row items-start mb-10">
