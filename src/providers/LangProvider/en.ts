@@ -123,6 +123,7 @@ const langEN = {
     'CKB/BTC/EVM address...': 'CKB/BTC/EVM address...',
     'Net Worth': 'Net Worth',
     'Value': 'Value',
+    'Staking': 'Staking'
 }
 
 

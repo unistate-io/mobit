@@ -125,6 +125,7 @@ const langCN: LangConfig = {
     'CKB/BTC/EVM address...': 'CKB/BTC/EVM地址...',
     'Net Worth': '净值',
     'Value': '价值',
+    'Staking': '质押',
 }
 
 

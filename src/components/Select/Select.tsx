@@ -50,7 +50,7 @@ export default function Select ({icon, options, placeholder, className='', hideD
 
     return <RadixSelect.Root {...props} open={open} onOpenChange={(open) => {toggleOpen(open)}}>
         <RadixSelect.Trigger
-            className={`SelectTrigger-${id.current} flex flex-row items-center justify-between w-full outline-0 ${className}`} aria-label={props.name || 'Select'}>
+            className={`SelectTrigger-${id.current} flex flex-row items-center justify-between w-full outline-0 ${className} ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''}`} aria-label={props.name || 'Select'}>
             { !!getValueLabel ?
                 <RadixSelect.Value placeholder={placeholder || 'Select ...'} >{getValueLabel()}</RadixSelect.Value>
                 : <RadixSelect.Value placeholder={placeholder || 'Select ...'} />

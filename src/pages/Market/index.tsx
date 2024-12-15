@@ -4,10 +4,7 @@ import {toDisplay} from "@/utils/number_display"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {useContext, useEffect, useState} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-
-const showChange = [
-    'CKB', 'BTC', 'ETH'
-]
+import HomeActions from "@/components/HomeActions"
 
 export default function MarketPage() {
     const {data, status} = useMarket()
@@ -43,6 +40,10 @@ export default function MarketPage() {
                 </button>
             }
         </div>
+
+        {!!address &&
+            <HomeActions />
+        }
 
         {status === 'loading' &&
             <>
@@ -84,7 +85,6 @@ export default function MarketPage() {
                     </tbody>
                 </table>
             </div>
-
         }
 
         {data.length !== 0 && status !== 'loading' && !showTable &&
@@ -107,20 +107,12 @@ export default function MarketPage() {
                         </div>
                     </div>
                     <div className="flex flex-row items-center">
-                        {/*<div className="bg-stone-50 rounded p-3 mr-2 flex-1">*/}
-                        {/*    <div className="text-xs mb-1">Change 1h</div>*/}
-                        {/*    <div className=""><DisPlayChange change={item.change_1h} /></div>*/}
-                        {/*</div>*/}
                         { !!item.change_24h &&
                             <div className="bg-stone-50 rounded p-3 mr-2 flex-1">
                                 <div className="text-xs mb-1">{lang['Change24h']}</div>
                                 <div className=""><DisPlayChange change={item.change_24h} /></div>
                             </div>
                         }
-                        {/*<div className="bg-stone-50 rounded p-3 mr-2 flex-1">*/}
-                        {/*    <div className="text-xs mb-1">Change 7d</div>*/}
-                        {/*    <div className=""><DisPlayChange change={item.change_7d} /></div>*/}
-                        {/*</div>*/}
                     </div>
                 </div>
 
