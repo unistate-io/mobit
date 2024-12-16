@@ -110,7 +110,7 @@ export default function BtcProfile({internalAddress}: { internalAddress: string 
                     return <Button
                         key={tab.value}
                         onClick={() => setCurrTab(tab.value)}
-                        className={`w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg ${tab.value === currtab ? ' text-white !bg-black' : ''}`}
+                        className={`!w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg ${tab.value === currtab ? ' text-white !bg-black' : ''}`}
                         value={tab.value}>{tab.label}</Button>
                 })}
             </div>
