@@ -9629,10 +9629,10 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mobit-sdk@^1.12.0:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-1.12.0.tgz#c05f92591cafce6fd6ef70a7a0a957a6ff52478d"
-  integrity sha512-ViOLxDPLZqXuVyxfKIMjV8AIgGJecZiqkpCEEkmGnhZ+h7AwffdoRoFMsYcKzZ20kO0Cut2KlS33EkQHiCXMfw==
+mobit-sdk@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-1.14.0.tgz#3394f13a38443df2c64a56a0092693c39f4259a0"
+  integrity sha512-5hVeg68ZHrk0LbZ/XD9KOmDJy5ImGHumsbD50J94FypGZImt171hTZacp5/6GDpuii1NLorfCu11ZOaIqNq7xQ==
   dependencies:
     "@apollo/client" "^3.12.2"
     "@ckb-ccc/core" "0.1.0-alpha.7"
@@ -9642,15 +9642,15 @@ mobit-sdk@^1.12.0:
     "@rgbpp-sdk/service" "^0.6.0"
     rgbpp "^0.6.0"
 
-mobit-wallet@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/mobit-wallet/-/mobit-wallet-0.5.0.tgz#e3bf97d8ffc280df8191c43769c664bcd5604120"
-  integrity sha512-G781+RgnZaqtIsEmPPbAw3DtJlfEA5TXlGJwBJtL1IBr/m0oTrPmJYVRbjCpWdVkaNSsjkAr5yznh2QsD/sX/g==
+mobit-wallet@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/mobit-wallet/-/mobit-wallet-0.5.3.tgz#375d88b353ee9ddc96fb96f730aad27da4dbe506"
+  integrity sha512-fRxxRGSjJBFyqTFeWT470il+nst4uT5AkyCaGM3ZUde9lsB8xNQDjMT6VB6AaBh4LvPl+RBsSaKP9OHimVvP5w==
   dependencies:
     "@joyid/bitcoin" "^0.1.5"
     "@rgbpp-sdk/btc" "^0.6.0"
     "@rgbpp-sdk/service" "^0.6.0"
-    mobit-sdk "^1.12.0"
+    mobit-sdk "^1.14.0"
 
 ms@2.0.0:
   version "2.0.0"
