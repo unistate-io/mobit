@@ -20,29 +20,48 @@ export default function useLeapXudtToLayer2() {
         xudtType: CKBComponents.Script
         amount: string
     }) => {
+        console.log("[build] Starting build process with props:", props)
+
         if (!btcHelper) {
+            console.error("[build] btcHelper is not initialized")
             throw new Error("Not supported wallet")
         }
 
         const ckbHelper = new CkbHelper(network === "mainnet")
+        console.log("[build] Created ckbHelper with network:", network)
+
         const btcDataSource = new DataSource(
             btcHelper?.btcService,
             network === "mainnet" ? NetworkType.MAINNET : NetworkType.TESTNET
         )
+        console.log("[build] Created btcDataSource with network:", network === "mainnet" ? "MAINNET" : "TESTNET")
+
         const wallet = getSignPsbtWallet()!
-        return await prepareLeapUnsignedPsbt({
-            btcService: btcHelper.btcService,
-            toCkbAddress: props.toCkbAddress,
-            xudtType: props.xudtType,
-            transferAmount: BigInt(props.amount),
-            isMainnet: network === "mainnet",
-            btcTestnetType: network !== "mainnet" ? "Testnet3" : undefined,
-            collector: ckbHelper.collector,
-            fromBtcAccount: internalAddress!,
-            fromBtcAccountPubkey: await wallet.getPublicKey(),
-            btcDataSource,
-            btcFeeRate: feeRate
-        })
+        console.log("[build] Retrieved wallet instance")
+
+        const pubkey = await wallet.getPublicKey()
+        console.log("[build] Retrieved public key:", pubkey)
+
+        try {
+            const result = await prepareLeapUnsignedPsbt({
+                btcService: btcHelper.btcService,
+                toCkbAddress: props.toCkbAddress,
+                xudtType: props.xudtType,
+                transferAmount: BigInt(props.amount),
+                isMainnet: network === "mainnet",
+                btcTestnetType: network !== "mainnet" ? "Testnet3" : undefined,
+                collector: ckbHelper.collector,
+                fromBtcAccount: internalAddress!,
+                fromBtcAccountPubkey: pubkey,
+                btcDataSource,
+                btcFeeRate: feeRate
+            })
+            console.log("[build] Successfully prepared leap unsigned PSBT:", result)
+            return result
+        } catch (error) {
+            console.error("[build] Error preparing leap unsigned PSBT:", error)
+            throw error
+        }
     }
 
     const leap = async (props: {

@@ -46,7 +46,6 @@ export default function useLeapXudtToLayer1() {
         if (!isBtcWallet) {
             throw new Error("Unsupported wallet")
         }
-
         const ckbHelper = new CkbHelper(network === "mainnet")
 
         const tx = await leapFromCkbToBtcTransaction({
@@ -60,9 +59,16 @@ export default function useLeapXudtToLayer1() {
         })
 
         const skeleton = convertToTransaction(tx)
-        await skeleton.completeFeeBy(signer, props.feeRate)
+        console.log(
+            "Transaction skeleton before fee completion:",
+            JSON.stringify(skeleton, (key, value) => (typeof value === "bigint" ? value.toString() : value), 2)
+        )
 
-        console.log("tx", skeleton)
+        await skeleton.completeFeeBy(signer, props.feeRate)
+        console.log(
+            "Final transaction skeleton:",
+            JSON.stringify(skeleton, (key, value) => (typeof value === "bigint" ? value.toString() : value), 2)
+        )
         return skeleton
     }
 
