@@ -13,10 +13,11 @@ import BigNumber from "bignumber.js"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import dayjs from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
-import Select, {SelectOption} from "@/components/Select/Select"
+import Select from "@/components/Select/Select"
 import useBtcWallet from "@/serves/useBtcWallet"
 import {ccc, useCcc} from "@ckb-ccc/connector-react"
 import useAllXudtBalance from "@/serves/useAllXudtBalance"
+import {tokenInfoToScript} from "@/utils/graphql/types"
 
 export default function DialogXudtLeapToLayer1CanSelectToken({
     children,
@@ -45,6 +46,7 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
     const [toAddressError, setToAddressError] = useState("")
     const [txError, setTxError] = useState("")
     const [tokenError, setTokenError] = useState("")
+    const [buildError, setBuildError] = useState("")
 
     const {data: xudtBalance, status: xudtBalenceStatus} = useAllXudtBalance(addresses || [])
     const [token, setToken] = useState<undefined | TokenBalance>(undefined)
@@ -95,11 +97,15 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                         .times(10 ** token!.decimal)
                         .toString()
                 ),
-                xudtTypeArgs: token!.address.script_args.replace("\\", "0"),
+                xudtType: tokenInfoToScript(token!),
                 feeRate: BigInt(5000)
             })
+            setBuildError('')
             setTx(tx)
             setStep(3)
+        } catch (e:any) {
+            console.error(e)
+            setBuildError(e.message)
         } finally {
             setBusy(false)
         }
@@ -155,6 +161,7 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
             setStep(4)
             setTxHash(txHash)
         } catch (e: any) {
+            console.error(e)
             setTxError(e.message)
         } finally {
             setBusy(false)
@@ -379,6 +386,8 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                                         )}
                                     </div>
                                 )}
+
+                                <div className="font-normal text-red-400 mt-1 break-words mb-1">{buildError}</div>
 
                                 <div className="flex flex-row">
                                     <Button

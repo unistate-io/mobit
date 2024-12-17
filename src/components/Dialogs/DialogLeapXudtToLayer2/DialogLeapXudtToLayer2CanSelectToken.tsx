@@ -16,7 +16,8 @@ import useLeapXudtToLayer2 from "@/serves/useLeapXudtToLayer2"
 import * as dayjsLib from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
 import useBtcWallet from "@/serves/useBtcWallet"
-import Select from "@/components/Select/Select";
+import Select from "@/components/Select/Select"
+import {tokenInfoToScript} from "@/utils/graphql/types"
 
 const dayjs: any = dayjsLib
 
@@ -120,7 +121,7 @@ export default function DialogLeapXudtToLayer2CanSelectToken({children, classNam
             const txResult = await leap({
                 fromBtcAccount: internalAddress!,
                 toCkbAddress: formData.to,
-                xudtArgs: token!.address.script_args.replace('\\', '0'),
+                xudtType: tokenInfoToScript(token!),
                 amount: BigNumber(formData.amount).multipliedBy(10 ** token!.decimal).toString(),
                 feeRate: btcFeeRate
             })
