@@ -1,3 +1,5 @@
+import {hashType} from "@/serves/useXudtTransfer/lib"
+
 export interface XudtCell {
     amount: string
     lock_id: string
@@ -48,7 +50,7 @@ export interface TokenInfoWithAddress extends TokenInfo {
         script_code_hash: string
         script_hash_type: string
     }
-    addressByInscriptionId : {
+    addressByInscriptionId: {
         token_infos: {
             decimal: number
             name: string
@@ -58,6 +60,14 @@ export interface TokenInfoWithAddress extends TokenInfo {
             transaction_index?: string
         }
     } | null
+}
+
+export const tokenInfoToScript = (tokenInfo: TokenInfoWithAddress): CKBComponents.Script => {
+    return {
+        args: tokenInfo.address.script_args.replace("\\", "0"),
+        codeHash: tokenInfo.address.script_code_hash.replace("\\", "0"),
+        hashType: hashType[tokenInfo.address.script_hash_type]
+    }
 }
 
 export interface XudtStatusCell {
@@ -88,10 +98,9 @@ export interface Clusters {
     cluster_description: string
     cluster_name: string
     created_at: string
-    id:string
+    id: string
     is_burned: boolean
     mutant_id: string
     owner_address: string
     updated_at: string
 }
-

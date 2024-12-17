@@ -1,7 +1,7 @@
 import {useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
-import {TokenInfoWithAddress} from "@/utils/graphql/types"
+import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
 import {CkbHelper, convertToTransaction, createTransferXudtTransaction} from "mobit-sdk"
 
 export default function useXudtTransfer() {
@@ -24,7 +24,7 @@ export default function useXudtTransfer() {
         const ckbHelper = new CkbHelper(network === "mainnet")
         const tx = await createTransferXudtTransaction(
             {
-                xudtArgs: tokenInfo.address.script_args.replace("\\", "0"),
+                xudtType: tokenInfoToScript(tokenInfo),
                 receivers: [{toAddress: to, transferAmount: BigInt(amount)}],
                 ckbAddresses: froms,
                 collector: ckbHelper.collector,
@@ -34,7 +34,7 @@ export default function useXudtTransfer() {
         )
 
         console.log(tx)
-      
+
         const skeleton = convertToTransaction(tx)
         await skeleton.completeFeeBy(signer, feeRate)
 

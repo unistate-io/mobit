@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useMemo, useState} from "react"
+import React, {ReactNode, useContext, useEffect, useState} from "react"
 import * as Dialog from "@radix-ui/react-dialog"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
@@ -14,9 +14,9 @@ import useXudtBalance from "@/serves/useXudtBalance"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import dayjs from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
-import {helpers} from "@ckb-lumos/lumos"
 import useBtcWallet from "@/serves/useBtcWallet"
 import {ccc, useCcc} from "@ckb-ccc/connector-react"
+import {tokenInfoToScript} from "@/utils/graphql/types"
 
 export default function DialogLeapXudtToLayer1({
     token,
@@ -97,7 +97,7 @@ export default function DialogLeapXudtToLayer1({
                     .times(10 ** token.decimal)
                     .toString()
             ),
-            xudtTypeArgs: token.address.script_args.replace("\\", "0"),
+            xudtType: tokenInfoToScript(token),
             feeRate: BigInt(5000)
         })
 
