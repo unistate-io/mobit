@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from "react"
-import {TokenInfoWithAddress} from "@/utils/graphql/types"
+import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
 import {Cell, config as lumosConfig, helpers, Indexer} from "@ckb-lumos/lumos"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {hashType} from "@/serves/useXudtTransfer/lib"
@@ -62,7 +62,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
         const ckbHelper = new CkbHelper(network === "mainnet")
         let tx = await createMergeXudtTransaction(
             {
-                xudtArgs: tokenInfo.address.script_args.replace("\\", "0"),
+                xudtType: tokenInfoToScript(tokenInfo),
                 ckbAddresses: addresses,
                 collector: ckbHelper.collector,
                 isMainnet: network === "mainnet"
@@ -80,7 +80,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
         if (!tokenInfo || !addresses || !addresses.length || burnAmount === BigInt(0) || !signer) return null
         const ckbHelper = new CkbHelper(network === "mainnet")
         let tx = await createBurnXudtTransaction({
-            xudtArgs: tokenInfo.address.script_args.replace("\\", "0"),
+            xudtType: tokenInfoToScript(tokenInfo),
             ckbAddress: addresses[0],
             burnAmount: burnAmount,
             collector: ckbHelper.collector,

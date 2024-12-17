@@ -36,7 +36,7 @@ export default function useLeapXudtToLayer1() {
         outIndex: number
         btcTxId: string
         transferAmount: bigint
-        xudtTypeArgs: string
+        xudtType: CKBComponents.Script
         feeRate?: bigint
     }) => {
         if (!signer) {
@@ -52,9 +52,8 @@ export default function useLeapXudtToLayer1() {
         const tx = await leapFromCkbToBtcTransaction({
             outIndex: props.outIndex,
             btcTxId: props.btcTxId,
-            xudtTypeArgs: props.xudtTypeArgs,
+            xudtType: props.xudtType,
             transferAmount: props.transferAmount,
-            isMainnet: network === "mainnet",
             btcTestnetType: network !== "mainnet" ? "Testnet3" : undefined,
             collector: ckbHelper.collector,
             ckbAddress: address!
