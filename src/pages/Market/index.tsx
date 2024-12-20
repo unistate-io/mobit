@@ -41,9 +41,7 @@ export default function MarketPage() {
             }
         </div>
 
-        {!!address &&
-            <HomeActions />
-        }
+        <HomeActions />
 
         {status === 'loading' &&
             <>
