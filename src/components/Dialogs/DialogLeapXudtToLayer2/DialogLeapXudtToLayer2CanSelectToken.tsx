@@ -18,6 +18,7 @@ import CopyText from "@/components/CopyText/CopyText"
 import useBtcWallet from "@/serves/useBtcWallet"
 import Select from "@/components/Select/Select"
 import {tokenInfoToScript} from "@/utils/graphql/types"
+import {bitcoin} from "@rgbpp-sdk/btc";
 
 const dayjs: any = dayjsLib
 
@@ -26,7 +27,7 @@ export default function DialogLeapXudtToLayer2CanSelectToken({children, classNam
     className?: string
 }) {
     const {network, internalAddress, config} = useContext(CKBContext)
-    const {leap} = useLeapXudtToLayer2()
+    const {leap, build} = useLeapXudtToLayer2()
     const {lang} = useContext(LangContext)
     const {feeRate} = useBtcWallet()
 
@@ -36,6 +37,7 @@ export default function DialogLeapXudtToLayer2CanSelectToken({children, classNam
     const [busy, setBusy] = React.useState(false)
     const [btcFeeRate, setBtcFeeRate] = useState(feeRate)
     const [token, setToken] = useState<undefined | TokenBalance>(undefined)
+    const [tx, setTx] = React.useState<bitcoin.Psbt | null>(null)
 
     const [formData, setFormData] = React.useState<XudtTransferProps>({
         form: "",
@@ -81,7 +83,6 @@ export default function DialogLeapXudtToLayer2CanSelectToken({children, classNam
     }
 
     const checkAndBuild = async () => {
-
         if (formData.to === '') {
             setToError('Please enter a valid address')
             return
@@ -110,8 +111,26 @@ export default function DialogLeapXudtToLayer2CanSelectToken({children, classNam
             setAmountError('')
         }
 
+        setBusy(true)
         setBuildError('')
-        setStep(2)
+        try {
+            const tx = await build({
+                fromBtcAccount: internalAddress!,
+                toCkbAddress: formData.to,
+                xudtType: tokenInfoToScript(token),
+                amount: BigNumber(formData.amount)
+                    .multipliedBy(10 ** token.decimal)
+                    .toString()
+            })
+
+            console.log("tx", tx)
+            setTx(tx)
+            setStep(2)
+        } catch (e: any) {
+            setBuildError(e.message || "Failed to build transaction")
+        } finally {
+            setBusy(false)
+        }
     }
 
     const handleLeap = async () => {
