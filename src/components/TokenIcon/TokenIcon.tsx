@@ -1,7 +1,7 @@
-import {TokenIcons, ChainIcons} from "@/components/TokenIcon/icons";
+import { TokenIcons, ChainIcons } from "@/components/TokenIcon/icons";
 import Identicon from 'identicon.js'
-import {keccak_256} from "js-sha3";
-import {Buffer} from "buffer";
+import { keccak_256 } from "js-sha3";
+import { Buffer } from "buffer";
 
 function getStrHash(name: string) {
     let node = "0000000000000000000000000000000000000000000000000000000000000000";
@@ -33,40 +33,40 @@ export function stringToColor(str: string) {
     return color;
 }
 
-function IconUnknown (props: {str: string, size: number}) {
+function IconUnknown(props: { str: string, size: number }) {
     const bg = stringToColor(props.str)
 
-    return <div style={{background: bg, width: `${props.size}px`, height: `${props.size}px`, fontSize: `${props.size / 2}px`}} className={`rounded-full text-white flex flex-row justify-center items-center`}>
-        {props.str[0] ? props.str[0].toUpperCase() :  ''}
+    return <div style={{ background: bg, width: `${props.size}px`, height: `${props.size}px`, fontSize: `${props.size / 2}px` }} className={`rounded-full text-white flex flex-row justify-center items-center`}>
+        {props.str[0] ? props.str[0].toUpperCase() : ''}
     </div>
 }
 
 
-export default function TokenIcon({symbol='default', size, chain, rounded=true} : {symbol: string, size: number, chain?: string, rounded?: boolean}) {
+export default function TokenIcon({ symbol = 'default', size, chain, rounded = true, className }: { symbol: string, size: number, chain?: string, rounded?: boolean, className?: string }) {
     const options = {
-        foreground: [216, 140, 173, 255] ,
-        background: [245, 245, 245, 255] ,
+        foreground: [216, 140, 173, 255],
+        background: [245, 245, 245, 255],
         margin: 0,
         size: size,
         format: 'svg'
     }
 
     const tokenIcon = TokenIcons[symbol.toUpperCase()] || 'data:image/svg+xml;base64,' + new Identicon(getStrHash(symbol), (options as any)).toString()
-    const chainIcon = chain ? ChainIcons[chain]: undefined
+    const chainIcon = chain ? ChainIcons[chain] : undefined
 
-    return <div className={`relative mr-3`} style={{width: size + 'px', height: size + 'px'}}>
+    return <div className={`${className} relative mr-3`} style={{ width: size + 'px', height: size + 'px' }}>
         {!!TokenIcons[symbol.toUpperCase()] ?
             <img src={tokenIcon} className={`bg-gray-200 ${rounded ? 'rounded-full' : 'rounded-lg'}`} alt="icon"
-                 width={size} height={size}/>
+                width={size} height={size} />
             : <IconUnknown str={symbol} size={size} />
 
         }
         {
             chainIcon &&
             <img src={chainIcon}
-                 className={`bg-gray-200 ${rounded ? 'rounded-full' : 'rounded-lg'} absolute right-0 top-0 border border-white shadow block`}
-                 style={{marginRight: (size/ 8 * -3) + 'px'}}
-                 width={size/4 * 3} height={size/4 * 3} alt=""/>
+                className={`bg-gray-200 ${rounded ? 'rounded-full' : 'rounded-lg'} absolute right-0 top-0 border border-white shadow block`}
+                style={{ marginRight: (size / 8 * -3) + 'px' }}
+                width={size / 4 * 3} height={size / 4 * 3} alt="" />
         }
     </div>
 }

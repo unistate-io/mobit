@@ -26,6 +26,7 @@
         "@spore-sdk/core": "^0.2.1",
         "@svgr/webpack": "^5.5.0",
         "@utxoswap/swap-sdk-js": "^0.1.3",
+        "ahooks": "^3.8.4",
         "axios": "^1.7.2",
         "babel-jest": "^27.4.2",
         "babel-loader": "^8.2.3",
