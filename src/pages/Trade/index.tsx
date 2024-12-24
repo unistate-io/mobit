@@ -64,47 +64,23 @@ export default function Trade() {
             }}
             className="relative"
         >
-            {/* <div className="absolute top-0 left-0 -z-10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="663" height="793" viewBox="0 0 663 793" fill="none">
-                    <path d="M-22.5001 99.5C157.5 254.5 270 -21 406 42C530.102 99.4884 475.513 354.785 75.5 462.5C-333 572.5 21.5 1138.5 641.5 559" stroke="url(#paint0_linear_1483_3472)" stroke-width="63" />
-                    <defs>
-                        <linearGradient id="paint0_linear_1483_3472" x1="-124.5" y1="4.10235" x2="772.629" y2="263.697" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#B9B2A0" />
-                            <stop offset="0.0742138" stop-color="#B8AA9D" />
-                            <stop offset="0.200371" stop-color="#FFF1F3" />
-                            <stop offset="0.265" stop-color="#DD9EE8" />
-                            <stop offset="0.43" stop-color="#9D92C5" />
-                            <stop offset="0.565" stop-color="#E8E6E4" />
-                            <stop offset="0.685" stop-color="#5CD7CB" />
-                            <stop offset="0.8" stop-color="#70AF9C" />
-                            <stop offset="0.895" stop-color="#EAE0E3" />
-                            <stop offset="1" stop-color="#B7CE5D" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-            </div>
-            <div className="absolute top-0 right-0 -z-10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="777" height="915" viewBox="0 0 777 915" fill="none">
-                    <path d="M667 -24.5C343.5 412 829.5 239.5 856 389.5C875.33 498.916 442.5 571.5 847 801.5C866.5 1070 587.5 600 16.5 941" stroke="url(#paint0_linear_1483_3468)" stroke-width="63" />
-                    <defs>
-                        <linearGradient id="paint0_linear_1483_3468" x1="1047.5" y1="119.104" x2="150.371" y2="378.699" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#B9B2A0" />
-                            <stop offset="0.0742138" stop-color="#B8AA9D" />
-                            <stop offset="0.200371" stop-color="#FFF1F3" />
-                            <stop offset="0.359129" stop-color="#9D92C5" />
-                            <stop offset="0.501367" stop-color="#F7C8FF" />
-                            <stop offset="0.613608" stop-color="#E8E6E4" />
-                            <stop offset="0.685" stop-color="#5CD7CB" />
-                            <stop offset="0.8" stop-color="#70AF9C" />
-                            <stop offset="0.895" stop-color="#EAE0E3" />
-                            <stop offset="1" stop-color="#D8F272" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-            </div> */}
 
-            <div className="max-w-[--page-with]  mx-auto pt-4 md:pt-10 pb-10">
-                <div className="flex items-center gap-4 justify-between overflow-x-scroll px-3">
+            <div className="absolute inset-0 -z-10">
+                <img
+                    src="/images/streamers.svg"
+                    alt=""
+                    className="w-full h-full object-cover"
+                    style={{
+                        mixBlendMode: "soft-light",
+                    }}
+                />
+            </div>
+
+
+
+
+            <div className="w-full md:w-[682px]   mx-auto pt-4 md:pt-10 pb-10">
+                {/* <div className="flex items-center gap-4 justify-between overflow-x-scroll px-3">
                     {TRADE_LIST.map(({ value, label, svg }) => (
                         <div
                             className={`flex items-center justify-center gap-1 text-[#7B7C7B] text-sm font-semibold py-3 px-[18px] rounded-[38px] w-[128px] cursor-pointer ${tradeType === value ? "bg-white/70 text-[#272928]" : ""
@@ -117,7 +93,7 @@ export default function Trade() {
                             {label}
                         </div>
                     ))}
-                </div>
+                </div> */}
                 {tradeView}
             </div>
         </div>

@@ -64,7 +64,7 @@ export const DialogExchange = ({ className, value, options = [], onChange }: Pro
                 onPointerDownOutside={e => { e.preventDefault() }}
                 className="data-[state=open]:animate-contentShow z-50 fixed top-[50%] left-[50%] p-6 max-w-[98vw] w-full md:max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-white shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
                 <div className="flex flex-row justify-between items-center mb-6">
-                    <div className="font-medium text-xl text-[#272928]">Select a token</div>
+                    <div className="font-medium text-xl text-[#272928]">{lang['Select a token']}</div>
                     <div onClick={e => {
                         setOpen(false)
                     }}
@@ -76,7 +76,7 @@ export const DialogExchange = ({ className, value, options = [], onChange }: Pro
                 <Input className='h-[50px]' startIcon={<i className="uil-search text-black" />} onChange={handleInput} />
 
                 <div className="mt-6 flex flex-col gap-1">
-                    <span className='text-[#7B7C7B] text-sm'>All Token</span>
+                    <span className='text-[#7B7C7B] text-sm'>{lang['All Token']}</span>
                     <div className='flex flex-col gap-4 overflow-scroll max-h-[400px]'>
                         {
                             filteredOptions.map(({ token }) => {

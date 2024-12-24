@@ -13,12 +13,11 @@ import Button from "@/components/Form/Button/Button"
 import BigNumber from "bignumber.js"
 import { Transaction as CCCTransaction } from "@ckb-ccc/connector-react"
 import { append0x } from "@rgbpp-sdk/ckb"
-import { shortTransactionHash } from "@/utils/common"
-import CopyText from "@/components/CopyText/CopyText"
 import { LangContext } from "@/providers/LangProvider/LangProvider"
 
 import * as dayjsLib from "dayjs"
 import { DialogExchange, SelectOption } from "@/components/Dialogs/DialogExchange"
+import { SwapSuccess } from "@/components/Dialogs/DialogSwapSuccess"
 
 const dayjs: any = dayjsLib
 
@@ -30,14 +29,22 @@ const ckb: Token = {
     logo: "https://storage.utxoswap.xyz/images/ckb.png"
 }
 
+export interface SwapForm {
+    pool: Pool | null
+    selectedX: Token | null
+    amountX: string
+    selectedY: Token | null
+    amountY: string
+}
+
 export default function SwapView({ className, sellToken }: { className?: string; sellToken?: string }) {
     const { address, addresses, network, config, open: login, signer } = useContext(CKBContext)
     const { lang } = useContext(LangContext)
 
     const { pools, client, collector, supportTokens } = useUtxoSwap()
     const [open, setOpen] = useState(false)
-    const [step, setStep] = useState(1)
     const [busy, setBusy] = useState(false)
+    const [openSuccess, setOpenSuccess] = useState(false)
 
     const { data: ckbBalence, status: ckbBalenceStatus } = useCkbBalance(addresses)
 
@@ -49,23 +56,13 @@ export default function SwapView({ className, sellToken }: { className?: string;
     const [txErr, setTxErr] = useState<string>("")
     const [txHash, setTxHash] = useState<string>("")
 
-    const [swapForm, setSwapForm] = useState<{
-        pool: Pool | null
-        selectedX: Token | null
-        amountX: string
-        selectedY: Token | null
-        amountY: string
-    }>({
+    const [swapForm, setSwapForm] = useState<SwapForm>({
         pool: null,
         selectedX: null,
         amountX: "",
         selectedY: null,
         amountY: ""
     })
-
-    // useEffect(() => {
-    //     console.log('swapForm =>', swapForm)
-    // }, [swapForm]);
 
     const swapFromOptions = useMemo<SelectOption[]>(() => {
         if (!pools || !pools.length) return []
@@ -306,7 +303,6 @@ export default function SwapView({ className, sellToken }: { className?: string;
             })
             setTxErr("")
             setBusy(false)
-            setStep(1)
         }
     }, [open, sellToken, supportTokens])
 
@@ -328,7 +324,12 @@ export default function SwapView({ className, sellToken }: { className?: string;
             )
 
             setTxHash(intentTxHash || "")
-            setStep(2)
+            setOpenSuccess(true)
+            setSwapForm({
+                ...swapForm,
+                amountX: "",
+                amountY: ""
+            })
         } catch (e: any) {
             console.error(e)
             setTxErr(e.message)
@@ -360,316 +361,219 @@ export default function SwapView({ className, sellToken }: { className?: string;
 
     return (
         <div className="w-full px-3 pt-6 md:px-6">
-            {step === 1 && (
-                <>
-                    <div className="flex flex-col relative">
-                        <div
-                            onClick={handleReverse}
-                            style={{ boxShadow: "0px 1.988px 18px 0px rgba(0, 0, 0, 0.10)" }}
-                            className="bg-white left-[50%] top-[50%] ml-[-20px] mt-[-30px] absolute cursor-pointer w-10 h-10 flex flex-row justify-center items-center rounded-full"
-                        >
-                            <i className="uil-arrow-down" />
-                        </div>
-
-                        <div className="flex flex-col py-5 border rounded-2xl mb-2 bg-white">
-                            <div className="flex flex-row items-center justify-between mb-2 px-5">
-                                <div className="text-lg font-semibold text-[#7B7C7B]">{lang["Sell"]}</div>
-                                <div className="text-sm">
-                                    {lang["Balance"]}:{" "}
-                                    <span className="font-semibold text-base">
-                                        {swapForm.selectedX
-                                            ? swapForm.selectedX?.symbol === "CKB"
-                                                ? toDisplay(ckbBalence?.amount || "0", 8)
-                                                : toDisplay(tokenXBalence, swapForm.selectedX.decimals)
-                                            : "--"}
-                                    </span>
-                                    <span
-                                        onClick={handleSetMax}
-                                        className="font-semibold cursor-pointer text-[#6cd7b2] ml-2"
-                                    >
-                                        MAX
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="flex flex-row items-center px-5 justify-between">
-                                <div className="flex-1 font-semibold text-base mr-2">
-                                    <Input
-                                        type="number"
-                                        className="bg-[#fff] w-[100%]"
-                                        value={swapForm.amountX}
-                                        style={{ backgroundColor: "#fff", fontSize: "36px" }}
-                                        onChange={e => {
-                                            setSwapForm({
-                                                ...swapForm,
-                                                amountX: e.target.value
-                                            })
-                                        }}
-                                        placeholder={"0"}
-                                    />
-                                </div>
-                                <div className="min-w-[120px]  md:min-w-[160px] grow-0">
-                                    <DialogExchange options={swapFromOptions} value={swapForm.selectedX || null} onChange={handleSelectedX} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col py-5 border rounded-2xl mb-6 bg-white">
-                            <div className="flex flex-row items-center justify-between mb-2 px-5">
-                                <div className="text-lg font-semibold text-[#7B7C7B]">{lang["Buy"]}</div>
-                                <div className="text-sm">
-                                    {lang["Balance"]}:{" "}
-                                    <span className="font-semibold text-base">
-                                        {swapForm.selectedY
-                                            ? swapForm.selectedY?.symbol === "CKB"
-                                                ? toDisplay(ckbBalence?.amount || "0", 8)
-                                                : toDisplay(tokenYBalence, swapForm.selectedY.decimals)
-                                            : "--"}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="flex flex-row items-center px-5 justify-between">
-                                <div className="flex-1 font-semibold text-base mr-2">
-                                    <Input
-                                        disabled={true}
-                                        className="bg-[#fff] w-[100%]"
-                                        style={{ backgroundColor: "#fff", fontSize: "36px" }}
-                                        type="number"
-                                        value={swapForm.amountY}
-                                        placeholder={"0"}
-                                    />
-                                </div>
-                                <div className="min-w-[120px] md:min-w-[160px] grow-0 w-[220px]">
-                                    <Select
-                                        className="bg-gray-100 px-3 py-3 rounded-xl h-[56px]"
-                                        value={swapForm.selectedY?.typeHash}
-                                        options={swapToOptions}
-                                        placeholder={lang["Select..."]}
-                                        icon={
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                            >
-                                                <path
-                                                    d="M17.92 11.6199C17.8724 11.4972 17.801 11.385 17.71 11.2899L12.71 6.28994C12.6168 6.1967 12.5061 6.12274 12.3842 6.07228C12.2624 6.02182 12.1319 5.99585 12 5.99585C11.7337 5.99585 11.4783 6.10164 11.29 6.28994C11.1968 6.38318 11.1228 6.49387 11.0723 6.61569C11.0219 6.73751 10.9959 6.86808 10.9959 6.99994C10.9959 7.26624 11.1017 7.52164 11.29 7.70994L14.59 10.9999H7C6.73478 10.9999 6.48043 11.1053 6.29289 11.2928C6.10536 11.4804 6 11.7347 6 11.9999C6 12.2652 6.10536 12.5195 6.29289 12.707C6.48043 12.8946 6.73478 12.9999 7 12.9999H14.59L11.29 16.2899C11.1963 16.3829 11.1219 16.4935 11.0711 16.6154C11.0203 16.7372 10.9942 16.8679 10.9942 16.9999C10.9942 17.132 11.0203 17.2627 11.0711 17.3845C11.1219 17.5064 11.1963 17.617 11.29 17.7099C11.383 17.8037 11.4936 17.8781 11.6154 17.9288C11.7373 17.9796 11.868 18.0057 12 18.0057C12.132 18.0057 12.2627 17.9796 12.3846 17.9288C12.5064 17.8781 12.617 17.8037 12.71 17.7099L17.71 12.7099C17.801 12.6148 17.8724 12.5027 17.92 12.3799C18.02 12.1365 18.02 11.8634 17.92 11.6199Z"
-                                                    fill="black"
-                                                />
-                                            </svg>
-                                        }
-                                        getValueLabel={() => {
-                                            if (!swapForm.selectedY) return undefined
-                                            return (
-                                                <div className="flex flex-row items-center flex-1 text-nowrap">
-                                                    {!!swapForm.selectedY!.logo ? (
-                                                        <img
-                                                            className="w-12 h-12 rounded-full mr-3"
-                                                            src={swapForm.selectedY!.logo}
-                                                            alt=""
-                                                        />
-                                                    ) : (
-                                                        <TokenIcon symbol={swapForm.selectedY!.symbol} size={48} />
-                                                    )}
-                                                    <div className="font-bold text-2xl text-[#272928]">{swapForm.selectedY!.symbol}</div>
-                                                </div>
-                                            )
-                                        }}
-                                        getOptionLabel={opt => {
-                                            return (
-                                                <div className="flex flex-row items-center">
-                                                    {!!opt.token.logo ? (
-                                                        <img
-                                                            className="w-5 h-5 rounded-full mr-3"
-                                                            src={opt.token.logo}
-                                                            alt=""
-                                                        />
-                                                    ) : (
-                                                        <TokenIcon symbol={opt.token.symbol} size={20} />
-                                                    )}
-
-                                                    <div>{opt.token.symbol}</div>
-                                                </div>
-                                            )
-                                        }}
-                                        onValueChange={value => {
-                                            setSwapForm({
-                                                ...swapForm,
-                                                selectedY: swapToOptions.find(opt => opt.id === value)?.token || null
-                                            })
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
+            <>
+                <div className="flex flex-col relative">
+                    <div
+                        onClick={handleReverse}
+                        style={{ boxShadow: "0px 1.988px 18px 0px rgba(0, 0, 0, 0.10)" }}
+                        className="bg-white left-[50%] top-[50%] ml-[-20px] mt-[-30px] absolute cursor-pointer w-10 h-10 flex flex-row justify-center items-center rounded-full"
+                    >
+                        <i className="uil-arrow-down" />
                     </div>
 
-                    {!address && (
-                        <Button
-                            btntype={"primary"}
-                            onClick={() => {
-                                login()
-                                setOpen(false)
-                            }}
-                        >
-                            {lang["Connect Wallet"]}
-                        </Button>
-                    )}
-
-                    {!!txErr && <div className="h-6 mb-4 text-red-400">{txErr}</div>}
-
-                    {!!address && (
-                        <Button
-                            disabled={disableSwap}
-                            onClick={handleSwap}
-                            loading={busy || ckbBalenceStatus === "loading"}
-                            btntype={"primary"}
-                        >
-                            Swap
-                        </Button>
-                    )}
-
-                    <div className="text-center h-6 font-semibold my-6">
-                        {!!price &&
-                            swapForm.amountY &&
-                            swapForm.amountX &&
-                            `1 ${swapForm.selectedX!.symbol} ≈ ${price} ${swapForm.selectedY!.symbol}`}
-                    </div>
-
-                    <div className="shadow rounded-xl py-3 bg-white">
-                        <div className="flex flex-row items-center justify-between px-6 mb-4">
-                            <div className="text-sm">{lang["Max slippage"]}</div>
-                            <div className="font-semibold">{swapConfig.slippage} %</div>
+                    <div className="flex flex-col py-5 border rounded-2xl mb-2 bg-white">
+                        <div className="flex flex-row items-center justify-between mb-2 px-5">
+                            <div className="text-lg font-semibold text-[#7B7C7B]">{lang["Sell"]}</div>
+                            <div className="text-sm">
+                                {lang["Balance"]}:{" "}
+                                <span className="font-semibold text-base">
+                                    {swapForm.selectedX
+                                        ? swapForm.selectedX?.symbol === "CKB"
+                                            ? toDisplay(ckbBalence?.amount || "0", 8)
+                                            : toDisplay(tokenXBalence, swapForm.selectedX.decimals)
+                                        : "--"}
+                                </span>
+                                <span
+                                    onClick={handleSetMax}
+                                    className="font-semibold cursor-pointer text-[#6cd7b2] ml-2"
+                                >
+                                    MAX
+                                </span>
+                            </div>
                         </div>
-                        <div className="flex flex-row items-center justify-between px-6 mb-4">
-                            {!!swapForm.pool && swapForm.amountX ? (
-                                <>
-                                    <div className="text-sm">
-                                        {lang["Fee"]}{" "}
-                                        <span>{`(${((swapForm.pool as any).poolInfo.feeRate / 10000).toFixed(
-                                            3
-                                        )}%)`}</span>
-                                    </div>
-                                    <div className="font-semibold">
-                                        {BigNumber(swapForm.amountX)
-                                            .times((swapForm.pool as any).poolInfo.feeRate / 10000)
-                                            .toFormat(8)}{" "}
-                                        {swapForm.selectedX?.symbol}
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="text-sm">{lang["Fee"]}</div>
-                                    <div className="font-semibold">0</div>
-                                </>
-                            )}
-                        </div>
-                        {/*<div className="flex flex-row items-center justify-between px-6">*/}
-                        {/*    <div className="text-sm">Network Fee</div>*/}
-                        {/*    <div className="font-semibold">{swapConfig.networkFeeRate}</div>*/}
-                        {/*</div>*/}
-                    </div>
-                </>
-            )}
-
-            {step === 2 && (
-                <>
-                    <div className="flex flex-row justify-center items-center mb-4 mt-2">
-                        <svg width="73" height="72" viewBox="0 0 73 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clipPath="url(#clip0_699_1259)">
-                                <circle cx="36.5" cy="36" r="36" fill="#41D195" fillOpacity="0.12" />
-                                <path
-                                    d="M37 19.3335C27.8167 19.3335 20.3333 26.8168 20.3333 36.0002C20.3333 45.1835 27.8167 52.6668 37 52.6668C46.1833 52.6668 53.6667 45.1835 53.6667 36.0002C53.6667 26.8168 46.1833 19.3335 37 19.3335ZM44.9667 32.1668L35.5167 41.6168C35.2833 41.8502 34.9667 41.9835 34.6333 41.9835C34.3 41.9835 33.9833 41.8502 33.75 41.6168L29.0333 36.9002C28.55 36.4168 28.55 35.6168 29.0333 35.1335C29.5167 34.6502 30.3167 34.6502 30.8 35.1335L34.6333 38.9668L43.2 30.4002C43.6833 29.9168 44.4833 29.9168 44.9667 30.4002C45.45 30.8835 45.45 31.6668 44.9667 32.1668Z"
-                                    fill="#41D195"
+                        <div className="flex flex-row items-center px-5 justify-between">
+                            <div className="flex-1 font-semibold text-base mr-2">
+                                <Input
+                                    type="number"
+                                    className="bg-[#fff] w-[100%] "
+                                    value={swapForm.amountX}
+                                    style={{ backgroundColor: "#fff", fontSize: "36px", fontFamily: "DIN Alternate" }}
+                                    onChange={e => {
+                                        setSwapForm({
+                                            ...swapForm,
+                                            amountX: e.target.value
+                                        })
+                                    }}
+                                    placeholder={"0"}
                                 />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_699_1259">
-                                    <rect width="72" height="72" fill="white" transform="translate(0.5)" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </div>
-                    <div className="font-semibold text-center text-lg">{lang["Transaction Sent !"]}</div>
-                    <div className="text-center text-sm">
-                        {lang["The transaction is sent and will be confirmed later"]}
-                    </div>
-
-                    <div className="my-4 p-3 bg-gray-100 rounded-lg">
-                        <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                            <div className="text-gray-500">{lang["Sell"]}</div>
-                            <div className="font-semibold">
-                                {swapForm.amountX || "--"} {swapForm.selectedX?.symbol}
+                            </div>
+                            <div className="min-w-[120px]  md:min-w-[160px] grow-0">
+                                <DialogExchange options={swapFromOptions} value={swapForm.selectedX || null} onChange={handleSelectedX} />
                             </div>
                         </div>
+                    </div>
 
-                        <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                            <div className="text-gray-500">{lang["Buy"]}</div>
-                            <div className="font-semibold">
-                                {swapForm.amountY || "--"} {swapForm.selectedY?.symbol}
+                    <div className="flex flex-col py-5 border rounded-2xl mb-6 bg-white">
+                        <div className="flex flex-row items-center justify-between mb-2 px-5">
+                            <div className="text-lg font-semibold text-[#7B7C7B]">{lang["Buy"]}</div>
+                            <div className="text-sm">
+                                {lang["Balance"]}:{" "}
+                                <span className="font-semibold text-base">
+                                    {swapForm.selectedY
+                                        ? swapForm.selectedY?.symbol === "CKB"
+                                            ? toDisplay(ckbBalence?.amount || "0", 8)
+                                            : toDisplay(tokenYBalence, swapForm.selectedY.decimals)
+                                        : "--"}
+                                </span>
                             </div>
                         </div>
+                        <div className="flex flex-row items-center px-5 justify-between">
+                            <div className="flex-1 font-semibold text-base mr-2">
+                                <Input
+                                    disabled={true}
+                                    className="bg-[#fff] w-[100%]"
+                                    style={{ backgroundColor: "#fff", fontSize: "36px", fontFamily: "DIN Alternate" }}
+                                    type="number"
+                                    value={swapForm.amountY}
+                                    placeholder={"0"}
+                                />
+                            </div>
+                            <div className="min-w-[120px] md:min-w-[160px] grow-0 w-[220px]">
+                                <Select
+                                    className="bg-gray-100 px-3 py-3 rounded-xl h-[56px]"
+                                    value={swapForm.selectedY?.typeHash}
+                                    options={swapToOptions}
+                                    placeholder={lang["Select..."]}
+                                    icon={
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                        >
+                                            <path
+                                                d="M17.92 11.6199C17.8724 11.4972 17.801 11.385 17.71 11.2899L12.71 6.28994C12.6168 6.1967 12.5061 6.12274 12.3842 6.07228C12.2624 6.02182 12.1319 5.99585 12 5.99585C11.7337 5.99585 11.4783 6.10164 11.29 6.28994C11.1968 6.38318 11.1228 6.49387 11.0723 6.61569C11.0219 6.73751 10.9959 6.86808 10.9959 6.99994C10.9959 7.26624 11.1017 7.52164 11.29 7.70994L14.59 10.9999H7C6.73478 10.9999 6.48043 11.1053 6.29289 11.2928C6.10536 11.4804 6 11.7347 6 11.9999C6 12.2652 6.10536 12.5195 6.29289 12.707C6.48043 12.8946 6.73478 12.9999 7 12.9999H14.59L11.29 16.2899C11.1963 16.3829 11.1219 16.4935 11.0711 16.6154C11.0203 16.7372 10.9942 16.8679 10.9942 16.9999C10.9942 17.132 11.0203 17.2627 11.0711 17.3845C11.1219 17.5064 11.1963 17.617 11.29 17.7099C11.383 17.8037 11.4936 17.8781 11.6154 17.9288C11.7373 17.9796 11.868 18.0057 12 18.0057C12.132 18.0057 12.2627 17.9796 12.3846 17.9288C12.5064 17.8781 12.617 17.8037 12.71 17.7099L17.71 12.7099C17.801 12.6148 17.8724 12.5027 17.92 12.3799C18.02 12.1365 18.02 11.8634 17.92 11.6199Z"
+                                                fill="black"
+                                            />
+                                        </svg>
+                                    }
+                                    getValueLabel={() => {
+                                        if (!swapForm.selectedY) return undefined
+                                        return (
+                                            <div className="flex flex-row items-center flex-1 text-nowrap">
+                                                {!!swapForm.selectedY!.logo ? (
+                                                    <img
+                                                        className="w-12 h-12 rounded-full mr-3"
+                                                        src={swapForm.selectedY!.logo}
+                                                        alt=""
+                                                    />
+                                                ) : (
+                                                    <TokenIcon symbol={swapForm.selectedY!.symbol} size={48} />
+                                                )}
+                                                <div className="font-bold text-2xl text-[#272928]">{swapForm.selectedY!.symbol}</div>
+                                            </div>
+                                        )
+                                    }}
+                                    getOptionLabel={opt => {
+                                        return (
+                                            <div className="flex flex-row items-center">
+                                                {!!opt.token.logo ? (
+                                                    <img
+                                                        className="w-5 h-5 rounded-full mr-3"
+                                                        src={opt.token.logo}
+                                                        alt=""
+                                                    />
+                                                ) : (
+                                                    <TokenIcon symbol={opt.token.symbol} size={20} />
+                                                )}
 
-                        <div className="h-[1px] bg-gray-200 my-4" />
+                                                <div>{opt.token.symbol}</div>
+                                            </div>
+                                        )
+                                    }}
+                                    onValueChange={value => {
+                                        setSwapForm({
+                                            ...swapForm,
+                                            selectedY: swapToOptions.find(opt => opt.id === value)?.token || null
+                                        })
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                        {!!swapForm.pool && swapForm.amountX && (
-                            <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                <div className="text-gray-500">{lang["Transaction fee"]}</div>
+                {!address && (
+                    <Button
+                        btntype={"primary"}
+                        onClick={() => {
+                            login()
+                            setOpen(false)
+                        }}
+                    >
+                        {lang["Connect Wallet"]}
+                    </Button>
+                )}
+
+                {!!txErr && <div className="h-6 mb-4 text-red-400">{txErr}</div>}
+
+                {!!address && (
+                    <Button
+                        disabled={disableSwap}
+                        onClick={handleSwap}
+                        loading={busy || ckbBalenceStatus === "loading"}
+                        btntype={"primary"}
+                    >
+                        Swap
+                    </Button>
+                )}
+
+                <div className="text-center h-6 font-semibold my-6">
+                    {!!price &&
+                        swapForm.amountY &&
+                        swapForm.amountX &&
+                        `1 ${swapForm.selectedX!.symbol} ≈ ${price} ${swapForm.selectedY!.symbol}`}
+                </div>
+
+                <div className="shadow rounded-xl py-3 bg-white">
+                    <div className="flex flex-row items-center justify-between px-6 mb-4">
+                        <div className="text-sm">{lang["Max slippage"]}</div>
+                        <div className="font-semibold">{swapConfig.slippage} %</div>
+                    </div>
+                    <div className="flex flex-row items-center justify-between px-6 mb-4">
+                        {!!swapForm.pool && swapForm.amountX ? (
+                            <>
+                                <div className="text-sm">
+                                    {lang["Fee"]}{" "}
+                                    <span>{`(${((swapForm.pool as any).poolInfo.feeRate / 10000).toFixed(
+                                        3
+                                    )}%)`}</span>
+                                </div>
                                 <div className="font-semibold">
                                     {BigNumber(swapForm.amountX)
                                         .times((swapForm.pool as any).poolInfo.feeRate / 10000)
-                                        .toFormat()}{" "}
+                                        .toFormat(8)}{" "}
                                     {swapForm.selectedX?.symbol}
                                 </div>
-                            </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="text-sm">{lang["Fee"]}</div>
+                                <div className="font-semibold">0</div>
+                            </>
                         )}
-
-                        {/*<div className="flex flex-row flex-nowrap justify-between text-sm mb-2">*/}
-                        {/*    <div className="text-gray-500">Network fee</div>*/}
-                        {/*    <div className="font-semibold">-- CKB</div>*/}
-                        {/*</div>*/}
-
-                        <div className="h-[1px] bg-gray-200 my-4" />
-
-                        <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                            <div className="text-gray-500">{lang["Time"]}</div>
-                            <div className="font-semibold">{dayjs().format("YYYY-MM-DD HH:mm")}</div>
-                        </div>
-
-                        <div className="h-[1px] bg-gray-200 my-4" />
-
-                        <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                            <div className="text-gray-500">{lang["Tx Hash"]}</div>
-                            <div className="font-semibold flex flex-row">
-                                <CopyText copyText={txHash || ""}>
-                                    {txHash ? shortTransactionHash(txHash) : "--"}
-                                </CopyText>
-                            </div>
-                        </div>
                     </div>
+                    {/*<div className="flex flex-row items-center justify-between px-6">*/}
+                    {/*    <div className="text-sm">Network Fee</div>*/}
+                    {/*    <div className="font-semibold">{swapConfig.networkFeeRate}</div>*/}
+                    {/*</div>*/}
+                </div>
+            </>
 
-                    <div className="flex">
-                        <Button
-                            btntype={"secondary"}
-                            className={"mr-4 text-xs"}
-                            onClick={e => {
-                                window.open(`${config.explorer}/transaction/${txHash}`, "_blank")
-                            }}
-                        >
-                            {lang["View on Explorer"]}
-                        </Button>
+            <SwapSuccess open={openSuccess} setOpen={setOpenSuccess} swapForm={swapForm} txHash={txHash} />
 
-                        <Button
-                            btntype={"primary"}
-                            onClick={e => {
-                                setOpen(false)
-                            }}
-                        >
-                            {lang["Done"]}
-                        </Button>
-                    </div>
-                </>
-            )}
+
         </div>
     )
 }
