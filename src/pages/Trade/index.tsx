@@ -80,20 +80,6 @@ export default function Trade() {
 
 
             <div className="w-full md:w-[682px]   mx-auto pt-4 md:pt-10 pb-10">
-                {/* <div className="flex items-center gap-4 justify-between overflow-x-scroll px-3">
-                    {TRADE_LIST.map(({ value, label, svg }) => (
-                        <div
-                            className={`flex items-center justify-center gap-1 text-[#7B7C7B] text-sm font-semibold py-3 px-[18px] rounded-[38px] w-[128px] cursor-pointer ${tradeType === value ? "bg-white/70 text-[#272928]" : ""
-                                }`}
-                            onClick={() => {
-                                setTradeType(value)
-                            }}
-                        >
-                            {svg}
-                            {label}
-                        </div>
-                    ))}
-                </div> */}
                 {tradeView}
             </div>
         </div>
