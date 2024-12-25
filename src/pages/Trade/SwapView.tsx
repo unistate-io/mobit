@@ -323,13 +323,8 @@ export default function SwapView({ className, sellToken }: { className?: string;
                 swapConfig.networkFeeRate
             )
 
-            setTxHash(intentTxHash || "")
             setOpenSuccess(true)
-            setSwapForm({
-                ...swapForm,
-                amountX: "",
-                amountY: ""
-            })
+            setTxHash(intentTxHash || "")
         } catch (e: any) {
             console.error(e)
             setTxErr(e.message)
@@ -359,6 +354,15 @@ export default function SwapView({ className, sellToken }: { className?: string;
         })
     }
 
+    const handleCloseSuccessDialog = () => {
+        setOpenSuccess(false)
+        setSwapForm({
+            ...swapForm,
+            amountX: "",
+            amountY: ""
+        })
+    }
+
     return (
         <div className="w-full px-3 pt-6 md:px-6">
             <>
@@ -373,7 +377,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
 
                     <div className="flex flex-col py-5 border rounded-2xl mb-2 bg-white">
                         <div className="flex flex-row items-center justify-between mb-2 px-5">
-                            <div className="text-lg font-semibold text-[#7B7C7B]">{lang["Sell"]}</div>
+                            <div className="text-lg  text-[#7B7C7B]">{lang["Sell"]}</div>
                             <div className="text-sm">
                                 {lang["Balance"]}:{" "}
                                 <span className="font-semibold text-base">
@@ -415,7 +419,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
 
                     <div className="flex flex-col py-5 border rounded-2xl mb-6 bg-white">
                         <div className="flex flex-row items-center justify-between mb-2 px-5">
-                            <div className="text-lg font-semibold text-[#7B7C7B]">{lang["Buy"]}</div>
+                            <div className="text-lg  text-[#7B7C7B]">{lang["Buy"]}</div>
                             <div className="text-sm">
                                 {lang["Balance"]}:{" "}
                                 <span className="font-semibold text-base">
@@ -520,7 +524,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
 
                 {!!address && (
                     <Button
-                        disabled={disableSwap}
+                        // disabled={disableSwap}
                         onClick={handleSwap}
                         loading={busy || ckbBalenceStatus === "loading"}
                         btntype={"primary"}
@@ -539,21 +543,21 @@ export default function SwapView({ className, sellToken }: { className?: string;
                 <div className="shadow rounded-xl py-3 bg-white">
                     <div className="flex flex-row items-center justify-between px-6 mb-4">
                         <div className="text-sm">{lang["Max slippage"]}</div>
-                        <div className="font-semibold">{swapConfig.slippage} %</div>
+                        <div className="font-semibold" style={{ fontFamily: 'Anonymous Pro' }}>{swapConfig.slippage} %</div>
                     </div>
                     <div className="flex flex-row items-center justify-between px-6 mb-4">
                         {!!swapForm.pool && swapForm.amountX ? (
                             <>
                                 <div className="text-sm">
-                                    {lang["Fee"]}{" "}
-                                    <span>{`(${((swapForm.pool as any).poolInfo.feeRate / 10000).toFixed(
+                                    {lang["Fee"]}
+                                    <span style={{ fontFamily: 'Anonymous Pro' }}>{`(${((swapForm.pool as any).poolInfo.feeRate / 10000).toFixed(
                                         3
                                     )}%)`}</span>
                                 </div>
-                                <div className="font-semibold">
+                                <div className="font-semibold" style={{ fontFamily: 'Anonymous Pro' }}>
                                     {BigNumber(swapForm.amountX)
                                         .times((swapForm.pool as any).poolInfo.feeRate / 10000)
-                                        .toFormat(8)}{" "}
+                                        .toFormat(8)}
                                     {swapForm.selectedX?.symbol}
                                 </div>
                             </>
@@ -571,7 +575,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
                 </div>
             </>
 
-            <SwapSuccess open={openSuccess} setOpen={setOpenSuccess} swapForm={swapForm} txHash={txHash} />
+            <SwapSuccess open={openSuccess} onClose={handleCloseSuccessDialog} swapForm={swapForm} txHash={txHash} />
 
 
         </div>

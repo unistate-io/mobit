@@ -1,14 +1,14 @@
-import {Link, NavLink} from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 import HeaderMenu from "@/components/HeaderMenu/HeaderMenu"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {useContext} from "react"
-import {LangContext} from "@/providers/LangProvider/LangProvider"
-import {useParams} from "react-router-dom"
+import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
+import { useContext } from "react"
+import { LangContext } from "@/providers/LangProvider/LangProvider"
+import { useParams } from "react-router-dom"
 
 function Header() {
-    const {address} = useContext(CKBContext)
-    const {lang} = useContext(LangContext)
-    const {address: addressParams} = useParams()
+    const { address } = useContext(CKBContext)
+    const { lang } = useContext(LangContext)
+    const { address: addressParams } = useParams()
 
     return (
         <header className={"sticky w-full bg-white shadow h-[60px] top-0 z-20"}>
@@ -20,10 +20,9 @@ function Header() {
 
                     {!!address && (
                         <NavLink
-                            className={({isActive}) => {
-                                return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${
-                                    isActive && address === addressParams ? "text-[#6CD7B2]" : ""
-                                }`
+                            className={({ isActive }) => {
+                                return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive && address === addressParams ? "text-[#6CD7B2]" : ""
+                                    }`
                             }}
                             to={`/address/${address}`}
                         >
@@ -32,34 +31,31 @@ function Header() {
                     )}
 
                     <NavLink
-                        className={({isActive}) => {
-                            return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${
-                                isActive ? "text-[#6CD7B2]" : ""
-                            }`
+                        className={({ isActive }) => {
+                            return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive ? "text-[#6CD7B2]" : ""
+                                }`
                         }}
                         to={`/market`}
                     >
                         {lang["Market"]}
                     </NavLink>
                     <NavLink
-                        className={({isActive}) => {
-                            return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${
-                                isActive ? "text-[#6CD7B2]" : ""
-                            }`
+                        className={({ isActive }) => {
+                            return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive ? "text-[#6CD7B2]" : ""
+                                }`
                         }}
                         to={`/apps`}
                     >
                         {lang["Apps"]}
                     </NavLink>
                     <NavLink
-                        className={({isActive}) => {
-                            return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${
-                                isActive ? "text-[#6CD7B2]" : ""
-                            }`
+                        className={({ isActive }) => {
+                            return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive ? "text-[#6CD7B2]" : ""
+                                }`
                         }}
                         to={`/trade`}
                     >
-                        {lang["Trade"]}
+                        {lang["Swap"]}
                     </NavLink>
                 </div>
 

@@ -12,15 +12,15 @@ interface Props {
     open: boolean
     swapForm: SwapForm
     txHash: string
-    setOpen: (open: boolean) => void
+    onClose: () => void
 }
 
 
-export const SwapSuccess = ({ open, setOpen, swapForm, txHash }: Props) => {
+export const SwapSuccess = ({ open, onClose, swapForm, txHash }: Props) => {
 
     const { lang } = useContext(LangContext)
 
-    return <Dialog.Root open={open} onOpenChange={setOpen}>
+    return <Dialog.Root open={open} >
         <Dialog.Portal>
             <Dialog.Overlay
                 className="bg-[rgba(0,0,0,0.6)] z-40 data-[state=open]:animate-overlayShow fixed inset-0" />
@@ -65,11 +65,14 @@ export const SwapSuccess = ({ open, setOpen, swapForm, txHash }: Props) => {
                         <div className="h-[1px] bg-gray-200 my-4" />
 
                         {!!swapForm.pool && swapForm.amountX &&
-                            <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                <div className="text-gray-500">{lang['Transaction fee']}</div>
-                                <div
-                                    className="font-semibold">{BigNumber(swapForm.amountX).times((swapForm.pool as any).poolInfo.feeRate / 10000).toFormat()} {swapForm.selectedX?.symbol}</div>
-                            </div>
+                            <>
+                                <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
+                                    <div className="text-gray-500">{lang['Transaction fee']}</div>
+                                    <div
+                                        className="font-semibold">{BigNumber(swapForm.amountX).times((swapForm.pool as any).poolInfo.feeRate / 10000).toFormat()} {swapForm.selectedX?.symbol}</div>
+                                </div>
+                                <div className="h-[1px] bg-gray-200 my-4" />
+                            </>
                         }
 
                         {/*<div className="flex flex-row flex-nowrap justify-between text-sm mb-2">*/}
@@ -77,7 +80,6 @@ export const SwapSuccess = ({ open, setOpen, swapForm, txHash }: Props) => {
                         {/*    <div className="font-semibold">-- CKB</div>*/}
                         {/*</div>*/}
 
-                        <div className="h-[1px] bg-gray-200 my-4" />
 
                         <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                             <div className="text-gray-500">{lang['Time']}</div>
@@ -100,9 +102,7 @@ export const SwapSuccess = ({ open, setOpen, swapForm, txHash }: Props) => {
                     <div className="flex">
                         <Button btntype={'primary'}
                             className='bg-[#272928] text-white hover:bg-[#272928] text-sm'
-                            onClick={e => {
-                                setOpen(false)
-                            }}>
+                            onClick={onClose}>
                             {lang['Done']}
                         </Button>
                     </div>
