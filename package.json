@@ -4,11 +4,15 @@
     "license": "MIT",
     "private": true,
     "resolutions": {
-        "@ckb-lumos/lumos": "0.0.0-canary-d279b87-20240624101315"
+        "@ckb-lumos/lumos": "0.0.0-canary-d279b87-20240624101315",
+        "@nervosnetwork/ckb-types": "0.109.4",
+        "@nervosnetwork/ckb-sdk-utils": "0.109.4",
+        "@nervosnetwork/ckb-sdk-core": "0.109.4",
+        "@nervosnetwork/ckb-sdk-rpc": "0.109.4"
     },
     "dependencies": {
         "@babel/core": "^7.16.0",
-        "@ckb-ccc/connector-react": "^0.0.17",
+        "@ckb-ccc/connector-react": "^1.0.1",
         "@ckb-lumos/lumos": "0.0.0-canary-d279b87-20240624101315",
         "@joyid/ckb": "^0.0.8",
         "@nervina-labs/dob-render": "^0.0.0",
@@ -65,8 +69,8 @@
         "js-sha3": "^0.9.3",
         "json-bigint": "^1.0.0",
         "mini-css-extract-plugin": "^2.4.5",
-        "mobit-sdk": "^1.16.0",
-        "mobit-wallet": "^0.5.5",
+        "mobit-sdk": "^1.17.0",
+        "mobit-wallet": "^0.5.6",
         "node-polyfill-webpack-plugin": "^4.0.0",
         "path-browserify": "^1.0.1",
         "postcss": "^8.4.4",
