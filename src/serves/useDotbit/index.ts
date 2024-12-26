@@ -19,7 +19,7 @@ export default function useDotbit(address?: string) {
         }
 
         setStatus("loading")
-        fetch(`https://ckb-property-aggregator.unistate.io/?ckbaddress=${address}`)
+        fetch(`https://aggregator.unistate.io/?ckbaddress=${address}`)
             .then(res => res.json())
             .catch((e: any) => {
                 setError(e)
