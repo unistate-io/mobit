@@ -22,7 +22,7 @@ function Home() {
                 <div>
                     <KeepAliveOutlet/>
                 </div>
-                <Feedback />
+                {location.pathname !== "/trade" && <Feedback />}
             </div>
         </CKBProvider>
     )
