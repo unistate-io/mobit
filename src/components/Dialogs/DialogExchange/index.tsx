@@ -40,7 +40,12 @@ export const DialogExchange = ({ className, value, options = [], onChange }: Pro
     return <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger className={`${className} flex h-[56px] items-center w-[220px] bg-gray-100 px-3 py-3 rounded-xl justify-between`}>
             {value ? <div className='flex flex-row items-center gap-[12px]'>
-                {value.logo ? <img src={value.logo} className='w-[48px] h-[48px]' /> : <TokenIcon symbol={value.symbol} size={48} className='mr-[0px]' />}
+                <div  className='relative'>
+                    {value.logo ? <img src={value.logo} className='w-[48px] h-[48px]' /> : <TokenIcon symbol={value.symbol} size={48} className='mr-[0px]' />}
+                    <div className='h-[22px] w-[22px] px-[5px] py-[6px] bg-white rounded-full absolute bottom-0 right-[-10px]'><img src="/images/logo_ckb.svg" className='w-[12px] h-[12px]' /></div>
+                </div>
+
+
                 <div className='font-bold text-2xl text-[#272928]'>{value.symbol}</div>
             </div> : lang["Select..."]}
             <svg
