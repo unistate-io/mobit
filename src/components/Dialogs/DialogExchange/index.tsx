@@ -86,9 +86,9 @@ export const DialogExchange = ({ className, value, options = [], onChange }: Pro
                         {
                             filteredOptions.map(({ token }) => {
                                 return <div className='flex gap-[6px] items-center cursor-pointer' onClick={() => handleSelect(token)}>
-                                    <div className='relative'>
+                                    <div className='relative '>
                                         {token.logo ? <img src={token.logo} className='w-[30px] h-[30px]' /> : <TokenIcon symbol={token.symbol} size={30} className='mr-[0px]' />}
-                                        <div className=' absolute bottom-[-2px] right-[-4px]'><img src="/images/logo_ckb.svg" className='w-[12px] h-[12px]' /></div>
+                                        <div className=' absolute bottom-[-2px] right-[-4px] p-[2px] bg-white rounded-full'><img src="/images/logo_ckb.svg" className='w-[12px] h-[12px]' /></div>
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-xl text-[#272928] font-semibold	'>{token.name}</span>
