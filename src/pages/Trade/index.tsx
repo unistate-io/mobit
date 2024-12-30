@@ -60,14 +60,14 @@ export default function Trade() {
             style={{
                 background: 'url("/images/trade-bg.png") center center no-repeat',
                 backgroundSize: "100% 100%",
-                minHeight: "calc(100vh - 160px)"
+                minHeight: "calc(100vh - 60px)"
             }}
             className="relative"
         >
 
             <div className="absolute inset-0 -z-10">
                 <img
-                    src="/images/streamers.svg"
+                    src={window.innerWidth < 768 ? "/images/streamers_mobile.svg" : "/images/streamers.svg"}
                     alt=""
                     className="w-full h-full object-cover"
                     style={{
