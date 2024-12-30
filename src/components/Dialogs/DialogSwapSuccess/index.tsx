@@ -100,8 +100,9 @@ export const SwapSuccess = ({ open, onClose, swapForm, txHash }: Props) => {
                     </div>
 
                     <div className="flex">
-                        <Button btntype={'primary'}
-                            className='bg-[#272928] text-white hover:bg-[#272928] text-sm'
+                        <Button
+                            style={{ backgroundColor: '#272928' }}
+                            className=' text-white hover:bg-[#272928] text-sm'
                             onClick={onClose}>
                             {lang['Done']}
                         </Button>

@@ -65,7 +65,7 @@ export default function TokenIcon({ symbol = 'default', size, chain, rounded = t
             chainIcon &&
             <img src={chainIcon}
                 className={`bg-gray-200 ${rounded ? 'rounded-full' : 'rounded-lg'} absolute right-0 top-0 border border-white shadow block`}
-                style={{ marginRight: (size / 8 * -3) + 'px' }}
+                style={{ marginRight: (size / 8 * -3) + 'px', marginTop: -(size / 8 * -3) + 'px' }}
                 width={size / 4 * 3} height={size / 4 * 3} alt="" />
         }
     </div>

@@ -42,7 +42,7 @@ export const DialogExchange = ({ className, value, options = [], onChange }: Pro
             {value ? <div className='flex flex-row items-center gap-[12px]'>
                 <div className='relative'>
                     {value.logo ? <img src={value.logo} className='w-[48px] h-[48px]' /> : <TokenIcon symbol={value.symbol} size={48} className='mr-[0px]' />}
-                    <div className='h-[22px] w-[22px] px-[5px] py-[6px] bg-white rounded-full absolute bottom-0 right-[-10px]'><img src="/images/logo_ckb.svg" className='w-[12px] h-[12px]' /></div>
+                    <div className='h-[22px] w-[22px] px-[5px] py-[6px] bg-white rounded-full absolute bottom-0 right-[-10px]'><img src="/images/logo_ckb.png" className='w-[12px] h-[12px]' /></div>
                 </div>
 
 
@@ -88,7 +88,7 @@ export const DialogExchange = ({ className, value, options = [], onChange }: Pro
                                 return <div className='flex gap-[6px] items-center cursor-pointer' onClick={() => handleSelect(token)}>
                                     <div className='relative '>
                                         {token.logo ? <img src={token.logo} className='w-[30px] h-[30px]' /> : <TokenIcon symbol={token.symbol} size={30} className='mr-[0px]' />}
-                                        <div className=' absolute bottom-[-2px] right-[-4px] p-[2px] bg-white rounded-full'><img src="/images/logo_ckb.svg" className='w-[12px] h-[12px]' /></div>
+                                        <div className=' absolute bottom-[-2px] right-[-4px] p-[2px]'><img src={'/images/logo_ckb.png'} className='w-[12px] h-[12px]' /></div>
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-xl text-[#272928] font-semibold	'>{token.name}</span>
