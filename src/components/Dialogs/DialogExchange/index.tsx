@@ -38,11 +38,12 @@ export const DialogExchange = ({ className, value, options = [], onChange }: Pro
     }, [options, searchWord])
 
     return <Dialog.Root open={open} onOpenChange={setOpen}>
-        <Dialog.Trigger className={`${className} flex h-[56px] items-center w-[220px] bg-gray-100 px-3 py-3 rounded-xl justify-between`}>
+        <Dialog.Trigger className={`${className} flex h-[56px] items-center  w-full bg-gray-100 px-3 py-3 rounded-xl justify-between`}>
             {value ? <div className='flex flex-row items-center gap-[12px]'>
                 <div className='relative'>
-                    {value.logo ? <img src={value.logo} className='w-[48px] h-[48px]' /> : <TokenIcon symbol={value.symbol} size={48} className='mr-[0px]' />}
-                    <div className='h-[22px] w-[22px] px-[5px] py-[6px] bg-white rounded-full absolute bottom-0 right-[-10px]'><img src="/images/logo_ckb.png" className='w-[12px] h-[12px]' /></div>
+                    {value.logo ? <img src={value.logo} className='w-[48px] h-[48px]'/> :
+                        <TokenIcon symbol={value.symbol} size={48} className='mr-[0px]'/>}
+                    <img src="/images/logo_ckb.png" className='w-[22px] h-[22px] rounded-full absolute bottom-0 right-[-10px]'/>
                 </div>
 
 
@@ -68,6 +69,7 @@ export const DialogExchange = ({ className, value, options = [], onChange }: Pro
             <Dialog.Content
                 onPointerDownOutside={e => { e.preventDefault() }}
                 className="data-[state=open]:animate-contentShow z-50 fixed top-[50%] left-[50%] p-6 max-w-[98vw] w-full md:max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-white shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
+                <Dialog.Title />
                 <div className="flex flex-row justify-between items-center mb-6">
                     <div className="font-medium text-xl text-[#272928]">{lang['Select a token']}</div>
                     <div onClick={e => {
@@ -84,11 +86,14 @@ export const DialogExchange = ({ className, value, options = [], onChange }: Pro
                     <span className='text-[#7B7C7B] text-sm'>{lang['All Token']}</span>
                     <div className='flex flex-col gap-4 overflow-scroll max-h-[400px]'>
                         {
-                            filteredOptions.map(({ token }) => {
-                                return <div className='flex gap-[6px] items-center cursor-pointer' onClick={() => handleSelect(token)}>
+                            filteredOptions.map(({ token }, i) => {
+                                return <div className='flex gap-[6px] items-center cursor-pointer'
+                                            onClick={() => handleSelect(token)}
+                                            key={i}>
                                     <div className='relative '>
                                         {token.logo ? <img src={token.logo} className='w-[30px] h-[30px]' /> : <TokenIcon symbol={token.symbol} size={30} className='mr-[0px]' />}
-                                        <div className=' absolute bottom-[-2px] right-[-4px] p-[2px]'><img src={'/images/logo_ckb.png'} className='w-[12px] h-[12px]' /></div>
+                                        <img src={'/images/logo_ckb.png'}
+                                             className='w-[12px] h-[12px] absolute rounded-full bottom-[-2px] right-[-4px]'/>
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-xl text-[#272928] font-semibold	'>{token.name}</span>

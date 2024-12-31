@@ -368,8 +368,23 @@ export default function SwapView({ className, sellToken }: { className?: string;
         })
     }
 
+    useEffect(() => {
+        const perventWheel = (e: Event) => {
+            e.preventDefault()
+        }
+        document.querySelectorAll('input[type="number"]')?.forEach(input => {
+            input.addEventListener("mousewheel", perventWheel, {passive: false})
+        })
+
+        return () => {
+            document.querySelectorAll('input[type="number"]')?.forEach(input => {
+                input.removeEventListener("mousewheel", perventWheel)
+            })
+        }
+    }, []);
+
     return (
-        <div className="w-full px-3 pt-6 md:px-6">
+        <div className="w-full px-3 pt-2 md:pt-6 md:px-6">
             <>
                 <div className="flex flex-col relative">
                     <div
@@ -382,7 +397,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
 
                     <div className="flex flex-col py-5 border rounded-2xl mb-2 bg-white">
                         <div className="flex flex-row items-center justify-between mb-2 px-5">
-                            <div className="text-[20px]  text-[#7B7C7B]">{lang["Sell"]}</div>
+                            <div className="text-[20px] text-[#7B7C7B]">{lang["Sell"]}</div>
                             <div className="text-base">
                                 {lang["Balance"]}:{" "}
                                 <span className="font-semibold text-base">
@@ -401,12 +416,12 @@ export default function SwapView({ className, sellToken }: { className?: string;
                             </div>
                         </div>
                         <div className="flex flex-row items-center px-5 justify-between">
-                            <div className="flex-1 font-semibold text-base mr-2">
+                            <div className="flex-1 font-semibold text-base mr-2 min-w-[40%]">
                                 <Input
                                     type="number"
-                                    className="bg-[#fff] w-[100%] "
+                                    className="bg-[#fff] w-[100%] text-3xl sm:text-4xl"
                                     value={swapForm.amountX}
-                                    style={{ backgroundColor: "#fff", fontSize: "36px", fontFamily: "DIN Alternate" }}
+                                    style={{ backgroundColor: "#fff", fontFamily: "DIN Alternate" }}
                                     onChange={e => {
                                         setSwapForm({
                                             ...swapForm,
@@ -416,7 +431,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
                                     placeholder={"0"}
                                 />
                             </div>
-                            <div className="min-w-[120px]  md:min-w-[160px] grow-0">
+                            <div className="max-w-[220px] w-full">
                                 <DialogExchange options={swapFromOptions} value={swapForm.selectedX || null} onChange={handleSelectedX} />
                             </div>
                         </div>
@@ -437,11 +452,11 @@ export default function SwapView({ className, sellToken }: { className?: string;
                             </div>
                         </div>
                         <div className="flex flex-row items-center px-5 justify-between">
-                            <div className="flex-1 font-semibold text-base mr-2">
+                            <div className="flex-1 font-semibold text-base mr-2 min-w-[40%]">
                                 <Input
                                     disabled={true}
-                                    className="bg-[#fff] w-[100%]"
-                                    style={{ backgroundColor: "#fff", fontSize: "36px", fontFamily: "DIN Alternate" }}
+                                    className="bg-[#fff] w-[100%] text-3xl sm:text-4xl"
+                                    style={{ backgroundColor: "#fff", fontFamily: "DIN Alternate" }}
                                     type="number"
                                     value={swapForm.amountY}
                                     placeholder={"0"}
