@@ -21,7 +21,7 @@ import {isBtcAddress} from "@/utils/common"
 import useDotbit from "@/serves/useDotbit"
 import ListDotBit from "@/components/ListDotBit/ListDotBit"
 import DialogReceive from "@/components/Dialogs/DialogReceive/DialogReceive"
-import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
+import { Link } from "react-router-dom"
 import NetWorth from "@/components/NetWorth"
 import Button from "@/components/Form/Button/Button";
 
@@ -173,11 +173,10 @@ export default function Profile() {
         <div className="max-w-[--page-with] mx-auto relative">
             {!!addresses && !!addresses.length && !!internalAddress && isOwner &&
                 <div className="absolute right-3 top-[12px]">
-                    <DialogSwap>
-                        <div
-                            className="mr-4 border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex">Swap
-                        </div>
-                    </DialogSwap>
+                    <Link to="/trade"
+                        className="mr-4 border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex">
+                        Swap
+                    </Link>
                     <DialogReceive
                         addresses={addresses.includes(internalAddress) ? addresses : [...addresses, internalAddress]}>
                         <div
@@ -190,7 +189,7 @@ export default function Profile() {
         <div className="max-w-[--page-with] mx-auto px-3 pb-10 relative">
 
             <div className="absolute right-3 top-[40px] md:top-[80px]">
-                <NetWorth balances={tokenData}/>
+            <NetWorth balances={tokenData}/>
             </div>
 
             <div
