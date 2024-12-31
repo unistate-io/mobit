@@ -231,6 +231,10 @@ export default function Profile() {
                         className={`!w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg ${tab.value === currtab ? ' text-white !bg-black' : ''}`}
                         value={tab.value}>{tab.label}</Button>
                 })}
+                <a href="https://www.nervdao.com/" target="_blank"
+                   className="!w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg">
+                    Nervos DAO
+                </a>
             </div>
             <div className="flex justify-between flex-col lg:flex-row">
                 <div className={`flex-1 lg:max-w-[780px] ${currtab !== 'Activity' ? 'block' : 'hidden'}`}>
