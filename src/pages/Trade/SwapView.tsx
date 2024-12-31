@@ -40,7 +40,6 @@ export default function SwapView({ className, sellToken }: { className?: string;
     const { lang } = useContext(LangContext)
 
     const { pools, client, collector, supportTokens } = useUtxoSwap()
-    const [open, setOpen] = useState(false)
     const [busy, setBusy] = useState(false)
     const [openSuccess, setOpenSuccess] = useState(false)
 
@@ -286,23 +285,21 @@ export default function SwapView({ className, sellToken }: { className?: string;
     }, [swapForm.amountX, swapForm.amountY, swapForm.selectedY])
 
     useEffect(() => {
-        if (open) {
-            let initToken: Token | undefined = undefined
-            if (sellToken && supportTokens.length) {
-                initToken = supportTokens.find(t => t.typeHash === sellToken) as any
-            }
-
-            setSwapForm({
-                pool: null,
-                selectedX: initToken || ckb,
-                amountX: "",
-                selectedY: null,
-                amountY: ""
-            })
-            setTxErr("")
-            setBusy(false)
+        let initToken: Token | undefined = undefined
+        if (sellToken && supportTokens.length) {
+            initToken = supportTokens.find(t => t.typeHash === sellToken) as any
         }
-    }, [open, sellToken, supportTokens])
+
+        setSwapForm({
+            pool: null,
+            selectedX: initToken || ckb,
+            amountX: "",
+            selectedY: null,
+            amountY: ""
+        })
+        setTxErr("")
+        setBusy(false)
+    }, [sellToken, supportTokens])
 
     const signTxFunc = async (rawTx: CKBComponents.RawTransactionToSign) => {
         const txLike = await signer!.signTransaction(rawTx as any)
@@ -474,7 +471,6 @@ export default function SwapView({ className, sellToken }: { className?: string;
                         btntype={"primary"}
                         onClick={() => {
                             login()
-                            setOpen(false)
                         }}
                     >
                         {lang["Connect Wallet"]}
