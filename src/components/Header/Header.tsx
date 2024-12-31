@@ -24,8 +24,8 @@ function Header() {
                         <DrawerTrigger>
                             <i className="md:hidden block uil-align-justify text-2xl mr-2" />
                         </DrawerTrigger>
-                        <DrawerContent className="bg-white w-[60vw] h-[100vh]">
-                           <div className="grid grid-cols-1 gap-4 px-3">
+                        <DrawerContent className="bg-white w-[60vw] h-[100vh] !top-0 !mt-0">
+                           <div className="mb-4 px-3 grid grid-cols-1 gap-3">
                                <Link to="/">
                                    <img src="/images/logo.png" alt="" width={114} height={32} />
                                </Link>
