@@ -1,7 +1,7 @@
 import * as RadixSelect from '@radix-ui/react-select';
-import {forwardRef, LegacyRef, RefAttributes, useRef, ReactNode} from 'react';
+import { forwardRef, LegacyRef, RefAttributes, useRef, ReactNode } from 'react';
 import * as React from "react";
-import {SelectItemProps, SelectProps} from "@radix-ui/react-select";
+import { SelectItemProps, SelectProps } from "@radix-ui/react-select";
 
 
 export interface SelectOption {
@@ -11,7 +11,7 @@ export interface SelectOption {
 }
 
 export interface SelectOptionProps extends SelectProps {
-    options: (SelectOption & {[key: string]: any})[];
+    options: (SelectOption & { [key: string]: any })[];
     placeholder?: string;
     className?: string;
     hideDropIcon?: boolean;
@@ -22,7 +22,7 @@ export interface SelectOptionProps extends SelectProps {
 }
 
 
-const SelectItem = forwardRef(({children, className, ...props} : SelectItemProps & RefAttributes<HTMLDivElement>, ref: LegacyRef<HTMLDivElement>) => {
+const SelectItem = forwardRef(({ children, className, ...props }: SelectItemProps & RefAttributes<HTMLDivElement>, ref: LegacyRef<HTMLDivElement>) => {
     return (
         <RadixSelect.Item className={`SelectItem ${className || ''}`} {...props} ref={ref}>
             <RadixSelect.ItemText>{children}</RadixSelect.ItemText>
@@ -35,7 +35,7 @@ const SelectItem = forwardRef(({children, className, ...props} : SelectItemProps
 
 
 
-export default function Select ({icon, options, placeholder, className='', hideDropIcon=false, getValueLabel, getOptionLabel, ...props}: SelectOptionProps) {
+export default function Select({ icon, options, placeholder, className = '', hideDropIcon = false, getValueLabel, getOptionLabel, ...props }: SelectOptionProps) {
     const [open, setOpen] = React.useState(false)
     const [menuWidth, setMenuWidth] = React.useState('auto')
     const id = useRef(Math.floor(Math.random() * (100000 - 10000 + 1)) + 10000)
@@ -43,27 +43,27 @@ export default function Select ({icon, options, placeholder, className='', hideD
     const toggleOpen = (openValue: boolean) => {
         if (openValue) {
             const width = document.querySelector(`.SelectTrigger-${id.current}`)?.clientWidth
-            setMenuWidth(width ? `${width + 2 * (props.containerWidthPrefix || 0) }px` : 'auto')
+            setMenuWidth(width ? `${width + 2 * (props.containerWidthPrefix || 0)}px` : 'auto')
         }
         setOpen(openValue)
     }
 
-    return <RadixSelect.Root {...props} open={open} onOpenChange={(open) => {toggleOpen(open)}}>
+    return <RadixSelect.Root {...props} open={open} onOpenChange={(open) => { toggleOpen(open) }}>
         <RadixSelect.Trigger
-            className={`SelectTrigger-${id.current} flex flex-row items-center justify-between w-full outline-0 ${className} ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''}`} aria-label={props.name || 'Select'}>
-            { !!getValueLabel ?
+            className={`SelectTrigger-${id.current} flex flex-row items-center justify-between w-full outline-0  ${className} ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''}`} aria-label={props.name || 'Select'}>
+            {!!getValueLabel ?
                 <RadixSelect.Value placeholder={placeholder || 'Select ...'} >{getValueLabel()}</RadixSelect.Value>
                 : <RadixSelect.Value placeholder={placeholder || 'Select ...'} />
             }
 
-            { !hideDropIcon &&
+            {!hideDropIcon &&
                 <RadixSelect.Icon className="SelectIcon">
-                    {icon || <i className="uil-angle-down text-2xl"/>}
+                    {icon || <i className="uil-angle-down text-2xl" />}
                 </RadixSelect.Icon>
             }
         </RadixSelect.Trigger>
         <RadixSelect.Portal>
-            <RadixSelect.Content className={`SelectContent z-[999] `}  style={{
+            <RadixSelect.Content className={`SelectContent z-[999] `} style={{
                 minWidth: menuWidth,
                 marginLeft: props.containerWidthPrefix ? `${props.containerWidthPrefix * -1}px` : 'initial'
             }} position={'popper'}>
