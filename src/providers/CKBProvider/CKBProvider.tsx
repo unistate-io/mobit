@@ -2,10 +2,10 @@ import {ccc as cccLib} from "@ckb-ccc/connector-react"
 import {createContext, useEffect, useMemo, useRef, useState} from "react"
 import {NetworkConfig} from "@/providers/CKBProvider/network_config"
 import network_config from "@/providers/CKBProvider/network_config"
-import {Client} from '@ckb-ccc/core'
+import {Client} from "@ckb-ccc/core"
 import {redirect, useNavigate} from "react-router-dom"
 
-export type Network = 'mainnet' | 'testnet'
+export type Network = "mainnet" | "testnet"
 
 export interface CKBContextType {
     open: () => any
@@ -16,20 +16,18 @@ export interface CKBContextType {
     address?: string
     addresses?: string[]
     signer?: cccLib.Signer | undefined
-    config: NetworkConfig,
+    config: NetworkConfig
     client?: Client
 }
 
 export const CKBContext = createContext<CKBContextType>({
-    open: () => {
-    },
-    disconnect: () => {
-    },
-    config: network_config['mainnet'],
-    network: 'mainnet'
+    open: () => {},
+    disconnect: () => {},
+    config: network_config["mainnet"],
+    network: "mainnet"
 })
 
-export default function CKBProvider({children}: { children: any }) {
+export default function CKBProvider({children}: {children: any}) {
     const {open, disconnect, wallet, setClient, client} = cccLib.useCcc()
     const signer = cccLib.useSigner()
     const navigate = useNavigate()
@@ -42,9 +40,9 @@ export default function CKBProvider({children}: { children: any }) {
 
     const network = useMemo(() => {
         if (!client) {
-            return 'mainnet'
+            return "mainnet"
         } else {
-            return client instanceof cccLib.ClientPublicTestnet ? 'testnet' : 'mainnet'
+            return client instanceof cccLib.ClientPublicTestnet ? "testnet" : "mainnet"
         }
     }, [client])
 
@@ -56,7 +54,7 @@ export default function CKBProvider({children}: { children: any }) {
             return
         }
 
-        (async () => {
+        ;(async () => {
             const internalAddress = await signer.getInternalAddress()
             const address = await signer.getRecommendedAddress()
             const addresses = await signer.getAddresses()
@@ -72,23 +70,31 @@ export default function CKBProvider({children}: { children: any }) {
     }, [signer])
 
     useEffect(() => {
-        localStorage.setItem('ckb_network', network)
-        redirect('/')
+        localStorage.setItem("ckb_network", network)
+        redirect("/")
     }, [network])
 
     return (
-        <CKBContext.Provider value={{
-            client,
-            config: network_config[network],
-            network,
-            open: () => {
-                const currHref = window.location.href
-                if (currHref.includes('/address/')) {
-                    needRedirect.current = true
-                }
-                open()
-            }, disconnect, wallet, signer, internalAddress, address, addresses
-        }}>
+        <CKBContext.Provider
+            value={{
+                client,
+                config: network_config[network],
+                network,
+                open: () => {
+                    const currHref = window.location.href
+                    if (currHref.includes("/address/")) {
+                        needRedirect.current = true
+                    }
+                    open()
+                },
+                disconnect,
+                wallet,
+                signer,
+                internalAddress,
+                address,
+                addresses
+            }}
+        >
             {children}
         </CKBContext.Provider>
     )

@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react"
 import {TransactionHistory} from "@/components/ListHistory/ListHistory"
-import network_config from "@/providers/CKBProvider/network_config";
+import network_config from "@/providers/CKBProvider/network_config"
 
 export default function useTransactions(address?: string, pageSize?: number) {
     const [data, setData] = useState<TransactionHistory[]>([])
-    const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
+    const [status, setStatus] = useState<"loading" | "complete" | "error">("loading")
     const [error, setError] = useState<undefined | any>(undefined)
     const [page, setPage] = useState(1)
     const [loadAll, setLoadAll] = useState(false)
@@ -13,41 +13,44 @@ export default function useTransactions(address?: string, pageSize?: number) {
     useEffect(() => {
         setPage(1)
         setLoadAll(false)
-    }, [address]);
+    }, [address])
 
     useEffect(() => {
         if (!address) {
             setData([])
-            setStatus('complete')
+            setStatus("complete")
             setError(undefined)
         } else {
-            setStatus('loading')
-            const config = address.startsWith('ckt') ? network_config['testnet'] : network_config['mainnet']
-            fetch(`${config.explorer_api}/address_transactions/${address}?page=${page}&page_size=${size}&sort=time.desc`, {
-                method: 'GET',
-                headers: {
-                    "Accept": 'application/vnd.api+json',
-                    "Content-Type": 'application/vnd.api+json',
+            setStatus("loading")
+            const config = address.startsWith("ckt") ? network_config["testnet"] : network_config["mainnet"]
+            fetch(
+                `${config.explorer_api}/address_transactions/${address}?page=${page}&page_size=${size}&sort=time.desc`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/vnd.api+json",
+                        "Content-Type": "application/vnd.api+json"
+                    }
                 }
-            })
-                .then(async (res) => {
+            )
+                .then(async res => {
                     const json = await res.json()
                     if (json.data) {
                         setData([...data, ...json.data])
-                        setStatus('complete')
+                        setStatus("complete")
 
                         if (json.data.length < size) {
                             setLoadAll(true)
                         }
                     } else {
                         setData([])
-                        setStatus('complete')
+                        setStatus("complete")
                     }
                 })
                 .catch((e: any) => {
                     console.warn(e)
                     setData([])
-                    setStatus('error')
+                    setStatus("error")
                     setError(e)
                 })
         }

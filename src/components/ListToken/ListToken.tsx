@@ -216,7 +216,9 @@ export default function ListToken({
                                                                             tip={lang["Swap tokens via UTXO Swap"]}
                                                                         >
                                                                             <div
-                                                                                onClick={() => { window.location.href=`/trade?sell-token=${typeHash}`}}
+                                                                                onClick={() => {
+                                                                                    window.location.href = `/trade?sell-token=${typeHash}`
+                                                                                }}
                                                                                 className="mb-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex"
                                                                             >
                                                                                 {"Swap"}
@@ -295,8 +297,12 @@ export default function ListToken({
                                             {item.symbol === "CKB" && (
                                                 <>
                                                     <TooltipItem tip={lang["Swap tokens via UTXO Swap"]}>
-                                                        <div onClick={() => { window.location.href=`/trade?sell-token=${typeHash}`}}
-                                                             className="tooltip cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                        <div
+                                                            onClick={() => {
+                                                                window.location.href = `/trade?sell-token=${typeHash}`
+                                                            }}
+                                                            className="tooltip cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1"
+                                                        >
                                                             {"Swap"}
                                                         </div>
                                                     </TooltipItem>

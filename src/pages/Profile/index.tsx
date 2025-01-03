@@ -21,19 +21,19 @@ export default function ProfilePage() {
     const {network} = useContext(CKBContext)
 
     if (!address) {
-        throw new Error('address is required')
+        throw new Error("address is required")
     }
 
-    const [displayAddress, setDisplayAddress] = useState('')
-    const [displayInternalAddress, setDisplayInternalAddress] = useState('')
+    const [displayAddress, setDisplayAddress] = useState("")
+    const [displayInternalAddress, setDisplayInternalAddress] = useState("")
     const [ready, setReady] = useState(false)
 
     // check address type
     useEffect(() => {
-        (async () => {
+        ;(async () => {
             // ckb address
             if (checksumCkbAddress(address, network)) {
-                console.log('ckb profile')
+                console.log("ckb profile")
                 setDisplayAddress(address)
                 setReady(true)
                 return
@@ -41,7 +41,7 @@ export default function ProfilePage() {
 
             // evm address
             if (!!client && isEvmAddress(address)) {
-                console.log('evm profile')
+                console.log("evm profile")
                 const res = await getCkbAddressFromEvm(address, client)
                 setDisplayAddress(res!)
                 setDisplayInternalAddress(address)
@@ -50,9 +50,9 @@ export default function ProfilePage() {
             }
 
             // btc address
-            if (!!client && isBtcAddress(address, network === 'mainnet')) {
-                console.log('btc profile')
-                const res = await getCkbAddressFromBTC(address, client, network === 'mainnet')
+            if (!!client && isBtcAddress(address, network === "mainnet")) {
+                console.log("btc profile")
+                const res = await getCkbAddressFromBTC(address, client, network === "mainnet")
                 if (!!res) {
                     setDisplayAddress(res!)
                     setDisplayInternalAddress(address)
@@ -68,21 +68,19 @@ export default function ProfilePage() {
         })()
     }, [address, client])
 
-    return <>
-        <MarketProvider>
-            {ready && !!displayAddress &&
-                <UserProvider address={displayAddress!}>
-                    {
-                        displayInternalAddress
-                            ? <EvmProfile internalAddress={displayInternalAddress}/>
-                            : <Profile/>
-                    }
-                </UserProvider>
-            }
+    return (
+        <>
+            <MarketProvider>
+                {ready && !!displayAddress && (
+                    <UserProvider address={displayAddress!}>
+                        {displayInternalAddress ? <EvmProfile internalAddress={displayInternalAddress} /> : <Profile />}
+                    </UserProvider>
+                )}
 
-            {ready && !displayAddress && !!displayInternalAddress &&
-                <BtcProfile internalAddress={displayInternalAddress}/>
-            }
-        </MarketProvider>
-    </>
+                {ready && !displayAddress && !!displayInternalAddress && (
+                    <BtcProfile internalAddress={displayInternalAddress} />
+                )}
+            </MarketProvider>
+        </>
+    )
 }

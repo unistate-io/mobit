@@ -1,19 +1,15 @@
-import { Link, NavLink } from "react-router-dom"
+import {Link, NavLink} from "react-router-dom"
 import HeaderMenu from "@/components/HeaderMenu/HeaderMenu"
-import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
-import { useContext, useState } from "react"
-import { LangContext } from "@/providers/LangProvider/LangProvider"
-import { useParams } from "react-router-dom"
-import {
-    Drawer,
-    DrawerContent,
-    DrawerTrigger,
-} from "@/components/Drawer"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import {useContext, useState} from "react"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
+import {useParams} from "react-router-dom"
+import {Drawer, DrawerContent, DrawerTrigger} from "@/components/Drawer"
 
 function Header() {
-    const { address } = useContext(CKBContext)
-    const { lang } = useContext(LangContext)
-    const { address: addressParams } = useParams()
+    const {address} = useContext(CKBContext)
+    const {lang} = useContext(LangContext)
+    const {address: addressParams} = useParams()
     const [isOpen, setIsOpen] = useState(false)
 
     return (
@@ -25,38 +21,30 @@ function Header() {
                             <i className="md:hidden block uil-align-justify text-2xl mr-2" />
                         </DrawerTrigger>
                         <DrawerContent className="bg-white w-[60vw] h-[100vh] !top-0 !mt-0">
-                           <div className="mb-4 px-3 grid grid-cols-1 gap-3">
-                               <Link to="/">
-                                   <img src="/images/logo.png" alt="" width={114} height={32} />
-                               </Link>
+                            <div className="mb-4 px-3 grid grid-cols-1 gap-3">
+                                <Link to="/">
+                                    <img src="/images/logo.png" alt="" width={114} height={32} />
+                                </Link>
 
-                               {!!address && (
-                                   <NavLink
-                                       onClick={() => setIsOpen(false)}
-                                       className='font-semibold pl-3'
-                                       to={`/address/${address}`}>
-                                      <i className=""></i> {lang["Profile"]}
-                                   </NavLink>
-                               )}
-                               <NavLink
-                                   onClick={() => setIsOpen(false)}
-                                   className='font-semibold pl-3'
-                                   to={`/market`}>
-                                   {lang["Market"]}
-                               </NavLink>
-                               <NavLink
-                                   onClick={() => setIsOpen(false)}
-                                   className='font-semibold pl-3'
-                                   to={`/apps`}>
-                                   {lang["Apps"]}
-                               </NavLink>
-                               <NavLink
-                                   onClick={() => setIsOpen(false)}
-                                   className='font-semibold pl-3'
-                                   to={`/trade`}>
-                                   {lang["Swap"]}
-                               </NavLink>
-                           </div>
+                                {!!address && (
+                                    <NavLink
+                                        onClick={() => setIsOpen(false)}
+                                        className="font-semibold pl-3"
+                                        to={`/address/${address}`}
+                                    >
+                                        <i className=""></i> {lang["Profile"]}
+                                    </NavLink>
+                                )}
+                                <NavLink onClick={() => setIsOpen(false)} className="font-semibold pl-3" to={`/market`}>
+                                    {lang["Market"]}
+                                </NavLink>
+                                <NavLink onClick={() => setIsOpen(false)} className="font-semibold pl-3" to={`/apps`}>
+                                    {lang["Apps"]}
+                                </NavLink>
+                                <NavLink onClick={() => setIsOpen(false)} className="font-semibold pl-3" to={`/trade`}>
+                                    {lang["Swap"]}
+                                </NavLink>
+                            </div>
                         </DrawerContent>
                     </Drawer>
 
@@ -67,8 +55,9 @@ function Header() {
                     <div className="hidden sm:block">
                         {!!address && (
                             <NavLink
-                                className={({ isActive }) => {
-                                    return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive && address === addressParams ? "text-[#6CD7B2]" : ""
+                                className={({isActive}) => {
+                                    return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${
+                                        isActive && address === addressParams ? "text-[#6CD7B2]" : ""
                                     }`
                                 }}
                                 to={`/address/${address}`}
@@ -78,8 +67,9 @@ function Header() {
                         )}
 
                         <NavLink
-                            className={({ isActive }) => {
-                                return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive ? "text-[#6CD7B2]" : ""
+                            className={({isActive}) => {
+                                return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${
+                                    isActive ? "text-[#6CD7B2]" : ""
                                 }`
                             }}
                             to={`/market`}
@@ -87,8 +77,9 @@ function Header() {
                             {lang["Market"]}
                         </NavLink>
                         <NavLink
-                            className={({ isActive }) => {
-                                return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive ? "text-[#6CD7B2]" : ""
+                            className={({isActive}) => {
+                                return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${
+                                    isActive ? "text-[#6CD7B2]" : ""
                                 }`
                             }}
                             to={`/apps`}
@@ -96,8 +87,9 @@ function Header() {
                             {lang["Apps"]}
                         </NavLink>
                         <NavLink
-                            className={({ isActive }) => {
-                                return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive ? "text-[#6CD7B2]" : ""
+                            className={({isActive}) => {
+                                return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${
+                                    isActive ? "text-[#6CD7B2]" : ""
                                 }`
                             }}
                             to={`/trade`}

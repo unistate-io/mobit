@@ -1,5 +1,5 @@
 import {useSearchParams} from "react-router-dom"
-import { useMemo, useState } from "react"
+import {useMemo, useState} from "react"
 import SwapView from "./SwapView"
 
 export enum TradeType {
@@ -56,7 +56,6 @@ export default function Trade() {
         }
     }, [tradeType])
 
-
     return (
         <div
             style={{
@@ -66,20 +65,16 @@ export default function Trade() {
             }}
             className="relative"
         >
-
             <div className="absolute inset-0 -z-10">
                 <img
                     src={window.innerWidth < 768 ? "/images/streamers_mobile.svg" : "/images/streamers.svg"}
                     alt=""
                     className="w-full h-full object-cover"
                     style={{
-                        mixBlendMode: "soft-light",
+                        mixBlendMode: "soft-light"
                     }}
                 />
             </div>
-
-
-
 
             <div className="w-full md:w-[682px]   mx-auto pt-4 md:pt-10 pb-10">
                 {/* <div className="flex items-center gap-4 justify-between overflow-x-scroll px-3">

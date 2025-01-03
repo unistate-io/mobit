@@ -133,7 +133,7 @@ const langEN = {
     "Swap": "Swap",
     "Trade": "Trade",
     "Select a token": "Select a token",
-    "All Token": "All Token",
+    "All Token": "All Token"
 }
 
 export type LangConfig = typeof langEN

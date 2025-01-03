@@ -4,30 +4,30 @@ import {querySporesByAddress} from "@/utils/graphql"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 export interface SporesWithChainInfo extends Spores {
-    chain: 'btc' | 'ckb'
+    chain: "btc" | "ckb"
 }
 
 export default function useSpores(addresses: string[]) {
     const [data, setData] = useState<SporesWithChainInfo[]>([])
-    const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
+    const [status, setStatus] = useState<"loading" | "complete" | "error">("loading")
     const [error, setError] = useState<undefined | any>(undefined)
     const [page, setPage] = useState(1)
     const [loaded, setLoaded] = useState(false)
     const {network} = useContext(CKBContext)
     const pageSize = 3
 
-    const historyRef = useRef('')
+    const historyRef = useRef("")
 
     const handleNextPage = (page: number) => {
-        if (status !== 'loading') {
+        if (status !== "loading") {
             setPage(page)
         }
     }
 
     useEffect(() => {
         if (!addresses || !addresses.length) return
-        if (historyRef.current !== addresses.join(',')) {
-            historyRef.current = addresses.join(',')
+        if (historyRef.current !== addresses.join(",")) {
+            historyRef.current = addresses.join(",")
             setPage(1)
             return
         }
@@ -35,25 +35,27 @@ export default function useSpores(addresses: string[]) {
 
     useEffect(() => {
         if (page === 1) {
-            setStatus('loading')
+            setStatus("loading")
         }
 
-        (async () => {
+        ;(async () => {
             try {
-                const spores = await querySporesByAddress(addresses, page, pageSize, undefined, network === 'mainnet')
+                const spores = await querySporesByAddress(addresses, page, pageSize, undefined, network === "mainnet")
                 setLoaded(spores.length < pageSize)
                 const list = page === 1 ? spores : [...data, ...spores]
-                setData(list.map((s: Spores) => {
-                    return {
-                        ...s,
-                        chain: 'ckb'
-                    }
-                }))
-                setStatus('complete')
+                setData(
+                    list.map((s: Spores) => {
+                        return {
+                            ...s,
+                            chain: "ckb"
+                        }
+                    })
+                )
+                setStatus("complete")
             } catch (e: any) {
                 console.error(e)
                 setData([])
-                setStatus('error')
+                setStatus("error")
                 setLoaded(true)
                 setError(e)
             }

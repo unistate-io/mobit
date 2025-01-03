@@ -1,4 +1,4 @@
-import { LangConfig } from "./en"
+import {LangConfig} from "./en"
 
 function slotLang(str: string) {
     return function (slots: any[]): string {
@@ -133,7 +133,7 @@ const langCN: LangConfig = {
     "Swap": "swap",
     "Trade": "交易",
     "Select a token": "选择一个代币",
-    "All Token": "全部代币",
+    "All Token": "全部代币"
 }
 
 export default langCN

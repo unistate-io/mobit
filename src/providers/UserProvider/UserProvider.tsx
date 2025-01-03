@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from 'react'
+import {createContext, useContext, useEffect, useState} from "react"
 import {defaultTheme, getTheme, UserTheme} from "@/providers/UserProvider/themes"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
@@ -14,17 +14,16 @@ export const UserContext = createContext<UserContextType>({
     isOwner: false
 })
 
-function UserProvider(props: { children: any, address: string }) {
+function UserProvider(props: {children: any; address: string}) {
     const {address: connectedAddress, addresses} = useContext(CKBContext)
 
     const [theme, setTheme] = useState<UserTheme>(defaultTheme)
     const [address, setAddress] = useState<undefined | string>(props.address)
     const [isOwner, setIsOwner] = useState(props.address === connectedAddress)
 
-
     useEffect(() => {
         setTheme(getTheme(props.address))
-        setAddress(props.address);
+        setAddress(props.address)
     }, [props.address])
 
     useEffect(() => {
@@ -35,9 +34,7 @@ function UserProvider(props: { children: any, address: string }) {
         }
     }, [addresses, props.address])
 
-    return (<UserContext.Provider value={{address, theme, isOwner}}
-    >{props.children}
-    </UserContext.Provider>)
+    return <UserContext.Provider value={{address, theme, isOwner}}>{props.children}</UserContext.Provider>
 }
 
 export default UserProvider

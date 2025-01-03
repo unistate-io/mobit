@@ -1,21 +1,21 @@
-import { useUtxoSwap } from "@/serves/useUtxoSwap"
-import { Pool, Token } from "@utxoswap/swap-sdk-js"
-import { useCallback, useContext, useEffect, useMemo, useState } from "react"
+import {useUtxoSwap} from "@/serves/useUtxoSwap"
+import {Pool, Token} from "@utxoswap/swap-sdk-js"
+import {useCallback, useContext, useEffect, useMemo, useState} from "react"
 import Input from "@/components/Form/Input/Input"
 import useCkbBalance from "@/serves/useCkbBalance"
-import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
-import { getXudtBalance } from "@/serves/useXudtBalance"
-import { Collector } from "@/libs/rgnpp_collector/index"
-import { toDisplay } from "@/utils/number_display"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import {getXudtBalance} from "@/serves/useXudtBalance"
+import {Collector} from "@/libs/rgnpp_collector/index"
+import {toDisplay} from "@/utils/number_display"
 import Button from "@/components/Form/Button/Button"
 import BigNumber from "bignumber.js"
-import { Transaction as CCCTransaction } from "@ckb-ccc/connector-react"
-import { append0x } from "@rgbpp-sdk/ckb"
-import { LangContext } from "@/providers/LangProvider/LangProvider"
+import {Transaction as CCCTransaction} from "@ckb-ccc/connector-react"
+import {append0x} from "@rgbpp-sdk/ckb"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 import * as dayjsLib from "dayjs"
-import { DialogExchange, SelectOption } from "@/components/Dialogs/DialogExchange"
-import { SwapSuccess } from "@/components/Dialogs/DialogSwapSuccess"
+import {DialogExchange, SelectOption} from "@/components/Dialogs/DialogExchange"
+import {SwapSuccess} from "@/components/Dialogs/DialogSwapSuccess"
 
 const dayjs: any = dayjsLib
 
@@ -35,15 +35,15 @@ export interface SwapForm {
     amountY: string
 }
 
-export default function SwapView({ className, sellToken }: { className?: string; sellToken?: string }) {
-    const { address, addresses, network, config, open: login, signer } = useContext(CKBContext)
-    const { lang } = useContext(LangContext)
+export default function SwapView({className, sellToken}: {className?: string; sellToken?: string}) {
+    const {address, addresses, network, config, open: login, signer} = useContext(CKBContext)
+    const {lang} = useContext(LangContext)
 
-    const { pools, client, collector, supportTokens } = useUtxoSwap()
+    const {pools, client, collector, supportTokens} = useUtxoSwap()
     const [busy, setBusy] = useState(false)
     const [openSuccess, setOpenSuccess] = useState(false)
 
-    const { data: ckbBalence, status: ckbBalenceStatus } = useCkbBalance(addresses)
+    const {data: ckbBalence, status: ckbBalenceStatus} = useCkbBalance(addresses)
 
     const [swapConfig, setSwapConfig] = useState({
         slippage: "0.5",
@@ -145,7 +145,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
             return
         }
 
-        ; (async () => {
+        ;(async () => {
             try {
                 setBusy(true)
                 const collector = new Collector({
@@ -168,7 +168,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
             return
         }
 
-        ; (async () => {
+        ;(async () => {
             try {
                 setBusy(true)
                 const collector = new Collector({
@@ -258,7 +258,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
                 return
             }
 
-            const { output, priceImpact, buyPrice } = swapForm.pool.calculateOutputAmountAndPriceImpactWithExactInput(
+            const {output, priceImpact, buyPrice} = swapForm.pool.calculateOutputAmountAndPriceImpactWithExactInput(
                 swapForm.amountX
             )
 
@@ -378,7 +378,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
                 input.removeEventListener("mousewheel", perventWheel)
             })
         }
-    }, []);
+    }, [])
 
     return (
         <div className="w-full px-3 pt-2 md:pt-6 md:px-6">
@@ -386,7 +386,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
                 <div className="flex flex-col relative">
                     <div
                         onClick={handleReverse}
-                        style={{ boxShadow: "0px 1.988px 18px 0px rgba(0, 0, 0, 0.10)" }}
+                        style={{boxShadow: "0px 1.988px 18px 0px rgba(0, 0, 0, 0.10)"}}
                         className="bg-white left-[50%] top-[50%] ml-[-20px] mt-[-30px] absolute cursor-pointer w-10 h-10 flex flex-row justify-center items-center rounded-full"
                     >
                         <i className="uil-arrow-down" />
@@ -418,7 +418,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
                                     type="number"
                                     className="bg-[#fff] w-[100%] text-3xl sm:text-4xl"
                                     value={swapForm.amountX}
-                                    style={{ backgroundColor: "#fff", fontFamily: "DIN Alternate" }}
+                                    style={{backgroundColor: "#fff", fontFamily: "DIN Alternate"}}
                                     onChange={e => {
                                         setSwapForm({
                                             ...swapForm,
@@ -429,7 +429,11 @@ export default function SwapView({ className, sellToken }: { className?: string;
                                 />
                             </div>
                             <div className="max-w-[220px] w-full">
-                                <DialogExchange options={swapFromOptions} value={swapForm.selectedX || null} onChange={handleSelectedX} />
+                                <DialogExchange
+                                    options={swapFromOptions}
+                                    value={swapForm.selectedX || null}
+                                    onChange={handleSelectedX}
+                                />
                             </div>
                         </div>
                     </div>
@@ -453,14 +457,18 @@ export default function SwapView({ className, sellToken }: { className?: string;
                                 <Input
                                     disabled={true}
                                     className="bg-[#fff] w-[100%] text-3xl sm:text-4xl"
-                                    style={{ backgroundColor: "#fff", fontFamily: "DIN Alternate" }}
+                                    style={{backgroundColor: "#fff", fontFamily: "DIN Alternate"}}
                                     type="number"
                                     value={swapForm.amountY}
                                     placeholder={"0"}
                                 />
                             </div>
                             <div className="min-w-[120px] md:min-w-[160px] grow-0 w-[220px]">
-                                <DialogExchange options={swapToOptions} value={swapForm.selectedY || null} onChange={handleSelectedY} />
+                                <DialogExchange
+                                    options={swapToOptions}
+                                    value={swapForm.selectedY || null}
+                                    onChange={handleSelectedY}
+                                />
                             </div>
                         </div>
                     </div>
@@ -500,18 +508,20 @@ export default function SwapView({ className, sellToken }: { className?: string;
                 <div className="shadow rounded-xl py-3 bg-white">
                     <div className="flex flex-row items-center justify-between px-6 mb-4">
                         <div className="text-base">{lang["Max slippage"]}</div>
-                        <div className="font-semibold" style={{ fontFamily: 'Anonymous Pro' }}>{swapConfig.slippage} %</div>
+                        <div className="font-semibold" style={{fontFamily: "Anonymous Pro"}}>
+                            {swapConfig.slippage} %
+                        </div>
                     </div>
                     <div className="flex flex-row items-center justify-between px-6 mb-4">
                         {!!swapForm.pool && swapForm.amountX ? (
                             <>
                                 <div className="text-base">
                                     {lang["Fee"]}
-                                    <span style={{ fontFamily: 'Anonymous Pro' }}>{`(${((swapForm.pool as any).poolInfo.feeRate / 10000).toFixed(
-                                        3
-                                    )}%)`}</span>
+                                    <span style={{fontFamily: "Anonymous Pro"}}>{`(${(
+                                        (swapForm.pool as any).poolInfo.feeRate / 10000
+                                    ).toFixed(3)}%)`}</span>
                                 </div>
-                                <div className="font-semibold" style={{ fontFamily: 'Anonymous Pro' }}>
+                                <div className="font-semibold" style={{fontFamily: "Anonymous Pro"}}>
                                     {BigNumber(swapForm.amountX)
                                         .times((swapForm.pool as any).poolInfo.feeRate / 10000)
                                         .toFormat(8)}
@@ -533,8 +543,6 @@ export default function SwapView({ className, sellToken }: { className?: string;
             </>
 
             <SwapSuccess open={openSuccess} onClose={handleCloseSuccessDialog} swapForm={swapForm} txHash={txHash} />
-
-
         </div>
     )
 }
@@ -544,7 +552,7 @@ export function transactionFormatter(transaction: CCCTransaction): CKBComponents
         return append0x(num.toString(16))
     }
 
-    const { version, cellDeps, headerDeps, inputs, outputs, outputsData, witnesses } = transaction
+    const {version, cellDeps, headerDeps, inputs, outputs, outputsData, witnesses} = transaction
     return {
         version: bigint2Hex(version),
         cellDeps: cellDeps.map(cell => {

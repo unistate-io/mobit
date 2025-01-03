@@ -82,7 +82,11 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
 
     const setMaxAmount = () => {
         if (xudtBalenceStatus === "complete" && !!token) {
-            setLeapAmount(BigNumber(token.amount).div(10 ** token.decimal).toString())
+            setLeapAmount(
+                BigNumber(token.amount)
+                    .div(10 ** token.decimal)
+                    .toString()
+            )
         }
     }
 
@@ -100,17 +104,15 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                 xudtType: tokenInfoToScript(token!),
                 feeRate: BigInt(5000)
             })
-            setBuildError('')
+            setBuildError("")
             setTx(tx)
             setStep(3)
-        } catch (e:any) {
+        } catch (e: any) {
             console.error(e)
             setBuildError(e.message)
         } finally {
             setBusy(false)
         }
-
-
     }
 
     const handleStep2 = async () => {
@@ -127,9 +129,8 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
             return
         }
 
-
         if (!token) {
-            setTokenError('Please select a token')
+            setTokenError("Please select a token")
             return
         }
 
@@ -205,7 +206,7 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
         if (!!xudtBalance && xudtBalance.length) {
             setToken(xudtBalance[0])
         }
-    }, [xudtBalance]);
+    }, [xudtBalance])
 
     const tokenList = useMemo(() => {
         return xudtBalance.map(token => ({id: token.symbol, label: token.symbol, ...token}))
@@ -253,7 +254,7 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                                 <div className="font-semibold mb-1 mt-4">{lang["Assets"]}</div>
                                 <Select
                                     className="bg-[#F8F9F8] rounded-lg px-2 py-3"
-                                    placeholder={'Select Token...'}
+                                    placeholder={"Select Token..."}
                                     disabled={!tokenList.length || xudtBalenceStatus === "loading"}
                                     value={token?.symbol}
                                     onValueChange={value => {
@@ -261,14 +262,22 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                                         !!target && setToken(target)
                                     }}
                                     options={tokenList}
-                                    getValueLabel={token ? () => <div className="flex flex-row items-center">
-                                        <TokenIcon symbol={token!.symbol} size={24}/>
-                                        <div>{token?.symbol}</div>
-                                    </div> : undefined}
-                                    getOptionLabel={(opt) => <div className="flex flex-row items-center">
-                                        <TokenIcon symbol={opt.symbol} size={24}/>
-                                        <div>{opt.symbol}</div>
-                                    </div>}
+                                    getValueLabel={
+                                        token
+                                            ? () => (
+                                                  <div className="flex flex-row items-center">
+                                                      <TokenIcon symbol={token!.symbol} size={24} />
+                                                      <div>{token?.symbol}</div>
+                                                  </div>
+                                              )
+                                            : undefined
+                                    }
+                                    getOptionLabel={opt => (
+                                        <div className="flex flex-row items-center">
+                                            <TokenIcon symbol={opt.symbol} size={24} />
+                                            <div>{opt.symbol}</div>
+                                        </div>
+                                    )}
                                 />
                                 <div className="font-normal text-red-400 mt-1 break-words">{tokenError}</div>
 

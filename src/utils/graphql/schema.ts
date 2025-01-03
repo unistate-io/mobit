@@ -91,7 +91,6 @@ const spores = `spores(){
             }
       }`
 
-
 const clusters = `clusters(){
         cluster_description
         cluster_name
@@ -102,8 +101,6 @@ const clusters = `clusters(){
         owner_address
         updated_at
       }`
-
-
 
 const schema = {
     xudt_cell,
@@ -121,7 +118,7 @@ export const gql = (type: keyof typeof schema, opt?: string) => {
         throw new Error(`Invalid query type: ${type}`)
     }
 
-    query = query.replace('()', opt ? `(${opt})` : '')
+    query = query.replace("()", opt ? `(${opt})` : "")
 
     query = `query MyQuery {
         ${query}
@@ -130,23 +127,23 @@ export const gql = (type: keyof typeof schema, opt?: string) => {
     return query
 }
 
-export const gqls = (props: { type: keyof typeof schema, key?: string, opt?: string }[]) => {
-    let query = ''
+export const gqls = (props: {type: keyof typeof schema; key?: string; opt?: string}[]) => {
+    let query = ""
 
-    props.forEach(({type, opt,key}) => {
+    props.forEach(({type, opt, key}) => {
         let q = schema[type]
 
         if (!q) {
             throw new Error(`Invalid query type: ${type}`)
         }
 
-        q = q.replace('()', opt ? `(${opt})` : '')
+        q = q.replace("()", opt ? `(${opt})` : "")
 
         if (key) {
             q = `${key}: ${q}`
         }
 
-        query += q + '\n'
+        query += q + "\n"
     })
 
     query = `query MyQuery {

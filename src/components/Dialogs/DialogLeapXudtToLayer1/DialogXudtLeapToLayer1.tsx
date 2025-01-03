@@ -103,10 +103,10 @@ export default function DialogLeapXudtToLayer1({
                 xudtType: tokenInfoToScript(token!),
                 feeRate: BigInt(5000)
             })
-            setBuildError('')
+            setBuildError("")
             setTx(tx)
             setStep(3)
-        } catch (e:any) {
+        } catch (e: any) {
             console.error(e)
             setBuildError(e.message)
         } finally {
@@ -295,12 +295,12 @@ export default function DialogLeapXudtToLayer1({
                             <>
                                 <div className="font-semibold mb-1">{lang["Select_An_UTXO_To_Leap"]}</div>
                                 <div className="mb-2 flex flex-row items-center bg-orange-50 py-2 px-3 rounded-lg">
-                                    <i className="uil-info-circle mr-2 text-2xl align-middle text-orange-300"/>
+                                    <i className="uil-info-circle mr-2 text-2xl align-middle text-orange-300" />
                                     <div className="text-xs">
                                         {
                                             lang[
                                                 "It_Is_Recommended_To_Use_546_Satoshi_UTXO_To_Avoid_Being_Accidentally_Spent_And_wasted"
-                                                ]
+                                            ]
                                         }
                                         {isBtcWallet && (
                                             <span
@@ -310,24 +310,20 @@ export default function DialogLeapXudtToLayer1({
                                                 }}
                                             >
                                                 {lang["Create_A_New_UTXO"]}
-                                                <i className="uil-arrow-right"/>
+                                                <i className="uil-arrow-right" />
                                             </span>
                                         )}
                                     </div>
                                 </div>
                                 {busy && (
-                                    <div
-                                        className="flex flex-row w-full flex-wrap mb-4 child h-[104px] [&>*:nth-child(2n)]:mr-0">
-                                        <div
-                                            className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
-                                        <div
-                                            className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
+                                    <div className="flex flex-row w-full flex-wrap mb-4 child h-[104px] [&>*:nth-child(2n)]:mr-0">
+                                        <div className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
+                                        <div className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
                                     </div>
                                 )}
 
                                 {!busy && (
-                                    <div
-                                        className="flex flex-row w-full flex-wrap mb-4 max-h-[208px] overflow-auto [&>*:nth-child(2n)]:mr-0">
+                                    <div className="flex flex-row w-full flex-wrap mb-4 max-h-[208px] overflow-auto [&>*:nth-child(2n)]:mr-0">
                                         {utxos.length > 0 ? (
                                             utxos.map((uxto, index) => {
                                                 const isSelected =
@@ -350,7 +346,7 @@ export default function DialogLeapXudtToLayer1({
                                                             Tx: {shortTransactionHash(uxto.txid)}
                                                         </a>
                                                         <div className="flex flex-row items-center p-2">
-                                                            <TokenIcon size={28} symbol={"BTC"}/>
+                                                            <TokenIcon size={28} symbol={"BTC"} />
                                                             <div className="text-sm">
                                                                 <div>BTC</div>
                                                                 <div className="font-semibold">
@@ -362,8 +358,7 @@ export default function DialogLeapXudtToLayer1({
                                                 )
                                             })
                                         ) : (
-                                            <div
-                                                className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">
+                                            <div className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">
                                                 No Data
                                             </div>
                                         )}

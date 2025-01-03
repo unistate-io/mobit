@@ -25,12 +25,12 @@ export interface DialogXudtCellMergeProps {
 }
 
 export default function DialogXudtCellBurn({
-                                               children,
-                                               addresses,
-                                               xudt,
-                                               className = "",
-                                               onOpenChange
-                                           }: DialogXudtCellMergeProps) {
+    children,
+    addresses,
+    xudt,
+    className = "",
+    onOpenChange
+}: DialogXudtCellMergeProps) {
     const {config} = useContext(CKBContext)
     const {lang} = useContext(LangContext)
 
@@ -135,8 +135,7 @@ export default function DialogXudtCellBurn({
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger className={className}>{children}</Dialog.Trigger>
             <Dialog.Portal>
-                <Dialog.Overlay
-                    className="bg-[rgba(0,0,0,0.6)] z-40 data-[state=open]:animate-overlayShow fixed inset-0"/>
+                <Dialog.Overlay className="bg-[rgba(0,0,0,0.6)] z-40 data-[state=open]:animate-overlayShow fixed inset-0" />
                 <Dialog.Content
                     onPointerDownOutside={e => {
                         e.preventDefault()
@@ -152,7 +151,7 @@ export default function DialogXudtCellBurn({
                                 }}
                                 className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100"
                             >
-                                <i className="uil-times text-gray-500"/>
+                                <i className="uil-times text-gray-500" />
                             </div>
                         </div>
                         {step === 1 && (
@@ -212,35 +211,39 @@ export default function DialogXudtCellBurn({
                             <>
                                 <div className="font-semibold mb-1">{lang["Input"]} Cells</div>
                                 {status === "loading" && (
-                                    <div
-                                        className="flex flex-row w-full flex-wrap mb-4 child h-[104px] [&>*:nth-child(2n)]:mr-0">
-                                        <div
-                                            className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
-                                        <div
-                                            className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
+                                    <div className="flex flex-row w-full flex-wrap mb-4 child h-[104px] [&>*:nth-child(2n)]:mr-0">
+                                        <div className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
+                                        <div className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
                                     </div>
                                 )}
 
                                 {status === "complete" && (
-                                    <div
-                                        className="flex flex-row w-full flex-wrap mb-4 max-h-[208px] overflow-auto [&>*:nth-child(2n)]:mr-0">
+                                    <div className="flex flex-row w-full flex-wrap mb-4 max-h-[208px] overflow-auto [&>*:nth-child(2n)]:mr-0">
                                         {!!rawTx ? (
                                             rawTx.inputs.map((cell, index) => {
                                                 return (
-                                                    <div key={index}
-                                                         className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden">
-                                                        <div
-                                                            className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
-                                                            {toDisplay(Number(cell.cellOutput?.capacity).toString(), 8, true)} CKB
+                                                    <div
+                                                        key={index}
+                                                        className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden"
+                                                    >
+                                                        <div className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
+                                                            {toDisplay(
+                                                                Number(cell.cellOutput?.capacity).toString(),
+                                                                8,
+                                                                true
+                                                            )}{" "}
+                                                            CKB
                                                         </div>
                                                         {!cell.cellOutput?.type && (
                                                             <div className="flex flex-row items-center p-2">
-                                                                <TokenIcon size={28} symbol={'ckb'}/>
+                                                                <TokenIcon size={28} symbol={"ckb"} />
                                                                 <div className="text-sm">
-                                                                    <div>{'CKB'}</div>
+                                                                    <div>{"CKB"}</div>
                                                                     <div className="font-semibold">
                                                                         {toDisplay(
-                                                                            Number(cell.cellOutput!.capacity).toString(),
+                                                                            Number(
+                                                                                cell.cellOutput!.capacity
+                                                                            ).toString(),
                                                                             8,
                                                                             true
                                                                         )}
@@ -250,7 +253,7 @@ export default function DialogXudtCellBurn({
                                                         )}
                                                         {!!cell.cellOutput?.type && (
                                                             <div className="flex flex-row items-center p-2">
-                                                                <TokenIcon size={28} symbol={xudt?.symbol || ""}/>
+                                                                <TokenIcon size={28} symbol={xudt?.symbol || ""} />
                                                                 <div className="text-sm">
                                                                     <div>{xudt?.symbol}</div>
                                                                     <div className="font-semibold">
@@ -269,8 +272,7 @@ export default function DialogXudtCellBurn({
                                                 )
                                             })
                                         ) : (
-                                            <div
-                                                className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">
+                                            <div className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">
                                                 Not Data
                                             </div>
                                         )}
@@ -281,10 +283,8 @@ export default function DialogXudtCellBurn({
 
                                 {status === "loading" && (
                                     <div className="flex flex-row w-full flex-wrap h-[104px] [&>*:nth-child(2n)]:mr-0">
-                                        <div
-                                            className="loading-bg my-1 h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
-                                        <div
-                                            className="loading-bg my-1 h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
+                                        <div className="loading-bg my-1 h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
+                                        <div className="loading-bg my-1 h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
                                     </div>
                                 )}
 
@@ -293,19 +293,17 @@ export default function DialogXudtCellBurn({
                                         {!!rawTx ? (
                                             rawTx.outputs.map((cellOutput: any, index) => {
                                                 return (
-                                                    <div key={index}
-                                                         className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden">
-                                                        <div
-                                                            className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
-                                                            {toDisplay(
-                                                                Number(cellOutput.capacity).toString(),
-                                                                8,
-                                                                true
-                                                            )} CKB
+                                                    <div
+                                                        key={index}
+                                                        className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden"
+                                                    >
+                                                        <div className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
+                                                            {toDisplay(Number(cellOutput.capacity).toString(), 8, true)}{" "}
+                                                            CKB
                                                         </div>
                                                         {!!cellOutput.type && (
                                                             <div className="flex flex-row items-center p-2">
-                                                                <TokenIcon size={28} symbol={xudt?.symbol || ""}/>
+                                                                <TokenIcon size={28} symbol={xudt?.symbol || ""} />
                                                                 <div className="text-sm">
                                                                     <div>{xudt?.symbol}</div>
                                                                     <div className="font-semibold">
@@ -323,7 +321,7 @@ export default function DialogXudtCellBurn({
 
                                                         {!cellOutput.type && (
                                                             <div className="flex flex-row items-center p-2">
-                                                                <TokenIcon size={28} symbol="CKB"/>
+                                                                <TokenIcon size={28} symbol="CKB" />
                                                                 <div className="text-sm">
                                                                     <div>CKB</div>
                                                                     <div className="font-semibold">
@@ -340,8 +338,7 @@ export default function DialogXudtCellBurn({
                                                 )
                                             })
                                         ) : (
-                                            <div
-                                                className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">
+                                            <div className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">
                                                 Not Data
                                             </div>
                                         )}
@@ -384,7 +381,7 @@ export default function DialogXudtCellBurn({
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <g clipPath="url(#clip0_699_1259)">
-                                            <circle cx="36.5" cy="36" r="36" fill="#41D195" fillOpacity="0.12"/>
+                                            <circle cx="36.5" cy="36" r="36" fill="#41D195" fillOpacity="0.12" />
                                             <path
                                                 d="M37 19.3335C27.8167 19.3335 20.3333 26.8168 20.3333 36.0002C20.3333 45.1835 27.8167 52.6668 37 52.6668C46.1833 52.6668 53.6667 45.1835 53.6667 36.0002C53.6667 26.8168 46.1833 19.3335 37 19.3335ZM44.9667 32.1668L35.5167 41.6168C35.2833 41.8502 34.9667 41.9835 34.6333 41.9835C34.3 41.9835 33.9833 41.8502 33.75 41.6168L29.0333 36.9002C28.55 36.4168 28.55 35.6168 29.0333 35.1335C29.5167 34.6502 30.3167 34.6502 30.8 35.1335L34.6333 38.9668L43.2 30.4002C43.6833 29.9168 44.4833 29.9168 44.9667 30.4002C45.45 30.8835 45.45 31.6668 44.9667 32.1668Z"
                                                 fill="#41D195"
@@ -392,7 +389,7 @@ export default function DialogXudtCellBurn({
                                         </g>
                                         <defs>
                                             <clipPath id="clip0_699_1259">
-                                                <rect width="72" height="72" fill="white" transform="translate(0.5)"/>
+                                                <rect width="72" height="72" fill="white" transform="translate(0.5)" />
                                             </clipPath>
                                         </defs>
                                     </svg>
@@ -413,7 +410,7 @@ export default function DialogXudtCellBurn({
                                         <div className="font-semibold">{fee} CKB</div>
                                     </div>
 
-                                    <div className="h-[1px] bg-gray-200 my-4"/>
+                                    <div className="h-[1px] bg-gray-200 my-4" />
 
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                         <div className="text-gray-500">{lang["Tx Hash"]}</div>

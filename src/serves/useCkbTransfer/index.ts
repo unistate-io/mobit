@@ -6,29 +6,25 @@ export default function useCkbTransfer() {
     const {signer} = useContext(CKBContext)
 
     const build = async ({
-                             to,
-                             amount,
-                             feeRate,
-                             sendAll
-                         }: {
-        to: string,
-        amount: string,
-        feeRate: number,
+        to,
+        amount,
+        feeRate,
+        sendAll
+    }: {
+        to: string
+        amount: string
+        feeRate: number
         sendAll?: boolean
     }) => {
-
         if (!signer) {
-            throw new Error('Please connect wallet first')
+            throw new Error("Please connect wallet first")
         }
 
-        const {script: toLock} = await ccc.Address.fromString(
-            to,
-            signer.client,
-        )
+        const {script: toLock} = await ccc.Address.fromString(to, signer.client)
 
         const tx = ccc.Transaction.from({
             outputs: [{lock: toLock}],
-            outputsData: [],
+            outputsData: []
         })
 
         if (sendAll) {
@@ -50,29 +46,31 @@ export default function useCkbTransfer() {
     }
 
     const signAndSend = async ({
-                                   to,
-                                   amount,
-                                   feeRate,
-                                   sendAll
-                               }: { to: string, amount: string, feeRate: number, sendAll?: boolean }) => {
+        to,
+        amount,
+        feeRate,
+        sendAll
+    }: {
+        to: string
+        amount: string
+        feeRate: number
+        sendAll?: boolean
+    }) => {
         if (!signer) {
-            throw new Error('Please connect wallet first')
+            throw new Error("Please connect wallet first")
         }
 
-        const {script: toLock} = await ccc.Address.fromString(
-            to,
-            signer.client,
-        )
+        const {script: toLock} = await ccc.Address.fromString(to, signer.client)
 
         const tx = ccc.Transaction.from({
             outputs: [{lock: toLock}],
-            outputsData: [],
+            outputsData: []
         })
 
         if (sendAll) {
             await tx.completeInputsAll(signer)
             await tx.completeFeeChangeToOutput(signer, 0, feeRate)
-            const hash = await signer.sendTransaction(tx);
+            const hash = await signer.sendTransaction(tx)
             return hash
         } else {
             tx.outputs.forEach((output, i) => {
@@ -82,9 +80,9 @@ export default function useCkbTransfer() {
                 output.capacity = ccc.fixedPointFrom(amount, 0)
             })
 
-            await tx.completeInputsByCapacity(signer);
-            await tx.completeFeeBy(signer, feeRate);
-            const hash = await signer.sendTransaction(tx);
+            await tx.completeInputsByCapacity(signer)
+            await tx.completeFeeBy(signer, feeRate)
+            const hash = await signer.sendTransaction(tx)
             return hash
         }
     }
