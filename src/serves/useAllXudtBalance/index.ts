@@ -1,32 +1,32 @@
-import {queryXudtCell} from "@/utils/graphql"
+import {queryXudtCell} from '@/utils/graphql';
 // @ts-ignore
-import BigNumber from "bignumber.js"
-import {useEffect, useState, useRef, useContext} from "react"
-import {TokenBalance} from "@/components/ListToken/ListToken"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {XudtCell} from "@/utils/graphql/types"
+import BigNumber from 'bignumber.js';
+import {useEffect, useState, useRef, useContext} from 'react';
+import {TokenBalance} from '@/components/ListToken/ListToken';
+import {CKBContext} from '@/providers/CKBProvider/CKBProvider';
+import {XudtCell} from '@/utils/graphql/types';
 
 export const balance = async (addresses: string[], isMainnet: boolean): Promise<TokenBalance[]> => {
-    const cells = await queryXudtCell(addresses, isMainnet)
+    const cells = await queryXudtCell(addresses, isMainnet);
 
     if (cells.length === 0) {
-        console.log('enpty')
-        return []
+        console.log('enpty');
+        return [];
     }
 
-    let list:XudtCell[] = []
+    let list: XudtCell[] = [];
     cells.forEach(c => {
-        const exist = list.find(l => l.type_id === c.type_id)
+        const exist = list.find(l => l.type_id === c.type_id);
         if (!exist) {
-            c.amount = c.amount.toString()
-            list.push(c)
+            c.amount = c.amount.toString();
+            list.push(c);
         } else {
-            exist.amount = BigNumber(exist.amount).plus(BigNumber(c.amount)).toString()
+            exist.amount = BigNumber(exist.amount).plus(BigNumber(c.amount)).toString();
         }
-    })
+    });
 
     const _list = list.map(_l => {
-        const info = _l.addressByTypeId?.token_info || _l.addressByTypeId?.token_infos[0] || undefined
+        const info = _l.addressByTypeId?.token_info || _l.addressByTypeId?.token_infos[0] || undefined;
 
         return {
             amount: _l.amount,
@@ -44,46 +44,43 @@ export const balance = async (addresses: string[], isMainnet: boolean): Promise<
                 id: _l.addressByTypeId?.id || '',
                 script_args: _l.addressByTypeId?.script_args || '',
                 script_code_hash: _l.addressByTypeId?.script_code_hash || '',
-                script_hash_type: _l.addressByTypeId?.script_hash_type || ''
-            }
+                script_hash_type: _l.addressByTypeId?.script_hash_type || '',
+            },
+        } as TokenBalance;
+    });
 
-        } as TokenBalance
-    })
-
-    return _list
-}
+    return _list;
+};
 
 export default function useAllXudtBalance(addresses: string[]) {
-    const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
-    const [data, setData] = useState<TokenBalance[]>([])
-    const [error, setError] = useState<undefined | any>(undefined)
-    const {network} = useContext(CKBContext)
+    const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading');
+    const [data, setData] = useState<TokenBalance[]>([]);
+    const [error, setError] = useState<undefined | any>(undefined);
+    const {network} = useContext(CKBContext);
 
-
-    const historyRef = useRef('')
+    const historyRef = useRef('');
 
     useEffect(() => {
-        if (!addresses || !addresses.length ||  historyRef.current === addresses.join(',')) return
-        historyRef.current = addresses.join(',')
-        setStatus('loading')
+        if (!addresses || !addresses.length || historyRef.current === addresses.join(',')) return;
+        historyRef.current = addresses.join(',');
+        setStatus('loading');
         setData([]);
-
         (async () => {
             try {
-                const res = await balance(addresses, network === 'mainnet')
-                setData(res)
-                setStatus('complete')
+                const res = await balance(addresses, network === 'mainnet');
+                setData(res);
+                setStatus('complete');
             } catch (e: any) {
-                console.error(e)
-                setError(e)
-                setStatus('error')
+                console.error(e);
+                setError(e);
+                setStatus('error');
             }
-        })()
-    }, [addresses])
+        })();
+    }, [addresses]);
 
     return {
         status,
         data,
-        error
-    }
+        error,
+    };
 }

@@ -1,81 +1,81 @@
-import React, {useContext, useEffect, useMemo} from "react"
-import * as Dialog from "@radix-ui/react-dialog"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import useLayer1Assets from "@/serves/useLayer1Assets"
-import {bitcoin} from "@rgbpp-sdk/btc"
-import {TokenBalance} from "@/components/ListToken/ListToken"
-import {LangContext} from "@/providers/LangProvider/LangProvider"
-import Input from "@/components/Form/Input/Input"
-import TokenIcon from "@/components/TokenIcon/TokenIcon"
-import {toDisplay} from "@/utils/number_display"
-import Button from "@/components/Form/Button/Button"
-import {XudtTransferProps} from "@/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer"
-import BigNumber from "bignumber.js"
-import {checksumCkbAddress, shortTransactionHash} from "@/utils/common"
-import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
-import useLeapXudtToLayer2 from "@/serves/useLeapXudtToLayer2"
-import * as dayjsLib from "dayjs"
-import CopyText from "@/components/CopyText/CopyText"
-import useBtcWallet from "@/serves/useBtcWallet"
-import {tokenInfoToScript} from "@/utils/graphql/types"
+import React, {useContext, useEffect, useMemo} from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
+import {CKBContext} from '@/providers/CKBProvider/CKBProvider';
+import useLayer1Assets from '@/serves/useLayer1Assets';
+import {bitcoin} from '@rgbpp-sdk/btc';
+import {TokenBalance} from '@/components/ListToken/ListToken';
+import {LangContext} from '@/providers/LangProvider/LangProvider';
+import Input from '@/components/Form/Input/Input';
+import TokenIcon from '@/components/TokenIcon/TokenIcon';
+import {toDisplay} from '@/utils/number_display';
+import Button from '@/components/Form/Button/Button';
+import {XudtTransferProps} from '@/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer';
+import BigNumber from 'bignumber.js';
+import {checksumCkbAddress, shortTransactionHash} from '@/utils/common';
+import ProfileAddresses from '@/components/ProfileAddresses/ProfileAddresses';
+import useLeapXudtToLayer2 from '@/serves/useLeapXudtToLayer2';
+import * as dayjsLib from 'dayjs';
+import CopyText from '@/components/CopyText/CopyText';
+import useBtcWallet from '@/serves/useBtcWallet';
+import {tokenInfoToScript} from '@/utils/graphql/types';
 
-const dayjs: any = dayjsLib
+const dayjs: any = dayjsLib;
 
 export default function DialogLeapXudtToLayer2({
     children,
     token,
-    className
+    className,
 }: {
-    children: React.ReactNode
-    token: TokenBalance
-    className?: string
+    children: React.ReactNode;
+    token: TokenBalance;
+    className?: string;
 }) {
-    const {network, internalAddress, config} = useContext(CKBContext)
-    const {build, leap} = useLeapXudtToLayer2()
-    const {lang} = useContext(LangContext)
-    const {feeRate} = useBtcWallet()
+    const {network, internalAddress, config} = useContext(CKBContext);
+    const {build, leap} = useLeapXudtToLayer2();
+    const {lang} = useContext(LangContext);
+    const {feeRate} = useBtcWallet();
 
-    const [open, setOpen] = React.useState(false)
-    const [step, setStep] = React.useState(1)
-    const [btctxHash, setBtCtxHash] = React.useState<string>("")
-    const [tx, setTx] = React.useState<bitcoin.Psbt | null>(null)
-    const [busy, setBusy] = React.useState(false)
-    const [btcFeeRate, setBtcFeeRate] = React.useState(feeRate)
+    const [open, setOpen] = React.useState(false);
+    const [step, setStep] = React.useState(1);
+    const [btctxHash, setBtCtxHash] = React.useState<string>('');
+    const [tx, setTx] = React.useState<bitcoin.Psbt | null>(null);
+    const [busy, setBusy] = React.useState(false);
+    const [btcFeeRate, setBtcFeeRate] = React.useState(feeRate);
 
     const [formData, setFormData] = React.useState<XudtTransferProps>({
-        form: "",
-        amount: "",
-        to: ""
-    })
+        form: '',
+        amount: '',
+        to: '',
+    });
 
     //errors
-    const [toError, setToError] = React.useState<string>("")
-    const [buildError, setBuildError] = React.useState<string>("")
-    const [amountError, setAmountError] = React.useState<string>("")
-    const [transactionError, setTransactionError] = React.useState<string>("")
+    const [toError, setToError] = React.useState<string>('');
+    const [buildError, setBuildError] = React.useState<string>('');
+    const [amountError, setAmountError] = React.useState<string>('');
+    const [transactionError, setTransactionError] = React.useState<string>('');
 
-    const {xudts: xudtsBalance, status: xudtsBalanceStatus} = useLayer1Assets(open ? internalAddress : undefined)
+    const {xudts: xudtsBalance, status: xudtsBalanceStatus} = useLayer1Assets(open ? internalAddress : undefined);
 
     const balance = useMemo(() => {
-        if (xudtsBalanceStatus !== "complete") {
-            return "0"
+        if (xudtsBalanceStatus !== 'complete') {
+            return '0';
         }
 
-        const targetToken = xudtsBalance.find(t => t.type_id === token.type_id)
-        return !!token ? token.amount : "0"
-    }, [xudtsBalance, xudtsBalanceStatus, token])
+        const targetToken = xudtsBalance.find(t => t.type_id === token.type_id);
+        return !!token ? token.amount : '0';
+    }, [xudtsBalance, xudtsBalanceStatus, token]);
 
     useEffect(() => {
         if (open) {
-            setStep(1)
-            setBtCtxHash("")
-            setTx(null)
-            setToError("")
-            setAmountError("")
-            setTransactionError("")
-            setBuildError("")
+            setStep(1);
+            setBtCtxHash('');
+            setTx(null);
+            setToError('');
+            setAmountError('');
+            setTransactionError('');
+            setBuildError('');
         }
-    }, [open])
+    }, [open]);
 
     const setMaxAmount = () => {
         setFormData({
@@ -84,40 +84,40 @@ export default function DialogLeapXudtToLayer2({
                 ? BigNumber(balance)
                       .dividedBy(10 ** token.decimal)
                       .toString()
-                : "0"
-        })
-    }
+                : '0',
+        });
+    };
 
     const checkAndBuild = async () => {
-        if (formData.to === "") {
-            setToError("Please enter a valid address")
-            return
+        if (formData.to === '') {
+            setToError('Please enter a valid address');
+            return;
         } else if (!checksumCkbAddress(formData.to, network)) {
-            setToError("Invalid CKB address")
-            return
+            setToError('Invalid CKB address');
+            return;
         } else {
-            setToError("")
+            setToError('');
         }
 
-        if (formData.amount === "") {
-            setAmountError("Please enter a valid amount")
-            return
+        if (formData.amount === '') {
+            setAmountError('Please enter a valid amount');
+            return;
         } else if (
             BigNumber(formData.amount)
                 .multipliedBy(10 ** token.decimal)
                 .gt(balance ? balance : 0)
         ) {
-            setAmountError("Insufficient balance")
-            return
+            setAmountError('Insufficient balance');
+            return;
         } else if (BigNumber(formData.amount).eq(0)) {
-            setAmountError("Please enter a valid amount")
-            return
+            setAmountError('Please enter a valid amount');
+            return;
         } else {
-            setAmountError("")
+            setAmountError('');
         }
 
-        setBusy(true)
-        setBuildError("")
+        setBusy(true);
+        setBuildError('');
         try {
             const tx = await build({
                 fromBtcAccount: internalAddress!,
@@ -125,22 +125,22 @@ export default function DialogLeapXudtToLayer2({
                 xudtType: tokenInfoToScript(token),
                 amount: BigNumber(formData.amount)
                     .multipliedBy(10 ** token.decimal)
-                    .toString()
-            })
+                    .toString(),
+            });
 
-            console.log("tx", tx)
-            setTx(tx)
-            setStep(2)
+            console.log('tx', tx);
+            setTx(tx);
+            setStep(2);
         } catch (e: any) {
-            setBuildError(e.message || "Failed to build transaction")
+            setBuildError(e.message || 'Failed to build transaction');
         } finally {
-            setBusy(false)
+            setBusy(false);
         }
-    }
+    };
 
     const handleLeap = async () => {
-        setBusy(true)
-        setTransactionError("")
+        setBusy(true);
+        setTransactionError('');
         try {
             const txResult = await leap({
                 fromBtcAccount: internalAddress!,
@@ -149,23 +149,23 @@ export default function DialogLeapXudtToLayer2({
                 amount: BigNumber(formData.amount)
                     .multipliedBy(10 ** token.decimal)
                     .toString(),
-                feeRate: btcFeeRate
-            })
-            console.log("txResult", txResult)
+                feeRate: btcFeeRate,
+            });
+            console.log('txResult', txResult);
 
             if (!txResult.btcTxId) {
-                throw new Error("btc transaction failed")
+                throw new Error('btc transaction failed');
             }
 
-            setBtCtxHash(txResult.btcTxId)
-            setStep(3)
+            setBtCtxHash(txResult.btcTxId);
+            setStep(3);
         } catch (e: any) {
-            console.error(e)
-            setTransactionError(e.message || "Failed to leap")
+            console.error(e);
+            setTransactionError(e.message || 'Failed to leap');
         } finally {
-            setBusy(false)
+            setBusy(false);
         }
-    }
+    };
 
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -174,7 +174,7 @@ export default function DialogLeapXudtToLayer2({
                 <Dialog.Overlay className="bg-[rgba(0,0,0,0.6)] z-40 data-[state=open]:animate-overlayShow fixed inset-0" />
                 <Dialog.Content
                     onPointerDownOutside={e => {
-                        e.preventDefault()
+                        e.preventDefault();
                     }}
                     className="data-[state=open]:animate-contentShow z-50 fixed top-[50%] left-[50%] p-4 max-w-[98vw] w-full md:max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-white shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none"
                 >
@@ -182,10 +182,10 @@ export default function DialogLeapXudtToLayer2({
                         {step === 1 && (
                             <>
                                 <div className="flex flex-row justify-between items-center mb-4">
-                                    <div className="font-semibold text-2xl">{lang["Leap_l1_to_l2"]}</div>
+                                    <div className="font-semibold text-2xl">{lang['Leap_l1_to_l2']}</div>
                                     <div
                                         onClick={e => {
-                                            setOpen(false)
+                                            setOpen(false);
                                         }}
                                         className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100"
                                     >
@@ -194,42 +194,48 @@ export default function DialogLeapXudtToLayer2({
                                 </div>
 
                                 <div className="font-semibold mb-10">
-                                    <div className="mb-2">{lang["Leap to"]}</div>
+                                    <div className="mb-2">{lang['Leap to']}</div>
                                     <Input
                                         value={formData.to}
-                                        placeholder={lang["Recipient address"]}
-                                        type={"text"}
+                                        placeholder={lang['Recipient address']}
+                                        type={'text'}
                                         onChange={e => {
-                                            setFormData({...formData, to: e.target.value})
+                                            setFormData({
+                                                ...formData,
+                                                to: e.target.value,
+                                            });
                                         }}
                                     />
                                     <div className="font-normal text-red-400 mt-1 break-words">{toError}</div>
                                 </div>
 
                                 <div className="font-semibold mb-10">
-                                    <div className="mb-2">{lang["Asset"]}</div>
+                                    <div className="mb-2">{lang['Asset']}</div>
                                     <Input
                                         startIcon={<TokenIcon size={32} symbol={token.symbol} />}
                                         value={token.symbol}
-                                        type={"text"}
+                                        type={'text'}
                                         disabled
                                     />
                                 </div>
 
                                 <div className="font-semibold mb-10">
                                     <div className="mb-2 flex-row flex items-center justify-between">
-                                        <div>{lang["Amount"]}</div>
+                                        <div>{lang['Amount']}</div>
                                         <div className="font-normal">
-                                            <span className="text-gray-500"> {lang["Balance"]}: </span>{" "}
-                                            {balance ? toDisplay(balance, token.decimal, true) : "--"}
+                                            <span className="text-gray-500"> {lang['Balance']}: </span>{' '}
+                                            {balance ? toDisplay(balance, token.decimal, true) : '--'}
                                         </div>
                                     </div>
                                     <Input
                                         value={formData.amount}
-                                        type={"number"}
-                                        placeholder={lang["Transfer amount"]}
+                                        type={'number'}
+                                        placeholder={lang['Transfer amount']}
                                         onChange={e => {
-                                            setFormData({...formData, amount: e.target.value})
+                                            setFormData({
+                                                ...formData,
+                                                amount: e.target.value,
+                                            });
                                         }}
                                         endIcon={
                                             <div className="cursor-pointer text-[#6CD7B2]" onClick={setMaxAmount}>
@@ -243,11 +249,11 @@ export default function DialogLeapXudtToLayer2({
                                 <div className="font-normal text-red-400 mb-1 break-words">{buildError}</div>
 
                                 <Button
-                                    btntype={"primary"}
+                                    btntype={'primary'}
                                     onClick={checkAndBuild}
-                                    loading={xudtsBalanceStatus === "loading" || busy}
+                                    loading={xudtsBalanceStatus === 'loading' || busy}
                                 >
-                                    {lang["Continue"]}
+                                    {lang['Continue']}
                                 </Button>
                             </>
                         )}
@@ -255,10 +261,10 @@ export default function DialogLeapXudtToLayer2({
                         {step === 2 && (
                             <>
                                 <div className="flex flex-row justify-between items-center mb-4">
-                                    <div className="font-semibold text-2xl">{lang["Sign Transaction"]}</div>
+                                    <div className="font-semibold text-2xl">{lang['Sign Transaction']}</div>
                                     <div
                                         onClick={e => {
-                                            setOpen(false)
+                                            setOpen(false);
                                         }}
                                         className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100"
                                     >
@@ -278,7 +284,7 @@ export default function DialogLeapXudtToLayer2({
                                     </div>
 
                                     <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
-                                        <div className="flex flex-row flex-nowrap items-center">{lang["From"]}</div>
+                                        <div className="flex flex-row flex-nowrap items-center">{lang['From']}</div>
                                         {internalAddress ? (
                                             <ProfileAddresses
                                                 addresses={[internalAddress]}
@@ -290,7 +296,7 @@ export default function DialogLeapXudtToLayer2({
                                     </div>
 
                                     <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
-                                        <div className="flex flex-row flex-nowrap items-center">{lang["Leap to"]}</div>
+                                        <div className="flex flex-row flex-nowrap items-center">{lang['Leap to']}</div>
                                         {internalAddress ? (
                                             <ProfileAddresses addresses={[formData.to]} defaultAddress={formData.to} />
                                         ) : (
@@ -299,15 +305,15 @@ export default function DialogLeapXudtToLayer2({
                                     </div>
 
                                     <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
-                                        <div className="flex flex-row flex-nowrap items-center">{lang["Fee_Rate"]}</div>
+                                        <div className="flex flex-row flex-nowrap items-center">{lang['Fee_Rate']}</div>
                                         <div className="flex flex-row items-center">
                                             <Input
                                                 value={btcFeeRate}
-                                                className={"w-[100px] text-center font-semibold"}
-                                                type={"number"}
-                                                placeholder={lang["fee rate"]}
+                                                className={'w-[100px] text-center font-semibold'}
+                                                type={'number'}
+                                                placeholder={lang['fee rate']}
                                                 onChange={e => {
-                                                    setBtcFeeRate(Number(e.target.value))
+                                                    setBtcFeeRate(Number(e.target.value));
                                                 }}
                                             />
                                             <span className="ml-2">Sat/vB</span>
@@ -319,16 +325,16 @@ export default function DialogLeapXudtToLayer2({
 
                                 <div className="flex flex-row">
                                     <Button
-                                        btntype={"secondary"}
+                                        btntype={'secondary'}
                                         className="mr-4"
                                         onClick={e => {
-                                            setStep(1)
+                                            setStep(1);
                                         }}
                                     >
-                                        {lang["Cancel"]}
+                                        {lang['Cancel']}
                                     </Button>
-                                    <Button btntype={"primary"} loading={busy} onClick={handleLeap}>
-                                        {lang["Leap"]}
+                                    <Button btntype={'primary'} loading={busy} onClick={handleLeap}>
+                                        {lang['Leap']}
                                     </Button>
                                 </div>
                             </>
@@ -358,19 +364,19 @@ export default function DialogLeapXudtToLayer2({
                                         </defs>
                                     </svg>
                                 </div>
-                                <div className="font-semibold text-center text-lg">{lang["Transaction Sent !"]}</div>
+                                <div className="font-semibold text-center text-lg">{lang['Transaction Sent !']}</div>
                                 <div className="text-center text-sm">
                                     {
                                         lang[
-                                            "The leap action will be completed after this transaction has been confirmed by more than"
+                                            'The leap action will be completed after this transaction has been confirmed by more than'
                                         ]
                                     }
-                                    <b>6 {lang["blocks"]}</b>
+                                    <b>6 {lang['blocks']}</b>
                                 </div>
 
                                 <div className="my-4 p-3 bg-gray-100 rounded-lg">
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                        <div className="text-gray-500">{lang["From"]}</div>
+                                        <div className="text-gray-500">{lang['From']}</div>
                                         <div className="font-semibold">
                                             {internalAddress ? (
                                                 <ProfileAddresses
@@ -378,12 +384,12 @@ export default function DialogLeapXudtToLayer2({
                                                     defaultAddress={internalAddress}
                                                 />
                                             ) : (
-                                                "--"
+                                                '--'
                                             )}
                                         </div>
                                     </div>
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                        <div className="text-gray-500">{lang["Leap to"]}</div>
+                                        <div className="text-gray-500">{lang['Leap to']}</div>
                                         <div className="font-semibold">
                                             {formData.to ? (
                                                 <ProfileAddresses
@@ -391,31 +397,31 @@ export default function DialogLeapXudtToLayer2({
                                                     defaultAddress={formData.to}
                                                 />
                                             ) : (
-                                                "--"
+                                                '--'
                                             )}
                                         </div>
                                     </div>
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                        <div className="text-gray-500">{lang["Time"]}</div>
-                                        <div className="font-semibold">{dayjs().format("YYYY-MM-DD HH:mm")}</div>
+                                        <div className="text-gray-500">{lang['Time']}</div>
+                                        <div className="font-semibold">{dayjs().format('YYYY-MM-DD HH:mm')}</div>
                                     </div>
 
                                     <div className="h-[1px] bg-gray-200 my-4" />
 
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                        <div className="text-gray-500">{lang["Amount"]}</div>
+                                        <div className="text-gray-500">{lang['Amount']}</div>
                                         <div className="font-semibold">
-                                            {formData.amount || "--"} {token.symbol}
+                                            {formData.amount || '--'} {token.symbol}
                                         </div>
                                     </div>
 
                                     <div className="h-[1px] bg-gray-200 my-4" />
 
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                        <div className="text-gray-500">BTC {lang["Tx Hash"]}</div>
+                                        <div className="text-gray-500">BTC {lang['Tx Hash']}</div>
                                         <div className="font-semibold flex flex-row">
-                                            <CopyText copyText={btctxHash || ""}>
-                                                {btctxHash ? shortTransactionHash(btctxHash) : "--"}
+                                            <CopyText copyText={btctxHash || ''}>
+                                                {btctxHash ? shortTransactionHash(btctxHash) : '--'}
                                             </CopyText>
                                         </div>
                                     </div>
@@ -423,21 +429,21 @@ export default function DialogLeapXudtToLayer2({
 
                                 <div className="flex">
                                     <Button
-                                        btntype={"secondary"}
-                                        className={"mr-4 text-xs"}
+                                        btntype={'secondary'}
+                                        className={'mr-4 text-xs'}
                                         onClick={e => {
-                                            window.open(`${config.btc_explorer}/tx/${btctxHash}`, "_blank")
+                                            window.open(`${config.btc_explorer}/tx/${btctxHash}`, '_blank');
                                         }}
                                     >
-                                        {lang["View on Explorer"]}
+                                        {lang['View on Explorer']}
                                     </Button>
                                     <Button
-                                        btntype={"primary"}
+                                        btntype={'primary'}
                                         onClick={e => {
-                                            setOpen(false)
+                                            setOpen(false);
                                         }}
                                     >
-                                        {lang["Done"]}
+                                        {lang['Done']}
                                     </Button>
                                 </div>
                             </>
@@ -446,5 +452,5 @@ export default function DialogLeapXudtToLayer2({
                 </Dialog.Content>
             </Dialog.Portal>
         </Dialog.Root>
-    )
+    );
 }

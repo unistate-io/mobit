@@ -1,13 +1,13 @@
-import {useContext, useEffect} from "react"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {bytifyRawString, createCluster, createSpore, predefinedSporeConfigs} from '@spore-sdk/core'
-import {config as lumsCoinfg, helpers} from "@ckb-lumos/lumos";
+import {useContext, useEffect} from 'react';
+import {CKBContext} from '@/providers/CKBProvider/CKBProvider';
+import {bytifyRawString, createCluster, createSpore, predefinedSporeConfigs} from '@spore-sdk/core';
+import {config as lumsCoinfg, helpers} from '@ckb-lumos/lumos';
 import {BI} from '@ckb-lumos/bi';
-import {getInfoFromOmnilockArgs} from "@/pages/Test/wallet";
-import {ccc} from "@ckb-ccc/connector-react"
-import useLeapXudtToLayer1 from "@/serves/useLeapXudtToLayer1";
-import {isBtcAddress} from "@/utils/common";
-import DialogLeapXudtToLayer2 from "@/components/Dialogs/DialogLeapXudtToLayer2/DialogLeapXudtToLayer2";
+import {getInfoFromOmnilockArgs} from '@/pages/Test/wallet';
+import {ccc} from '@ckb-ccc/connector-react';
+import useLeapXudtToLayer1 from '@/serves/useLeapXudtToLayer1';
+import {isBtcAddress} from '@/utils/common';
+import DialogLeapXudtToLayer2 from '@/components/Dialogs/DialogLeapXudtToLayer2/DialogLeapXudtToLayer2';
 
 export default function Test() {
     const {
@@ -16,20 +16,20 @@ export default function Test() {
         addresses,
         internalAddress,
         signer, // 没链接钱包是undefined
-    } = useContext(CKBContext) // ccc 的 api
+    } = useContext(CKBContext); // ccc 的 api
 
     const handleCreateSpore = async () => {
-        if (!address || !signer) return
+        if (!address || !signer) return;
 
         const config = predefinedSporeConfigs.Aggron4;
 
-        const scriptConfig = network === 'mainnet' ? lumsCoinfg.MAINNET : lumsCoinfg.TESTNET
+        const scriptConfig = network === 'mainnet' ? lumsCoinfg.MAINNET : lumsCoinfg.TESTNET;
 
-        console.log('scriptConfig', scriptConfig)
+        console.log('scriptConfig', scriptConfig);
 
-        const toLock = helpers.addressToScript(address, {config: scriptConfig})
+        const toLock = helpers.addressToScript(address, {config: scriptConfig});
 
-        console.log('toLock', toLock)
+        console.log('toLock', toLock);
 
         let {txSkeleton} = await createSpore({
             data: {
@@ -42,34 +42,32 @@ export default function Test() {
             cluster: {
                 capacityMargin: (clusterCell, margin) => {
                     const args = getInfoFromOmnilockArgs(clusterCell.cellOutput.lock.args);
-                    const minCkb = args.minCkb !== void 0
-                        ? BI.from(10).pow(args.minCkb)
-                        : BI.from(0);
+                    const minCkb = args.minCkb !== void 0 ? BI.from(10).pow(args.minCkb) : BI.from(0);
 
                     return margin.add(minCkb as any);
                 },
 
                 updateWitness: '0x',
             },
-            config
+            config,
         });
 
-        console.log('txSkeleton', txSkeleton)
-        const cccLib = ccc as any
-        const __tx = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
-        console.log(__tx)
-        const txHash = await signer.sendTransaction(__tx)
+        console.log('txSkeleton', txSkeleton);
+        const cccLib = ccc as any;
+        const __tx = cccLib.Transaction.fromLumosSkeleton(txSkeleton);
+        console.log(__tx);
+        const txHash = await signer.sendTransaction(__tx);
 
-        return txHash
-    }
+        return txHash;
+    };
     const handleCreateCluster = async () => {
-        if (!address || !signer) return
+        if (!address || !signer) return;
 
         const config = predefinedSporeConfigs.Aggron4;
 
-        const scriptConfig = network === 'mainnet' ? lumsCoinfg.MAINNET : lumsCoinfg.TESTNET
+        const scriptConfig = network === 'mainnet' ? lumsCoinfg.MAINNET : lumsCoinfg.TESTNET;
 
-        const toLock = helpers.addressToScript(address, {config: scriptConfig})
+        const toLock = helpers.addressToScript(address, {config: scriptConfig});
 
         let {txSkeleton} = await createCluster({
             data: {
@@ -78,55 +76,55 @@ export default function Test() {
             },
             toLock: toLock,
             fromInfos: [address],
-            config
+            config,
         });
 
-        console.log('txSkeleton', txSkeleton)
-        const cccLib = ccc as any
-        const __tx = cccLib.Transaction.fromLumosSkeleton(txSkeleton)
-        console.log("__tx", __tx)
-        const txHash = await signer.sendTransaction(__tx)
+        console.log('txSkeleton', txSkeleton);
+        const cccLib = ccc as any;
+        const __tx = cccLib.Transaction.fromLumosSkeleton(txSkeleton);
+        console.log('__tx', __tx);
+        const txHash = await signer.sendTransaction(__tx);
 
-        return txHash
-    }
+        return txHash;
+    };
 
-
-    const {getUTXO} = useLeapXudtToLayer1()
+    const {getUTXO} = useLeapXudtToLayer1();
 
     useEffect(() => {
         (async () => {
             if (!!internalAddress && isBtcAddress(internalAddress, network === 'mainnet')) {
-                const utxos = await getUTXO({btcAddress: internalAddress}).then(console.log)
-                console.log(utxos)
+                const utxos = await getUTXO({btcAddress: internalAddress}).then(console.log);
+                console.log(utxos);
             }
-        })()
+        })();
     }, [internalAddress]);
-    return <div>
-        <div onClick={handleCreateSpore}>create spore</div>
-        <div onClick={handleCreateCluster}>handleCreateCluster</div>
-        <div onClick={e => {
-
-        }}>prepareUTXO
-        </div>
+    return (
         <div>
-            <DialogLeapXudtToLayer2 token={{
-                type_id: '',
-                symbol: 'XUDT',
-                name: 'XUDT',
-                amount: '0',
-                decimal: 8,
-                type: 'xudt',
-                chain: 'ckb',
-                address: {
-                    id: '',
-                    script_args: '',
-                    script_code_hash: '',
-                    script_hash_type: ''
-                },
-                addressByInscriptionId: null
-            }}>
-                <div>test</div>
-            </DialogLeapXudtToLayer2>
+            <div onClick={handleCreateSpore}>create spore</div>
+            <div onClick={handleCreateCluster}>handleCreateCluster</div>
+            <div onClick={e => {}}>prepareUTXO</div>
+            <div>
+                <DialogLeapXudtToLayer2
+                    token={{
+                        type_id: '',
+                        symbol: 'XUDT',
+                        name: 'XUDT',
+                        amount: '0',
+                        decimal: 8,
+                        type: 'xudt',
+                        chain: 'ckb',
+                        address: {
+                            id: '',
+                            script_args: '',
+                            script_code_hash: '',
+                            script_hash_type: '',
+                        },
+                        addressByInscriptionId: null,
+                    }}
+                >
+                    <div>test</div>
+                </DialogLeapXudtToLayer2>
+            </div>
         </div>
-    </div>
+    );
 }

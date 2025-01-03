@@ -1,145 +1,140 @@
-import React, {ReactNode, useContext, useEffect, useState} from "react"
-import {TokenInfoWithAddress} from "@/utils/graphql/types"
-import * as Dialog from "@radix-ui/react-dialog"
-import useGetXudtCell from "@/serves/useGetXudtCell"
-import TokenIcon from "@/components/TokenIcon/TokenIcon"
-import {toDisplay} from "@/utils/number_display"
-import {number} from "@ckb-lumos/codec"
-import Button from "@/components/Form/Button/Button"
-import {shortTransactionHash} from "@/utils/common"
-import CopyText from "@/components/CopyText/CopyText"
-import dayjs from "dayjs"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {LangContext} from "@/providers/LangProvider/LangProvider"
-import {ccc, useCcc} from "@ckb-ccc/connector-react"
-import BigNumber from "bignumber.js"
+import React, {ReactNode, useContext, useEffect, useState} from 'react';
+import {TokenInfoWithAddress} from '@/utils/graphql/types';
+import * as Dialog from '@radix-ui/react-dialog';
+import useGetXudtCell from '@/serves/useGetXudtCell';
+import TokenIcon from '@/components/TokenIcon/TokenIcon';
+import {toDisplay} from '@/utils/number_display';
+import {number} from '@ckb-lumos/codec';
+import Button from '@/components/Form/Button/Button';
+import {shortTransactionHash} from '@/utils/common';
+import CopyText from '@/components/CopyText/CopyText';
+import dayjs from 'dayjs';
+import {CKBContext} from '@/providers/CKBProvider/CKBProvider';
+import {LangContext} from '@/providers/LangProvider/LangProvider';
+import {ccc, useCcc} from '@ckb-ccc/connector-react';
+import BigNumber from 'bignumber.js';
 
 export interface DialogXudtCellMergeProps {
-    children: ReactNode
-    addresses?: string[]
-    xudt?: TokenInfoWithAddress
-    className?: string
-    onOpenChange?: (open: boolean) => any
+    children: ReactNode;
+    addresses?: string[];
+    xudt?: TokenInfoWithAddress;
+    className?: string;
+    onOpenChange?: (open: boolean) => any;
 }
 
 export default function DialogXudtCellMerge({
-                                                children,
-                                                addresses,
-                                                xudt,
-                                                className = "",
-                                                onOpenChange
-                                            }: DialogXudtCellMergeProps) {
-    const {config} = useContext(CKBContext)
-    const {lang} = useContext(LangContext)
+    children,
+    addresses,
+    xudt,
+    className = '',
+    onOpenChange,
+}: DialogXudtCellMergeProps) {
+    const {config} = useContext(CKBContext);
+    const {lang} = useContext(LangContext);
 
-    const [step, setStep] = useState(1)
-    const [open, setOpen] = useState(false)
-    const [sending, setSending] = useState(false)
-    const [building, setBuilding] = useState(false)
-    const [rawTx, setRawTx] = useState<ccc.Transaction | null>(null)
-    const [txHash, setTxHash] = useState<string | null>(null)
-    const [txError, setTxError] = useState<string>("")
+    const [step, setStep] = useState(1);
+    const [open, setOpen] = useState(false);
+    const [sending, setSending] = useState(false);
+    const [building, setBuilding] = useState(false);
+    const [rawTx, setRawTx] = useState<ccc.Transaction | null>(null);
+    const [txHash, setTxHash] = useState<string | null>(null);
+    const [txError, setTxError] = useState<string>('');
 
-    const {data, status, createMergeXudtCellTx, signAndSend} = useGetXudtCell(xudt, open ? addresses : undefined)
+    const {data, status, createMergeXudtCellTx, signAndSend} = useGetXudtCell(xudt, open ? addresses : undefined);
 
     useEffect(() => {
         if (!data.length) {
-            setRawTx(null)
-            return
+            setRawTx(null);
+            return;
         }
 
-        ;(async () => {
+        (async () => {
             try {
-                setBuilding(true)
-                const tx = await createMergeXudtCellTx(1000)
-                console.log("tx: ", tx)
-                setRawTx(tx)
+                setBuilding(true);
+                const tx = await createMergeXudtCellTx(1000);
+                console.log('tx: ', tx);
+                setRawTx(tx);
             } catch (e: any) {
-                setTxError(e.message || "Failed to create transaction")
+                setTxError(e.message || 'Failed to create transaction');
             } finally {
-                setBuilding(false)
+                setBuilding(false);
             }
-        })()
-    }, [data])
+        })();
+    }, [data]);
 
     useEffect(() => {
-        setStep(1)
-        setTxError("")
-        !!onOpenChange && onOpenChange(open)
-    }, [open])
+        setStep(1);
+        setTxError('');
+        !!onOpenChange && onOpenChange(open);
+    }, [open]);
 
     const handleSignAndSend = async () => {
-        setSending(true)
-        setTxError("")
+        setSending(true);
+        setTxError('');
         try {
-            const txHash = await signAndSend(rawTx!)
-            setTxHash(txHash)
-            setStep(2)
+            const txHash = await signAndSend(rawTx!);
+            setTxHash(txHash);
+            setStep(2);
         } catch (e: any) {
-            console.error(e)
-            setTxError(e.message || "Failed to send transaction")
+            console.error(e);
+            setTxError(e.message || 'Failed to send transaction');
         } finally {
-            setSending(false)
+            setSending(false);
         }
-    }
+    };
 
-    const [fee, setFee1000] = useState("0")
-    const {client} = useCcc()
+    const [fee, setFee1000] = useState('0');
+    const {client} = useCcc();
     useEffect(() => {
         const calculateFee = async () => {
-            if (!rawTx) return
-            const inputCap = await rawTx.getInputsCapacity(client)
-            const outCap = rawTx.getOutputsCapacity()
-            const fee = inputCap - outCap
-            const feeBigNumber = new BigNumber(fee.toString())
-            const divisor = new BigNumber(10 ** 8)
-            const fee1000BigNumber = feeBigNumber.dividedBy(divisor)
-            setFee1000(fee1000BigNumber.toString())
-        }
+            if (!rawTx) return;
+            const inputCap = await rawTx.getInputsCapacity(client);
+            const outCap = rawTx.getOutputsCapacity();
+            const fee = inputCap - outCap;
+            const feeBigNumber = new BigNumber(fee.toString());
+            const divisor = new BigNumber(10 ** 8);
+            const fee1000BigNumber = feeBigNumber.dividedBy(divisor);
+            setFee1000(fee1000BigNumber.toString());
+        };
 
-        calculateFee()
-    }, [rawTx, data, xudt])
+        calculateFee();
+    }, [rawTx, data, xudt]);
 
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger className={className}>{children}</Dialog.Trigger>
             <Dialog.Portal>
-                <Dialog.Overlay
-                    className="bg-[rgba(0,0,0,0.6)] z-40 data-[state=open]:animate-overlayShow fixed inset-0"/>
+                <Dialog.Overlay className="bg-[rgba(0,0,0,0.6)] z-40 data-[state=open]:animate-overlayShow fixed inset-0" />
                 <Dialog.Content
                     onPointerDownOutside={e => {
-                        e.preventDefault()
+                        e.preventDefault();
                     }}
                     className="data-[state=open]:animate-contentShow z-50 fixed top-[50%] left-[50%] p-4 max-w-[98vw] w-full md:max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-white shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none"
                 >
                     <div className="h-full overflow-auto max-h-[88vh] w-full">
                         <div className="flex flex-row justify-between items-center mb-4">
-                            <div className="font-semibold text-2xl">{lang["Merge"]} Cell</div>
+                            <div className="font-semibold text-2xl">{lang['Merge']} Cell</div>
                             <div
                                 onClick={e => {
-                                    setOpen(false)
+                                    setOpen(false);
                                 }}
                                 className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100"
                             >
-                                <i className="uil-times text-gray-500"/>
+                                <i className="uil-times text-gray-500" />
                             </div>
                         </div>
                         {step === 1 && (
                             <>
-                                <div className="font-semibold mb-1">{lang["Input"]} Cells</div>
-                                {status === "loading" && (
-                                    <div
-                                        className="flex flex-row w-full flex-wrap mb-4 child h-[104px] [&>*:nth-child(2n)]:mr-0">
-                                        <div
-                                            className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
-                                        <div
-                                            className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
+                                <div className="font-semibold mb-1">{lang['Input']} Cells</div>
+                                {status === 'loading' && (
+                                    <div className="flex flex-row w-full flex-wrap mb-4 child h-[104px] [&>*:nth-child(2n)]:mr-0">
+                                        <div className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
+                                        <div className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
                                     </div>
                                 )}
 
-                                {status === "complete" && (
-                                    <div
-                                        className="flex flex-row w-full flex-wrap mb-4 max-h-[208px] overflow-auto [&>*:nth-child(2n)]:mr-0">
+                                {status === 'complete' && (
+                                    <div className="flex flex-row w-full flex-wrap mb-4 max-h-[208px] overflow-auto [&>*:nth-child(2n)]:mr-0">
                                         {data.length > 0 ? (
                                             data.map((cell, index) => {
                                                 return (
@@ -147,16 +142,16 @@ export default function DialogXudtCellMerge({
                                                         key={index}
                                                         className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden"
                                                     >
-                                                        <div
-                                                            className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
+                                                        <div className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
                                                             {toDisplay(
                                                                 Number(cell.cellOutput.capacity).toString(),
                                                                 8,
                                                                 true
-                                                            )} CKB
+                                                            )}{' '}
+                                                            CKB
                                                         </div>
                                                         <div className="flex flex-row items-center p-2">
-                                                            <TokenIcon size={28} symbol={xudt?.symbol || ""}/>
+                                                            <TokenIcon size={28} symbol={xudt?.symbol || ''} />
                                                             <div className="text-sm">
                                                                 <div>{xudt?.symbol}</div>
                                                                 <div className="font-semibold">
@@ -169,29 +164,26 @@ export default function DialogXudtCellMerge({
                                                             </div>
                                                         </div>
                                                     </div>
-                                                )
+                                                );
                                             })
                                         ) : (
-                                            <div
-                                                className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">
+                                            <div className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">
                                                 No Data
                                             </div>
                                         )}
                                     </div>
                                 )}
 
-                                <div className="font-semibold mb-1">{lang["Output"]} Cells</div>
+                                <div className="font-semibold mb-1">{lang['Output']} Cells</div>
 
-                                {status === "loading" && (
+                                {status === 'loading' && (
                                     <div className="flex flex-row w-full flex-wrap h-[104px] [&>*:nth-child(2n)]:mr-0">
-                                        <div
-                                            className="loading-bg my-1 h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
-                                        <div
-                                            className="loading-bg my-1 h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
+                                        <div className="loading-bg my-1 h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
+                                        <div className="loading-bg my-1 h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
                                     </div>
                                 )}
 
-                                {status !== "loading" && (
+                                {status !== 'loading' && (
                                     <div className="flex flex-row w-full flex-wrap h-[104px] [&>*:nth-child(2n)]:mr-0">
                                         {!!rawTx ? (
                                             rawTx.outputs.map((cellOutput: any, index) => {
@@ -200,18 +192,13 @@ export default function DialogXudtCellMerge({
                                                         key={index}
                                                         className="h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden"
                                                     >
-                                                        <div
-                                                            className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
-                                                            {toDisplay(
-                                                                Number(cellOutput.capacity).toString(),
-                                                                8,
-                                                                true
-                                                            )}{" "}
+                                                        <div className="flex flex-row items-center bg-gray-50 p-2 text-xs overflow-hidden">
+                                                            {toDisplay(Number(cellOutput.capacity).toString(), 8, true)}{' '}
                                                             CKB
                                                         </div>
                                                         {!!cellOutput.type && (
                                                             <div className="flex flex-row items-center p-2">
-                                                                <TokenIcon size={28} symbol={xudt?.symbol || ""}/>
+                                                                <TokenIcon size={28} symbol={xudt?.symbol || ''} />
                                                                 <div className="text-sm">
                                                                     <div>{xudt?.symbol}</div>
                                                                     <div className="font-semibold">
@@ -229,7 +216,7 @@ export default function DialogXudtCellMerge({
 
                                                         {!cellOutput.type && (
                                                             <div className="flex flex-row items-center p-2">
-                                                                <TokenIcon size={28} symbol="CKB"/>
+                                                                <TokenIcon size={28} symbol="CKB" />
                                                                 <div className="text-sm">
                                                                     <div>CKB</div>
                                                                     <div className="font-semibold">
@@ -243,11 +230,10 @@ export default function DialogXudtCellMerge({
                                                             </div>
                                                         )}
                                                     </div>
-                                                )
+                                                );
                                             })
                                         ) : (
-                                            <div
-                                                className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">
+                                            <div className="h-[104px] flex items-center justify-center flex-row w-full bg-gray-50 rounded text-gray-300">
                                                 Not Data
                                             </div>
                                         )}
@@ -255,26 +241,26 @@ export default function DialogXudtCellMerge({
                                 )}
 
                                 <div className="min-h-6 mt-4 mb-2 font-semibold">
-                                    {lang["Fee"]}: <span className="font-normal">{fee}</span> CKB
+                                    {lang['Fee']}: <span className="font-normal">{fee}</span> CKB
                                 </div>
                                 <div className="text-red-400 min-h-6 break-words mt-1 mb-2">{txError}</div>
                                 <div className="flex flex-row mt-4">
                                     <Button
-                                        btntype={"secondary"}
+                                        btntype={'secondary'}
                                         className="mr-4"
                                         onClick={e => {
-                                            setOpen(false)
+                                            setOpen(false);
                                         }}
                                     >
-                                        {lang["Cancel"]}
+                                        {lang['Cancel']}
                                     </Button>
                                     <Button
                                         disabled={data.length < 2}
-                                        btntype={"primary"}
-                                        loading={sending || building || status === "loading"}
+                                        btntype={'primary'}
+                                        loading={sending || building || status === 'loading'}
                                         onClick={handleSignAndSend}
                                     >
-                                        {lang["Merge"]}
+                                        {lang['Merge']}
                                     </Button>
                                 </div>
                             </>
@@ -291,7 +277,7 @@ export default function DialogXudtCellMerge({
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <g clipPath="url(#clip0_699_1259)">
-                                            <circle cx="36.5" cy="36" r="36" fill="#41D195" fillOpacity="0.12"/>
+                                            <circle cx="36.5" cy="36" r="36" fill="#41D195" fillOpacity="0.12" />
                                             <path
                                                 d="M37 19.3335C27.8167 19.3335 20.3333 26.8168 20.3333 36.0002C20.3333 45.1835 27.8167 52.6668 37 52.6668C46.1833 52.6668 53.6667 45.1835 53.6667 36.0002C53.6667 26.8168 46.1833 19.3335 37 19.3335ZM44.9667 32.1668L35.5167 41.6168C35.2833 41.8502 34.9667 41.9835 34.6333 41.9835C34.3 41.9835 33.9833 41.8502 33.75 41.6168L29.0333 36.9002C28.55 36.4168 28.55 35.6168 29.0333 35.1335C29.5167 34.6502 30.3167 34.6502 30.8 35.1335L34.6333 38.9668L43.2 30.4002C43.6833 29.9168 44.4833 29.9168 44.9667 30.4002C45.45 30.8835 45.45 31.6668 44.9667 32.1668Z"
                                                 fill="#41D195"
@@ -299,34 +285,34 @@ export default function DialogXudtCellMerge({
                                         </g>
                                         <defs>
                                             <clipPath id="clip0_699_1259">
-                                                <rect width="72" height="72" fill="white" transform="translate(0.5)"/>
+                                                <rect width="72" height="72" fill="white" transform="translate(0.5)" />
                                             </clipPath>
                                         </defs>
                                     </svg>
                                 </div>
-                                <div className="font-semibold text-center text-lg">{lang["Transaction Sent !"]}</div>
+                                <div className="font-semibold text-center text-lg">{lang['Transaction Sent !']}</div>
                                 <div className="text-center text-sm">
-                                    {lang["The transaction is sent and will be confirmed later"]}
+                                    {lang['The transaction is sent and will be confirmed later']}
                                 </div>
 
                                 <div className="my-4 p-3 bg-gray-100 rounded-lg">
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                        <div className="text-gray-500">{lang["Time"]}</div>
-                                        <div className="font-semibold">{dayjs().format("YYYY-MM-DD HH:mm")}</div>
+                                        <div className="text-gray-500">{lang['Time']}</div>
+                                        <div className="font-semibold">{dayjs().format('YYYY-MM-DD HH:mm')}</div>
                                     </div>
 
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                        <div className="text-gray-500">{lang["Transaction fee"]}</div>
+                                        <div className="text-gray-500">{lang['Transaction fee']}</div>
                                         <div className="font-semibold">{fee} CKB</div>
                                     </div>
 
-                                    <div className="h-[1px] bg-gray-200 my-4"/>
+                                    <div className="h-[1px] bg-gray-200 my-4" />
 
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                        <div className="text-gray-500">{lang["Tx Hash"]}</div>
+                                        <div className="text-gray-500">{lang['Tx Hash']}</div>
                                         <div className="font-semibold flex flex-row">
-                                            <CopyText copyText={txHash || ""}>
-                                                {txHash ? shortTransactionHash(txHash) : "--"}
+                                            <CopyText copyText={txHash || ''}>
+                                                {txHash ? shortTransactionHash(txHash) : '--'}
                                             </CopyText>
                                         </div>
                                     </div>
@@ -334,24 +320,24 @@ export default function DialogXudtCellMerge({
 
                                 <div className="flex">
                                     <Button
-                                        btntype={"secondary"}
-                                        className={"mr-4 text-xs"}
+                                        btntype={'secondary'}
+                                        className={'mr-4 text-xs'}
                                         loading={sending}
                                         onClick={e => {
-                                            window.open(`${config.explorer}/transaction/${txHash}`, "_blank")
+                                            window.open(`${config.explorer}/transaction/${txHash}`, '_blank');
                                         }}
                                     >
-                                        {lang["View on Explorer"]}
+                                        {lang['View on Explorer']}
                                     </Button>
 
                                     <Button
-                                        btntype={"primary"}
+                                        btntype={'primary'}
                                         loading={sending}
                                         onClick={e => {
-                                            setOpen(false)
+                                            setOpen(false);
                                         }}
                                     >
-                                        {lang["Done"]}
+                                        {lang['Done']}
                                     </Button>
                                 </div>
                             </>
@@ -360,5 +346,5 @@ export default function DialogXudtCellMerge({
                 </Dialog.Content>
             </Dialog.Portal>
         </Dialog.Root>
-    )
+    );
 }

@@ -1,8 +1,8 @@
-import React, {forwardRef} from "react"
+import React, {forwardRef} from 'react';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    startIcon?: React.ReactNode
-    endIcon?: React.ReactNode
+    startIcon?: React.ReactNode;
+    endIcon?: React.ReactNode;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(({startIcon, endIcon, className, ...props}, ref) => {
@@ -16,7 +16,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({startIcon, endIcon, cla
             />
             {!!endIcon && <div className="pr-4">{endIcon}</div>}
         </div>
-    )
-})
+    );
+});
 
-export default Input
+export default Input;

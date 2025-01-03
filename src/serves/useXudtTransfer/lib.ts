@@ -2,9 +2,9 @@ import {BI, Cell, config, helpers, Indexer, commons} from '@ckb-lumos/lumos';
 import {blockchain, values} from '@ckb-lumos/base';
 import {bytes, molecule, number} from '@ckb-lumos/codec';
 import {Byte32, Bytes, BytesOpt} from '@ckb-lumos/codec/lib/blockchain';
-import {fetchTypeIdCellDeps} from "@rgbpp-sdk/ckb"
-import {queryAddressInfoWithAddress} from "@/utils/graphql";
-import {TokenInfo} from "@/utils/graphql/types";
+import {fetchTypeIdCellDeps} from '@rgbpp-sdk/ckb';
+import {queryAddressInfoWithAddress} from '@/utils/graphql';
+import {TokenInfo} from '@/utils/graphql/types';
 
 const {table, option, vector} = molecule;
 
@@ -16,7 +16,7 @@ const Script = table(
         hashType: Uint8,
         args: Bytes,
     },
-    ['codeHash', 'hashType', 'args'],
+    ['codeHash', 'hashType', 'args']
 );
 const ScriptOpt = option(Script);
 const ScriptVecOpt = option(vector(Script));
@@ -28,21 +28,20 @@ export const xudtWitnessType = table(
         raw_extension_data: ScriptVecOpt,
         extension_data: vector(Bytes),
     },
-    ['owner_script', 'owner_signature', 'raw_extension_data', 'extension_data'],
+    ['owner_script', 'owner_signature', 'raw_extension_data', 'extension_data']
 );
 
-export type CellDep = any
-type  TransactionSkeletonType = helpers.TransactionSkeletonType
+export type CellDep = any;
+type TransactionSkeletonType = helpers.TransactionSkeletonType;
 
 export const hashType: any = {
     '0': 'data',
     '1': 'type',
     '2': 'data1',
-    '3': 'data2'
-}
+    '3': 'data2',
+};
 
-const OMNILOCK = config.MAINNET.SCRIPTS.OMNILOCK
-
+const OMNILOCK = config.MAINNET.SCRIPTS.OMNILOCK;
 
 export async function transferTokenToAddress(
     fromAddresses: string[],
@@ -51,31 +50,33 @@ export async function transferTokenToAddress(
     tokenInfo: TokenInfo,
     indexer: Indexer,
     feeRate: number,
-    network :'mainnet' | 'testnet',
-    fee = 0,
+    network: 'mainnet' | 'testnet',
+    fee = 0
 ): Promise<TransactionSkeletonType> {
-
-    console.log('fee', fee)
-    const scriptConfig = network === 'mainnet' ? config.MAINNET : config.TESTNET
-    const tokenDetail = await queryAddressInfoWithAddress([tokenInfo.type_id], network === 'mainnet')
+    console.log('fee', fee);
+    const scriptConfig = network === 'mainnet' ? config.MAINNET : config.TESTNET;
+    const tokenDetail = await queryAddressInfoWithAddress([tokenInfo.type_id], network === 'mainnet');
 
     if (!tokenDetail[0]) {
-        throw new Error('Token not found')
+        throw new Error('Token not found');
     }
 
     const typeScript: any = {
         codeHash: tokenDetail[0].address.script_code_hash.replace('\\', '0'),
         hashType: hashType[tokenDetail[0].address.script_hash_type],
         args: tokenDetail[0].address.script_args.replace('\\', '0'),
-    }
+    };
 
-    const senderLockScript = helpers.addressToScript(fromAddresses[0], { config: scriptConfig })
+    const senderLockScript = helpers.addressToScript(fromAddresses[0], {
+        config: scriptConfig,
+    });
     // console.log('senderLockScript', senderLockScript)
-    const receiverLockScript = helpers.addressToScript(receiverAddress, { config: scriptConfig });
+    const receiverLockScript = helpers.addressToScript(receiverAddress, {
+        config: scriptConfig,
+    });
     // console.log('receiverLockScript', receiverLockScript)
 
     const lockDeps = OMNILOCK;
-
 
     let txSkeleton = helpers.TransactionSkeleton({cellProvider: indexer});
 
@@ -91,12 +92,12 @@ export async function transferTokenToAddress(
     txSkeleton = addCellDep(txSkeleton, {
         outPoint: {
             txHash: config.MAINNET.SCRIPTS.SECP256K1_BLAKE160.TX_HASH,
-            index: "0x0",
+            index: '0x0',
         },
         depType: 'depGroup',
     });
 
-    const xdutDeps = await fetchTypeIdCellDeps(true, {xudt: true})
+    const xdutDeps = await fetchTypeIdCellDeps(true, {xudt: true});
 
     // console.log('xdutDepsxdutDeps', xdutDeps)
 
@@ -115,8 +116,7 @@ export async function transferTokenToAddress(
     const targetOutputCapacity = helpers.minimalCellCapacity(targetOutput);
     targetOutput.cellOutput.capacity = '0x' + targetOutputCapacity.toString(16);
 
-    console.log('targetOutputCapacity', targetOutputCapacity.toString())
-
+    console.log('targetOutputCapacity', targetOutputCapacity.toString());
 
     // additional 0.001 ckb for tx fee
     // the tx fee could calculated by tx size
@@ -125,37 +125,35 @@ export async function transferTokenToAddress(
     // const neededCapacity = BI.from(capacity.toString(10)).add(100000);
 
     const targetXudtCellNeededCapacity = BI.from(targetOutputCapacity.toString(10));
-    console.log('targetXudtCellNeededCapacity', targetXudtCellNeededCapacity.toString())
-
+    console.log('targetXudtCellNeededCapacity', targetXudtCellNeededCapacity.toString());
 
     let xudtCollectedCapSum = BI.from(0);
     let xudtCollectedAmount = BI.from(0);
     const collected: Cell[] = [];
 
-    const senderLocks = fromAddresses.map((address) => {
-        return helpers.addressToScript(address, { config: scriptConfig })
-    })
+    const senderLocks = fromAddresses.map(address => {
+        return helpers.addressToScript(address, {config: scriptConfig});
+    });
 
-
-    let xudtCollectBreak = false
+    let xudtCollectBreak = false;
     for (const lock of senderLocks) {
-        if (xudtCollectBreak) break
+        if (xudtCollectBreak) break;
 
         const collector = indexer.collector({lock: lock, type: typeScript});
-        console.log('xudt cells ->', collector)
+        console.log('xudt cells ->', collector);
         for await (const cell of collector.collect()) {
             xudtCollectedCapSum = xudtCollectedCapSum.add(cell.cellOutput.capacity);
             xudtCollectedAmount = xudtCollectedAmount.add(number.Uint128LE.unpack(cell.data) as any);
-            console.log('cell', cell)
+            console.log('cell', cell);
             collected.push(cell);
             if (xudtCollectedAmount >= BI.from(amount)) {
-                xudtCollectBreak = true
+                xudtCollectBreak = true;
                 break;
             }
         }
     }
 
-    console.log('collected inputs', collected)
+    console.log('collected inputs', collected);
 
     // const collector = indexer.collector({lock: senderLockScript, type: typeScript});
     // console.log('xudt cells ->', collector)
@@ -167,11 +165,11 @@ export async function transferTokenToAddress(
     //     if (xudtCollectedAmount >= BI.from(amount)) break;
     // }
 
-    console.log('xudtCollectedCapSum', xudtCollectedCapSum.toString())
+    console.log('xudtCollectedCapSum', xudtCollectedCapSum.toString());
 
     // 判断xudt是否需要找零
     let xudtChangeOutputTokenAmount = BI.from(0);
-    let xudtChangeOutput: Cell | null = null
+    let xudtChangeOutput: Cell | null = null;
     let changeXudtOutputNeededCapacity = BI.from(0);
     if (xudtCollectedAmount.gt(BI.from(amount))) {
         xudtChangeOutputTokenAmount = xudtCollectedAmount.sub(BI.from(amount));
@@ -186,45 +184,46 @@ export async function transferTokenToAddress(
 
         // xudt找零cell的最小capacity
         changeXudtOutputNeededCapacity = BI.from(helpers.minimalCellCapacity(xudtChangeOutput));
-        console.log('changeOutputNeededCapacity', changeXudtOutputNeededCapacity.toString(10))
+        console.log('changeOutputNeededCapacity', changeXudtOutputNeededCapacity.toString(10));
         xudtChangeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity.toHexString();
     }
 
-
     // fee 0.001
-    let extraNeededCapacity = targetXudtCellNeededCapacity.add(changeXudtOutputNeededCapacity).sub(xudtCollectedCapSum).add(fee);
-    console.log('extraNeededCapacity', extraNeededCapacity.toString(10))
+    let extraNeededCapacity = targetXudtCellNeededCapacity
+        .add(changeXudtOutputNeededCapacity)
+        .sub(xudtCollectedCapSum)
+        .add(fee);
+    console.log('extraNeededCapacity', extraNeededCapacity.toString(10));
 
     if (
         extraNeededCapacity.gt(0) ||
         xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).sub(fee).lt(changeXudtOutputNeededCapacity)
     ) {
-
         if (xudtCollectedCapSum.sub(targetXudtCellNeededCapacity).sub(fee).lt(changeXudtOutputNeededCapacity)) {
             extraNeededCapacity = xudtCollectedCapSum
                 .sub(targetXudtCellNeededCapacity)
                 .sub(changeXudtOutputNeededCapacity)
                 .sub(fee)
-                .mul(-1)
-            console.log('extraNeededCapacity after', extraNeededCapacity.toString(10))
-            console.log('targetXudtCellNeededCapacity after', targetXudtCellNeededCapacity.toString(10))
+                .mul(-1);
+            console.log('extraNeededCapacity after', extraNeededCapacity.toString(10));
+            console.log('targetXudtCellNeededCapacity after', targetXudtCellNeededCapacity.toString(10));
         }
 
         let extraCollectedCapSum = BI.from(0);
         const extraCollectedCells: Cell[] = [];
 
-        let ckbCollectBreak = false
+        let ckbCollectBreak = false;
         for (const lock of senderLocks) {
-            if (ckbCollectBreak) break
+            if (ckbCollectBreak) break;
 
             const collector = indexer.collector({lock: lock, type: 'empty'});
-            console.log('ckb cells ->', collector)
+            console.log('ckb cells ->', collector);
             for await (const cell of collector.collect()) {
                 extraCollectedCapSum = extraCollectedCapSum.add(cell.cellOutput.capacity);
                 extraCollectedCells.push(cell);
-                console.log('ckb cell', cell)
+                console.log('ckb cell', cell);
                 if (extraCollectedCapSum.gte(extraNeededCapacity)) {
-                    ckbCollectBreak = true
+                    ckbCollectBreak = true;
                     break;
                 }
             }
@@ -241,19 +240,21 @@ export async function transferTokenToAddress(
         //     }
         // }
 
-        console.log('extraCollectedSum', extraCollectedCapSum.toString(10))
-        console.log('extraNeededCapacity', extraNeededCapacity.toString(10))
+        console.log('extraCollectedSum', extraCollectedCapSum.toString(10));
+        console.log('extraNeededCapacity', extraNeededCapacity.toString(10));
 
         if (extraCollectedCapSum.lt(extraNeededCapacity)) {
-            console.log(`Not enough CKB for change, ${extraCollectedCapSum} < ${extraNeededCapacity}`)
-            throw new Error(`Not enough CKB for change, extra needed: ${extraNeededCapacity.div(10**8).toString(10)} CKB`);
+            console.log(`Not enough CKB for change, ${extraCollectedCapSum} < ${extraNeededCapacity}`);
+            throw new Error(
+                `Not enough CKB for change, extra needed: ${extraNeededCapacity.div(10 ** 8).toString(10)} CKB`
+            );
         }
 
-        txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(...extraCollectedCells));
+        txSkeleton = txSkeleton.update('inputs', inputs => inputs.push(...extraCollectedCells));
 
         const ckbChangeCapacity = extraCollectedCapSum.sub(extraNeededCapacity);
-        console.log('extraCollectedCapSum', extraCollectedCapSum.toString(10))
-        console.log('ckbChangeCapacity', ckbChangeCapacity.toString(10))
+        console.log('extraCollectedCapSum', extraCollectedCapSum.toString(10));
+        console.log('ckbChangeCapacity', ckbChangeCapacity.toString(10));
         if (ckbChangeCapacity.gt(6100000000)) {
             const ckbChangeOutput: Cell = {
                 cellOutput: {
@@ -262,11 +263,13 @@ export async function transferTokenToAddress(
                 },
                 data: '0x',
             };
-            txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(ckbChangeOutput));
+            txSkeleton = txSkeleton.update('outputs', outputs => outputs.push(ckbChangeOutput));
         } else {
             if (!!xudtChangeOutput) {
                 // 扣完手续费之后ckb剩余不足61个转到xudt找零cell上
-                xudtChangeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity.add(ckbChangeCapacity).toHexString();
+                xudtChangeOutput.cellOutput.capacity = changeXudtOutputNeededCapacity
+                    .add(ckbChangeCapacity)
+                    .toHexString();
             } else {
                 // 全额发送xudt不找零, 扣完手续费之后ckb剩余不足61个直接送给对方
                 targetOutput.cellOutput.capacity = targetXudtCellNeededCapacity.add(ckbChangeCapacity).toHexString();
@@ -280,20 +283,16 @@ export async function transferTokenToAddress(
                 .sub(fee)
                 .toHexString();
         } else {
-            targetOutput.cellOutput.capacity = xudtCollectedCapSum
-                .sub(fee)
-                .toHexString();
+            targetOutput.cellOutput.capacity = xudtCollectedCapSum.sub(fee).toHexString();
         }
     }
 
-    txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(...collected));
+    txSkeleton = txSkeleton.update('inputs', inputs => inputs.push(...collected));
     if (!!xudtChangeOutput) {
-        txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(targetOutput, xudtChangeOutput!));
+        txSkeleton = txSkeleton.update('outputs', outputs => outputs.push(targetOutput, xudtChangeOutput!));
     } else {
-        txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(targetOutput));
+        txSkeleton = txSkeleton.update('outputs', outputs => outputs.push(targetOutput));
     }
-
-
 
     /* 65-byte zeros in hex */
     const lockWitness =
@@ -307,24 +306,39 @@ export async function transferTokenToAddress(
         outputType: outputTypeWitness,
     });
     const witness = bytes.hexify(witnessArgs);
-    txSkeleton = txSkeleton.update('witnesses', (witnesses) => witnesses.set(0, witness));
+    txSkeleton = txSkeleton.update('witnesses', witnesses => witnesses.set(0, witness));
 
-    const inputs = txSkeleton.get('inputs').toArray().map((input) => {
-        return Number(input.cellOutput.capacity.toString())
-    });
-    const outputs = txSkeleton.get('outputs').toArray().map((out) => {
-        return Number(out.cellOutput.capacity.toString())
-    });
-    console.log('inputs cap', inputs)
-    console.log('outputs cap', outputs)
+    const inputs = txSkeleton
+        .get('inputs')
+        .toArray()
+        .map(input => {
+            return Number(input.cellOutput.capacity.toString());
+        });
+    const outputs = txSkeleton
+        .get('outputs')
+        .toArray()
+        .map(out => {
+            return Number(out.cellOutput.capacity.toString());
+        });
+    console.log('inputs cap', inputs);
+    console.log('outputs cap', outputs);
 
     if (fee === 0) {
         const txSize = commons.common.__tests__.getTransactionSize(txSkeleton);
-        console.log(txSize)
-        const _fee = (txSize + 300) * (feeRate / 1000)
-        return await transferTokenToAddress(fromAddresses, amount, receiverAddress, tokenInfo, indexer, feeRate, network, _fee)
+        console.log(txSize);
+        const _fee = (txSize + 300) * (feeRate / 1000);
+        return await transferTokenToAddress(
+            fromAddresses,
+            amount,
+            receiverAddress,
+            tokenInfo,
+            indexer,
+            feeRate,
+            network,
+            _fee
+        );
     } else {
-        return txSkeleton
+        return txSkeleton;
     }
 
     // txSkeleton = await commons.common.payFeeByFeeRate(
@@ -346,17 +360,17 @@ export async function transferTokenToAddress(
 }
 
 export function addCellDep(txSkeleton: TransactionSkeletonType, newCellDep: CellDep): TransactionSkeletonType {
-    const cellDep = txSkeleton.get('cellDeps').find((cellDep) => {
+    const cellDep = txSkeleton.get('cellDeps').find(cellDep => {
         return (
             cellDep.depType === newCellDep.depType &&
             new values.OutPointValue(cellDep.outPoint, {validate: false}).equals(
-                new values.OutPointValue(newCellDep.outPoint, {validate: false}),
+                new values.OutPointValue(newCellDep.outPoint, {validate: false})
             )
         );
     });
 
     if (!cellDep) {
-        txSkeleton = txSkeleton.update('cellDeps', (cellDeps) => {
+        txSkeleton = txSkeleton.update('cellDeps', cellDeps => {
             return cellDeps.push({
                 outPoint: newCellDep.outPoint,
                 depType: newCellDep.depType,

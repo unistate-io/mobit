@@ -1,18 +1,18 @@
-import {useSearchParams} from "react-router-dom"
-import { useMemo, useState } from "react"
-import SwapView from "./SwapView"
+import {useSearchParams} from 'react-router-dom';
+import {useMemo, useState} from 'react';
+import SwapView from './SwapView';
 
 export enum TradeType {
-    Swap = "swap",
-    Leap = "leap",
-    Receive = "receive",
-    Staking = "staking",
-    TopUp = "topUp"
+    Swap = 'swap',
+    Leap = 'leap',
+    Receive = 'receive',
+    Staking = 'staking',
+    TopUp = 'topUp',
 }
 
 const TRADE_LIST = [
     {
-        label: "Swap",
+        label: 'Swap',
         value: TradeType.Swap,
         svg: (
             <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,65 +21,60 @@ const TRADE_LIST = [
                     fill="#18181B"
                 />
             </svg>
-        )
+        ),
     },
     {
-        label: "Leap",
-        value: TradeType.Leap
+        label: 'Leap',
+        value: TradeType.Leap,
     },
     {
-        label: "Receive",
-        value: TradeType.Receive
+        label: 'Receive',
+        value: TradeType.Receive,
     },
     {
-        label: "Staking",
-        value: TradeType.Staking
+        label: 'Staking',
+        value: TradeType.Staking,
     },
     {
-        label: "Top up",
-        value: TradeType.TopUp
-    }
-]
+        label: 'Top up',
+        value: TradeType.TopUp,
+    },
+];
 
 export default function Trade() {
-    const [tradeType, setTradeType] = useState<TradeType>(TradeType.Swap)
-    const [searchParams] = useSearchParams()
+    const [tradeType, setTradeType] = useState<TradeType>(TradeType.Swap);
+    const [searchParams] = useSearchParams();
 
-    const sellToken = searchParams?.get("sell-token")
+    const sellToken = searchParams?.get('sell-token');
 
     const tradeView = useMemo(() => {
         switch (tradeType) {
             case TradeType.Swap:
-                return <SwapView sellToken={sellToken || undefined} />
+                return <SwapView sellToken={sellToken || undefined} />;
             default:
-                return <SwapView sellToken={sellToken || undefined} />
+                return <SwapView sellToken={sellToken || undefined} />;
         }
-    }, [tradeType])
-
+    }, [tradeType]);
 
     return (
         <div
             style={{
                 background: 'url("/images/trade-bg.png") center center no-repeat',
-                backgroundSize: "100% 100%",
-                minHeight: "calc(100vh - 60px)"
+                backgroundSize: '100% 100%',
+                minHeight: 'calc(100vh - 60px)',
             }}
             className="relative"
         >
-
             <div className="absolute inset-0 -z-10">
                 <img
-                    src={window.innerWidth < 768 ? "/images/streamers_mobile.svg" : "/images/streamers.svg"}
+                    src={window.innerWidth < 768 ? '/images/streamers_mobile.svg' : '/images/streamers.svg'}
                     alt=""
                     className="w-full h-full object-cover"
                     style={{
-                        mixBlendMode: "soft-light",
+                        mixBlendMode: 'soft-light',
                     }}
                 />
             </div>
-
-
-
 
             <div className="w-full md:w-[682px]   mx-auto pt-4 md:pt-10 pb-10">
                 {/* <div className="flex items-center gap-4 justify-between overflow-x-scroll px-3">
@@ -99,5 +94,5 @@ export default function Trade() {
                 {tradeView}
             </div>
         </div>
-    )
+    );
 }

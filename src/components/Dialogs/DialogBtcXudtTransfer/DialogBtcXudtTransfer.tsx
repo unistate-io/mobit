@@ -1,123 +1,123 @@
-import React, {ReactNode, useContext, useEffect, useMemo, useState} from "react"
-import Input from "@/components/Form/Input/Input"
-import * as Dialog from "@radix-ui/react-dialog"
-import Button from "@/components/Form/Button/Button"
-import {isBtcAddress, shortTransactionHash} from "@/utils/common"
-import BigNumber from "bignumber.js"
-import {toDisplay} from "@/utils/number_display"
-import CopyText from "@/components/CopyText/CopyText"
-import TokenIcon from "@/components/TokenIcon/TokenIcon"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import useBtcXudtTransfer from "@/serves/useBtcXudtTransfer"
-import useBtcWallet from "@/serves/useBtcWallet"
-import {LangContext} from "@/providers/LangProvider/LangProvider"
+import React, {ReactNode, useContext, useEffect, useMemo, useState} from 'react';
+import Input from '@/components/Form/Input/Input';
+import * as Dialog from '@radix-ui/react-dialog';
+import Button from '@/components/Form/Button/Button';
+import {isBtcAddress, shortTransactionHash} from '@/utils/common';
+import BigNumber from 'bignumber.js';
+import {toDisplay} from '@/utils/number_display';
+import CopyText from '@/components/CopyText/CopyText';
+import TokenIcon from '@/components/TokenIcon/TokenIcon';
+import {CKBContext} from '@/providers/CKBProvider/CKBProvider';
+import useBtcXudtTransfer from '@/serves/useBtcXudtTransfer';
+import useBtcWallet from '@/serves/useBtcWallet';
+import {LangContext} from '@/providers/LangProvider/LangProvider';
 
-import * as dayjsLib from "dayjs"
-import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
-import useLayer1Assets from "@/serves/useLayer1Assets"
-import {TokenBalance} from "@/components/ListToken/ListToken"
+import * as dayjsLib from 'dayjs';
+import {tokenInfoToScript, TokenInfoWithAddress} from '@/utils/graphql/types';
+import useLayer1Assets from '@/serves/useLayer1Assets';
+import {TokenBalance} from '@/components/ListToken/ListToken';
 
-const dayjs: any = dayjsLib
+const dayjs: any = dayjsLib;
 
 export interface XudtTransferProps {
-    form: string
-    amount: string
-    to: string
+    form: string;
+    amount: string;
+    to: string;
 }
 
 export default function DialogBtcXudtTransfer({
     children,
     className,
-    token
+    token,
 }: {
-    children: ReactNode
-    token: TokenInfoWithAddress
-    className?: string
+    children: ReactNode;
+    token: TokenInfoWithAddress;
+    className?: string;
 }) {
-    const {signAndSend} = useBtcXudtTransfer()
-    const {config, internalAddress, network} = useContext(CKBContext)
-    const [open, setOpen] = useState(false)
-    const {feeRate} = useBtcWallet()
-    const {lang} = useContext(LangContext)
+    const {signAndSend} = useBtcXudtTransfer();
+    const {config, internalAddress, network} = useContext(CKBContext);
+    const [open, setOpen] = useState(false);
+    const {feeRate} = useBtcWallet();
+    const {lang} = useContext(LangContext);
 
     const btcAddress = useMemo(() => {
-        if (!internalAddress) return undefined
-        return isBtcAddress(internalAddress, network === "mainnet") ? internalAddress : undefined
-    }, [internalAddress])
+        if (!internalAddress) return undefined;
+        return isBtcAddress(internalAddress, network === 'mainnet') ? internalAddress : undefined;
+    }, [internalAddress]);
 
-    const {xudts, status} = useLayer1Assets(open && !!btcAddress ? btcAddress : undefined)
+    const {xudts, status} = useLayer1Assets(open && !!btcAddress ? btcAddress : undefined);
 
     const xudtBalance = useMemo<TokenBalance>(() => {
-        const target = xudts?.find(x => x.symbol === token.symbol)
+        const target = xudts?.find(x => x.symbol === token.symbol);
         return (
             target || {
                 ...token,
-                amount: "0",
-                type: "xudt",
-                chain: "btc"
+                amount: '0',
+                type: 'xudt',
+                chain: 'btc',
             }
-        )
-    }, [token, xudts])
+        );
+    }, [token, xudts]);
 
     const [formData, setFormData] = useState<XudtTransferProps>({
-        form: "",
-        amount: "",
-        to: ""
-    })
+        form: '',
+        amount: '',
+        to: '',
+    });
 
-    const [step, setStep] = useState<1 | 2 | 3>(1)
-    const [sending, setSending] = useState(false)
-    const [txHash, setTxHash] = useState<null | string>(null)
-    const [btcFeeRate, setBtcFeeRate] = useState<number>(feeRate)
+    const [step, setStep] = useState<1 | 2 | 3>(1);
+    const [sending, setSending] = useState(false);
+    const [txHash, setTxHash] = useState<null | string>(null);
+    const [btcFeeRate, setBtcFeeRate] = useState<number>(feeRate);
 
     //errors
-    const [toError, setToError] = useState<string>("")
-    const [fromError, setFromError] = useState<string>("")
-    const [amountError, setAmountError] = useState<string>("")
-    const [transactionError, setTransactionError] = useState<string>("")
+    const [toError, setToError] = useState<string>('');
+    const [fromError, setFromError] = useState<string>('');
+    const [amountError, setAmountError] = useState<string>('');
+    const [transactionError, setTransactionError] = useState<string>('');
 
     const checkErrorsAndBuild = async () => {
-        let hasError = false
+        let hasError = false;
 
         if (!internalAddress) {
-            setFromError("Invalid from address")
-            hasError = true
-        } else if (!isBtcAddress(internalAddress, network === "mainnet")) {
-            setFromError("Invalid from address")
-            hasError = true
+            setFromError('Invalid from address');
+            hasError = true;
+        } else if (!isBtcAddress(internalAddress, network === 'mainnet')) {
+            setFromError('Invalid from address');
+            hasError = true;
         } else {
-            setFromError("")
+            setFromError('');
         }
 
-        if (formData.to === "") {
-            setToError("Please enter a valid address")
-            hasError = true
-        } else if (!isBtcAddress(formData.to, network === "mainnet")) {
-            setToError("Invalid BTC address")
-            hasError = true
+        if (formData.to === '') {
+            setToError('Please enter a valid address');
+            hasError = true;
+        } else if (!isBtcAddress(formData.to, network === 'mainnet')) {
+            setToError('Invalid BTC address');
+            hasError = true;
         } else {
-            setToError("")
+            setToError('');
         }
 
-        if (formData.amount === "") {
-            setAmountError("Please enter a valid amount")
-            hasError = true
+        if (formData.amount === '') {
+            setAmountError('Please enter a valid amount');
+            hasError = true;
         } else if (
             BigNumber(formData.amount)
                 .multipliedBy(10 ** token.decimal)
                 .gt(xudtBalance ? xudtBalance.amount : 0)
         ) {
-            setAmountError("Insufficient balance")
-            hasError = true
+            setAmountError('Insufficient balance');
+            hasError = true;
         } else if (BigNumber(formData.amount).eq(0)) {
-            setAmountError("Please enter a valid amount")
-            hasError = true
+            setAmountError('Please enter a valid amount');
+            hasError = true;
         } else {
-            setAmountError("")
+            setAmountError('');
         }
 
-        return !hasError
-    }
+        return !hasError;
+    };
 
     const setMaxAmount = () => {
         setFormData({
@@ -126,54 +126,54 @@ export default function DialogBtcXudtTransfer({
                 ? BigNumber(xudtBalance.amount)
                       .dividedBy(10 ** token.decimal)
                       .toString()
-                : "0"
-        })
-    }
+                : '0',
+        });
+    };
 
     const handleTransfer = async () => {
         try {
-            const check = await checkErrorsAndBuild()
+            const check = await checkErrorsAndBuild();
             if (check) {
-                setStep(2)
+                setStep(2);
             }
         } catch (e) {
-            console.error(e)
+            console.error(e);
         }
-    }
+    };
 
     const HandleSignAndSend = async () => {
         const amount = BigNumber(formData.amount)
             .multipliedBy(10 ** token.decimal)
-            .toString()
-        setSending(true)
-        setTransactionError("")
+            .toString();
+        setSending(true);
+        setTransactionError('');
         try {
             const tx = await signAndSend({
                 from: btcAddress!,
                 to: formData.to,
                 amount: amount,
                 xudtType: tokenInfoToScript(token),
-                feeRate: btcFeeRate
-            })
-            setTxHash(tx)
-            setStep(3)
+                feeRate: btcFeeRate,
+            });
+            setTxHash(tx);
+            setStep(3);
         } catch (e: any) {
-            setTransactionError(e.message)
+            setTransactionError(e.message);
         } finally {
-            setSending(false)
+            setSending(false);
         }
-    }
+    };
 
     useEffect(() => {
-        setStep(1)
-    }, [open])
+        setStep(1);
+    }, [open]);
 
     useEffect(() => {
-        setAmountError("")
-        setToError("")
-        setTransactionError("")
-        setSending(false)
-    }, [step])
+        setAmountError('');
+        setToError('');
+        setTransactionError('');
+        setSending(false);
+    }, [step]);
 
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -182,7 +182,7 @@ export default function DialogBtcXudtTransfer({
                 <Dialog.Overlay className="bg-[rgba(0,0,0,0.6)] z-40 data-[state=open]:animate-overlayShow fixed inset-0" />
                 <Dialog.Content
                     onPointerDownOutside={e => {
-                        e.preventDefault()
+                        e.preventDefault();
                     }}
                     className="data-[state=open]:animate-contentShow z-50 fixed top-[50%] left-[50%] p-4 max-w-[98vw] w-full md:max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-white shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none"
                 >
@@ -190,10 +190,10 @@ export default function DialogBtcXudtTransfer({
                         {step === 1 && (
                             <>
                                 <div className="flex flex-row justify-between items-center mb-4">
-                                    <div className="font-semibold text-2xl">{lang["Transfer"]}</div>
+                                    <div className="font-semibold text-2xl">{lang['Transfer']}</div>
                                     <div
                                         onClick={e => {
-                                            setOpen(false)
+                                            setOpen(false);
                                         }}
                                         className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100"
                                     >
@@ -202,50 +202,56 @@ export default function DialogBtcXudtTransfer({
                                 </div>
 
                                 <div className="font-semibold mb-4">
-                                    <div className="mb-2">{lang["From"]}</div>
-                                    <Input value={internalAddress} type={"text"} disabled />
+                                    <div className="mb-2">{lang['From']}</div>
+                                    <Input value={internalAddress} type={'text'} disabled />
                                     <div className="font-normal text-red-400 mt-1 break-words">{fromError}</div>
                                 </div>
 
                                 <div className="font-semibold mb-10">
-                                    <div className="mb-2">{lang["Send to"]}</div>
+                                    <div className="mb-2">{lang['Send to']}</div>
                                     <Input
                                         value={formData.to}
-                                        placeholder={lang["Recipient address"]}
-                                        type={"text"}
+                                        placeholder={lang['Recipient address']}
+                                        type={'text'}
                                         onChange={e => {
-                                            setFormData({...formData, to: e.target.value})
+                                            setFormData({
+                                                ...formData,
+                                                to: e.target.value,
+                                            });
                                         }}
                                     />
                                     <div className="font-normal text-red-400 mt-1 break-words">{toError}</div>
                                 </div>
 
                                 <div className="font-semibold mb-10">
-                                    <div className="mb-2">{lang["Asset"]}</div>
+                                    <div className="mb-2">{lang['Asset']}</div>
                                     <Input
                                         startIcon={<TokenIcon size={32} symbol={token.symbol} />}
                                         value={token.symbol}
-                                        type={"text"}
+                                        type={'text'}
                                         disabled
                                     />
                                 </div>
 
                                 <div className="font-semibold mb-10">
                                     <div className="mb-2 flex-row flex items-center justify-between">
-                                        <div>{lang["Amount"]}</div>
+                                        <div>{lang['Amount']}</div>
                                         <div className="font-normal">
-                                            <span className="text-gray-500">{lang["Balance"]}: </span>{" "}
+                                            <span className="text-gray-500">{lang['Balance']}: </span>{' '}
                                             {xudtBalance
                                                 ? toDisplay(xudtBalance.amount, xudtBalance.decimal, true)
-                                                : "--"}
+                                                : '--'}
                                         </div>
                                     </div>
                                     <Input
                                         value={formData.amount}
-                                        placeholder={lang["Transfer amount"]}
-                                        type={"number"}
+                                        placeholder={lang['Transfer amount']}
+                                        type={'number'}
                                         onChange={e => {
-                                            setFormData({...formData, amount: e.target.value})
+                                            setFormData({
+                                                ...formData,
+                                                amount: e.target.value,
+                                            });
                                         }}
                                         endIcon={
                                             <div className="cursor-pointer text-[#6CD7B2]" onClick={setMaxAmount}>
@@ -257,11 +263,11 @@ export default function DialogBtcXudtTransfer({
                                 </div>
 
                                 <Button
-                                    btntype={"primary"}
-                                    loading={status === "loading" || sending}
+                                    btntype={'primary'}
+                                    loading={status === 'loading' || sending}
                                     onClick={handleTransfer}
                                 >
-                                    {lang["Continue"]}
+                                    {lang['Continue']}
                                 </Button>
                             </>
                         )}
@@ -269,10 +275,10 @@ export default function DialogBtcXudtTransfer({
                         {step === 2 && (
                             <>
                                 <div className="flex flex-row justify-between items-center mb-4">
-                                    <div className="font-semibold text-2xl">{lang["Sign Transaction"]}</div>
+                                    <div className="font-semibold text-2xl">{lang['Sign Transaction']}</div>
                                     <div
                                         onClick={e => {
-                                            setOpen(false)
+                                            setOpen(false);
                                         }}
                                         className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100"
                                     >
@@ -281,7 +287,7 @@ export default function DialogBtcXudtTransfer({
                                 </div>
 
                                 <div className="mb-4">
-                                    <div className="mb-2 font-semibold">{lang["Send Token"]}</div>
+                                    <div className="mb-2 font-semibold">{lang['Send Token']}</div>
                                     <div className="flex flex-row flex-nowrap justify-between items-center text-sm mb-4">
                                         <div className="flex flex-row flex-nowrap items-center">
                                             <TokenIcon size={18} symbol={token.symbol} />
@@ -294,30 +300,30 @@ export default function DialogBtcXudtTransfer({
 
                                     <div className="flex flex-row flex-nowrap justify-between items-center text-sm mb-4">
                                         <div className="flex flex-row flex-nowrap items-center">
-                                            {lang["From Address"]}
+                                            {lang['From Address']}
                                         </div>
                                         <div>{shortTransactionHash(internalAddress!)}</div>
                                     </div>
 
                                     <div className="flex flex-row flex-nowrap justify-between items-center text-sm mb-4">
                                         <div className="flex flex-row flex-nowrap items-center">
-                                            {lang["To Address"]}
+                                            {lang['To Address']}
                                         </div>
                                         <div>{shortTransactionHash(formData.to)}</div>
                                     </div>
 
                                     <div className="flex flex-row flex-nowrap justify-between items-center mb-4 text-sm">
                                         <div className="flex flex-row flex-nowrap items-center">
-                                            {lang["BTC Fee Rate"]}
+                                            {lang['BTC Fee Rate']}
                                         </div>
                                         <div className="flex flex-row items-center">
                                             <Input
                                                 value={btcFeeRate}
-                                                className={"w-[100px] text-center font-semibold"}
-                                                type={"number"}
-                                                placeholder={lang["fee rate"]}
+                                                className={'w-[100px] text-center font-semibold'}
+                                                type={'number'}
+                                                placeholder={lang['fee rate']}
                                                 onChange={e => {
-                                                    setBtcFeeRate(Number(e.target.value))
+                                                    setBtcFeeRate(Number(e.target.value));
                                                 }}
                                             />
                                             <span className="ml-2">Sat/vB</span>
@@ -329,17 +335,17 @@ export default function DialogBtcXudtTransfer({
 
                                 <div className="flex flex-row">
                                     <Button
-                                        btntype={"secondary"}
+                                        btntype={'secondary'}
                                         className="mr-4"
-                                        loading={status === "loading"}
+                                        loading={status === 'loading'}
                                         onClick={e => {
-                                            setStep(1)
+                                            setStep(1);
                                         }}
                                     >
-                                        {lang["Cancel"]}
+                                        {lang['Cancel']}
                                     </Button>
-                                    <Button btntype={"primary"} loading={sending} onClick={HandleSignAndSend}>
-                                        {lang["Transfer"]}
+                                    <Button btntype={'primary'} loading={sending} onClick={HandleSignAndSend}>
+                                        {lang['Transfer']}
                                     </Button>
                                 </div>
                             </>
@@ -381,7 +387,7 @@ export default function DialogBtcXudtTransfer({
                                     </div>
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                         <div className="text-gray-500">Time</div>
-                                        <div className="font-semibold">{dayjs().format("YYYY-MM-DD HH:mm")}</div>
+                                        <div className="font-semibold">{dayjs().format('YYYY-MM-DD HH:mm')}</div>
                                     </div>
 
                                     <div className="h-[1px] bg-gray-200 my-4" />
@@ -398,8 +404,8 @@ export default function DialogBtcXudtTransfer({
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                         <div className="text-gray-500">Tx Hash</div>
                                         <div className="font-semibold flex flex-row">
-                                            <CopyText copyText={txHash || ""}>
-                                                {txHash ? shortTransactionHash(txHash) : "--"}
+                                            <CopyText copyText={txHash || ''}>
+                                                {txHash ? shortTransactionHash(txHash) : '--'}
                                             </CopyText>
                                         </div>
                                     </div>
@@ -407,21 +413,21 @@ export default function DialogBtcXudtTransfer({
 
                                 <div className="flex">
                                     <Button
-                                        btntype={"secondary"}
-                                        className={"mr-4 text-xs"}
+                                        btntype={'secondary'}
+                                        className={'mr-4 text-xs'}
                                         loading={sending}
                                         onClick={e => {
-                                            window.open(`${config.btc_explorer}/tx/${txHash}`, "_blank")
+                                            window.open(`${config.btc_explorer}/tx/${txHash}`, '_blank');
                                         }}
                                     >
                                         View on Explorer
                                     </Button>
 
                                     <Button
-                                        btntype={"primary"}
+                                        btntype={'primary'}
                                         loading={sending}
                                         onClick={e => {
-                                            setOpen(false)
+                                            setOpen(false);
                                         }}
                                     >
                                         Done
@@ -433,5 +439,5 @@ export default function DialogBtcXudtTransfer({
                 </Dialog.Content>
             </Dialog.Portal>
         </Dialog.Root>
-    )
+    );
 }

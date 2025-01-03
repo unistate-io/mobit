@@ -1,10 +1,9 @@
-
-import { SporeConfig, getSporeConfig, isScriptIdEquals } from '@spore-sdk/core';
-import { defaultEmptyWitnessArgs, updateWitnessArgs } from '@spore-sdk/core';
-import { hd, helpers, HexString, RPC } from '@ckb-lumos/lumos';
-import { Address, Hash, Script } from '@ckb-lumos/base';
-import { omnilock } from '@ckb-lumos/common-scripts';
-import { bytes, number } from '@ckb-lumos/codec';
+import {SporeConfig, getSporeConfig, isScriptIdEquals} from '@spore-sdk/core';
+import {defaultEmptyWitnessArgs, updateWitnessArgs} from '@spore-sdk/core';
+import {hd, helpers, HexString, RPC} from '@ckb-lumos/lumos';
+import {Address, Hash, Script} from '@ckb-lumos/base';
+import {omnilock} from '@ckb-lumos/common-scripts';
+import {bytes, number} from '@ckb-lumos/codec';
 
 export interface OmnilockWallet {
     lock: Script;
@@ -59,7 +58,7 @@ export function createOmnilockWallet(props: {
     // Sign prepared signing entries,
     // and then fill signatures into Transaction.witnesses
     async function signTransaction(
-        txSkeleton: helpers.TransactionSkeletonType,
+        txSkeleton: helpers.TransactionSkeletonType
     ): Promise<helpers.TransactionSkeletonType> {
         const signingEntries = txSkeleton.get('signingEntries');
         const signatures = new Map<HexString, Hash>();
@@ -93,7 +92,9 @@ export function createOmnilockWallet(props: {
         const rpc = new RPC(config.ckbNodeUrl);
 
         // Sign transaction
-        txSkeleton = omnilock.prepareSigningEntries(txSkeleton, { config: config.lumos });
+        txSkeleton = omnilock.prepareSigningEntries(txSkeleton, {
+            config: config.lumos,
+        });
         txSkeleton = await signTransaction(txSkeleton);
 
         // Convert to Transaction
@@ -126,14 +127,14 @@ export function createOmnilockSecp256k1Wallet(props: {
     lockArgs?: HexString;
     config?: SporeConfig;
 }): OmnilockWallet {
-    const { privateKey, lockArgs, config } = props;
+    const {privateKey, lockArgs, config} = props;
 
     function signMessage(message: HexString): Hash {
         const sig = hd.key.signRecoverable(message, privateKey);
         return bytes.hexify(
             omnilock.OmnilockWitnessLock.pack({
                 signature: sig,
-            }),
+            })
         );
     }
 
@@ -150,7 +151,7 @@ export function createOmnilockSecp256k1Wallet(props: {
 /**
  * Create an Omnilock lock script.
  */
-export function createOmnilockLock(props: { lockAuth: HexString; lockArgs?: HexString; config?: SporeConfig }): Script {
+export function createOmnilockLock(props: {lockAuth: HexString; lockArgs?: HexString; config?: SporeConfig}): Script {
     const config = props.config ?? getSporeConfig();
     const Omnilock = config.lumos.SCRIPTS.OMNILOCK!;
     const omnilockArgs = props.lockArgs ?? '0x00';
@@ -166,9 +167,7 @@ export function createOmnilockLock(props: { lockAuth: HexString; lockArgs?: HexS
  * Create ACP Omnilock args with minimalCkb and minimalUdt parameters.
  * minCkb: The minimal required digit of payment CKBytes.
  */
-export function createOmnilockAcpArgs(props: {
-    minCkb: number,
-}): HexString {
+export function createOmnilockAcpArgs(props: {minCkb: number}): HexString {
     const minimalCkb = bytes.hexify(number.Uint8.pack(props.minCkb ?? 0));
     return `0x02${removeHexPrefix(minimalCkb)}00`;
 }

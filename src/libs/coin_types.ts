@@ -1,4 +1,4 @@
- const coin_types = [
+const coin_types = [
     [0x80000000, 'BTC', 'Bitcoin'],
     [0x80000001, '', 'Testnet (all coins)'],
     [0x80000002, 'LTC', 'Litecoin'],
@@ -385,7 +385,7 @@
     [0x8000017f, 'KAL', 'Kaleidochain'],
     [0x80000180, 'XSN', 'Stakenet'],
     [0x80000181, 'DOGEC', 'DogeCash'],
-    [0x80000182, 'BMV', 'Bitcoin Matteo\'s Vision'],
+    [0x80000182, 'BMV', "Bitcoin Matteo's Vision"],
     [0x80000183, 'QBC', 'Quebecoin'],
     [0x80000184, 'IMG', 'ImageCoin'],
     [0x80000185, 'QOS', 'QOS'],
@@ -1017,7 +1017,7 @@
     [0x8000167d, 'STX', 'Stacks'],
     [0x80001707, 'VOW', 'VowChain VOW'],
     [0x80001720, 'SLU', 'SILUBIUM'],
-    [0x8000176B, 'DUSK', 'Dusk Network'],
+    [0x8000176b, 'DUSK', 'Dusk Network'],
     [0x800017ac, 'GO', 'GoChain GO'],
     [0x80001800, 'DTS', 'Datos'],
     [0x8000181e, 'MOI', 'My Own Internet'],
@@ -1179,7 +1179,7 @@
     [0xc655454c, '', 'Fuel'],
     [0xc655454d, 'TTNC', 'TakeTitan'],
     [0xc6554557, 'MTGBP', 'MTGBP'],
-    [0xc6554561, 'QFS', 'Qfs']
-]
+    [0xc6554561, 'QFS', 'Qfs'],
+];
 
-export default coin_types
+export default coin_types;

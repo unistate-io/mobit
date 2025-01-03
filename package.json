@@ -109,6 +109,7 @@
         "start": "node scripts/start.js",
         "start_ssl": "cross-env HTTPS=true node scripts/start.js",
         "build": "node scripts/build.js",
+        "format": "bun x prettier --write .",
         "test": "node scripts/test.js"
     },
     "eslintConfig": {

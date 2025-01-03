@@ -1,111 +1,111 @@
-import {useContext, useEffect, useState} from "react"
-import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
-import {Cell, config as lumosConfig, helpers, Indexer} from "@ckb-lumos/lumos"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {hashType} from "@/serves/useXudtTransfer/lib"
-import {CkbHelper, convertToTransaction, createMergeXudtTransaction, createBurnXudtTransaction} from "mobit-sdk"
-import {ccc} from "@ckb-ccc/connector-react"
+import {useContext, useEffect, useState} from 'react';
+import {tokenInfoToScript, TokenInfoWithAddress} from '@/utils/graphql/types';
+import {Cell, config as lumosConfig, helpers, Indexer} from '@ckb-lumos/lumos';
+import {CKBContext} from '@/providers/CKBProvider/CKBProvider';
+import {hashType} from '@/serves/useXudtTransfer/lib';
+import {CkbHelper, convertToTransaction, createMergeXudtTransaction, createBurnXudtTransaction} from 'mobit-sdk';
+import {ccc} from '@ckb-ccc/connector-react';
 
 export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, addresses?: string[]) {
-    const {config, network, signer, wallet} = useContext(CKBContext)
-    const [data, setData] = useState<Cell[]>([])
-    const [status, setStatus] = useState<"loading" | "error" | "complete">("loading")
-    const [error, setError] = useState<any | null>(null)
+    const {config, network, signer, wallet} = useContext(CKBContext);
+    const [data, setData] = useState<Cell[]>([]);
+    const [status, setStatus] = useState<'loading' | 'error' | 'complete'>('loading');
+    const [error, setError] = useState<any | null>(null);
 
     useEffect(() => {
         if (!tokenInfo || !addresses || addresses.length === 0) {
-            setStatus("complete")
-            setError(null)
-            setData([])
-            return
+            setStatus('complete');
+            setError(null);
+            setData([]);
+            return;
         }
 
-        ;(async () => {
-            setStatus("loading")
+        (async () => {
+            setStatus('loading');
 
-            const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc)
-            const scriptConfig = network === "mainnet" ? lumosConfig.MAINNET : lumosConfig.TESTNET
+            const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc);
+            const scriptConfig = network === 'mainnet' ? lumosConfig.MAINNET : lumosConfig.TESTNET;
             const senderLocks = addresses.map(address => {
-                return helpers.addressToScript(address, {config: scriptConfig})
-            })
+                return helpers.addressToScript(address, {config: scriptConfig});
+            });
 
             const typeScript: any = {
-                codeHash: tokenInfo.address.script_code_hash.replace("\\", "0"),
+                codeHash: tokenInfo.address.script_code_hash.replace('\\', '0'),
                 hashType: hashType[tokenInfo.address.script_hash_type],
-                args: tokenInfo.address.script_args.replace("\\", "0")
-            }
+                args: tokenInfo.address.script_args.replace('\\', '0'),
+            };
 
-            let collected: Cell[] = []
+            let collected: Cell[] = [];
 
             try {
                 for (const lock of senderLocks) {
-                    const collector = indexer.collector({lock: lock, type: typeScript})
+                    const collector = indexer.collector({lock: lock, type: typeScript});
                     for await (const cell of collector.collect()) {
-                        collected.push(cell)
+                        collected.push(cell);
                     }
                 }
 
-                setData(collected)
-                setStatus("complete")
+                setData(collected);
+                setStatus('complete');
             } catch (e) {
-                console.warn(e)
-                setStatus("error")
-                setData([])
-                setError(e)
+                console.warn(e);
+                setStatus('error');
+                setData([]);
+                setError(e);
             }
-        })()
-    }, [tokenInfo?.type_id, addresses, config.ckb_indexer, config.ckb_rpc, network])
+        })();
+    }, [tokenInfo?.type_id, addresses, config.ckb_indexer, config.ckb_rpc, network]);
 
     const createMergeXudtCellTx = async (feeRate: ccc.NumLike) => {
-        if (!tokenInfo || !addresses || !addresses.length || !signer) return null
+        if (!tokenInfo || !addresses || !addresses.length || !signer) return null;
 
-        const ckbHelper = new CkbHelper(network === "mainnet")
+        const ckbHelper = new CkbHelper(network === 'mainnet');
         let tx = await createMergeXudtTransaction(
             {
                 xudtType: tokenInfoToScript(tokenInfo),
                 ckbAddresses: addresses,
                 collector: ckbHelper.collector,
-                isMainnet: network === "mainnet"
+                isMainnet: network === 'mainnet',
             },
             addresses[0]
-        )
+        );
 
-        let txSkeleton = convertToTransaction(tx)
-        await txSkeleton.completeFeeBy(signer, feeRate)
-        console.log("txSkeleton", txSkeleton)
-        return txSkeleton
-    }
+        let txSkeleton = convertToTransaction(tx);
+        await txSkeleton.completeFeeBy(signer, feeRate);
+        console.log('txSkeleton', txSkeleton);
+        return txSkeleton;
+    };
 
     const createBurnXudtCellTx = async (burnAmount: bigint, feeRate: ccc.NumLike) => {
-        if (!tokenInfo || !addresses || !addresses.length || burnAmount === BigInt(0) || !signer) return null
-        const ckbHelper = new CkbHelper(network === "mainnet")
+        if (!tokenInfo || !addresses || !addresses.length || burnAmount === BigInt(0) || !signer) return null;
+        const ckbHelper = new CkbHelper(network === 'mainnet');
         let tx = await createBurnXudtTransaction({
             xudtType: tokenInfoToScript(tokenInfo),
             ckbAddress: addresses[0],
             burnAmount: burnAmount,
             collector: ckbHelper.collector,
-            isMainnet: network === "mainnet"
-        })
+            isMainnet: network === 'mainnet',
+        });
 
-        const txSkeleton = convertToTransaction(tx)
-        await txSkeleton.completeFeeBy(signer, feeRate)
+        const txSkeleton = convertToTransaction(tx);
+        await txSkeleton.completeFeeBy(signer, feeRate);
 
-        console.log("txSkeleton", txSkeleton)
-        return txSkeleton
-    }
+        console.log('txSkeleton', txSkeleton);
+        return txSkeleton;
+    };
 
     const signAndSend = async (tx: ccc.Transaction) => {
-        if (!tokenInfo || !addresses || !addresses.length) return null
+        if (!tokenInfo || !addresses || !addresses.length) return null;
 
         if (!signer) {
-            throw new Error("Please connect wallet first.")
+            throw new Error('Please connect wallet first.');
         }
 
-        console.log("signer", signer)
+        console.log('signer', signer);
 
-        const hash = await signer.sendTransaction(tx)
-        return hash
-    }
+        const hash = await signer.sendTransaction(tx);
+        return hash;
+    };
 
     return {
         data,
@@ -113,6 +113,6 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
         error,
         createMergeXudtCellTx,
         createBurnXudtCellTx,
-        signAndSend
-    }
+        signAndSend,
+    };
 }
