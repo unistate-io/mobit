@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useState} from "react"
+import {ReactNode, useContext, useEffect, useState} from "react"
 import Input from "@/components/Form/Input/Input"
 import * as Dialog from "@radix-ui/react-dialog"
 import Button from "@/components/Form/Button/Button"
@@ -10,7 +10,6 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 import * as dayjsLib from "dayjs"
-import {helpers} from "@ckb-lumos/lumos"
 import useSporeTransfer from "@/serves/useSporeTransfer"
 import {Spores} from "@/utils/graphql/types"
 import {ccc} from "@ckb-ccc/connector-react"
@@ -45,12 +44,12 @@ export default function DialogSporeTransfer({
     const [txHash, setTxHash] = useState<null | string>(null)
     const [fee1000, setFee1000] = useState<string>("0")
     const [to, setTo] = useState<string>("")
-
     const fee = (showFeeRate: number) => {
-        return BigNumber(fee1000)
+        const calculatedFee = BigNumber(fee1000)
             .multipliedBy(showFeeRate / 1000)
             .dividedBy(10 ** 8)
             .toString()
+        return calculatedFee
     }
 
     //errors
@@ -71,10 +70,8 @@ export default function DialogSporeTransfer({
             let tx: ccc.Transaction | null = null
             if (!hasError) {
                 tx = await build({
-                    payeeAddresses: froms,
                     to,
-                    spore,
-                    feeRate
+                    spore
                 })
 
                 if (!!tx) {
@@ -84,15 +81,21 @@ export default function DialogSporeTransfer({
                         const fee = (inputCap - outCap) / (feeRate / 1000)
                         setFee1000(fee.toString())
                     } catch (e) {
-                        console.error(e)
+                        console.error("Error calculating capacities or fee:", e)
                     }
+                } else {
+                    console.error("Failed to build transaction")
                 }
+            } else {
+                console.error("Skipping transaction build due to errors")
             }
 
             return !hasError ? tx : null
         } catch (e: any) {
-            console.trace(e)
-            setTransactionError(e.message || "")
+            console.trace("Error in checkErrorsAndBuild:", e)
+            setTransactionError(e.message || "An unexpected error occurred")
+        } finally {
+            console.log("Finished checkErrorsAndBuild")
         }
     }
 
