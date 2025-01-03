@@ -7,24 +7,24 @@ import Feedback from '@/components/Feedback';
 import {KeepAliveOutlet} from 'react-alive-outlet';
 
 function Home() {
-    const location = useLocation();
+  const location = useLocation();
 
-    useLayoutEffect(() => {
-        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        scrollTop && window.scrollTo(0, 0);
-    }, [location.pathname]);
+  useLayoutEffect(() => {
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    scrollTop && window.scrollTo(0, 0);
+  }, [location.pathname]);
 
-    return (
-        <CKBProvider>
-            <div className="App">
-                <Header />
-                <div>
-                    <KeepAliveOutlet />
-                </div>
-                {location.pathname !== '/trade' && <Feedback />}
-            </div>
-        </CKBProvider>
-    );
+  return (
+    <CKBProvider>
+      <div className="App">
+        <Header />
+        <div>
+          <KeepAliveOutlet />
+        </div>
+        {location.pathname !== '/trade' && <Feedback />}
+      </div>
+    </CKBProvider>
+  );
 }
 
 export default Home;

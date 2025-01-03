@@ -12,24 +12,24 @@ import DotBit from '@/pages/DotBit/DotBit';
 import TradePage from '@/pages/Trade';
 
 const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <Layout />,
-        errorElement: <div>error</div>,
-        children: [
-            {path: '/', element: <MarketPage />},
-            {path: '/address/:address', element: <ProfilePage />},
-            {path: '/market', element: <MarketPage />},
-            {path: '/apps', element: <Apps />},
-            {path: '/dob/:tokenid', element: <Dob />},
-            {path: '/token/:tokenid', element: <TokenPage />},
-            {path: '/token', element: <CkbTokenPage />},
-            {path: '/bitcoin', element: <BtcTokenPage />},
-            {path: '/test', element: <Test />},
-            {path: '/dotbit/:domain', element: <DotBit />},
-            {path: '/trade', element: <TradePage />},
-        ],
-    },
+  {
+    path: '/',
+    element: <Layout />,
+    errorElement: <div>error</div>,
+    children: [
+      {path: '/', element: <MarketPage />},
+      {path: '/address/:address', element: <ProfilePage />},
+      {path: '/market', element: <MarketPage />},
+      {path: '/apps', element: <Apps />},
+      {path: '/dob/:tokenid', element: <Dob />},
+      {path: '/token/:tokenid', element: <TokenPage />},
+      {path: '/token', element: <CkbTokenPage />},
+      {path: '/bitcoin', element: <BtcTokenPage />},
+      {path: '/test', element: <Test />},
+      {path: '/dotbit/:domain', element: <DotBit />},
+      {path: '/trade', element: <TradePage />},
+    ],
+  },
 ]);
 
 export default router;

@@ -103,54 +103,54 @@ const clusters = `clusters(){
       }`;
 
 const schema = {
-    xudt_cell,
-    token_info,
-    xudt_status_cell,
-    spores,
-    clusters,
-    token_info_address,
+  xudt_cell,
+  token_info,
+  xudt_status_cell,
+  spores,
+  clusters,
+  token_info_address,
 };
 
 export const gql = (type: keyof typeof schema, opt?: string) => {
-    let query = schema[type];
+  let query = schema[type];
 
-    if (!query) {
-        throw new Error(`Invalid query type: ${type}`);
-    }
+  if (!query) {
+    throw new Error(`Invalid query type: ${type}`);
+  }
 
-    query = query.replace('()', opt ? `(${opt})` : '');
+  query = query.replace('()', opt ? `(${opt})` : '');
 
-    query = `query MyQuery {
+  query = `query MyQuery {
         ${query}
     }`;
 
-    return query;
+  return query;
 };
 
 export const gqls = (props: {type: keyof typeof schema; key?: string; opt?: string}[]) => {
-    let query = '';
+  let query = '';
 
-    props.forEach(({type, opt, key}) => {
-        let q = schema[type];
+  props.forEach(({type, opt, key}) => {
+    let q = schema[type];
 
-        if (!q) {
-            throw new Error(`Invalid query type: ${type}`);
-        }
+    if (!q) {
+      throw new Error(`Invalid query type: ${type}`);
+    }
 
-        q = q.replace('()', opt ? `(${opt})` : '');
+    q = q.replace('()', opt ? `(${opt})` : '');
 
-        if (key) {
-            q = `${key}: ${q}`;
-        }
+    if (key) {
+      q = `${key}: ${q}`;
+    }
 
-        query += q + '\n';
-    });
+    query += q + '\n';
+  });
 
-    query = `query MyQuery {
+  query = `query MyQuery {
         ${query}
     }`;
 
-    return query;
+  return query;
 };
 
 export default schema;
