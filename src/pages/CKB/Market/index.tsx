@@ -5,10 +5,13 @@ import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {useContext, useEffect, useState} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import HomeActions from "@/components/HomeActions"
+import DialogConnectWallet from "@/components/Dialogs/DialogConnectWallet"
+import {RoochContext} from "@/providers/RoochProvider/RoochProvider"
 
-export default function MarketPage() {
+export default function MarketPage({showActions=true}: {showActions?: boolean}) {
     const {data, status} = useMarket()
     const {lang} = useContext(LangContext)
+    const {roochAddress} = useContext(RoochContext)
     const {open, address} = useContext(CKBContext);
     const [showTable, setShowTable] = useState(false)
 
@@ -33,15 +36,17 @@ export default function MarketPage() {
             <div className="font-semibold text-xl text-center mb-4" dangerouslySetInnerHTML={{__html: lang['Effortlessly and securely transfer assets between Bitcoin and CKB']}}></div>
             <div className="text-[#7B7C7B] text-sm mb-4">{lang['Enjoying a seamless cross-chain experience with RGB++ Leap functionality!']}</div>
             {
-                !address && <button
+                !address && !roochAddress && <DialogConnectWallet>
+                <button
                     className="btn btn-primary py-3 px-6  font-semibold hover:opacity-80 rounded-[100px] bg-[#7FF7CE]"
                     onClick={open}>
                     {lang['Connect Wallet']} <i className="uil-arrow-right"/>
                 </button>
+                </DialogConnectWallet>
             }
         </div>
 
-        <HomeActions />
+        {showActions && <HomeActions />}
 
         {status === 'loading' &&
             <>

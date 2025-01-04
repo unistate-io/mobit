@@ -14,7 +14,7 @@ import {
     isEvmAddress
 } from "@/utils/common"
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
-import DialogProfileInfo from "@/components/Dialogs/DialogProfileInfo/DialogProfileInfo"
+import DialogConnectWallet from "@/components/Dialogs/DialogConnectWallet"
 
 export default function HeaderMenu() {
     const {open, address, client, network} = useContext(CKBContext);
@@ -38,7 +38,7 @@ export default function HeaderMenu() {
         setSearching(true)
         try {
             if (checksumCkbAddress(keyword, network)) {
-                navigate(`/address/${keyword}`)
+                navigate(`/ckb/address/${keyword}`)
                 searchRef.current?.blur()
                 setShowSearchInput(false)
                 return
@@ -48,7 +48,7 @@ export default function HeaderMenu() {
                 if (isEvmAddress(keyword)) {
                     const ckbAddressFromEvm = await getCkbAddressFromEvm(keyword, client)
                     if (ckbAddressFromEvm) {
-                        navigate(`/address/${ckbAddressFromEvm}`)
+                        navigate(`/ckb/address/${ckbAddressFromEvm}`)
                         searchRef.current?.blur()
                         setShowSearchInput(false)
                         return
@@ -56,7 +56,7 @@ export default function HeaderMenu() {
                 }
 
                 if (isBtcAddress(keyword, network === 'mainnet')) {
-                    navigate(`/address/${keyword}`)
+                    navigate(`/ckb/address/${keyword}`)
                     searchRef.current?.blur()
                     setShowSearchInput(false)
                     return
@@ -143,9 +143,10 @@ export default function HeaderMenu() {
                     <Avatar size={18} colors={getTheme(address).colors} name={address}/>
                 </div>
                 :
-                <div className="text-xs cursor-pointer hover:text-[#6CD7B2]"
-                     onClick={open}
-                ><i className="uil-wallet text-sm mr-1"/>{lang['Connect']}</div>
+                <DialogConnectWallet>
+                    <div className="text-xs cursor-pointer hover:text-[#6CD7B2]">
+                        <i className="uil-wallet text-sm mr-1"/>{lang['Connect']}</div>
+                </DialogConnectWallet>
         }
     </div>
 }

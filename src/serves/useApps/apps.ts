@@ -99,7 +99,186 @@ const apps: CkbApp[] = [
             cn: 'Dobby 是 Bitcion 上的数码物（DOBs）去中心化交易平台',
             en: 'Dobby is a decentralized trading platform for digital objects (DOBs) on Bitcoin'
         }
+    },{
+        logo: 'https://www.ckbeco.fund/images/eco/CELL_Studio.png',
+        name: 'CELL Studio',
+        url: 'https://cell.studio/',
+        description: {
+            en: 'A Blockchain Software Development Company Committed to Advancing the BTCKB Initiative.',
+            cn: '一家致力于推进 BTCKB 倡议的区块链软件开发公司。',
+        }
     },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/cellula.png',
+        name: 'Cellula',
+        url: 'https://factory.cellula.life/welcome',
+        description: {
+            en: 'A fully on-chain AI game that offers users ability to create, compose and evolve digital life.',
+            cn: '一个完全在链上的 AI 游戏，为用户提供创建、组合和进化数字生活的能力。',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/HueHub.png',
+        name: 'HueHub',
+        url: 'https://huehub.xyz/',
+        description: {
+            en: 'First DEX for RGB++ Assets on Bitcoin',
+            cn: 'RGB++ 资产在比特币上的第一个 DEX',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/JoyID.png',
+        name: 'JoyID',
+        url: 'https://app.joy.id/',
+        description: {
+            en: 'Universal Account Protocol for Web3 Mass-adoption',
+            cn: 'Web3 大规模采用的通用账户协议',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/Metaforo.png',
+        name: 'Metaforo',
+        url: 'https://metaforo.io/',
+        description: {
+            en: 'Voting Governance Module Supporting the RGB++ Protocol',
+            cn: '支持 RGB++ 协议的投票治理模块',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/Nervape.png',
+        name: 'Nervape',
+        url: 'https://www.nervape.com/nervape',
+        description: {
+            en: 'Multi-chain Composable Digital Objects Built on Bitcoin',
+            cn: '基于比特币构建的多链可组合数字对象',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/SEAL.png',
+        name: 'SEAL',
+        url: 'https://x.com/btckbseal',
+        description: {
+            en: 'The First RGB++ Asset',
+            cn: '第一个 RGB++ 资产',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/SeeDAO.png',
+        name: 'SeeDAO',
+        url: 'https://seedao.xyz/',
+        description: {
+            en: 'A Network Polis Connecting 1 Million Crypto Nomads',
+            cn: '连接 100 万加密游牧民的网络 Polis',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/Stable++.png',
+        name: 'Stable++',
+        url: 'https://www.stablepp.xyz/',
+        description: {
+            en: 'Stable coin for Nervos & RGB++',
+            cn: 'Nervos & RGB++ 的稳定币',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/Unicorn.png',
+        name: 'Unicorn',
+        url: 'http://unidob.xyz/',
+        description: {
+            en: 'The First Tradable Asset and the First DOBs (Digital Objects) on CKB Mainnet',
+            cn: 'CKB 主网上的第一个可交易资产和第一个 DOBs（数字对象）',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/UTXOswap.png',
+        name: 'UTXOSwap',
+        url: 'https://utxoswap.xyz/',
+        description: {
+            en: 'AMM DEX on CKB',
+            cn: 'CKB 上的 AMM DEX',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/UTXOstack.png',
+        name: 'UTXO Stack',
+        url: 'https://www.utxostack.network/',
+        description: {
+            en: 'A BTC and RGB++ based “OP Stack”',
+            cn: '基于 BTC 和 RGB++ 的“OP Stack”',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/world3.png',
+        name: 'World3',
+        url: 'https://world3.ai/',
+        description: {
+            en: 'AW (Autonomous Worlds) game based on the RGB++ protocol and DOBs.',
+            cn: '基于 RGB++ 协议和 DOBs 的 AW（自主世界）游戏。',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/Neuron.png',
+        name: 'Neuron',
+        url: 'https://neuron.magickbase.com/',
+        description: {
+            en: 'Desktop Wallet',
+            cn: '桌面钱包',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/imToken.png',
+        name: 'imToken',
+        url: 'https://token.im/ckb-wallet',
+        description: {
+            en: 'Mobile Wallet',
+            cn: '移动钱包',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/SafePal.png',
+        name: 'SafePal',
+        url: 'https://blog.safepal.com/ckb/',
+        description: {
+            en: 'Mobile, Hardware Wallet',
+            cn: '移动、硬件钱包',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/Ledger.png',
+        name: 'Ledger',
+        url: 'https://www.ledger.com/',
+        description: {
+            en: 'Hardware Wallet',
+            cn: '硬件钱包',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/imKey.png',
+        name: 'imKey',
+        url: 'https://imkey.im/',
+        description: {
+            en: 'Hardware Wallet',
+            cn: '硬件钱包',
+        }
+    },
+    {
+        logo: 'https://www.ckbeco.fund/images/eco/OneKey.png',
+        name: 'OneKey',
+        url: 'https://onekey.so/',
+        description: {
+            en: 'Mobile, Desktop, Hardware Wallet',
+            cn: '移动、桌面、硬件钱包',
+        }
+    },
+    {
+        logo: 'https://raw.githubusercontent.com/ckb-devrel/ccc/master/assets/logo.svg',
+        name: 'CCC App',
+        url: 'https://app.ckbccc.com',
+        description: {
+            en: 'An app based on the CCC library',
+            cn: '基于 CCC 库的应用',
+        }
+    }
 ]
 
 export default apps

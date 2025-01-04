@@ -45,7 +45,7 @@ export default function DialogBtcXudtTransfer({
         return isBtcAddress(internalAddress, network === "mainnet") ? internalAddress : undefined
     }, [internalAddress])
 
-    const {xudts, status} = useLayer1Assets(open && !!btcAddress ? btcAddress : undefined)
+    const {xudts, status} = useLayer1Assets(network, open && !!btcAddress ? btcAddress : undefined)
 
     const xudtBalance = useMemo<TokenBalance>(() => {
         const target = xudts?.find(x => x.symbol === token.symbol)

@@ -31,7 +31,7 @@ export default function useDotbitDetail(domain?: string) {
         }
 
         setStatus("loading")
-        fetch(`https://ckb-property-aggregator.unistate.io/?bitdomain=${domain}`)
+        fetch(`https://aggregator.unistate.io/?bitdomain=${domain}`)
             .then(res => res.json())
             .catch((e: any) => {
                 setError(e)

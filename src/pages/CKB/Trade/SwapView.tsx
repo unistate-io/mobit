@@ -1,9 +1,7 @@
 import { useUtxoSwap } from "@/serves/useUtxoSwap"
 import { Pool, Token } from "@utxoswap/swap-sdk-js"
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react"
+import { useCallback, useContext, useEffect, useMemo, useState } from "react"
 import Input from "@/components/Form/Input/Input"
-import Select from "@/components/Select/Select"
-import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import useCkbBalance from "@/serves/useCkbBalance"
 import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
 import { getXudtBalance } from "@/serves/useXudtBalance"
@@ -42,7 +40,6 @@ export default function SwapView({ className, sellToken }: { className?: string;
     const { lang } = useContext(LangContext)
 
     const { pools, client, collector, supportTokens } = useUtxoSwap()
-    const [open, setOpen] = useState(false)
     const [busy, setBusy] = useState(false)
     const [openSuccess, setOpenSuccess] = useState(false)
 
@@ -288,23 +285,21 @@ export default function SwapView({ className, sellToken }: { className?: string;
     }, [swapForm.amountX, swapForm.amountY, swapForm.selectedY])
 
     useEffect(() => {
-        if (open) {
-            let initToken: Token | undefined = undefined
-            if (sellToken && supportTokens.length) {
-                initToken = supportTokens.find(t => t.typeHash === sellToken) as any
-            }
-
-            setSwapForm({
-                pool: null,
-                selectedX: initToken || ckb,
-                amountX: "",
-                selectedY: null,
-                amountY: ""
-            })
-            setTxErr("")
-            setBusy(false)
+        let initToken: Token | undefined = undefined
+        if (sellToken && supportTokens.length) {
+            initToken = supportTokens.find(t => t.typeHash === sellToken) as any
         }
-    }, [open, sellToken, supportTokens])
+
+        setSwapForm({
+            pool: null,
+            selectedX: initToken || ckb,
+            amountX: "",
+            selectedY: null,
+            amountY: ""
+        })
+        setTxErr("")
+        setBusy(false)
+    }, [sellToken, supportTokens])
 
     const signTxFunc = async (rawTx: CKBComponents.RawTransactionToSign) => {
         const txLike = await signer!.signTransaction(rawTx as any)
@@ -370,8 +365,23 @@ export default function SwapView({ className, sellToken }: { className?: string;
         })
     }
 
+    useEffect(() => {
+        const perventWheel = (e: Event) => {
+            e.preventDefault()
+        }
+        document.querySelectorAll('input[type="number"]')?.forEach(input => {
+            input.addEventListener("mousewheel", perventWheel, {passive: false})
+        })
+
+        return () => {
+            document.querySelectorAll('input[type="number"]')?.forEach(input => {
+                input.removeEventListener("mousewheel", perventWheel)
+            })
+        }
+    }, []);
+
     return (
-        <div className="w-full px-3 pt-6 md:px-6">
+        <div className="w-full px-3 pt-2 md:pt-6 md:px-6">
             <>
                 <div className="flex flex-col relative">
                     <div
@@ -384,8 +394,8 @@ export default function SwapView({ className, sellToken }: { className?: string;
 
                     <div className="flex flex-col py-5 border rounded-2xl mb-2 bg-white">
                         <div className="flex flex-row items-center justify-between mb-2 px-5">
-                            <div className="text-lg  text-[#7B7C7B]">{lang["Sell"]}</div>
-                            <div className="text-sm">
+                            <div className="text-[20px] text-[#7B7C7B]">{lang["Sell"]}</div>
+                            <div className="text-base">
                                 {lang["Balance"]}:{" "}
                                 <span className="font-semibold text-base">
                                     {swapForm.selectedX
@@ -403,12 +413,12 @@ export default function SwapView({ className, sellToken }: { className?: string;
                             </div>
                         </div>
                         <div className="flex flex-row items-center px-5 justify-between">
-                            <div className="flex-1 font-semibold text-base mr-2">
+                            <div className="flex-1 font-semibold text-base mr-2 min-w-[40%]">
                                 <Input
                                     type="number"
-                                    className="bg-[#fff] w-[100%] "
+                                    className="bg-[#fff] w-[100%] text-3xl sm:text-4xl"
                                     value={swapForm.amountX}
-                                    style={{ backgroundColor: "#fff", fontSize: "36px", fontFamily: "DIN Alternate" }}
+                                    style={{ backgroundColor: "#fff", fontFamily: "DIN Alternate" }}
                                     onChange={e => {
                                         setSwapForm({
                                             ...swapForm,
@@ -418,7 +428,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
                                     placeholder={"0"}
                                 />
                             </div>
-                            <div className="min-w-[120px]  md:min-w-[160px] grow-0">
+                            <div className="max-w-[220px] w-full">
                                 <DialogExchange options={swapFromOptions} value={swapForm.selectedX || null} onChange={handleSelectedX} />
                             </div>
                         </div>
@@ -426,8 +436,8 @@ export default function SwapView({ className, sellToken }: { className?: string;
 
                     <div className="flex flex-col py-5 border rounded-2xl mb-6 bg-white">
                         <div className="flex flex-row items-center justify-between mb-2 px-5">
-                            <div className="text-lg  text-[#7B7C7B]">{lang["Buy"]}</div>
-                            <div className="text-sm">
+                            <div className="text-[20px]  text-[#7B7C7B]">{lang["Buy"]}</div>
+                            <div className="text-base">
                                 {lang["Balance"]}:{" "}
                                 <span className="font-semibold text-base">
                                     {swapForm.selectedY
@@ -439,11 +449,11 @@ export default function SwapView({ className, sellToken }: { className?: string;
                             </div>
                         </div>
                         <div className="flex flex-row items-center px-5 justify-between">
-                            <div className="flex-1 font-semibold text-base mr-2">
+                            <div className="flex-1 font-semibold text-base mr-2 min-w-[40%]">
                                 <Input
                                     disabled={true}
-                                    className="bg-[#fff] w-[100%]"
-                                    style={{ backgroundColor: "#fff", fontSize: "36px", fontFamily: "DIN Alternate" }}
+                                    className="bg-[#fff] w-[100%] text-3xl sm:text-4xl"
+                                    style={{ backgroundColor: "#fff", fontFamily: "DIN Alternate" }}
                                     type="number"
                                     value={swapForm.amountY}
                                     placeholder={"0"}
@@ -461,7 +471,6 @@ export default function SwapView({ className, sellToken }: { className?: string;
                         btntype={"primary"}
                         onClick={() => {
                             login()
-                            setOpen(false)
                         }}
                     >
                         {lang["Connect Wallet"]}
@@ -472,7 +481,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
 
                 {!!address && (
                     <Button
-                        // disabled={disableSwap}
+                        disabled={disableSwap}
                         onClick={handleSwap}
                         loading={busy || ckbBalenceStatus === "loading"}
                         btntype={"primary"}
@@ -490,13 +499,13 @@ export default function SwapView({ className, sellToken }: { className?: string;
 
                 <div className="shadow rounded-xl py-3 bg-white">
                     <div className="flex flex-row items-center justify-between px-6 mb-4">
-                        <div className="text-sm">{lang["Max slippage"]}</div>
+                        <div className="text-base">{lang["Max slippage"]}</div>
                         <div className="font-semibold" style={{ fontFamily: 'Anonymous Pro' }}>{swapConfig.slippage} %</div>
                     </div>
                     <div className="flex flex-row items-center justify-between px-6 mb-4">
                         {!!swapForm.pool && swapForm.amountX ? (
                             <>
-                                <div className="text-sm">
+                                <div className="text-base">
                                     {lang["Fee"]}
                                     <span style={{ fontFamily: 'Anonymous Pro' }}>{`(${((swapForm.pool as any).poolInfo.feeRate / 10000).toFixed(
                                         3
@@ -511,7 +520,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
                             </>
                         ) : (
                             <>
-                                <div className="text-sm">{lang["Fee"]}</div>
+                                <div className="text-base">{lang["Fee"]}</div>
                                 <div className="font-semibold">0</div>
                             </>
                         )}

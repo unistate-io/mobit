@@ -24,7 +24,7 @@ import BigNumber from "bignumber.js"
 export interface TokenBalance extends TokenInfoWithAddress {
     amount: string
     type: string
-    chain: "ckb" | "btc"
+    chain: "ckb" | "btc" | 'rooch'
 }
 
 export default function ListToken({
@@ -48,7 +48,7 @@ export default function ListToken({
 
     const isSupportSwap = useCallback(
         (token: TokenBalance) => {
-            if (token.chain === "btc") return ""
+            if (token.chain === "btc" || token.chain === "rooch") return ""
 
             if (token.symbol === "CKB") {
                 return "0x0000000000000000000000000000000000000000000000000000000000000000"
@@ -77,11 +77,11 @@ export default function ListToken({
 
     const getLink = (token: TokenBalance) => {
         if (token.symbol === "CKB") {
-            return "/token"
+            return "/ckb/token"
         } else if (token.symbol === "BTC") {
-            return "/bitcoin"
+            return "/ckb/bitcoin"
         } else {
-            return `/token/${token.type_id}`
+            return `/ckb/token/${token.type_id}`
         }
     }
 
@@ -194,12 +194,6 @@ export default function ListToken({
                                         >
                                             {item.symbol !== "CKB" && item.chain === "ckb" && (
                                                 <>
-                                                    {!!typeHash && (
-                                                        <DialogSwap sellToken={typeHash}>
-                                                            <div id={`swap-${index}`} />
-                                                        </DialogSwap>
-                                                    )}
-
                                                     {isBtcWallet && (
                                                         <DialogXudtLeapToLayer1 token={item}>
                                                             <div id={`leap-${index}`} />
@@ -222,13 +216,7 @@ export default function ListToken({
                                                                             tip={lang["Swap tokens via UTXO Swap"]}
                                                                         >
                                                                             <div
-                                                                                onClick={() => {
-                                                                                    const el = document.getElementById(
-                                                                                        `swap-${index}`
-                                                                                    )
-                                                                                    !!el && el.click()
-                                                                                    close()
-                                                                                }}
+                                                                                onClick={() => { window.location.href=`/trade?sell-token=${typeHash}`}}
                                                                                 className="mb-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex"
                                                                             >
                                                                                 {"Swap"}
@@ -306,13 +294,12 @@ export default function ListToken({
 
                                             {item.symbol === "CKB" && (
                                                 <>
-                                                    <DialogSwap sellToken={typeHash}>
-                                                        <TooltipItem tip={lang["Swap tokens via UTXO Swap"]}>
-                                                            <div className="tooltip cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
-                                                                {"Swap"}
-                                                            </div>
-                                                        </TooltipItem>
-                                                    </DialogSwap>
+                                                    <TooltipItem tip={lang["Swap tokens via UTXO Swap"]}>
+                                                        <div onClick={() => { window.location.href=`/trade?sell-token=${typeHash}`}}
+                                                             className="tooltip cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                            {"Swap"}
+                                                        </div>
+                                                    </TooltipItem>
                                                     <DialogCkbTransfer froms={addresses}>
                                                         <TooltipItem tip={lang["Send CKB to Others"]}>
                                                             <div className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
@@ -342,7 +329,7 @@ export default function ListToken({
                                                 </>
                                             )}
 
-                                            {item.symbol !== "CKB" && item.chain !== "btc" && (
+                                            {item.symbol !== "CKB" && item.chain !== "btc" && item.chain !== "rooch" &&  (
                                                 <DialogXudtTransfer froms={addresses} token={item}>
                                                     <TooltipItem tip={lang["Send tokens to others"]}>
                                                         <div className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">

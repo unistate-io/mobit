@@ -8,6 +8,14 @@
   --page-with: 1200px
 }
 
+@font-face {
+  font-family: 'DIN Alternate';
+  /* 自定义字体名称 */
+  src: url('./fonts/DINAlternate-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   color: #333;
   font-size: 16px;
@@ -19,8 +27,10 @@ body {
   background: #fff;
 }
 
-button, input, textarea {
-  outline: none!important;
+button,
+input,
+textarea {
+  outline: none !important;
 }
 
 ccc-connector {
@@ -54,14 +64,14 @@ ccc-connector {
 }
 
 .loading-bg {
-  background-image: linear-gradient(100deg, #dddddd, #f7f7f7,#dddddd);
+  background-image: linear-gradient(100deg, #dddddd, #f7f7f7, #dddddd);
   animation: loading-color 6s infinite;
   background-size: 400%;
 }
 
 @keyframes loading-color {
   0% {
-    background-position : 0 0;
+    background-position: 0 0;
   }
 
   50% {
@@ -73,4 +83,6 @@ ccc-connector {
   }
 }
 
-
+input[type=number] {
+  appearance: auto;
+}

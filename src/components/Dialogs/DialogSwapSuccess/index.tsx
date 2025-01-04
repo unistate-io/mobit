@@ -1,6 +1,6 @@
 import CopyText from '@/components/CopyText/CopyText'
 import Button from '@/components/Form/Button/Button'
-import { SwapForm } from '@/pages/Trade/SwapView'
+import { SwapForm } from '@/pages/CKB/Trade/SwapView'
 import { LangContext } from '@/providers/LangProvider/LangProvider'
 import { shortTransactionHash } from '@/utils/common'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -100,8 +100,9 @@ export const SwapSuccess = ({ open, onClose, swapForm, txHash }: Props) => {
                     </div>
 
                     <div className="flex">
-                        <Button btntype={'primary'}
-                            className='bg-[#272928] text-white hover:bg-[#272928] text-sm'
+                        <Button
+                            style={{ backgroundColor: '#272928' }}
+                            className=' text-white hover:bg-[#272928] text-sm'
                             onClick={onClose}>
                             {lang['Done']}
                         </Button>

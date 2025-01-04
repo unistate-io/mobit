@@ -52,7 +52,7 @@ export default function DialogLeapXudtToLayer2CanSelectToken({children, classNam
     const [amountError, setAmountError] = React.useState<string>('')
     const [transactionError, setTransactionError] = React.useState<string>('')
 
-    const {xudts: xudtsBalance, status: xudtsBalanceStatus} = useLayer1Assets(internalAddress || undefined)
+    const {xudts: xudtsBalance, status: xudtsBalanceStatus} = useLayer1Assets(network, internalAddress || undefined)
 
     const balance = useMemo(() => {
         return !!token ? token.amount : '0'

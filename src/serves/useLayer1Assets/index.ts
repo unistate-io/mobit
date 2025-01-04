@@ -3,7 +3,6 @@ import BigNumber from "bignumber.js"
 import {useEffect, useState, useContext} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {SporesWithChainInfo} from "@/serves/useSpores"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {RgbppSDK} from "mobit-sdk"
 
 const queryAssets = async (
@@ -109,13 +108,12 @@ const btcEmpty: TokenBalance = {
     addressByInscriptionId: null
 }
 
-export default function useLayer1Assets(btcAddress?: string, polling?: boolean) {
+export default function useLayer1Assets(network:string, btcAddress?: string, polling?: boolean,) {
     const [status, setStatus] = useState<"loading" | "complete" | "error">("loading")
     const [xudts, setXudts] = useState<TokenBalance[]>([])
     const [dobs, setDobs] = useState<SporesWithChainInfo[]>([])
     const [btc, setBtc] = useState<TokenBalance | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
-    const {network} = useContext(CKBContext)
 
     const pollingInterval = 1000 * 30 // 30s 一次
 

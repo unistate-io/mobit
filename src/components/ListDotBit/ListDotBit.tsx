@@ -44,7 +44,7 @@ export default function ListDotBit({
 }
 
 function DOBItem({item}: { item: string }) {
-    return <Link to={`/dotbit/${item}`}
+    return <Link to={`/ckb/dotbit/${item}`}
                  className="shrink-0 grow-0 max-w-[50%] basis-1/2 md:basis-1/3 md:max-w-[33.3%] box-border p-2">
         <div
             className="relative w-full h-[140px] sm:h-[200px] md:h-[250px] lg:h-[180px]  overflow-hidden rounded-sm relative border border-1">

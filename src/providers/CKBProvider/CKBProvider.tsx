@@ -66,7 +66,7 @@ export default function CKBProvider({children}: { children: any }) {
 
             if (needRedirect.current) {
                 needRedirect.current = false
-                navigate(`/address/${address}`)
+                navigate(`/ckb/address/${address}`)
             }
         })()
     }, [signer])
@@ -82,7 +82,10 @@ export default function CKBProvider({children}: { children: any }) {
             config: network_config[network],
             network,
             open: () => {
-                needRedirect.current = true
+                const currHref = window.location.href
+                if (!currHref.includes('/ckb/market/')) {
+                    needRedirect.current = true
+                }
                 open()
             }, disconnect, wallet, signer, internalAddress, address, addresses
         }}>

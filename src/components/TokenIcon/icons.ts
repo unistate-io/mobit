@@ -9,12 +9,14 @@ export const TokenIcons:IconsUrl = {
     'SEAL': 'https://xudtlogos.cc/logos/seal-logo.png',
     'MEMES': 'https://xudtlogos.cc/logos/memes-logo.png',
     'OTTER': 'https://xudtlogos.cc/logos/otter-logo.png',
-    'CLOWN': 'https://ik.imagekit.io/soladata/1ut68bmf_FlKFW3LGX'
+    'CLOWN': 'https://ik.imagekit.io/soladata/1ut68bmf_FlKFW3LGX',
+    'RGAS': '/images/rgas.svg'
 }
 
 export const ChainIcons:IconsUrl = {
     'ckb': '/images/logo_ckb.png',
-    'btc': 'https://ik.imagekit.io/soladata/5veftj7e_LpXwtrv8H'
+    'btc': 'https://ik.imagekit.io/soladata/5veftj7e_LpXwtrv8H',
+    'rooch': '/images/rooch.jpg',
 }
 
 

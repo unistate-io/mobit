@@ -21,7 +21,7 @@ import {isBtcAddress} from "@/utils/common"
 import useDotbit from "@/serves/useDotbit"
 import ListDotBit from "@/components/ListDotBit/ListDotBit"
 import DialogReceive from "@/components/Dialogs/DialogReceive/DialogReceive"
-import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
+import { Link } from "react-router-dom"
 import NetWorth from "@/components/NetWorth"
 import Button from "@/components/Form/Button/Button";
 
@@ -79,12 +79,12 @@ export default function Profile() {
         btc: layer1Btc,
         status: layer1DataStatus,
         error: layer1DataErr
-    } = useLayer1Assets(btcAddress, true)
+    } = useLayer1Assets(network, btcAddress, true)
 
     const {
         data: btcHistory,
         status: btcHistoryStatus
-    } = useBtcTransactionsHistory(btcAddress)
+    } = useBtcTransactionsHistory(network, btcAddress)
 
     const {
         data: rgbppHistory,
@@ -173,11 +173,10 @@ export default function Profile() {
         <div className="max-w-[--page-with] mx-auto relative">
             {!!addresses && !!addresses.length && !!internalAddress && isOwner &&
                 <div className="absolute right-3 top-[12px]">
-                    <DialogSwap>
-                        <div
-                            className="mr-4 border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex">Swap
-                        </div>
-                    </DialogSwap>
+                    <Link to="/ckb/trade"
+                        className="mr-4 border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex">
+                        Swap
+                    </Link>
                     <DialogReceive
                         addresses={addresses.includes(internalAddress) ? addresses : [...addresses, internalAddress]}>
                         <div
@@ -190,7 +189,7 @@ export default function Profile() {
         <div className="max-w-[--page-with] mx-auto px-3 pb-10 relative">
 
             <div className="absolute right-3 top-[40px] md:top-[80px]">
-                <NetWorth balances={tokenData}/>
+            <NetWorth balances={tokenData}/>
             </div>
 
             <div
@@ -231,6 +230,10 @@ export default function Profile() {
                         className={`!w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg ${tab.value === currtab ? ' text-white !bg-black' : ''}`}
                         value={tab.value}>{tab.label}</Button>
                 })}
+                <a href="https://www.nervdao.com/" target="_blank"
+                   className="!w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg">
+                    Nervos DAO
+                </a>
             </div>
             <div className="flex justify-between flex-col lg:flex-row">
                 <div className={`flex-1 lg:max-w-[780px] ${currtab !== 'Activity' ? 'block' : 'hidden'}`}>

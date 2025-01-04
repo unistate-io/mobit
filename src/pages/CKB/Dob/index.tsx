@@ -36,7 +36,7 @@ export default function DobPage() {
         return chain
     }, [searchParams])
 
-    const {dobs, status:l1DataStatus} = useLayer1Assets(chain === 'btc' && !!internalAddress && isBtcAddress(internalAddress, network === 'mainnet') ? internalAddress : undefined)
+    const {dobs, status:l1DataStatus} = useLayer1Assets(network, chain === 'btc' && !!internalAddress && isBtcAddress(internalAddress, network === 'mainnet') ? internalAddress : undefined)
 
     const isOwner = useMemo(() => {
         if (!data || !addresses || !addresses.length || !internalAddress) return false

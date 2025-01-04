@@ -1,5 +1,4 @@
-// import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
-
+import {useSearchParams} from "react-router-dom"
 import { useMemo, useState } from "react"
 import SwapView from "./SwapView"
 
@@ -44,13 +43,16 @@ const TRADE_LIST = [
 
 export default function Trade() {
     const [tradeType, setTradeType] = useState<TradeType>(TradeType.Swap)
+    const [searchParams] = useSearchParams()
+
+    const sellToken = searchParams?.get("sell-token")
 
     const tradeView = useMemo(() => {
         switch (tradeType) {
             case TradeType.Swap:
-                return <SwapView />
+                return <SwapView sellToken={sellToken || undefined} />
             default:
-                return <SwapView />
+                return <SwapView sellToken={sellToken || undefined} />
         }
     }, [tradeType])
 

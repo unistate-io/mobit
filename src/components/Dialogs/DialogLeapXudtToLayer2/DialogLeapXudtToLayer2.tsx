@@ -54,7 +54,7 @@ export default function DialogLeapXudtToLayer2({
     const [amountError, setAmountError] = React.useState<string>("")
     const [transactionError, setTransactionError] = React.useState<string>("")
 
-    const {xudts: xudtsBalance, status: xudtsBalanceStatus} = useLayer1Assets(open ? internalAddress : undefined)
+    const {xudts: xudtsBalance, status: xudtsBalanceStatus} = useLayer1Assets(network, open ? internalAddress : undefined)
 
     const balance = useMemo(() => {
         if (xudtsBalanceStatus !== "complete") {
