@@ -8,7 +8,7 @@ import {Spores} from "@/utils/graphql/types"
 export default function useSporeTransfer() {
     const {signer, network} = useContext(CKBContext)
 
-    const build = async ({to, spore}: {to: string; spore: Spores}) => {
+    const build = async ({to, spore, feeRate}: {to: string; spore: Spores; feeRate: ccc.NumLike}) => {
         if (!signer) {
             throw new Error("please set signer")
         }
@@ -21,6 +21,8 @@ export default function useSporeTransfer() {
             id: spore.id.replace("\\", "0"),
             signer
         })
+
+        tx.completeFeeBy(signer, feeRate)
 
         return tx
     }

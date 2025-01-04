@@ -71,7 +71,8 @@ export default function DialogSporeTransfer({
             if (!hasError) {
                 tx = await build({
                     to,
-                    spore
+                    spore,
+                    feeRate
                 })
 
                 if (!!tx) {
