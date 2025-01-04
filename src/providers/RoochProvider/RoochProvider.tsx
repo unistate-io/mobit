@@ -1,6 +1,5 @@
 import {createContext, useEffect, useMemo, useState} from "react";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
-// @ts-ignore
 import {
     WalletProvider,
     RoochProvider as RoochProviderNative,
@@ -8,15 +7,13 @@ import {
     useWallets,
     Wallet,
     useCurrentAddress,
-    useConnectionStatus,
-    useCurrentWallet
+    useCurrentWallet,
+    useWalletStore
 } from '@roochnetwork/rooch-sdk-kit'
 
-import * as roochSDk from '@roochnetwork/rooch-sdk-kit'
 import {networkConfig} from './network_config';
 import {useNavigate} from "react-router-dom";
 import {defaultTheme, getTheme, UserTheme} from "@/providers/UserProvider/themes";
-
 
 export const DefaultNetwork = 'testnet'
 
@@ -44,21 +41,19 @@ const queryClient = new QueryClient()
 
 function RoochProviderInner({children}: { children: any }) {
     const { mutateAsync: connectWallet,  } = useConnectWallet();
-    const wallets = useWallets();
-    const currentAddress = useCurrentAddress();
-    const connectionStatus = useConnectionStatus();
-    const currentWallet = useCurrentWallet();
+    const wallets = useWallets().filter((item) => DefaultNetwork !== 'testnet' || (DefaultNetwork === 'testnet' && item.getName() === 'UniSat'));
+    const currentAddress = useCurrentAddress()
+    const currentWallet = useCurrentWallet()
     const navigate = useNavigate()
+    const setWalletDisconnected = useWalletStore((state) => state.setWalletDisconnected)
 
-    const disconnectWallet = () => {};
-    console.log('roochSDk', roochSDk)
 
     useEffect(() => {
         console.log('currentAddress', currentAddress)
-        console.log('connectionStatus', connectionStatus)
         console.log('rooch address', currentAddress?.genRoochAddress().toStr())
         console.log('currentWallet', currentWallet)
-    }, [currentAddress, connectionStatus, currentWallet]);
+        console.log('wallets', wallets)
+    }, [currentAddress, currentWallet]);
 
     const connect = async (wallet: Wallet) => {
         try {
@@ -96,14 +91,14 @@ function RoochProviderInner({children}: { children: any }) {
         }
     }, [roochAddress]);
 
-    return <RoochContext.Provider value={{connect, disconnect: disconnectWallet, wallets, btcAddress, roochAddress, theme, network: DefaultNetwork}}>
+    return <RoochContext.Provider value={{connect, disconnect: setWalletDisconnected, wallets, btcAddress, roochAddress, theme, network: DefaultNetwork}}>
        {children}
    </RoochContext.Provider>
 }
 
 export default function RoochProvider({children}: { children: any }) {
     return <QueryClientProvider client={queryClient}>
-        <RoochProviderNative defaultNetwork={DefaultNetwork} networks={networkConfig}>
+        <RoochProviderNative key={DefaultNetwork} defaultNetwork={DefaultNetwork} networks={networkConfig}>
             <WalletProvider chain="bitcoin" autoConnect>
                 <RoochProviderInner>
                     {children}
