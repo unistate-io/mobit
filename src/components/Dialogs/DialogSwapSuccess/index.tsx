@@ -1,6 +1,6 @@
 import CopyText from '@/components/CopyText/CopyText'
 import Button from '@/components/Form/Button/Button'
-import { SwapForm } from '@/pages/Trade/SwapView'
+import { SwapForm } from '@/pages/CKB/Trade/SwapView'
 import { LangContext } from '@/providers/LangProvider/LangProvider'
 import { shortTransactionHash } from '@/utils/common'
 import * as Dialog from '@radix-ui/react-dialog'

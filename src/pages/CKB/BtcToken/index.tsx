@@ -18,7 +18,7 @@ const BtcInfo: TokenInfo = {
 }
 
 export default function BitcoinPage() {
-    const {signer, internalAddress} = useContext(CKBContext)
+    const {signer, internalAddress, network} = useContext(CKBContext)
 
     const btcAddress = useMemo(() => {
         if (!internalAddress) {
@@ -33,8 +33,8 @@ export default function BitcoinPage() {
     }, [internalAddress])
 
     const [tokenInfo] = useState(BtcInfo)
-    const {btc, status: btcBalanceStatue} = useLayer1Assets(btcAddress)
-    const {data: historyData, status: historyDataStatus} = useBtcTransactionsHistory(btcAddress)
+    const {btc, status: btcBalanceStatue} = useLayer1Assets(network, btcAddress)
+    const {data: historyData, status: historyDataStatus} = useBtcTransactionsHistory(network, btcAddress)
     const {lang} = useContext(LangContext)
 
     return <div className="max-w-[--page-with] mx-auto px-3 py-8 flex flex-col sm:flex-row items-start mb-10">

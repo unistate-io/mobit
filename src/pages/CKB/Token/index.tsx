@@ -20,7 +20,7 @@ import DialogTransferFromAddressSelect from "@/components/Dialogs/DialogTransfer
 
 export default function TokenPage() {
     const {tokenid} = useParams()
-    const {signer, open, address, addresses, internalAddress} = useContext(CKBContext)
+    const {signer, open, address, addresses, internalAddress, network} = useContext(CKBContext)
     const {lang} = useContext(LangContext)
 
 
@@ -36,7 +36,7 @@ export default function TokenPage() {
     const {data: xudtBalance, status: xudtBalanceStatus} = useXudtBalance(addresses, tokenInfo || undefined)
     const {data: historyData, status: historyDataStatus} = useTokenTransactions(tokenInfo, address, 10)
     const {data: rgbppHistory, status: rgbppHistoryStatus} = useTransactionsHistory(btcAddress)
-    const {xudts: rgbppXudts, status: rgbppXudtsStatus} = useLayer1Assets(btcAddress)
+    const {xudts: rgbppXudts, status: rgbppXudtsStatus} = useLayer1Assets(network, btcAddress)
 
     const rgbppBalance = useMemo(() => {
         if (!rgbppXudts || !tokenInfo) return '0'

@@ -8,11 +8,10 @@ export const getBtcTransactionsHistory = async (address: string, isMainnet: bool
     return await sdk.fetchTxsDetails(address) as BtcApiTransaction[]
 }
 
-export default function useBtcTransactionsHistory(address?: string) {
+export default function useBtcTransactionsHistory(network: string, address?: string, ) {
     const [data, setData] = useState<BtcTransaction[]>([])
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [error, setError] = useState<undefined | any>(undefined)
-    const {network} = useContext(CKBContext)
     const [page, setPage] = useState(1)
 
     useEffect(() => {

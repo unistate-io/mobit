@@ -79,12 +79,12 @@ export default function Profile() {
         btc: layer1Btc,
         status: layer1DataStatus,
         error: layer1DataErr
-    } = useLayer1Assets(btcAddress, true)
+    } = useLayer1Assets(network, btcAddress, true)
 
     const {
         data: btcHistory,
         status: btcHistoryStatus
-    } = useBtcTransactionsHistory(btcAddress)
+    } = useBtcTransactionsHistory(network, btcAddress)
 
     const {
         data: rgbppHistory,
@@ -173,7 +173,7 @@ export default function Profile() {
         <div className="max-w-[--page-with] mx-auto relative">
             {!!addresses && !!addresses.length && !!internalAddress && isOwner &&
                 <div className="absolute right-3 top-[12px]">
-                    <Link to="/trade"
+                    <Link to="/ckb/trade"
                         className="mr-4 border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex">
                         Swap
                     </Link>

@@ -1,6 +1,6 @@
 import UserProvider from "@/providers/UserProvider/UserProvider"
 import {useParams} from "react-router-dom"
-import Profile from "@/pages/Profile/Profile"
+import Profile from "@/pages/CKB/Profile/Profile"
 import EvmProfile from "./EvmProfile"
 import {useContext, useEffect, useState} from "react"
 import {
@@ -11,7 +11,7 @@ import {
     isEvmAddress
 } from "@/utils/common"
 import {ccc} from "@ckb-ccc/connector-react"
-import BtcProfile from "@/pages/Profile/BtcProfile"
+import BtcProfile from "@/pages/CKB/Profile/BtcProfile"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {MarketProvider} from "@/providers/MarketProvider/MarketProvider"
 

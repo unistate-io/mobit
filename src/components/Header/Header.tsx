@@ -34,26 +34,26 @@ function Header() {
                                    <NavLink
                                        onClick={() => setIsOpen(false)}
                                        className='font-semibold pl-3'
-                                       to={`/address/${address}`}>
+                                       to={`/ckb/address/${address}`}>
                                       <i className=""></i> {lang["Profile"]}
                                    </NavLink>
                                )}
                                <NavLink
                                    onClick={() => setIsOpen(false)}
                                    className='font-semibold pl-3'
-                                   to={`/market`}>
+                                   to={`/ckb/market`}>
                                    {lang["Market"]}
                                </NavLink>
                                <NavLink
                                    onClick={() => setIsOpen(false)}
                                    className='font-semibold pl-3'
-                                   to={`/apps`}>
+                                   to={`/ckb/apps`}>
                                    {lang["Apps"]}
                                </NavLink>
                                <NavLink
                                    onClick={() => setIsOpen(false)}
                                    className='font-semibold pl-3'
-                                   to={`/trade`}>
+                                   to={`/ckb/trade`}>
                                    {lang["Swap"]}
                                </NavLink>
                            </div>
@@ -71,7 +71,7 @@ function Header() {
                                     return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive && address === addressParams ? "text-[#6CD7B2]" : ""
                                     }`
                                 }}
-                                to={`/address/${address}`}
+                                to={`/ckb/address/${address}`}
                             >
                                 {lang["Profile"]}
                             </NavLink>
@@ -82,7 +82,7 @@ function Header() {
                                 return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive ? "text-[#6CD7B2]" : ""
                                 }`
                             }}
-                            to={`/market`}
+                            to={`/ckb/market`}
                         >
                             {lang["Market"]}
                         </NavLink>
@@ -91,7 +91,7 @@ function Header() {
                                 return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive ? "text-[#6CD7B2]" : ""
                                 }`
                             }}
-                            to={`/apps`}
+                            to={`/ckb/apps`}
                         >
                             {lang["Apps"]}
                         </NavLink>
@@ -100,7 +100,7 @@ function Header() {
                                 return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive ? "text-[#6CD7B2]" : ""
                                 }`
                             }}
-                            to={`/trade`}
+                            to={`/ckb/trade`}
                         >
                             {lang["Swap"]}
                         </NavLink>

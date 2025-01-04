@@ -66,7 +66,7 @@ export default function CKBProvider({children}: { children: any }) {
 
             if (needRedirect.current) {
                 needRedirect.current = false
-                navigate(`/address/${address}`)
+                navigate(`/ckb/address/${address}`)
             }
         })()
     }, [signer])
@@ -83,7 +83,7 @@ export default function CKBProvider({children}: { children: any }) {
             network,
             open: () => {
                 const currHref = window.location.href
-                if (currHref.includes('/address/')) {
+                if (!currHref.includes('/ckb/market/')) {
                     needRedirect.current = true
                 }
                 open()

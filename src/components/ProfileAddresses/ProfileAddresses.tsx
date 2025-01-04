@@ -29,6 +29,11 @@ const getLabel = (address: string) => {
             className: 'bg-[#FFF7E8] text-[#F1CB45]',
             label: 'BTC'
         }
+    } else if (address.startsWith('rooch')) {
+        return {
+            className: 'bg-green-100 text-green-500',
+            label: 'Rooch'
+        }
     } else {
         return {
             className: '',

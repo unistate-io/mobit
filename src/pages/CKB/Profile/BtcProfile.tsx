@@ -11,8 +11,10 @@ import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
 import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
 import {themes} from "@/providers/UserProvider/themes";
 import Button from "@/components/Form/Button/Button";
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider";
 
 export default function BtcProfile({internalAddress}: { internalAddress: string }) {
+    const {network} = useContext(CKBContext)
     const {showToast} = useContext(ToastContext)
     const {lang} = useContext(LangContext)
 
@@ -31,13 +33,13 @@ export default function BtcProfile({internalAddress}: { internalAddress: string 
         btc: layer1Btc,
         status: layer1DataStatus,
         error: layer1DataErr
-    } = useLayer1Assets(
+    } = useLayer1Assets(network,
         internalAddress && isBtc ? internalAddress : undefined)
 
     const {
         data: btcHistory,
         status: btcHistoryStatus
-    } = useBtcTransactionsHistory(isBtc ? internalAddress : undefined)
+    } = useBtcTransactionsHistory(network, isBtc ? internalAddress : undefined)
 
     const tokensStatus = useMemo(() => {
         if (layer1DataStatus === 'loading') {
