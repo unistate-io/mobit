@@ -24,6 +24,7 @@ export default function useRoochBtcBalance(btcAddress?: string) {
             if (!btcAddress) {
                 setData(null)
                 setStatus("complete")
+                historyRef.current = ""
                 return
             }
 

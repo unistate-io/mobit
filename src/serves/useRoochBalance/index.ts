@@ -49,6 +49,7 @@ export default function useRoochBalance(address?: string) {
                     setStatus("complete")
                 }
             } else {
+                historyRef.current = ""
                 setData(tokenBalance)
             }
         })()
