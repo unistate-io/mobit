@@ -22,7 +22,7 @@ export default function useSporeTransfer() {
             signer
         })
 
-        tx.completeFeeBy(signer, feeRate)
+        await tx.completeFeeBy(signer, feeRate)
 
         return tx
     }

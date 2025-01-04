@@ -13,6 +13,7 @@ import * as dayjsLib from "dayjs"
 import useSporeTransfer from "@/serves/useSporeTransfer"
 import {Spores} from "@/utils/graphql/types"
 import {ccc, useCcc} from "@ckb-ccc/connector-react"
+import {toDisplay} from "@/utils/number_display"
 
 const dayjs: any = dayjsLib
 
@@ -45,11 +46,13 @@ export default function DialogSporeTransfer({
     const [fee1000, setFee1000] = useState<string>("0")
     const [to, setTo] = useState<string>("")
     const fee = (showFeeRate: number) => {
-        const calculatedFee = BigNumber(fee1000)
-            .multipliedBy(showFeeRate / 1000)
-            .dividedBy(10 ** 8)
-            .toString()
-        return calculatedFee
+        return toDisplay(
+            BigNumber(fee1000)
+                .multipliedBy(showFeeRate / 1000)
+                .toString(),
+            0,
+            true
+        )
     }
 
     //errors
@@ -57,7 +60,7 @@ export default function DialogSporeTransfer({
     const [transactionError, setTransactionError] = useState<string>("")
     const {client} = useCcc()
 
-    const checkErrorsAndBuild = async () => {
+    const checkErrorsAndBuild = async (feeRate: number) => {
         setToError("")
         let hasError = false
 
@@ -75,7 +78,7 @@ export default function DialogSporeTransfer({
                     feeRate
                 })
 
-                if (!!tx) {
+                if (!!tx && feeRate === 1000) {
                     try {
                         const inputCap = await tx.getInputsCapacity(client)
                         const outCap = tx.getOutputsCapacity()
@@ -118,7 +121,7 @@ export default function DialogSporeTransfer({
             (async () => {
                 try {
                     setSending(true)
-                    await checkErrorsAndBuild()
+                    await checkErrorsAndBuild(1000)
                 } finally {
                     setSending(false)
                 }
@@ -129,7 +132,7 @@ export default function DialogSporeTransfer({
         setSending(true)
         setTransactionError("")
         try {
-            const tx = await checkErrorsAndBuild()
+            const tx = await checkErrorsAndBuild(feeRate)
             if (!tx) {
                 return
             }
