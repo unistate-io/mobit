@@ -2617,19 +2617,6 @@
     "@radix-ui/react-use-callback-ref" "1.1.0"
     "@radix-ui/react-use-escape-keydown" "1.1.0"
 
-"@radix-ui/react-dropdown-menu@^2.1.1":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-dropdown-menu/-/react-dropdown-menu-2.1.4.tgz#5e1f453296dd9ae99224a26c36851832d26cf507"
-  integrity sha512-iXU1Ab5ecM+yEepGAWK8ZhMyKX4ubFdCNtol4sT9D0OVErG9PNElfx3TQhjw7n7BC5nFVz68/5//clWy+8TXzA==
-  dependencies:
-    "@radix-ui/primitive" "1.1.1"
-    "@radix-ui/react-compose-refs" "1.1.1"
-    "@radix-ui/react-context" "1.1.1"
-    "@radix-ui/react-id" "1.1.0"
-    "@radix-ui/react-menu" "2.1.4"
-    "@radix-ui/react-primitive" "2.0.1"
-    "@radix-ui/react-use-controllable-state" "1.1.0"
-
 "@radix-ui/react-focus-guards@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-focus-guards/-/react-focus-guards-1.1.1.tgz#8635edd346304f8b42cae86b05912b61aef27afe"
@@ -2655,30 +2642,6 @@
   integrity sha512-EJUrI8yYh7WOjNOqpoJaf1jlFIH2LvtgAl+YcFqNCa+4hj64ZXmPkAKOFs/ukjz3byN6bdb/AVUqHkI8/uWWMA==
   dependencies:
     "@radix-ui/react-use-layout-effect" "1.1.0"
-
-"@radix-ui/react-menu@2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-menu/-/react-menu-2.1.4.tgz#ac7aec296f29608206a7c6ef6335d8f102edaa95"
-  integrity sha512-BnOgVoL6YYdHAG6DtXONaR29Eq4nvbi8rutrV/xlr3RQCMMb3yqP85Qiw/3NReozrSW+4dfLkK+rc1hb4wPU/A==
-  dependencies:
-    "@radix-ui/primitive" "1.1.1"
-    "@radix-ui/react-collection" "1.1.1"
-    "@radix-ui/react-compose-refs" "1.1.1"
-    "@radix-ui/react-context" "1.1.1"
-    "@radix-ui/react-direction" "1.1.0"
-    "@radix-ui/react-dismissable-layer" "1.1.3"
-    "@radix-ui/react-focus-guards" "1.1.1"
-    "@radix-ui/react-focus-scope" "1.1.1"
-    "@radix-ui/react-id" "1.1.0"
-    "@radix-ui/react-popper" "1.2.1"
-    "@radix-ui/react-portal" "1.1.3"
-    "@radix-ui/react-presence" "1.1.2"
-    "@radix-ui/react-primitive" "2.0.1"
-    "@radix-ui/react-roving-focus" "1.1.1"
-    "@radix-ui/react-slot" "1.1.1"
-    "@radix-ui/react-use-callback-ref" "1.1.0"
-    aria-hidden "^1.1.1"
-    react-remove-scroll "^2.6.1"
 
 "@radix-ui/react-popover@^1.1.1":
   version "1.1.4"
@@ -2782,7 +2745,7 @@
     aria-hidden "^1.1.1"
     react-remove-scroll "^2.6.1"
 
-"@radix-ui/react-slot@1.1.1", "@radix-ui/react-slot@^1.1.0":
+"@radix-ui/react-slot@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-slot/-/react-slot-1.1.1.tgz#ab9a0ffae4027db7dc2af503c223c978706affc3"
   integrity sha512-RApLLOcINYJA+dMVbOju7MYv1Mb2EBp2nH4HdDzXTSyaR5optlm6Otrz1euW3HbdOR8UmmFK06TD+A9frYWv+g==
@@ -2979,27 +2942,22 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@roochnetwork/rooch-sdk-kit@^0.2.10":
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/@roochnetwork/rooch-sdk-kit/-/rooch-sdk-kit-0.2.10.tgz#51432d8f300986ea46881185b14c8819d7de3b88"
-  integrity sha512-9cq90rDLiMzhPYBNsxjVh+qc9f2VmOnc1wxKZX9RxZxUFJU4JBRxwt6DM0bzh12zGu7/IcSeBb4q1lRF6YOa9g==
+"@roochnetwork/rooch-sdk-kit@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@roochnetwork/rooch-sdk-kit/-/rooch-sdk-kit-0.2.7.tgz#b97d175ff48f2f42b4e38888eb8fd8dd6f072977"
+  integrity sha512-4RP41/3aAMxPHlMef9f8V45HRwXWW0M5fkWFCf12L5O1v0iaBxbL0O3pw8Lsu8ESd7BKdvk1ho5Qz7L+J/bcOg==
   dependencies:
-    "@radix-ui/react-dialog" "^1.1.1"
-    "@radix-ui/react-dropdown-menu" "^2.1.1"
-    "@radix-ui/react-slot" "^1.1.0"
-    "@roochnetwork/rooch-sdk" "0.2.9"
+    "@roochnetwork/rooch-sdk" "0.2.7"
     "@vanilla-extract/css" "^1.15.5"
     "@vanilla-extract/dynamic" "^2.1.2"
-    "@vanilla-extract/recipes" "^0.5.3"
+    "@vanilla-extract/recipes" "^0.5.5"
     clsx "^2.1.1"
-    dayjs "^1.11.11"
-    decimal.js "10.4.3"
     zustand "^4.5.5"
 
-"@roochnetwork/rooch-sdk@0.2.9", "@roochnetwork/rooch-sdk@^0.2.9":
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/@roochnetwork/rooch-sdk/-/rooch-sdk-0.2.9.tgz#5da958b1a99e50c8cacf5ed52711a3825a1e7591"
-  integrity sha512-1KMMAhf8vFjLwkAYVnxHS4U+fzCcd6xk6pNyK3D5gSBHCASFCcUPtQgozs61iK6nesXR6VnzajZ2OiODn4Ultg==
+"@roochnetwork/rooch-sdk@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@roochnetwork/rooch-sdk/-/rooch-sdk-0.2.7.tgz#c58dcc3a83ec8bbe587e3051a65e7825a73afeda"
+  integrity sha512-iQdoN06ijFLmdyPfOxgQGhcgl62vkhRKWUQ1fZO0+V2Kpu8wF4qN2Xg7nqZ8VCC5Kr1g9St2CmS60PXPjpCgPw==
   dependencies:
     "@mysten/bcs" "1.0.4"
     "@noble/curves" "~1.6.0"
@@ -3877,7 +3835,7 @@
   resolved "https://registry.yarnpkg.com/@vanilla-extract/private/-/private-1.0.6.tgz#f10bbf3189f7b827d0bd7f804a6219dd03ddbdd4"
   integrity sha512-ytsG/JLweEjw7DBuZ/0JCN4WAQgM9erfSTdS1NQY778hFQSZ6cfCDEZZ0sgVm4k54uNz6ImKB33AYvSR//fjxw==
 
-"@vanilla-extract/recipes@^0.5.3":
+"@vanilla-extract/recipes@^0.5.5":
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/@vanilla-extract/recipes/-/recipes-0.5.5.tgz#da34e247be2c3d70e01ecfeb53310daadc608b74"
   integrity sha512-VadU7+IFUwLNLMgks29AHav/K5h7DOEfTU91RItn5vwdPfzduodNg317YbgWCcpm7FSXkuR3B3X8ZOi95UOozA==
@@ -5885,7 +5843,7 @@ decamelize@^1.2.0:
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
   integrity sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==
 
-decimal.js@10.4.3, decimal.js@^10.2.1, decimal.js@^10.4.2:
+decimal.js@^10.2.1, decimal.js@^10.4.2:
   version "10.4.3"
   resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.4.3.tgz#1044092884d245d1b7f65725fa4ad4c6f781cc23"
   integrity sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==

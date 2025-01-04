@@ -8,7 +8,6 @@ import Input from "@/components/Form/Input/Input"
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
 import DialogProfileInfo from "@/components/Rooch/Dialogs/DialogProfileInfo/DialogProfileInfo"
 import DialogConnectWallet from "@/components/Dialogs/DialogConnectWallet";
-import {useCurrentAddress, useConnectionStatus, useAddresses} from "@roochnetwork/rooch-sdk-kit"
 import {getTheme} from "@/providers/UserProvider/themes";
 import {RoochContext} from "@/providers/RoochProvider/RoochProvider"
 
@@ -22,17 +21,6 @@ export default function HeaderMenu() {
 
     const [showSearchInput, setShowSearchInput] = useState(false)
     const [searching, setSearching] = useState(false)
-
-    const currentAddress = useCurrentAddress()
-    const connectionStatus = useConnectionStatus()
-    const addresses = useAddresses()
-
-    useEffect(() => {
-        console.log('currentAddress', currentAddress)
-        console.log('connectionStatus', connectionStatus)
-        console.log('addresses', addresses)
-        console.log('rooch address', currentAddress?.genRoochAddress().toStr())
-    }, [currentAddress, connectionStatus, addresses]);
 
     const showSearch = () => {
         setShowSearchInput(true)

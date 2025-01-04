@@ -11,8 +11,8 @@ import ListToken, {TokenBalance} from "@/components/ListToken/ListToken"
 import ListHistory from "@/components/ListHistory/ListHistory"
 import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
 import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
-import useLayer1Assets from "@/serves/useLayer1Assets"
 import useRoochBalance from "@/serves/useRoochBalance"
+import useRoochBtcBalance from '@/serves/useRoochBtcBalance'
 
 export default function RoochProfile() {
     const {address} = useParams()
@@ -37,10 +37,9 @@ export default function RoochProfile() {
     } = useBtcTransactionsHistory(network, btcAddress)
 
     const {
-        btc: layer1Btc,
-        status: layer1DataStatus,
-    } = useLayer1Assets(network, btcAddress, true)
-
+        data: layer1Btc,
+        status: layer1DataStatus
+    } = useRoochBtcBalance(!!btcAddress && isOwner ? btcAddress : undefined)
 
     const {data: roochBalance, status: roochBalanceStatus} = useRoochBalance(address)
 
