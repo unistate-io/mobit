@@ -12,7 +12,7 @@ import {LangContext} from "@/providers/LangProvider/LangProvider"
 import * as dayjsLib from "dayjs"
 import useSporeTransfer from "@/serves/useSporeTransfer"
 import {Spores} from "@/utils/graphql/types"
-import {ccc} from "@ckb-ccc/connector-react"
+import {ccc, useCcc} from "@ckb-ccc/connector-react"
 
 const dayjs: any = dayjsLib
 
@@ -55,6 +55,7 @@ export default function DialogSporeTransfer({
     //errors
     const [toError, setToError] = useState<string>("")
     const [transactionError, setTransactionError] = useState<string>("")
+    const {client} = useCcc()
 
     const checkErrorsAndBuild = async () => {
         setToError("")
@@ -65,7 +66,6 @@ export default function DialogSporeTransfer({
             setToError("Please enter a valid address")
             hasError = true
         }
-
         try {
             let tx: ccc.Transaction | null = null
             if (!hasError) {
@@ -77,10 +77,18 @@ export default function DialogSporeTransfer({
 
                 if (!!tx) {
                     try {
-                        const inputCap = tx.inputs.reduce((sum, input) => sum + Number(input.cellOutput?.capacity), 0)
-                        const outCap = tx.outputs.reduce((sum, input) => sum + Number(input.capacity), 0)
-                        const fee = (inputCap - outCap) / (feeRate / 1000)
-                        setFee1000(fee.toString())
+                        const inputCap = await tx.getInputsCapacity(client)
+                        const outCap = tx.getOutputsCapacity()
+
+                        console.log("Calculating fee...")
+                        const fee = inputCap - outCap
+                        console.log(`Fee calculated: ${fee}`)
+                        const feeBigNumber = new BigNumber(fee.toString())
+                        const divisor = new BigNumber(10 ** 8)
+                        const fee1000BigNumber = feeBigNumber.dividedBy(divisor)
+
+                        console.log("Setting fee1000...")
+                        setFee1000(fee1000BigNumber.toString())
                     } catch (e) {
                         console.error("Error calculating capacities or fee:", e)
                     }
