@@ -42,7 +42,7 @@ export default function RoochProfile() {
     } = useLayer1Assets(network, btcAddress, true)
 
 
-    const {data: roochBalance, status: roochBalanceStatus} = useRoochBalance(btcAddress)
+    const {data: roochBalance, status: roochBalanceStatus} = useRoochBalance(address)
 
     const tokensStatus = useMemo(() => {
         if (roochBalanceStatus === 'loading' || layer1DataStatus === 'loading') {
