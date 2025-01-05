@@ -1,14 +1,11 @@
 import {ChainIcons} from "@/components/TokenIcon/icons"
 import {useContext, useEffect, useState} from "react"
-import {bufferToRawString} from '@spore-sdk/core'
 import {shortTransactionHash} from "@/utils/number_display"
 import {Link} from "react-router-dom"
-import {queryClustersByIds} from "@/utils/graphql"
-import {renderByTokenKey, svgToBase64} from '@nervina-labs/dob-render'
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {SporesWithChainInfo} from "@/serves/useSpores"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {getImgFromSporeCell} from "@/utils/spore";
+import {renderDob} from "@/utils/spore"
 
 export default function ListDOBs({
                                      data,
@@ -41,7 +38,7 @@ export default function ListDOBs({
                 </div>
             }
 
-            <div className="flex flex-row flex-wrap px-2">
+            <div className="grid-cols-2 sm:grid-cols-3 grid">
                 {status !== 'loading' &&
                     data.map((item, index) => {
                         return <DOBItem item={item} key={item.id}/>
@@ -72,60 +69,17 @@ function DOBItem({item}: { item: SporesWithChainInfo }) {
     const {network} = useContext(CKBContext)
 
     useEffect(() => {
-        if (item.content_type === 'application/json') {
-            try {
-                const json = JSON.parse(bufferToRawString(item.content.replace('\\', '0')))
-                console.log('application/json', json)
-                if (json.name) {
-                    setName(json.name)
-                }
-
-                if (json.resource?.type.includes('image')) {
-                    const img = new Image()
-                    img.src = json.resource.url
-                    img.onload = () => {
-                        setImage(json.resource.url)
-                    }
-                }
-
-                if (json.resource?.type.includes('video')) {
-                    setVideo(json.resource.url)
-                }
-            } catch (e: any) {
-                console.error(e)
-            }
-        }
-
-        if (item.content_type.includes('text/plain')) {
-            setPlantText(bufferToRawString(item.content.replace('\\', '0')))
-        }
-
-        if (item.content_type.includes('dob/0') && network === 'mainnet') {
-            queryClustersByIds(item.cluster_id, true).then((clusters) => {
-                if (clusters) {
-                    setName(clusters.cluster_name)
-                }
-            })
-
-            renderByTokenKey(item.id.replace('\\', '').replace('x', ''))
-                .then(async (res) => {
-                    setImage(await svgToBase64(res))
-                })
-                .catch((e: any) => {
-                    console.warn(e)
-                })
-        }
-
-        if (item.content_type.includes('image')) {
-            const data = item.content.replace('\\x', '')
-            const res = getImgFromSporeCell(data, item.content_type)
-            setImage(res)
-        }
+        ;(async ()=> {
+            const {name, image, plantText} = await renderDob(item, network)
+            setName(name)
+            setImage(image)
+            setPlantText(plantText)
+        })()
     }, [item])
 
-    return <Link to={`/dob/${item.id.replace('\\', '').replace('x', '')}?chain=${item.chain}`} className="shrink-0 grow-0 max-w-[50%] basis-1/2 md:basis-1/3 md:max-w-[33.3%] box-border p-2">
+    return <Link to={`/dob/${item.id.replace('\\', '').replace('x', '')}?chain=${item.chain}`} className="box-border p-2">
         <div
-            className="relative w-full h-[140px] sm:h-[200px] md:h-[250px] lg:h-[180px]  overflow-hidden rounded-sm border border-1">
+            className="relative w-full sm:h-[240px] h-[180px] overflow-hidden rounded-sm border border-1">
             <img className="object-cover w-full h-full"
                  src={image || "/images/spore_placeholder.svg"} alt=""/>
             {

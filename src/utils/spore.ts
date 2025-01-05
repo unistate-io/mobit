@@ -1,4 +1,9 @@
-import { toBigEndian, hexToBytes } from '@nervosnetwork/ckb-sdk-utils'
+import {hexToBytes, toBigEndian} from '@nervosnetwork/ckb-sdk-utils'
+import {SporesWithChainInfo} from "@/serves/useSpores"
+import {bufferToRawString} from "@spore-sdk/core"
+import {queryClustersByIds} from "@/utils/graphql"
+import {renderByTokenKey, svgToBase64} from "@nervina-labs/dob-render";
+
 
 export const hexToUtf8 = (value: string = '') => {
     try {
@@ -80,4 +85,123 @@ export const isDob0 = (item: { standard: string | null; cell: { data: string | n
         // ignore
     }
     return false
+}
+
+export interface DobRenderRes {
+    name: string
+    image: string
+    video: string
+    plantText: string
+    description: string
+    traits: {key: string, value: any}[]
+    dna?: string
+    id?: string
+}
+export const renderDob = async (item: SporesWithChainInfo, network: string) => {
+    return new Promise<DobRenderRes>(async (resolve, reject) => {
+        const res: DobRenderRes = {
+            name: '',
+            image: '/images/spore_placeholder.svg',
+            description: '',
+            video: '',
+            plantText: '',
+            traits: []
+        }
+
+        if (item.cluster_id) {
+            const clusters = await queryClustersByIds(item.cluster_id, true)
+            if (clusters) {
+                console.log('clusters', clusters)
+                res.name = clusters.cluster_name || ''
+
+                if (clusters.cluster_description) {
+                    if (clusters.cluster_description.startsWith('{')) {
+                        const clusterDescription = JSON.parse(clusters.cluster_description)
+                        res.description = clusterDescription.description || ''
+                    } else {
+                        res.description = clusters.cluster_description
+                    }
+                }
+            }
+        }
+
+        if (item.content_type === 'application/json') {
+            try {
+                const json = JSON.parse(bufferToRawString(item.content.replace('\\', '0')))
+                if (json.resource?.type.includes('image')) {
+                    const img = new Image()
+                    img.src = json.resource.url
+                    img.onload = () => {
+                        res.image = json.resource.url
+                        resolve(res)
+                    }
+                } else if (json.resource?.type.includes('video')) {
+                    res.video = json.resource.url
+                    resolve(res)
+                } else {
+                    resolve(res)
+                }
+            } catch (e: any) {
+                console.error(e)
+                reject(e)
+            }
+        }
+        else if (item.content_type.includes('text/plain')) {
+            res.plantText = bufferToRawString(item.content.replace('\\', '0'))
+            resolve(res)
+        }
+        else if (item.content_type.includes('image')) {
+            const data = item.content.replace('\\x', '')
+            res.image = getImgFromSporeCell(data, item.content_type)
+            resolve(res)
+        }
+        else if (item.content_type.includes('dob/0') && network === 'mainnet') {
+            try {
+                const tokenId = item.id.replace('\\', '').replace('x', '')
+                const decode:any = await decodeBob0(tokenId)
+                res.traits = JSON.parse(decode.render_output)
+                    .filter((trait: any) => {
+                        return !trait.name.startsWith('prev.')
+                    })
+                    .map((trait: any)=> {
+                    return {key: trait.name , value: trait.traits[0].String || trait.traits[0].Number}
+                })
+                res.dna = decode.dob_content.dna || ''
+                res.id = decode.dob_content.id || ''
+
+                const svg = await renderByTokenKey(tokenId)
+                res.image = await svgToBase64(svg)
+                resolve(res)
+            } catch (e) {
+                console.error(e)
+                reject(e)
+            }
+        }
+        else resolve(res)
+    })
+}
+
+export function decodeBob0(tokenid: string) {
+    return new Promise((resolve, reject) => {
+        fetch(`https://dob-decoder.rgbpp.io/`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": 'application/json',
+            },
+            body: JSON.stringify({
+                id: 2,
+                jsonrpc: '2.0',
+                method: 'dob_decode',
+                params: [tokenid]
+            })
+        })
+            .then(res => {
+                return res.json()
+            }).then(res => {
+            resolve(JSON.parse(res.result))
+        })
+            .catch((e: any) => {
+                reject(e)
+            })
+    })
 }
