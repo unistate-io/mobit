@@ -7,10 +7,12 @@ import {
     DrawerContent,
     DrawerTrigger,
 } from "@/components/Drawer"
+import {RoochContext} from "@/providers/RoochProvider/RoochProvider";
 
 function Header() {
     const { lang } = useContext(LangContext)
     const [isOpen, setIsOpen] = useState(false)
+    const { roochAddress } = useContext(RoochContext)
 
     return (
         <header className={"sticky w-full bg-white shadow h-[60px] top-0 z-20"}>
@@ -29,7 +31,7 @@ function Header() {
                                <NavLink
                                    onClick={() => setIsOpen(false)}
                                    className='font-semibold pl-3'
-                                   to={`/rooch/address/${123}`}>
+                                   to={`/rooch/address/${roochAddress}`}>
                                    <i className=""></i> {lang["Profile"]}
                                </NavLink>
 
@@ -53,7 +55,7 @@ function Header() {
                                 return `whitespace-nowrap text-xs font-semibold ml-3 md:ml-10 md:text-sm ${isActive  ? "text-[#6CD7B2]" : ""
                                 }`
                             }}
-                            to={`/rooch/address/${123}`}
+                            to={`/rooch/address/${roochAddress}`}
                         >
                             {lang["Profile"]}
                         </NavLink>
