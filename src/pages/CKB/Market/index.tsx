@@ -7,8 +7,10 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import HomeActions from "@/components/HomeActions"
 import DialogConnectWallet from "@/components/Dialogs/DialogConnectWallet"
 import {RoochContext} from "@/providers/RoochProvider/RoochProvider"
+import RoochProvider from "@/providers/RoochProvider/RoochProvider"
 
-export default function MarketPage({showActions=true}: {showActions?: boolean}) {
+interface MarketPageInnerProps {showActions?: boolean}
+export function MarketPageInner({showActions=true}: MarketPageInnerProps) {
     const {data, status} = useMarket()
     const {lang} = useContext(LangContext)
     const {roochAddress} = useContext(RoochContext)
@@ -39,7 +41,7 @@ export default function MarketPage({showActions=true}: {showActions?: boolean}) 
                 !address && !roochAddress && <DialogConnectWallet>
                 <button
                     className="btn btn-primary py-3 px-6  font-semibold hover:opacity-80 rounded-[100px] bg-[#7FF7CE]"
-                    onClick={open}>
+                    >
                     {lang['Connect Wallet']} <i className="uil-arrow-right"/>
                 </button>
                 </DialogConnectWallet>
@@ -129,4 +131,10 @@ export function DisPlayChange (props: {change: number, className?: string}) {
     const text = props.change > 0 ? `+${(props.change).toFixed(2)}%` : `${(props.change).toFixed(2)}%`
 
     return <span className={`${color} ${props.className}`}>{text}</span>
+}
+
+export default function MarketPage(props: MarketPageInnerProps) {
+    return <RoochProvider>
+        <MarketPageInner {...props} />
+    </RoochProvider>
 }
