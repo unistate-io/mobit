@@ -181,7 +181,7 @@ export default function DialogLeapXudtToLayer2({
                     <div className="h-full overflow-auto max-h-[88vh] w-full">
                         {step === 1 && (
                             <>
-                                <div className="flex flex-row justify-between items-center mb-4">
+                                <div className="flex flex-row justify-between items-center mb-1">
                                     <div className="font-semibold text-2xl">{lang["Leap_l1_to_l2"]}</div>
                                     <div
                                         onClick={e => {
@@ -189,9 +189,10 @@ export default function DialogLeapXudtToLayer2({
                                         }}
                                         className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100"
                                     >
-                                        <i className="uil-times text-gray-500" />
+                                        <i className="uil-times text-gray-500"/>
                                     </div>
                                 </div>
+                                <div className="text-sm mb-5">{lang['Moving assets to other chains with RGB++ Protocol']}</div>
 
                                 <div className="font-semibold mb-10">
                                     <div className="mb-2">{lang["Leap to"]}</div>
@@ -209,7 +210,7 @@ export default function DialogLeapXudtToLayer2({
                                 <div className="font-semibold mb-10">
                                     <div className="mb-2">{lang["Asset"]}</div>
                                     <Input
-                                        startIcon={<TokenIcon size={32} symbol={token.symbol} />}
+                                        startIcon={<TokenIcon size={32} symbol={token.symbol}/>}
                                         value={token.symbol}
                                         type={"text"}
                                         disabled

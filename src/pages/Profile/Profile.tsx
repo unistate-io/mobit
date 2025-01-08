@@ -161,9 +161,6 @@ export default function Profile() {
         }, {
             value: '.bit',
             label: '.bit'
-        }, {
-            value: 'Activity',
-            label: lang['Activity']
         }]
     }, [lang])
 
@@ -231,9 +228,14 @@ export default function Profile() {
                         value={tab.value}>{tab.label}</Button>
                 })}
                 <a href="https://www.nervdao.com/" target="_blank"
-                   className="!w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg">
-                    Nervos DAO
+                   className="whitespace-nowrap !w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg">
+                    Nervos DAO ({lang['CKB Staking']})
                 </a>
+                <Button
+                    key={'Activity'}
+                    onClick={() => setCurrTab('Activity')}
+                    className={`!w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg ${'Activity' === currtab ? ' text-white !bg-black' : ''}`}
+                    value={'Activity'}>{lang['Activity']}</Button>
             </div>
             <div className="flex justify-between flex-col lg:flex-row">
                 <div className={`flex-1 lg:max-w-[780px] ${currtab !== 'Activity' ? 'block' : 'hidden'}`}>
@@ -323,7 +325,7 @@ export default function Profile() {
                     </div>
                 </div>
 
-                <div className={`lg:max-w-[380px] flex-1 mt-4 ${currtab !== 'Activity' ? 'block' : 'hidden'}`}>
+                <div className={`lg:max-w-[380px] flex-1 lg:ml-5 mt-4 ${currtab !== 'Activity' ? 'block' : 'hidden'}`}>
                     <div className="shadow rounded-lg bg-white py-4">
                         <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
                             <div className="text-xl font-semibold">{lang['Activity']}</div>

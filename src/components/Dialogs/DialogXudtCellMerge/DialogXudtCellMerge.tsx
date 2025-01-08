@@ -113,7 +113,7 @@ export default function DialogXudtCellMerge({
                     className="data-[state=open]:animate-contentShow z-50 fixed top-[50%] left-[50%] p-4 max-w-[98vw] w-full md:max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-white shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none"
                 >
                     <div className="h-full overflow-auto max-h-[88vh] w-full">
-                        <div className="flex flex-row justify-between items-center mb-4">
+                        <div className="flex flex-row justify-between items-center mb-1">
                             <div className="font-semibold text-2xl">{lang["Merge"]} Cell</div>
                             <div
                                 onClick={e => {
@@ -124,6 +124,9 @@ export default function DialogXudtCellMerge({
                                 <i className="uil-times text-gray-500"/>
                             </div>
                         </div>
+                        <div
+                            className="text-sm mb-5">{lang['Merge UTXO Cells to save space and get CKB returned']}</div>
+
                         {step === 1 && (
                             <>
                                 <div className="font-semibold mb-1">{lang["Input"]} Cells</div>

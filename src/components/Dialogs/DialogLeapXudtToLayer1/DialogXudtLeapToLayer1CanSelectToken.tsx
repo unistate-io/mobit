@@ -224,17 +224,21 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                 >
                     <div className="h-full overflow-auto max-h-[88vh] w-full">
                         {step !== 5 && step !== 6 && (
-                            <div className="flex flex-row justify-between items-center mb-4">
-                                <div className="font-semibold text-2xl">{lang["Leap_l2_to_l1"]}</div>
-                                <div
-                                    onClick={e => {
-                                        setOpen(false)
-                                    }}
-                                    className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100"
-                                >
-                                    <i className="uil-times text-gray-500" />
+                            <>
+                                <div className="flex flex-row justify-between items-center mb-1">
+                                    <div className="font-semibold text-2xl">{lang["Leap_l2_to_l1"]}</div>
+                                    <div
+                                        onClick={e => {
+                                            setOpen(false)
+                                        }}
+                                        className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100"
+                                    >
+                                        <i className="uil-times text-gray-500"/>
+                                    </div>
                                 </div>
-                            </div>
+                                <div
+                                    className="text-sm mb-5">{lang['Moving assets to other chains with RGB++ Protocol']}</div>
+                            </>
                         )}
 
                         {step === 1 && (
@@ -363,7 +367,7 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                                                             href={`${config.btc_explorer}/tx/${uxto.txid}`}
                                                             onClick={e => e.stopPropagation()}
                                                             target={"_blank"}
-                                                            className="hover:underline  flex flex-row items-center bg-[#fffbf5] p-2 text-xs overflow-hidden"
+                                                            className="hover:underline  flex flex-row items-center bg-[#fffbf5] p-2 text-xs overflow-hidden" rel="noreferrer"
                                                         >
                                                             Tx: {shortTransactionHash(uxto.txid)}
                                                         </a>

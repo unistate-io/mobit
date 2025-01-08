@@ -11,9 +11,10 @@ export default function ListDotBit({
     const {lang} = useContext(LangContext)
 
     return <div className="shadow rounded-lg bg-white py-4">
-        <div className="flex justify-between flex-row items-center px-2 md:px-4 mb-3">
+        <div className="flex justify-between flex-row items-center px-2 md:px-4">
             <div className="text-xl font-semibold">.bit</div>
         </div>
+        <div className="px-2 md:px-4 mb-3 text-sm text-gray-500">{lang['Decentralized Identity and domain name for CKB']}</div>
 
         <div className="flex flex-col">
             {status === 'loading' &&

@@ -134,6 +134,12 @@ const langCN: LangConfig = {
     "Trade": "交易",
     "Select a token": "选择一个代币",
     "All Token": "全部代币",
+    "Non-fungible assets": "非同质化资产",
+    "Decentralized Identity and domain name for CKB": "CKB的去中心化身份和域名",
+    "CKB Staking": "CKB质押",
+    "Moving assets to other chains with RGB++ Protocol":"使用RGB++协议将资产移动到其他链上",
+    "Merge UTXO Cells to save space and get CKB returned":"合并UTXO Cell以节省空间并获得CKB返还",
+    "Burn UTXO Cells to save space and get CKB returned":"销毁UTXO Cell以节省空间并获得CKB返还",
 }
 
 export default langCN

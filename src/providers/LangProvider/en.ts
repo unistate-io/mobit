@@ -134,6 +134,12 @@ const langEN = {
     "Trade": "Trade",
     "Select a token": "Select a token",
     "All Token": "All Token",
+    "Non-fungible assets": "Non-fungible assets",
+    "Decentralized Identity and domain name for CKB":"Decentralized Identity and domain name for CKB",
+    "CKB Staking":"CKB Staking",
+    "Moving assets to other chains with RGB++ Protocol":"Moving assets to other chains with RGB++ Protocol",
+    "Merge UTXO Cells to save space and get CKB returned":"Merge UTXO Cells to save space and get CKB returned",
+    "Burn UTXO Cells to save space and get CKB returned":"Burn UTXO Cells to save space and get CKB returned"
 }
 
 export type LangConfig = typeof langEN
