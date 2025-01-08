@@ -1,4 +1,4 @@
-import { LangConfig } from "./en"
+import {LangConfig} from "./en"
 
 function slotLang(str: string) {
     return function (slots: any[]): string {
@@ -137,9 +137,14 @@ const langCN: LangConfig = {
     "Non-fungible assets": "非同质化资产",
     "Decentralized Identity and domain name for CKB": "CKB的去中心化身份和域名",
     "CKB Staking": "CKB质押",
-    "Moving assets to other chains with RGB++ Protocol":"使用RGB++协议将资产移动到其他链上",
-    "Merge UTXO Cells to save space and get CKB returned":"合并UTXO Cell以节省空间并获得CKB返还",
-    "Burn UTXO Cells to save space and get CKB returned":"销毁UTXO Cell以节省空间并获得CKB返还",
+    "Moving assets to other chains with RGB++ Protocol": "使用RGB++协议将资产移动到其他链上",
+    "Merge UTXO Cells to save space and get CKB returned": "合并UTXO Cell以节省空间并获得CKB返还",
+    "Burn UTXO Cells to save space and get CKB returned": "销毁UTXO Cell以节省空间并获得CKB返还",
+    "Melt Spore": "销毁Spore",
+    "Create Spore": "创建Spore",
+    "Content Type": "内容类型",
+    "Content": "内容",
+    "Cluster ID": "Cluster ID"
 }
 
 export default langCN

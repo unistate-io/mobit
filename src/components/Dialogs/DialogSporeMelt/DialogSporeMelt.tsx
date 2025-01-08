@@ -1,29 +1,20 @@
 import {ReactNode, useContext, useEffect, useState} from "react"
-import Input from "@/components/Form/Input/Input"
 import * as Dialog from "@radix-ui/react-dialog"
 import Button from "@/components/Form/Button/Button"
-import {checksumCkbAddress, shortTransactionHash} from "@/utils/common"
-import BigNumber from "bignumber.js"
-import Select from "@/components/Select/Select"
-import CopyText from "@/components/CopyText/CopyText"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
-
 import * as dayjsLib from "dayjs"
-import useSporeTransfer from "@/serves/useSporeTransfer"
+import useSporeMelt from "@/serves/useSporeMelt"
 import {Spores} from "@/utils/graphql/types"
 import {ccc, useCcc} from "@ckb-ccc/connector-react"
-import {toDisplay} from "@/utils/number_display"
+import {shortTransactionHash, toDisplay} from "@/utils/number_display"
+import CopyText from "@/components/CopyText/CopyText"
+import BigNumber from "bignumber.js"
+import Select from "@/components/Select/Select"
 
 const dayjs: any = dayjsLib
 
-export interface XudtTransferProps {
-    form: string
-    amount: string
-    to: string
-}
-
-export default function DialogSporeTransfer({
+export default function DialogSporeMelt({
     children,
     spore,
     className,
@@ -34,7 +25,7 @@ export default function DialogSporeTransfer({
     className?: string
     onComplete?: () => void
 }) {
-    const {build, send} = useSporeTransfer()
+    const {build, send} = useSporeMelt()
     const {network, config} = useContext(CKBContext)
     const {lang} = useContext(LangContext)
 
@@ -44,7 +35,9 @@ export default function DialogSporeTransfer({
     const [sending, setSending] = useState(false)
     const [txHash, setTxHash] = useState<null | string>(null)
     const [fee1000, setFee1000] = useState<string>("0")
-    const [to, setTo] = useState<string>("")
+    const [transactionError, setTransactionError] = useState<string>("")
+    const {client} = useCcc()
+
     const fee = (showFeeRate: number) => {
         return toDisplay(
             BigNumber(fee1000)
@@ -55,54 +48,36 @@ export default function DialogSporeTransfer({
         )
     }
 
-    //errors
-    const [toError, setToError] = useState<string>("")
-    const [transactionError, setTransactionError] = useState<string>("")
-    const {client} = useCcc()
-
     const checkErrorsAndBuild = async (feeRate: number) => {
-        setToError("")
-        let hasError = false
-
-        const validAddress = checksumCkbAddress(to, network)
-        if (to === "" || !validAddress) {
-            setToError("Please enter a valid address")
-            hasError = true
-        }
+        setTransactionError("")
         try {
-            let tx: ccc.Transaction | null = null
-            if (!hasError) {
-                tx = await build({
-                    to,
-                    spore,
-                    feeRate
-                })
+            const tx = await build({
+                spore,
+                feeRate
+            })
 
-                if (!!tx && feeRate === 1000) {
-                    try {
-                        const inputCap = await tx.getInputsCapacity(client)
-                        const outCap = tx.getOutputsCapacity()
+            if (!!tx && feeRate === 1000) {
+                try {
+                    const inputCap = await tx.getInputsCapacity(client)
+                    const outCap = tx.getOutputsCapacity()
 
-                        console.log("Calculating fee...")
-                        const fee = inputCap - outCap
-                        console.log(`Fee calculated: ${fee}`)
-                        const feeBigNumber = new BigNumber(fee.toString())
-                        const divisor = new BigNumber(10 ** 8)
-                        const fee1000BigNumber = feeBigNumber.dividedBy(divisor)
+                    console.log("Calculating fee...")
+                    const fee = inputCap - outCap
+                    console.log(`Fee calculated: ${fee}`)
+                    const feeBigNumber = new BigNumber(fee.toString())
+                    const divisor = new BigNumber(10 ** 8)
+                    const fee1000BigNumber = feeBigNumber.dividedBy(divisor)
 
-                        console.log("Setting fee1000...")
-                        setFee1000(fee1000BigNumber.toString())
-                    } catch (e) {
-                        console.error("Error calculating capacities or fee:", e)
-                    }
-                } else {
-                    console.error("Failed to build transaction")
+                    console.log("Setting fee1000...")
+                    setFee1000(fee1000BigNumber.toString())
+                } catch (e) {
+                    console.error("Error calculating capacities or fee:", e)
                 }
             } else {
-                console.error("Skipping transaction build due to errors")
+                console.error("Failed to build transaction")
             }
 
-            return !hasError ? tx : null
+            return tx
         } catch (e: any) {
             console.trace("Error in checkErrorsAndBuild:", e)
             setTransactionError(e.message || "An unexpected error occurred")
@@ -113,11 +88,9 @@ export default function DialogSporeTransfer({
 
     useEffect(() => {
         setStep(1)
-        setToError("")
         setFeeRate(1000)
         setTransactionError("")
         open &&
-            !!to &&
             (async () => {
                 try {
                     setSending(true)
@@ -126,7 +99,7 @@ export default function DialogSporeTransfer({
                     setSending(false)
                 }
             })()
-    }, [to, spore, open])
+    }, [spore, open])
 
     const handleSignAndSend = async () => {
         setSending(true)
@@ -137,7 +110,7 @@ export default function DialogSporeTransfer({
                 return
             }
 
-            const txHash = await send(tx!)
+            const txHash = await send(tx)
             setTxHash(txHash)
             setStep(2)
         } catch (e: any) {
@@ -163,7 +136,7 @@ export default function DialogSporeTransfer({
                         {step === 1 && (
                             <>
                                 <div className="flex flex-row justify-between items-center mb-4">
-                                    <div className="font-semibold text-2xl">{lang["Transfer"]}</div>
+                                    <div className="font-semibold text-2xl">{lang["Melt Spore"]}</div>
                                     <div
                                         onClick={e => {
                                             setOpen(false)
@@ -174,21 +147,8 @@ export default function DialogSporeTransfer({
                                     </div>
                                 </div>
 
-                                <div className="font-semibold mb-10">
-                                    <div className="mb-2">{lang["Send to"]}</div>
-                                    <Input
-                                        value={to}
-                                        type={"text"}
-                                        onChange={e => {
-                                            setTo(e.target.value.trim())
-                                        }}
-                                    />
-                                    <div className="font-normal text-red-400 mt-1">{toError}</div>
-                                </div>
-
                                 <div className="mb-2 font-semibold">{lang["Transaction fee"]}</div>
                                 <Select
-                                    disabled={!to}
                                     className={"bg-gray-100 py-2 px-4 rounded-lg text-sm"}
                                     defaultValue={"1000"}
                                     value={feeRate + ""}
@@ -205,13 +165,8 @@ export default function DialogSporeTransfer({
                                 <div className="text-red-400 min-h-6 mb-2 break-words">{transactionError}</div>
 
                                 <div className="mt-4">
-                                    <Button
-                                        disabled={!to || !!toError}
-                                        btntype={"primary"}
-                                        loading={sending}
-                                        onClick={handleSignAndSend}
-                                    >
-                                        {lang["Transfer"]}
+                                    <Button btntype={"primary"} loading={sending} onClick={handleSignAndSend}>
+                                        {lang["Melt Spore"]}
                                     </Button>
                                 </div>
                             </>
@@ -247,10 +202,6 @@ export default function DialogSporeTransfer({
                                 </div>
 
                                 <div className="my-4 p-3 bg-gray-100 rounded-lg">
-                                    <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
-                                        <div className="text-gray-500">{lang["To"]}</div>
-                                        <div className="font-semibold">{shortTransactionHash(to)}</div>
-                                    </div>
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                         <div className="text-gray-500">{lang["Time"]}</div>
                                         <div className="font-semibold">{dayjs().format("YYYY-MM-DD HH:mm")}</div>
