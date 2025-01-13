@@ -6,7 +6,7 @@ import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {SporesWithChainInfo} from "@/serves/useSpores"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {renderDob} from "@/utils/spore"
-import DialogSporeCreate from "@/components/Dialogs/DialogSporeCreate/DialogSporeCreate"
+// import DialogSporeCreate from "@/components/Dialogs/DialogSporeCreate/DialogSporeCreate"
 
 export default function ListDOBs({
     data,
@@ -43,15 +43,6 @@ export default function ListDOBs({
                         {lang[`No assets found`]}
                     </div>
                 )}
-
-                {/* Add Create Spore Button */}
-                <div className="mx-4 mb-4">
-                    <DialogSporeCreate className="w-full">
-                        <div className="bg-blue-500 text-white font-semibold px-4 py-3 rounded-lg flex flex-row flex-nowrap justify-center hover:opacity-80">
-                            {lang["Create Spore"]}
-                        </div>
-                    </DialogSporeCreate>
-                </div>
 
                 <div className="grid-cols-2 sm:grid-cols-3 grid">
                     {status !== "loading" &&

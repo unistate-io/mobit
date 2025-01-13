@@ -92,14 +92,17 @@ export default function DobPage() {
                     {isOwner && chain !== "btc" && !!data && (
                         <div className="mt-3">
                             <DialogSporeTransfer spore={data} className="w-full" onComplete={handleComplete}>
-                                <div className="bg-black text-white font-semibold px-4 py-3 rounded-lg flex flex-row flex-nowrap justify-center hover:opacity-80">
-                                    Transfer
+                                <div
+                                    className="cursor-pointer px-4 py-3 font-semibold bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
+                                    {lang["Transfer"]}
                                 </div>
                             </DialogSporeTransfer>
                             <div className="mt-3">
-                                <DialogSporeMelt spore={data} className="w-full" onComplete={handleComplete}>
-                                    <div className="bg-red-500 text-white font-semibold px-4 py-3 rounded-lg flex flex-row flex-nowrap justify-center hover:opacity-80">
-                                        Melt Spore
+                                <DialogSporeMelt spore={data} className="w-full"
+                                                 onComplete={handleComplete}>
+                                    <div
+                                        className="text-red-500 bg-neutral-100 font-semibold px-4 py-3 rounded-lg flex flex-row flex-nowrap justify-center hover:opacity-80">
+                                        {lang["Melt"]}
                                     </div>
                                 </DialogSporeMelt>
                             </div>

@@ -15,18 +15,20 @@ import Select from "@/components/Select/Select"
 const dayjs: any = dayjsLib
 
 export default function DialogSporeMelt({
-    children,
-    spore,
-    className,
-    onComplete
-}: {
+                                            children,
+                                            spore,
+                                            className,
+                                            onComplete,
+                                            cover
+                                        }: {
     children: ReactNode
     spore: Spores
     className?: string
+    cover?: string
     onComplete?: () => void
 }) {
     const {build, send} = useSporeMelt()
-    const {network, config} = useContext(CKBContext)
+    const {config} = useContext(CKBContext)
     const {lang} = useContext(LangContext)
 
     const [open, setOpen] = useState(false)
@@ -91,14 +93,14 @@ export default function DialogSporeMelt({
         setFeeRate(1000)
         setTransactionError("")
         open &&
-            (async () => {
-                try {
-                    setSending(true)
-                    await checkErrorsAndBuild(1000)
-                } finally {
-                    setSending(false)
-                }
-            })()
+        (async () => {
+            try {
+                setSending(true)
+                await checkErrorsAndBuild(1000)
+            } finally {
+                setSending(false)
+            }
+        })()
     }, [spore, open])
 
     const handleSignAndSend = async () => {
@@ -121,11 +123,14 @@ export default function DialogSporeMelt({
         }
     }
 
+    console.log(spore)
+
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger className={className}>{children}</Dialog.Trigger>
             <Dialog.Portal>
-                <Dialog.Overlay className="bg-[rgba(0,0,0,0.6)] z-40 data-[state=open]:animate-overlayShow fixed inset-0" />
+                <Dialog.Overlay
+                    className="bg-[rgba(0,0,0,0.6)] z-40 data-[state=open]:animate-overlayShow fixed inset-0"/>
                 <Dialog.Content
                     onPointerDownOutside={e => {
                         e.preventDefault()
@@ -143,8 +148,18 @@ export default function DialogSporeMelt({
                                         }}
                                         className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100"
                                     >
-                                        <i className="uil-times text-gray-500" />
+                                        <i className="uil-times text-gray-500"/>
                                     </div>
+                                </div>
+
+
+                                <img className="w-[100px] h-100px rounded-lg mx-auto my-5"
+                                     src={cover || '/images/spore_placeholder.svg'} alt=""/>
+
+                                <div
+                                    className="mb-3 bg-amber-50 text-amber-500 text-xs px-2 py-1 rounded-lg flex flex-row items-center">
+                                    <i className="uil-info-circle text-xl mr-2"/>
+                                    {lang['Please NOTE: Asset melt is irreversible, so proceed with caution.']}
                                 </div>
 
                                 <div className="mb-2 font-semibold">{lang["Transaction fee"]}</div>
@@ -164,10 +179,16 @@ export default function DialogSporeMelt({
 
                                 <div className="text-red-400 min-h-6 mb-2 break-words">{transactionError}</div>
 
-                                <div className="mt-4">
-                                    <Button btntype={"primary"} loading={sending} onClick={handleSignAndSend}>
-                                        {lang["Melt Spore"]}
-                                    </Button>
+                                <div className="mt-4"
+                                     style={sending ? {opacity: '0.5', pointerEvents: 'none'} : undefined}>
+                                    <MeltSporeAlert onConfig={() => {
+                                        handleSignAndSend()
+                                    }} className="w-full">
+                                        <div
+                                            className="cursor-pointer text-red-500 bg-neutral-100 font-semibold px-4 py-3 rounded-lg flex flex-row flex-nowrap justify-center hover:opacity-80">
+                                            {lang["Melt Spore"]}
+                                        </div>
+                                    </MeltSporeAlert>
                                 </div>
                             </>
                         )}
@@ -183,7 +204,7 @@ export default function DialogSporeMelt({
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <g clipPath="url(#clip0_699_1259)">
-                                            <circle cx="36.5" cy="36" r="36" fill="#41D195" fillOpacity="0.12" />
+                                            <circle cx="36.5" cy="36" r="36" fill="#41D195" fillOpacity="0.12"/>
                                             <path
                                                 d="M37 19.3335C27.8167 19.3335 20.3333 26.8168 20.3333 36.0002C20.3333 45.1835 27.8167 52.6668 37 52.6668C46.1833 52.6668 53.6667 45.1835 53.6667 36.0002C53.6667 26.8168 46.1833 19.3335 37 19.3335ZM44.9667 32.1668L35.5167 41.6168C35.2833 41.8502 34.9667 41.9835 34.6333 41.9835C34.3 41.9835 33.9833 41.8502 33.75 41.6168L29.0333 36.9002C28.55 36.4168 28.55 35.6168 29.0333 35.1335C29.5167 34.6502 30.3167 34.6502 30.8 35.1335L34.6333 38.9668L43.2 30.4002C43.6833 29.9168 44.4833 29.9168 44.9667 30.4002C45.45 30.8835 45.45 31.6668 44.9667 32.1668Z"
                                                 fill="#41D195"
@@ -191,7 +212,7 @@ export default function DialogSporeMelt({
                                         </g>
                                         <defs>
                                             <clipPath id="clip0_699_1259">
-                                                <rect width="72" height="72" fill="white" transform="translate(0.5)" />
+                                                <rect width="72" height="72" fill="white" transform="translate(0.5)"/>
                                             </clipPath>
                                         </defs>
                                     </svg>
@@ -207,14 +228,14 @@ export default function DialogSporeMelt({
                                         <div className="font-semibold">{dayjs().format("YYYY-MM-DD HH:mm")}</div>
                                     </div>
 
-                                    <div className="h-[1px] bg-gray-200 my-4" />
+                                    <div className="h-[1px] bg-gray-200 my-4"/>
 
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                         <div className="text-gray-500">{lang["Transaction fee"]}</div>
                                         <div className="font-semibold">{fee(feeRate)} CKB</div>
                                     </div>
 
-                                    <div className="h-[1px] bg-gray-200 my-4" />
+                                    <div className="h-[1px] bg-gray-200 my-4"/>
 
                                     <div className="flex flex-row flex-nowrap justify-between text-sm mb-2">
                                         <div className="text-gray-500">{lang["Tx Hash"]}</div>
@@ -258,4 +279,38 @@ export default function DialogSporeMelt({
             </Dialog.Portal>
         </Dialog.Root>
     )
+}
+
+function MeltSporeAlert({children, onConfig, className}: {
+    onConfig: () => void, children:ReactNode, className?: string
+}) {
+    const {lang} = useContext(LangContext)
+    const [open, setOpen] = useState(false)
+
+    return <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Trigger className={className}>{children}</Dialog.Trigger>
+        <Dialog.Portal>
+            <Dialog.Content
+                onPointerDownOutside={e => {
+                    e.preventDefault()
+                }}
+                className="data-[state=open]:animate-contentShow z-50 fixed top-[50%] left-[50%] p-4 max-w-[98vw] w-full md:max-w-[400px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-white shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none"
+            >
+                <div className="text-center">
+                    <i className="uil-info-circle text-[60px] text-red-500"/>
+                </div>
+                <div className="my-2">
+                    {lang['Melting the DOB will return CKB capacity, but there may be potential losses due to the floor price of the DOB. Are you sure you want to destroy it?']}
+                </div>
+                <div className="flex flex-row mt-4">
+                    <Button btntype={"secondary"} onClick={() => setOpen(false)}>
+                        {lang["Cancel"]}
+                    </Button>
+                    <Button btntype={"danger"} onClick={()=>{onConfig();setOpen(false)}} className="text-white ml-2">
+                        {lang["Confirm"]}
+                    </Button>
+                </div>
+            </Dialog.Content>
+        </Dialog.Portal>
+    </Dialog.Root>
 }

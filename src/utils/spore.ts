@@ -98,6 +98,7 @@ export interface DobRenderRes {
     id?: string
 }
 export const renderDob = async (item: SporesWithChainInfo, network: string) => {
+    console.log('network', network)
     return new Promise<DobRenderRes>(async (resolve, reject) => {
         const res: DobRenderRes = {
             name: "",
@@ -109,9 +110,8 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
         }
 
         if (item.cluster_id) {
-            const clusters = await queryClustersByIds(item.cluster_id, true)
+            const clusters = await queryClustersByIds(item.cluster_id, network === "mainnet")
             if (clusters) {
-                console.log("clusters", clusters)
                 res.name = clusters.cluster_name || ""
 
                 if (clusters.cluster_description) {

@@ -140,11 +140,15 @@ const langCN: LangConfig = {
     "Moving assets to other chains with RGB++ Protocol": "使用RGB++协议将资产移动到其他链上",
     "Merge UTXO Cells to save space and get CKB returned": "合并UTXO Cell以节省空间并获得CKB返还",
     "Burn UTXO Cells to save space and get CKB returned": "销毁UTXO Cell以节省空间并获得CKB返还",
-    "Melt Spore": "销毁Spore",
-    "Create Spore": "创建Spore",
+    "Melt Spore": "销毁 Spore",
+    "Create Spore": "创建 Spore",
     "Content Type": "内容类型",
     "Content": "内容",
-    "Cluster ID": "Cluster ID"
+    "Cluster ID": "Cluster ID",
+    "Please NOTE: Asset melt is irreversible, so proceed with caution.":"请注意：资产销毁是不可逆的，请谨慎操作。",
+    "Melting the DOB will return CKB capacity, but there may be potential losses due to the floor price of the DOB. Are you sure you want to destroy it?":"销毁DOB将会返回CKB容量，但由于DOB的底价可能会导致潜在的损失。您确定要销毁吗？",
+    "Confirm":"确认",
+    "Melt":'销毁',
 }
 
 export default langCN
