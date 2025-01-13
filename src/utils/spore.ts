@@ -98,7 +98,6 @@ export interface DobRenderRes {
     id?: string
 }
 export const renderDob = async (item: SporesWithChainInfo, network: string) => {
-    console.log('network', network)
     return new Promise<DobRenderRes>(async (resolve, reject) => {
         const res: DobRenderRes = {
             name: "",

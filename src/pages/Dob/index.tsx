@@ -190,7 +190,7 @@ export default function DobPage() {
                             </div>
                         )}
 
-                        {data.details.traits.length && (
+                        {!!data.details.traits.length && (
                             <>
                                 {!!data.details.dna && (
                                     <div className="text-sm mb-6">
