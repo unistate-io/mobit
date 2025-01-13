@@ -1,9 +1,9 @@
 import en, { LangConfig } from "./en"
-import cn from "./cn"
+import zh from "./cn"
 import { ReactNode, useState, createContext} from "react";
 
 export enum LangType {
-    cn='cn',
+    zh='zh',
     en='en'
 }
 
@@ -25,11 +25,16 @@ function available(value: string): boolean {
 function LangProvider (props: LangProviderProps) {
     const langPackage = {
         en,
-        cn,
+        zh,
     }
 
     const historyLang = window.localStorage.getItem('lang') as LangType
-    const [langType, setLangType] = useState(available(historyLang) ? historyLang : LangType.en)
+    const systemLang = navigator.language.split('-')[0] as LangType || ''
+    const [langType, setLangType] = useState(available(historyLang)
+        ? historyLang
+        : (available(systemLang)
+            ? systemLang
+            : LangType.en))
     const [lang, setLang] = useState(() => {
         return langPackage[langType] as LangConfig
     })

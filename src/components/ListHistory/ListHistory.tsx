@@ -36,7 +36,7 @@ export default function ListHistory({
     const {lang, langType} = useContext(LangContext)
     const {config} = useContext(CKBContext)
 
-    dayjs.locale(langType === 'cn' ? 'zh-cn': 'en')
+    dayjs.locale(langType === 'zh' ? 'zh-cn': 'en')
 
     const showData = useMemo(() => {
         return maxShow ? data.slice(0, maxShow) : data

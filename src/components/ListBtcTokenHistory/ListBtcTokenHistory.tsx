@@ -20,7 +20,7 @@ export default function ListBtcTokenHistory({
     const {config} = useContext(CKBContext)
     const {lang, langType} = useContext(LangContext)
 
-    dayjs.locale(langType === 'cn' ? 'zh-cn': 'en')
+    dayjs.locale(langType === 'zh' ? 'zh-cn': 'en')
 
     return <div className="">
         <div className="flex flex-col">

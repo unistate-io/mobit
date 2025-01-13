@@ -23,7 +23,7 @@ export default function ListBtcHistory({
     const {config} = useContext(CKBContext)
     const pageSizeConfig = pageSize || 50
 
-    dayjs.locale(langType === 'cn' ? 'zh-cn': 'en')
+    dayjs.locale(langType === 'zh' ? 'zh-cn': 'en')
 
     const showData = useMemo(() => {
         return data.slice(0, pageSizeConfig)

@@ -123,7 +123,7 @@ export default function HomeActions() {
                             fill="#000"/>
                     </g>
                 </svg>
-                <div className="mt-1 font-semibold text-sm sm:text-base">Nervos DAO</div>
+                <div className="mt-1 font-semibold text-sm sm:text-base text-center">Nervos DAO</div>
             </a>
         </div>
     )

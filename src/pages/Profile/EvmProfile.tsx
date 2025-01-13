@@ -147,7 +147,7 @@ export default function EvmProfile({internalAddress}: { internalAddress: string 
                 </div>
             </div>
 
-            <div className="flex flex-row items-center mt-3 lg:mt-9 w-full overflow-auto">
+            <div className="flex flex-row items-center mt-3 lg:mt-9 w-full overflow-auto whitespace-nowrap">
                 {tabs.map((tab) => {
                     return <Button
                         key={tab.value}

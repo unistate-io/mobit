@@ -19,7 +19,7 @@ export default function ListTokenHistory({
     const {config} = useContext(CKBContext)
     const {lang, langType} = useContext(LangContext)
 
-    dayjs.locale(langType === 'cn' ? 'zh-cn': 'en')
+    dayjs.locale(langType === 'zh' ? 'zh-cn': 'en')
 
     return <div className="">
         <div className="flex flex-col">

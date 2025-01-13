@@ -121,8 +121,8 @@ export default function HeaderMenu() {
                 <i className="uil-search cursor-pointer" onClick={showSearch}/>
             }
         </div>
-        <i className="w-[1px] h-[14px] bg-black mx-3 scale-x-50 hidden sm:block "/>
-        <div className="hidden sm:block text-xs">
+        <i className="w-[1px] h-[14px] bg-black mx-3 scale-x-50 block"/>
+        <div className="text-xs">
             <Select
                 onValueChange={(value) => {
                     switchLang(value as any)
@@ -132,7 +132,7 @@ export default function HeaderMenu() {
                 hideDropIcon={true}
                 options={[
                     {label: 'EN', id: 'en'},
-                    {label: 'CN', id: 'cn'},
+                    {label: 'ZH', id: 'zh'},
                 ]}
             />
         </div>
