@@ -2,7 +2,7 @@ import {hexToBytes, toBigEndian} from "@nervosnetwork/ckb-sdk-utils"
 import {SporesWithChainInfo} from "@/serves/useSpores"
 import {bufferToRawString} from "@spore-sdk/core"
 import {queryClustersByIds} from "@/utils/graphql"
-import {renderByTokenKey, svgToBase64} from "@nervina-labs/dob-render"
+import {renderByTokenKey, svgToBase64, config} from "@nervina-labs/dob-render"
 import {ccc} from "@ckb-ccc/connector-react"
 
 export const hexToUtf8 = (value: string = "") => {
@@ -75,7 +75,7 @@ export const getImgFromSporeCell = (content: string, contentType: string) => {
     return DEFAULT_URL
 }
 
-export const isDob0 = (item: {standard: string | null; cell: {data: string | null} | null}) => {
+export const isDob0 = (item: { standard: string | null; cell: { data: string | null } | null }) => {
     if (item.standard !== "spore") return false
     if (!item.cell?.data) return false
     try {
@@ -93,10 +93,11 @@ export interface DobRenderRes {
     video: string
     plantText: string
     description: string
-    traits: {key: string; value: any}[]
+    traits: { key: string; value: any }[]
     dna?: string
     id?: string
 }
+
 export const renderDob = async (item: SporesWithChainInfo, network: string) => {
     return new Promise<DobRenderRes>(async (resolve, reject) => {
         const res: DobRenderRes = {
@@ -151,20 +152,33 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
             const data = item.content.replace("\\x", "")
             res.image = getImgFromSporeCell(data, item.content_type)
             resolve(res)
-        } else if (item.content_type.includes("dob/0") && network === "mainnet") {
+        } else if (item.content_type.includes("dob/0")) {
             try {
+                const decoderUrl = network === 'mainnet'
+                    ? 'https://dob-decoder.rgbpp.io/'
+                    : 'https://dob0-decoder-dev.omiga.io'
                 const tokenId = item.id.replace("\\", "").replace("x", "")
-                const decode: any = await decodeBob0(tokenId)
+                const decode: any = await decodeBob0(tokenId, decoderUrl)
+                console.log('JSON.parse(decode.render_output)', JSON.parse(decode.render_output))
                 res.traits = JSON.parse(decode.render_output)
                     .filter((trait: any) => {
                         return !trait.name.startsWith("prev.")
                     })
                     .map((trait: any) => {
-                        return {key: trait.name, value: trait.traits[0].String || trait.traits[0].Number}
+                        const value = trait.traits[0].String
+                            || trait.traits[0].string
+                            || trait.traits[0].Number
+                            || trait.traits[0].number
+                            || trait.traits[0].Timestamp
+                            || trait.traits[0].timestamp
+                            || trait.traits[0].Date
+                            || trait.traits[0].date
+                        return {key: trait.name, value}
                     })
                 res.dna = decode.dob_content.dna || ""
                 res.id = decode.dob_content.id || ""
 
+                config.setDobDecodeServerURL(decoderUrl)
                 const svg = await renderByTokenKey(tokenId)
                 res.image = await svgToBase64(svg)
                 resolve(res)
@@ -176,9 +190,11 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
     })
 }
 
-export function decodeBob0(tokenid: string) {
+export function decodeBob0(tokenid: string, decoderUrl?: string) {
+    const decoder = decoderUrl || "https://dob-decoder.rgbpp.io"
+
     return new Promise((resolve, reject) => {
-        fetch(`https://dob-decoder.rgbpp.io/`, {
+        fetch(decoder, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
