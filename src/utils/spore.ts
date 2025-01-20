@@ -159,7 +159,6 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                     : 'https://dob0-decoder-dev.omiga.io'
                 const tokenId = item.id.replace("\\", "").replace("x", "")
                 const decode: any = await decodeBob0(tokenId, decoderUrl)
-                console.log('JSON.parse(decode.render_output)', JSON.parse(decode.render_output))
                 res.traits = JSON.parse(decode.render_output)
                     .filter((trait: any) => {
                         return !trait.name.startsWith("prev.")
@@ -173,6 +172,9 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                             || trait.traits[0].timestamp
                             || trait.traits[0].Date
                             || trait.traits[0].date
+                            || trait.traits[0].boolean?.toString()
+                            || trait.traits[0].Boolean?.toString()
+                            || '--'
                         return {key: trait.name, value}
                     })
                 res.dna = decode.dob_content.dna || ""
