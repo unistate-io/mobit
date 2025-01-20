@@ -2,7 +2,11 @@ import {hexToBytes, toBigEndian} from "@nervosnetwork/ckb-sdk-utils"
 import {SporesWithChainInfo} from "@/serves/useSpores"
 import {bufferToRawString} from "@spore-sdk/core"
 import {queryClustersByIds} from "@/utils/graphql"
-import {renderByTokenKey, svgToBase64, config} from "@nervina-labs/dob-render"
+import {
+    svgToBase64,
+    config,
+    renderByDobDecodeResponse,
+} from "@nervina-labs/dob-render"
 import {ccc} from "@ckb-ccc/connector-react"
 
 export const hexToUtf8 = (value: string = "") => {
@@ -152,16 +156,18 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
             const data = item.content.replace("\\x", "")
             res.image = getImgFromSporeCell(data, item.content_type)
             resolve(res)
-        } else if (item.content_type.includes("dob/0")) {
+        } else if (item.content_type.includes("dob")) {
             try {
                 const decoderUrl = network === 'mainnet'
                     ? 'https://dob-decoder.rgbpp.io/'
                     : 'https://dob0-decoder-dev.omiga.io'
                 const tokenId = item.id.replace("\\", "").replace("x", "")
                 const decode: any = await decodeBob0(tokenId, decoderUrl)
-                res.traits = JSON.parse(decode.render_output)
+                const decodedData = JSON.parse(decode.render_output)
+                console.log('decodedData', decodedData)
+                res.traits = decodedData
                     .filter((trait: any) => {
-                        return !trait.name.startsWith("prev.")
+                        return !trait.name.startsWith("prev.") && trait.name !== ("IMAGE")
                     })
                     .map((trait: any) => {
                         const value = trait.traits[0].String
@@ -180,9 +186,18 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                 res.dna = decode.dob_content.dna || ""
                 res.id = decode.dob_content.id || ""
 
-                config.setDobDecodeServerURL(decoderUrl)
-                const svg = await renderByTokenKey(tokenId)
-                res.image = await svgToBase64(svg)
+                if (item.content_type === 'dob/0') {
+                    const svg = await renderByDobDecodeResponse(JSON.stringify(decode))
+                    res.image = await svgToBase64(svg)
+                } else if (item.content_type === 'dob/1') {
+                    const image = decodedData.find((trait: any) => {
+                        return trait.name === 'IMAGE'
+                    })
+                    if (image && image.traits[0].SVG) {
+                        const svg = await renderSvgBtcfs(image.traits[0].SVG)
+                        res.image = await svgToBase64(svg)
+                    }
+                }
                 resolve(res)
             } catch (e) {
                 console.error(e)
@@ -224,4 +239,20 @@ export interface SporeDataView {
     contentType: string
     content: ccc.BytesLike
     clusterId?: ccc.HexLike
+}
+
+export async function renderSvgBtcfs(svgStr: string) {
+    const regex = /btcfs:\/\/[a-zA-Z0-9]{64}i0/g;
+    const btcfsList = svgStr.match(regex)
+
+    if (!!btcfsList && btcfsList.length > 0) {
+        for (let i = 0; i < btcfsList.length; i++) {
+            const btcfs = btcfsList[i]
+            const btcFsResult = await config.queryBtcFsFn(btcfs as any)
+            const image = `data:${btcFsResult.content_type};base64,${hexToBase64(btcFsResult.content)}`
+            svgStr = svgStr.replace(btcfs, image)
+        }
+    }
+
+    return svgStr
 }
