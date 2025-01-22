@@ -186,18 +186,15 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                 res.dna = decode.dob_content.dna || ""
                 res.id = decode.dob_content.id || ""
 
-                if (item.content_type === 'dob/0') {
-                    const svg = await renderByDobDecodeResponse(JSON.stringify(decode))
-                    res.image = await svgToBase64(svg)
-                } else if (item.content_type === 'dob/1') {
-                    const image = decodedData.find((trait: any) => {
-                        return trait.name === 'IMAGE'
-                    })
-                    if (image && image.traits[0].SVG) {
-                        const svg = await renderSvgBtcfs(image.traits[0].SVG)
-                        res.image = await svgToBase64(svg)
-                    }
-                }
+                config.setDobDecodeServerURL(decoderUrl)
+                config.setQueryBtcFsFn(async (uri) => {
+                    const response = await fetch(`https://api.omiga.io/api/v1/nfts/dob_imgs?uri=${uri}`)
+                    return response.json()
+                })
+                // const svg = await renderByTokenKey(tokenId)
+                const svg = await renderByDobDecodeResponse(decode)
+                console.log('svg', svg)
+                res.image = await svgToBase64(svg)
                 resolve(res)
             } catch (e) {
                 console.error(e)
@@ -239,20 +236,4 @@ export interface SporeDataView {
     contentType: string
     content: ccc.BytesLike
     clusterId?: ccc.HexLike
-}
-
-export async function renderSvgBtcfs(svgStr: string) {
-    const regex = /btcfs:\/\/[a-zA-Z0-9]{64}i0/g;
-    const btcfsList = svgStr.match(regex)
-
-    if (!!btcfsList && btcfsList.length > 0) {
-        for (let i = 0; i < btcfsList.length; i++) {
-            const btcfs = btcfsList[i]
-            const btcFsResult = await config.queryBtcFsFn(btcfs as any)
-            const image = `data:${btcFsResult.content_type};base64,${hexToBase64(btcFsResult.content)}`
-            svgStr = svgStr.replace(btcfs, image)
-        }
-    }
-
-    return svgStr
 }
