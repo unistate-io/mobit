@@ -2381,10 +2381,10 @@
     tweetnacl "^1.0.3"
     tweetnacl-util "^0.15.1"
 
-"@nervina-labs/dob-render@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@nervina-labs/dob-render/-/dob-render-0.2.2.tgz#a15d251921d0b2dc49250598654373442d37e5d5"
-  integrity sha512-KRdkV5SajpA9p8YN6CSTZJtrEUEsWnlXKmonUS18Re7UPvIro2y5F/IA5QxLDnHxZdRUA8u5CMGdIf900y7FQg==
+"@nervina-labs/dob-render@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@nervina-labs/dob-render/-/dob-render-0.2.3.tgz#d0539088c7f0440a5153a9b6bd0b475823a8c292"
+  integrity sha512-wTxW0oZLsHOVTn/K2iompsxUoBUYS+L8slTXzyjIoEVr7MJTHb9eUDfLRXaI9hsCoe7CcIf9fwB8TUijGTULEQ==
   dependencies:
     satori "^0.10.13"
     svgson "^5.3.1"
