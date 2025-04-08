@@ -42,7 +42,7 @@ function IconUnknown(props: { str: string, size: number }) {
 }
 
 
-export default function TokenIcon({ symbol = 'default', size, chain, rounded = true, className }: { symbol: string, size: number, chain?: string, rounded?: boolean, className?: string }) {
+export default function TokenIcon({ symbol = 'default', size, chain, rounded = true, className, url }: { symbol: string, size: number, chain?: string, rounded?: boolean, className?: string, url?: string }) {
     const options = {
         foreground: [216, 140, 173, 255],
         background: [245, 245, 245, 255],
@@ -50,12 +50,11 @@ export default function TokenIcon({ symbol = 'default', size, chain, rounded = t
         size: size,
         format: 'svg'
     }
-
-    const tokenIcon = TokenIcons[symbol.toUpperCase()] || 'data:image/svg+xml;base64,' + new Identicon(getStrHash(symbol), (options as any)).toString()
+    const tokenIcon = url || TokenIcons[symbol.toUpperCase()]
     const chainIcon = chain ? ChainIcons[chain] : undefined
 
     return <div className={`${className} relative mr-3`} style={{ width: size + 'px', height: size + 'px' }}>
-        {!!TokenIcons[symbol.toUpperCase()] ?
+        {!!tokenIcon ?
             <img src={tokenIcon} className={`bg-gray-200 ${rounded ? 'rounded-full' : 'rounded-lg'}`} alt="icon"
                 width={size} height={size} />
             : <IconUnknown str={symbol} size={size} />

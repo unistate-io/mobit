@@ -64,7 +64,7 @@ export default function ListHistory({
                 showData.map((item, index) => {
                     return <Link
                         target="blank"
-                        to={`${config.explorer}/transaction/${item.attributes.transaction_hash}`} key={item.id}
+                        to={`${config.explorer}/transaction/${item.attributes.transaction_hash}`} key={index}
                         className="bg-stone-50 rounded p-4 mt-3">
                         <div className="flex  flex-row text-xs justify-between mb-3">
                            <div className="flex flex-row">

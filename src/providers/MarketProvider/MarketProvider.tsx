@@ -1,4 +1,4 @@
-import {createContext, ReactNode, useEffect, useState} from "react"
+import {createContext, ReactNode, useCallback, useEffect, useState} from "react"
 import useMarket from "@/serves/useMarket";
 
 export interface TokenPrice {
@@ -14,6 +14,7 @@ export interface MarketContextType {
     currCurrency: Currencies,
     setCurrCurrency: (currency: Currencies) => void
     currencySymbol: string
+    setInternalAssetsMarket: (markets: {[index: string]: number}) => void
 }
 
 export const MarketContext = createContext<MarketContextType>({
@@ -22,7 +23,8 @@ export const MarketContext = createContext<MarketContextType>({
     rates: {},
     currCurrency: 'usd',
     setCurrCurrency: (currency: Currencies) => {},
-    currencySymbol: '$'
+    currencySymbol: '$',
+    setInternalAssetsMarket: (markets: {[index: string]: number}) => {}
 })
 
 export const CurrencySymbol = {
@@ -34,6 +36,7 @@ export function MarketProvider({children}: {children: ReactNode}) {
     const [prices, setPrices] = useState<TokenPrice>({})
     const [rates, setRates] = useState<{[index: string]: number}>({})
     const [currCurrency, setCurrCurrency] = useState<'usd' | 'cny'>('usd')
+    const [internalAssetsMarket, setInternalAssetsMarket] = useState<{[index: string]: number}>({})
     const {data, status:marketStatus} = useMarket()
 
     useEffect(() => {
@@ -53,14 +56,13 @@ export function MarketProvider({children}: {children: ReactNode}) {
             data.forEach(i => {
                 res[i.symbol] = i.price
             })
-            setPrices(res)
+            setPrices({...res, ...internalAssetsMarket})
         }
-    }, [marketStatus, data]);
+    }, [marketStatus, data, internalAssetsMarket])
 
     const currencySymbol = CurrencySymbol[currCurrency]
 
-
-    return <MarketContext.Provider value={{prices, status: marketStatus, rates, currCurrency, setCurrCurrency, currencySymbol}}>
+    return <MarketContext.Provider value={{prices, status: marketStatus, rates, currCurrency, setCurrCurrency, currencySymbol, setInternalAssetsMarket}}>
         {children}
     </MarketContext.Provider>
 }

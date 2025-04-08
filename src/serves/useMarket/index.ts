@@ -46,9 +46,20 @@ export default function useMarket() {
             })
     }, [])
 
+    const appendMarkets = (markets: TokenMarket[]) => {
+        const newMarkets = data
+        markets.forEach((item: TokenMarket) => {
+            if (data.some((a: TokenMarket) => a.symbol !== a.symbol.toUpperCase())) {
+                newMarkets.push(item)
+            }
+        })
+        setData(newMarkets)
+    }
+
     return {
         data,
         status,
-        error
+        error,
+        appendMarkets
     }
 }

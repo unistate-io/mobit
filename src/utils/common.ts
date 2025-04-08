@@ -51,6 +51,20 @@ export const isEvmAddress = (address: string): boolean => {
     return address.startsWith('0x') && address.length === 42
 }
 
+export const getInternalAddressChain = (address?: string): string | undefined => {
+    if (!address) return undefined
+    if (address.startsWith('ckb')) {
+        return 'ckb'
+    } else if (address.startsWith('ckt')) {
+        return 'ckt'
+    } else if (address.startsWith('0x')) {
+        return 'evm'
+    } else if (address.startsWith('bc1') || address.startsWith('tb1')) {
+        return 'btc'
+    }
+    return undefined
+}
+
 export function shortTransactionHash(hash: string, keep?: number): string {
     const length = keep || 6
     return hash.slice(0, length) + '...' + hash.slice(hash.length - length)

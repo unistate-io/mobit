@@ -9,12 +9,24 @@ export const TokenIcons:IconsUrl = {
     'SEAL': 'https://xudtlogos.cc/logos/seal-logo.png',
     'MEMES': 'https://xudtlogos.cc/logos/memes-logo.png',
     'OTTER': 'https://xudtlogos.cc/logos/otter-logo.png',
-    'CLOWN': 'https://ik.imagekit.io/soladata/1ut68bmf_FlKFW3LGX'
+    'CLOWN': 'https://ik.imagekit.io/soladata/1ut68bmf_FlKFW3LGX',
+    'POL': 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
+    'OP': 'https://ik.imagekit.io/soladata/tf1p0294__n4jPmOjA',
+    'ARB': 'https://ik.imagekit.io/soladata/bmmv61b8_k8XBMON2K',
+    'BASE': 'https://ik.imagekit.io/soladata/169j49np_AlaMKtpfZ',
+    'USDT': 'https://ik.imagekit.io/soladata/041vywlb_vTdQI2CLS',
+    'USDC': 'https://ik.imagekit.io/soladata/57yobknk_WoLp8Wvot',
 }
 
 export const ChainIcons:IconsUrl = {
     'ckb': '/images/logo_ckb.png',
-    'btc': 'https://ik.imagekit.io/soladata/5veftj7e_LpXwtrv8H'
+    'btc': 'https://ik.imagekit.io/soladata/5veftj7e_LpXwtrv8H',
+    'eth': 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
+    'matic': 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
+    'arb': 'https://ik.imagekit.io/soladata/bmmv61b8_k8XBMON2K',
+    'opt': 'https://ik.imagekit.io/soladata/tf1p0294__n4jPmOjA',
+    'base': 'https://ik.imagekit.io/soladata/169j49np_AlaMKtpfZ',
+    'polygon': 'https://ik.imagekit.io/soladata/p858lw0t_SRpkUhlAL'
 }
 
 

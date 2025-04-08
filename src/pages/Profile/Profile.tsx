@@ -17,13 +17,14 @@ import useLayer1Assets from "@/serves/useLayer1Assets"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
 import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
-import {isBtcAddress} from "@/utils/common"
+import {getInternalAddressChain, isBtcAddress} from "@/utils/common"
 import useDotbit from "@/serves/useDotbit"
 import ListDotBit from "@/components/ListDotBit/ListDotBit"
 import DialogReceive from "@/components/Dialogs/DialogReceive/DialogReceive"
 import {Link} from "react-router-dom"
 import NetWorth from "@/components/NetWorth"
 import Button from "@/components/Form/Button/Button"
+import useInternalAssets from "@/serves/useInternalAssets"
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -90,19 +91,21 @@ export default function Profile() {
         loadAll: rgbppHistoryLoadAll
     } = useTransactionsHistory(btcAddress)
 
+    const {status: internalAssetsDataStatus, data: internalAssetsData} = useInternalAssets(internalAddress)
+
     const {domains, status: domainStatus} = useDotbit(address)
 
     const tokensStatus = useMemo(() => {
-        if (xudtDataStatus === "loading" || ckbDataStatus === "loading" || layer1DataStatus === "loading") {
+        if (xudtDataStatus === "loading" || ckbDataStatus === "loading" || layer1DataStatus === "loading" || internalAssetsDataStatus=== "loading") {
             return "loading"
-        } else if (xudtDataStatus === "error" || ckbDataStatus === "error" || layer1DataStatus === "error") {
+        } else if (xudtDataStatus === "error" || ckbDataStatus === "error" || layer1DataStatus === "error" || internalAssetsDataStatus === "error") {
             return "error"
-        } else if (xudtDataStatus === "complete" && ckbDataStatus === "complete" && ckbData) {
+        } else if (xudtDataStatus === "complete" && ckbDataStatus === "complete" && ckbData && layer1DataStatus === "complete" && internalAssetsDataStatus === "complete") {
             return "complete"
         }
 
         return "loading"
-    }, [xudtDataStatus, ckbDataStatus, layer1DataStatus, ckbData])
+    }, [xudtDataStatus, ckbDataStatus, layer1DataStatus, internalAssetsDataStatus, ckbData])
 
     const dobsListStatue = useMemo(() => {
         if (layer1DataStatus === "loading" || sporesDataStatus === "loading") {
@@ -121,10 +124,10 @@ export default function Profile() {
             return [] as TokenBalance[]
         } else {
             return layer1Btc
-                ? [ckbData!, ...xudtData, layer1Btc, ...layer1Xudt]
-                : [ckbData!, ...xudtData, ...layer1Xudt]
+                ? [ckbData!, ...xudtData, layer1Btc, ...layer1Xudt, ...internalAssetsData]
+                : [ckbData!, ...xudtData, ...layer1Xudt, ...internalAssetsData]
         }
-    }, [ckbData, layer1Btc, layer1Xudt, tokensStatus, xudtData])
+    }, [ckbData, layer1Btc, layer1Xudt, tokensStatus, xudtData, internalAssetsData])
 
     useEffect(() => {
         if (xudtDataErr) {

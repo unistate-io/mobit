@@ -2,7 +2,6 @@ import TokenIcon from "../TokenIcon/TokenIcon"
 import {useCallback, useContext, useState} from "react"
 import {toDisplay} from "@/utils/number_display"
 import DialogCkbTransfer from "@/components/Dialogs/DialogCkbTransfer/DialogCkbTransfer"
-import {Link} from "react-router-dom"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import DialogXudtTransfer from "@/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer"
 import DialogBtcXudtTransfer from "@/components/Dialogs/DialogBtcXudtTransfer/DialogBtcXudtTransfer"
@@ -13,18 +12,19 @@ import Dropdown from "@/components/Popover/Popover"
 import {scriptToHash} from "@nervosnetwork/ckb-sdk-utils"
 import {hashType} from "@/serves/useXudtTransfer/lib"
 import {useUtxoSwap} from "@/serves/useUtxoSwap"
-import DialogSwap from "@/components/Dialogs/DialogSwap/DialogSwap"
 import DialogXudtLeapToLayer1 from "@/components/Dialogs/DialogLeapXudtToLayer1/DialogXudtLeapToLayer1"
 import DialogLeapXudtToLayer2 from "@/components/Dialogs/DialogLeapXudtToLayer2/DialogLeapXudtToLayer2"
 import useBtcWallet from "@/serves/useBtcWallet"
 import {TooltipItem} from "@/components/Tooltip"
 import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
 import BigNumber from "bignumber.js"
+import {InternalTokenBalance} from "@/serves/useInternalAssets"
+import {useNavigate} from "react-router-dom"
 
 export interface TokenBalance extends TokenInfoWithAddress {
     amount: string
     type: string
-    chain: "ckb" | "btc"
+    chain: "ckb" | "btc" | 'evm'
 }
 
 export default function ListToken({
@@ -32,9 +32,9 @@ export default function ListToken({
     status,
     addresses,
     internalAddress,
-    previewSize = 5
+    previewSize = 20
 }: {
-    data: TokenBalance[]
+    data: Array<TokenBalance | InternalTokenBalance>
     status: string
     addresses?: string[]
     internalAddress?: string
@@ -45,10 +45,11 @@ export default function ListToken({
     const {supportTokens} = useUtxoSwap()
     const {isBtcWallet} = useBtcWallet()
     const {prices, currCurrency, rates, currencySymbol} = useContext(MarketContext)
+    const navigate= useNavigate()
 
     const isSupportSwap = useCallback(
         (token: TokenBalance) => {
-            if (token.chain === "btc") return ""
+            if (token.chain === "btc" || token.chain === 'evm') return ""
 
             if (token.symbol === "CKB") {
                 return "0x0000000000000000000000000000000000000000000000000000000000000000"
@@ -80,8 +81,10 @@ export default function ListToken({
             return "/token"
         } else if (token.symbol === "BTC") {
             return "/bitcoin"
-        } else {
+        } else if (token.chain === 'ckb') {
             return `/token/${token.type_id}`
+        } else {
+            return ''
         }
     }
 
@@ -101,18 +104,16 @@ export default function ListToken({
     }
 
     const calculatePrice = (token: TokenBalance) => {
-        return (
-            currencySymbol +
-            toDisplay(
-                BigNumber("1")
-                    .times(prices[token.symbol].toString())
-                    .times(rates[currCurrency.toUpperCase()])
-                    .toString(),
-                0,
-                true,
-                4
-            )
+        let value = toDisplay(
+            BigNumber("1")
+                .times(prices[token.symbol].toString())
+                .times(rates[currCurrency.toUpperCase()])
+                .toString(),
+            0,
+            true,
+            4
         )
+        return currencySymbol + value
     }
 
     return (
@@ -156,16 +157,26 @@ export default function ListToken({
                         const typeHash = isSupportSwap(item)
 
                         return (
-                            <Link
-                                to={getLink(item)}
+                            <div
+                                onClick={() => {
+                                    const link = getLink(item)
+                                    !!link && navigate(link)
+                                }}
                                 key={index}
                                 className={`whitespace-nowrap grid ${
                                     !!addresses ? "sm:grid-cols-5 grid-cols-3" : "sm:grid-cols-4 grid-cols-2"
-                                } px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100`}
+                                } ${getLink(item) ? 'cursor-pointer' : '!cursor-default'} px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100`}
                             >
-                                <div className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center">
-                                    <TokenIcon symbol={item.symbol!} size={24} chain={item.chain} />
-                                    {item.symbol!}
+                                <div className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center"
+                                     title={item.symbol!}
+                                >
+                                    <TokenIcon
+                                        symbol={item.symbol!}
+                                        size={24}
+                                        chain={(item as InternalTokenBalance).assets_chain || item.chain}
+                                        url={(item as InternalTokenBalance).assets_icon}
+                                    />
+                                    <div className={'max-w-[80px] overflow-hidden whitespace-nowrap overflow-ellipsis'}>{item.symbol!}</div>
                                 </div>
                                 <>
                                     <div className="flex-row hidden items-center sm:flex">
@@ -176,7 +187,7 @@ export default function ListToken({
                                             !!addresses ? "justify-start" : "justify-end sm:justify-start"
                                         }`}
                                     >
-                                        {toDisplay(item.amount, item.decimal!, true)}
+                                        {toDisplay(item.amount, item.decimal!, true, 8)}
                                     </div>
                                     <div
                                         className={`flex-row hidden items-center sm:flex ${
@@ -329,7 +340,7 @@ export default function ListToken({
                                                 </>
                                             )}
 
-                                            {item.symbol !== "CKB" && item.chain !== "btc" && (
+                                            {item.symbol !== "CKB" && item.chain !== "btc" && item.chain !== "evm" && (
                                                 <DialogXudtTransfer froms={addresses} token={item}>
                                                     <TooltipItem tip={lang["Send tokens to others"]}>
                                                         <div className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
@@ -341,7 +352,7 @@ export default function ListToken({
                                         </div>
                                     )}
                                 </>
-                            </Link>
+                            </div>
                         )
                     })}
             </div>

@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js'
+import {TokenBalance} from "@/components/ListToken/ListToken"
 
 function toValue(numStr: string, decimal: number, split?: boolean, isInt?: boolean): string {
     const num = BigNumber(numStr)
@@ -15,11 +16,18 @@ export function toDisplay(numStr: string, decimal: number, split?: boolean, fixe
     const num = BigNumber(numStr)
     const d = BigNumber(10 ** decimal + '')
 
-    if (split) {
-        return num.dividedBy(d).toFormat(fixed)
+    let str = ''
+    if (fixed) {
+        str = num.dividedBy(d).toFixed(fixed)
     } else {
-        return fixed ? num.dividedBy(d).toFixed(fixed) : num.dividedBy(d).toString()
+        str = num.dividedBy(d).toString()
     }
+
+    if (split) {
+        str = BigNumber(str).toFormat()
+    }
+
+    return str
 }
 
 export function shortTransactionHash(hash: string, keep?: number): string {
