@@ -5,10 +5,10 @@
     "private": true,
     "resolutions": {
         "@ckb-lumos/lumos": "0.0.0-canary-d279b87-20240624101315",
-        "@nervosnetwork/ckb-types": "0.109.4",
-        "@nervosnetwork/ckb-sdk-utils": "0.109.4",
-        "@nervosnetwork/ckb-sdk-core": "0.109.4",
-        "@nervosnetwork/ckb-sdk-rpc": "0.109.4"
+        "@nervosnetwork/ckb-types": "0.109.5",
+        "@nervosnetwork/ckb-sdk-utils": "0.109.5",
+        "@nervosnetwork/ckb-sdk-core": "0.109.5",
+        "@nervosnetwork/ckb-sdk-rpc": "0.109.5"
     },
     "dependencies": {
         "@babel/core": "^7.16.0",
@@ -17,7 +17,7 @@
         "@ckb-lumos/lumos": "0.0.0-canary-d279b87-20240624101315",
         "@joyid/ckb": "^0.0.8",
         "@nervina-labs/dob-render": "^0.2.3",
-        "@nervosnetwork/ckb-sdk-core": "0.109.3",
+        "@nervosnetwork/ckb-sdk-core": "0.109.5",
         "@noble/hashes": "^1.4.0",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
         "@radix-ui/react-dialog": "^1.0.5",
@@ -29,7 +29,7 @@
         "@radix-ui/react-tooltip": "^1.1.4",
         "@rgbpp-sdk/ckb": "^0.6.0",
         "@svgr/webpack": "^5.5.0",
-        "@utxoswap/swap-sdk-js": "^0.1.3",
+        "@utxoswap/swap-sdk-js": "^0.1.14",
         "ahooks": "^3.8.4",
         "alchemy-sdk": "^3.5.6",
         "axios": "^1.7.2",
