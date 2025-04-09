@@ -91,7 +91,7 @@ export default function Profile() {
         loadAll: rgbppHistoryLoadAll
     } = useTransactionsHistory(btcAddress)
 
-    const {status: internalAssetsDataStatus, data: internalAssetsData} = useInternalAssets(internalAddress)
+    const {status: internalAssetsDataStatus, data: internalAssetsData} = useInternalAssets(isOwner ? internalAddress : undefined)
 
     const {domains, status: domainStatus} = useDotbit(address)
 
