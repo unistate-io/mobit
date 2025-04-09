@@ -199,6 +199,7 @@ export default function ListToken({
                                     {!!addresses && addresses.length && (
                                         <div
                                             onClick={e => {
+                                                e.stopPropagation()
                                                 e.preventDefault()
                                             }}
                                             className="text-right flex-row items-center flex flex-nowrap justify-end"
