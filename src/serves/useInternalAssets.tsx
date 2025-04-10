@@ -1,10 +1,9 @@
-import {useState, useCallback, useContext} from "react"
+import {useState, useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {useEffect} from "react"
 import {getInternalAddressChain} from "@/utils/common"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
-import {Network, Alchemy, Utils} from "alchemy-sdk"
 
 export const SupportedChainMetadata = [
     {
@@ -37,6 +36,7 @@ export const SupportedChainMetadata = [
 export interface InternalTokenBalance extends TokenBalance {
     assets_chain: string,
     assets_icon?: string,
+    contract_address?: string,
 }
 
 export default function useInternalAssets(walletAddress?: string) {
@@ -52,24 +52,18 @@ export default function useInternalAssets(walletAddress?: string) {
     }> => {
         if (network === "testnet") return {balance: [], markets: {}}
         if (chain === "evm") {
-            const opts = {
-                addresses: [
-                    {
-                        address: walletAddress!,
-                        networks: SupportedChainMetadata.map((chain) => chain.chain)
-                    }
-                ],
-                withMetadata: true,
-                withPrices: true
-            }
-
-            const data = await fetch(`https://api.g.alchemy.com/data/v1/${process.env.REACT_APP_ALCHEMY_API_KEY}/assets/tokens/by-address`,
+            const data = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/get_token_balance`,
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(opts)
+                    body: JSON.stringify(
+                        {
+                            address: walletAddress!,
+                            networks: SupportedChainMetadata.map((chain) => chain.chain)
+                        }
+                    )
                 })
 
             if (!data.ok) {
@@ -89,6 +83,7 @@ export default function useInternalAssets(walletAddress?: string) {
                     name: item.tokenMetadata.name,
                     symbol: item.tokenMetadata.symbol,
                     assets_icon: item.tokenMetadata.logo,
+                    contract_address: item.tokenMetadata.contractAddress,
                     type_id: "",
                     assets_chain: item.network.split("-")[0],
                     address: {
@@ -120,32 +115,35 @@ export default function useInternalAssets(walletAddress?: string) {
         if (network === "testnet") return []
         if (chain !== "evm") return []
 
-        const alchemyClients = SupportedChainMetadata.map(supportedChain => {
-            return {
-                chain: supportedChain.chain,
-                client: new Alchemy({
-                    apiKey: process.env.REACT_APP_ALCHEMY_API_KEY,
-                    network: supportedChain.chain as Network
-                })
-            }
-        })
+        const data = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/balance`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(
+                    {
+                        address: walletAddress!,
+                        networks: SupportedChainMetadata.map((chain) => chain.chain)
+                    }
+                )
+            })
 
-        const balance = await Promise.all(alchemyClients.map(async client => {
-            return client.client.core.getBalance(walletAddress!, "latest")
-        }))
+        if (!data.ok) {
+            throw new Error(`Failed to fetch tokens for ${data.statusText}`)
+        }
 
-        const tokenBalance = balance
+        const res: {chain: string, amount: string}[] = await data.json()
+
+        const tokenBalance = res
             .map((b, index) => {
                 // polygon mainnet => matic
-                const assets_chain = SupportedChainMetadata[index].chain === "polygon-mainnet"
-                    ? "matic"
-                    : SupportedChainMetadata[index].chain.split("-")[0]
                 return {
                     decimal: 18,
                     name: SupportedChainMetadata[index].name,
                     symbol: SupportedChainMetadata[index].tokenSymbol,
                     type_id: "",
-                    assets_chain: assets_chain,
+                    assets_chain: b.chain,
                     address: {
                         id: "",
                         script_args: "",
@@ -153,14 +151,15 @@ export default function useInternalAssets(walletAddress?: string) {
                         script_hash_type: ""
                     },
                     addressByInscriptionId: null,
-                    amount: b.toString(),
-                    type: assets_chain,
+                    amount: b.amount,
+                    type: b.chain,
                     chain: "evm"
                 } as InternalTokenBalance
             })
             .filter((b) => {
                 return b.amount !== "0"
             })
+
 
         return tokenBalance
     }
@@ -169,27 +168,27 @@ export default function useInternalAssets(walletAddress?: string) {
         if (network === "testnet") return {}
         if (chain !== "evm") return {}
 
-        const options = {method: "GET", headers: {accept: "application/json"}}
-
-        const res = await fetch(`https://api.g.alchemy.com/prices/v1/${process.env.REACT_APP_ALCHEMY_API_KEY}/tokens/by-symbol?symbols=ETH&symbols=OP&symbols=MATIC&symbols=BASE&symbols=ARB`, options)
+        const res = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/market`, {
+            method: "POST",
+            headers: {accept: "application/json"},
+            body: JSON.stringify({
+                symbols: SupportedChainMetadata.map((chain) => chain.tokenSymbol)
+            })
+        })
 
         if (!res.ok) {
             throw new Error(`Failed to fetch tokens for ${res.statusText}`)
         }
 
         const data = await res.json()
-        const market: {[index: string]: any} = {}
-        data.data.forEach((item: any) => {
-            market[item.symbol] = item.prices[0]?.value
-        })
-        return {...market, "BASE": market["ETH"], "POL": market["MATIC"]}
+        return data as {[index: string]: string}[]
     }
 
 
     useEffect(() => {
         ;(async () => {
             if (!walletAddress) {
-                setStatus('complete')
+                setStatus("complete")
             }
             const chain = getInternalAddressChain(walletAddress)
             if (!!chain && !!walletAddress) {
