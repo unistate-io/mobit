@@ -9,27 +9,47 @@ export const SupportedChainMetadata = [
     {
         chain: "eth-mainnet",
         name: "Ethereum",
-        tokenSymbol: "ETH"
+        tokenSymbol: "ETH",
+        chainId: "0x1",
+        rpcUrl: "https://mainnet.infura.io/v3/",
+        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+        blockExplorerUrls: ["https://etherscan.io"]
     },
     {
         chain: "base-mainnet",
         tokenSymbol: "BASE",
-        name: "Base"
+        name: "Base",
+        chainId: "0x2105",
+        rpcUrl: "https://mainnet.base.org",
+        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+        blockExplorerUrls: ["https://basescan.org"]
     },
     {
         chain: "polygon-mainnet",
         tokenSymbol: "MATIC",
-        name: "Matic"
+        name: "Matic",
+        chainId: "0x89",
+        rpcUrl: "https://polygon-rpc.com",
+        nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
+        blockExplorerUrls: ["https://polygonscan.com"]
     },
     {
         chain: "arb-mainnet",
         tokenSymbol: "ARB",
-        name: "Arbitrum"
+        name: "Arbitrum",
+        chainId: "0xa4b1",
+        rpcUrl: "https://arb1.arbitrum.io/rpc",
+        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+        blockExplorerUrls: ["https://arbiscan.io"]
     },
     {
         chain: "opt-mainnet",
         tokenSymbol: "OP",
-        name: "Optimism"
+        name: "Optimism",
+        chainId: "0xa",
+        rpcUrl: "https://mainnet.optimism.io",
+        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+        blockExplorerUrls: ["https://optimistic.etherscan.io"]
     }
 ]
 

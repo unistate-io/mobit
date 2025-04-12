@@ -13,6 +13,7 @@ import ListEvmTokenHistory from "@/components/ListEvmTokenHistory"
 import {useParams} from "react-router-dom"
 import {useNavigate} from "react-router-dom"
 import {SupportedChainMetadata} from "@/serves/useInternalAssets"
+import useEvmTokenTransfer from "@/serves/useEvmTokenTransfer"
 
 export interface EvmTokenTransaction {
     blockNum: string
@@ -48,6 +49,8 @@ export default function EvmNativeTokenPage() {
     if (!network) {
         navigate("/", {replace: true})
     }
+    const {allowedTransfer} = useEvmTokenTransfer()
+    
     const metadata = SupportedChainMetadata.find(m => m.chain === network)
     if (!metadata) {
         navigate("/", {replace: true})
@@ -303,7 +306,7 @@ export default function EvmNativeTokenPage() {
                         }
                     </div>
                     <div className="flex flex-row justify-between text-sm">
-                        <Button className="mr-2">{lang["Send"]}</Button>
+                        {allowedTransfer && <Button className="mr-2">{lang["Send"]}</Button>}
                         <DialogXudtReceive address={internalAddress!} className="flex-1">
                             <Button className="text-white !bg-[#000] hover:opacity-80 hover:bg-[#000]"
                             >{lang["Receive"]}</Button>

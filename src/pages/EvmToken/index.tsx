@@ -1,4 +1,3 @@
-import { useSearchParams } from "react-router-dom"
 import { useContext, useEffect, useRef, useState } from "react"
 import { type TokenMetadataResponse } from 'alchemy-sdk';
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
@@ -46,7 +45,7 @@ export interface EvmTokenPropsSearchParams {
 
 export default function EvmTokenPage() {
     const {network, contract} = useParams<EvmTokenPropsSearchParams>()
-    const { internalAddress } = useContext(CKBContext)
+    const { internalAddress, wallet, signer } = useContext(CKBContext)
     const { lang } = useContext(LangContext)
 
     const chartBoxRef = useRef<HTMLDivElement>(null)
@@ -158,6 +157,7 @@ export default function EvmTokenPage() {
     }, [contract, network])
 
     useEffect(() => {
+        console.log('wallet ==>', wallet, signer)
         getTokenTransactions()
         getBalance()
     }, [internalAddress, metadata])
@@ -166,7 +166,7 @@ export default function EvmTokenPage() {
         if (!chartBoxRef.current || !chartData) return
 
         const handleResize = () => {
-            chart.applyOptions({ width: chartBoxRef.current!.clientWidth });
+           !!chartBoxRef.current && chart.applyOptions({ width: chartBoxRef.current!.clientWidth });
         };
 
         const chart = createChart(chartBoxRef.current, {
