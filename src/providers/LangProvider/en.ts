@@ -149,6 +149,7 @@ const langEN = {
     "Melting the DOB will return CKB capacity, but there may be potential losses due to the floor price of the DOB. Are you sure you want to destroy it?":"Melting the DOB will return CKB capacity, but there may be potential losses due to the floor price of the DOB. Are you sure you want to destroy it?",
     "Confirm":"Confirm",
     "Melt":"Melt",
+    "Token Info":"Token Info",
 }
 
 export type LangConfig = typeof langEN

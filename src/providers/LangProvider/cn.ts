@@ -149,6 +149,7 @@ const langCN: LangConfig = {
     "Melting the DOB will return CKB capacity, but there may be potential losses due to the floor price of the DOB. Are you sure you want to destroy it?":"销毁DOB将会返回CKB容量，但由于DOB的底价可能会导致潜在的损失。您确定要销毁吗？",
     "Confirm":"确认",
     "Melt":'销毁',
+    "Token Info":"代币信息",
 }
 
 export default langCN

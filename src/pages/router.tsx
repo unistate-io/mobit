@@ -10,6 +10,8 @@ import BtcTokenPage from "@/pages/BtcToken"
 import Test from "@/pages/Test"
 import DotBit from "@/pages/DotBit/DotBit"
 import TradePage from "@/pages/Trade"
+import EvmTokenPage from "@/pages/EvmToken"
+import EvmNativeTokenPage from '@/pages/EvmNativeToken'
 
 const router = createBrowserRouter([
     {
@@ -27,7 +29,9 @@ const router = createBrowserRouter([
             {path: "/bitcoin", element: <BtcTokenPage />},
             {path: "/test", element: <Test />},
             {path: "/dotbit/:domain", element: <DotBit />},
-            {path: "/trade", element: <TradePage />}
+            {path: "/trade", element: <TradePage />},
+            {path: "/evm/token/:network/:contract", element: <EvmTokenPage />},
+            {path: "/evm/token/:network", element: <EvmNativeTokenPage />}
         ]
     }
 ])

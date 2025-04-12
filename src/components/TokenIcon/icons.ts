@@ -11,6 +11,7 @@ export const TokenIcons:IconsUrl = {
     'OTTER': 'https://xudtlogos.cc/logos/otter-logo.png',
     'CLOWN': 'https://ik.imagekit.io/soladata/1ut68bmf_FlKFW3LGX',
     'POL': 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
+    'MATIC': 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
     'OP': 'https://ik.imagekit.io/soladata/tf1p0294__n4jPmOjA',
     'ARB': 'https://ik.imagekit.io/soladata/bmmv61b8_k8XBMON2K',
     'BASE': 'https://ik.imagekit.io/soladata/169j49np_AlaMKtpfZ',
@@ -22,11 +23,12 @@ export const ChainIcons:IconsUrl = {
     'ckb': '/images/logo_ckb.png',
     'btc': 'https://ik.imagekit.io/soladata/5veftj7e_LpXwtrv8H',
     'eth': 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
-    'matic': 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
-    'arb': 'https://ik.imagekit.io/soladata/bmmv61b8_k8XBMON2K',
-    'opt': 'https://ik.imagekit.io/soladata/tf1p0294__n4jPmOjA',
-    'base': 'https://ik.imagekit.io/soladata/169j49np_AlaMKtpfZ',
-    'polygon': 'https://ik.imagekit.io/soladata/p858lw0t_SRpkUhlAL'
+    'eth-mainnet': 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
+    'matic-mainnet': 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
+    'arb-mainnet': 'https://ik.imagekit.io/soladata/bmmv61b8_k8XBMON2K',
+    'opt-mainnet': 'https://ik.imagekit.io/soladata/tf1p0294__n4jPmOjA',
+    'base-mainnet': 'https://ik.imagekit.io/soladata/169j49np_AlaMKtpfZ',
+    'polygon-mainnet': 'https://ik.imagekit.io/soladata/p858lw0t_SRpkUhlAL'
 }
 
 

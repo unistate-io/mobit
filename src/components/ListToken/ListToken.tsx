@@ -76,13 +76,20 @@ export default function ListToken({
         list = data.slice(0, previewSize)
     }
 
-    const getLink = (token: TokenBalance) => {
+    const getLink = (token: TokenBalance | InternalTokenBalance) => {
         if (token.symbol === "CKB") {
             return "/token"
         } else if (token.symbol === "BTC") {
             return "/bitcoin"
         } else if (token.chain === 'ckb') {
             return `/token/${token.type_id}`
+        } else if (token.chain === 'evm') {
+            const contract = (token as InternalTokenBalance).contract_address
+            let  network = (token as InternalTokenBalance).assets_chain
+            if (network === 'matic-mainnet') {
+                network = 'polygon-mainnet'
+            }
+            return contract ? `/evm/token/${network}/${contract}` : `/evm/token/${network}`
         } else {
             return ''
         }

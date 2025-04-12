@@ -18,7 +18,7 @@ export const SupportedChainMetadata = [
     },
     {
         chain: "polygon-mainnet",
-        tokenSymbol: "POL",
+        tokenSymbol: "MATIC",
         name: "Matic"
     },
     {
@@ -52,7 +52,7 @@ export default function useInternalAssets(walletAddress?: string) {
     }> => {
         if (network === "testnet") return {balance: [], markets: {}}
         if (chain === "evm") {
-            const data = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/get_token_balance`,
+            const data = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/tokens_balance`,
                 {
                     method: "POST",
                     headers: {
@@ -83,9 +83,9 @@ export default function useInternalAssets(walletAddress?: string) {
                     name: item.tokenMetadata.name,
                     symbol: item.tokenMetadata.symbol,
                     assets_icon: item.tokenMetadata.logo,
-                    contract_address: item.tokenMetadata.contractAddress,
+                    contract_address: item.tokenAddress,
                     type_id: "",
-                    assets_chain: item.network.split("-")[0],
+                    assets_chain: item.network,
                     address: {
                         id: "",
                         script_args: "",

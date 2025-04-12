@@ -58,7 +58,6 @@ export default function TokenIcon({ symbol = 'default', size, chain, rounded = t
             <img src={tokenIcon} className={`bg-gray-200 ${rounded ? 'rounded-full' : 'rounded-lg'}`} alt="icon"
                 width={size} height={size} />
             : <IconUnknown str={symbol} size={size} />
-
         }
         {
             chainIcon &&
