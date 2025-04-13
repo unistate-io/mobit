@@ -14,6 +14,7 @@ import {useParams} from "react-router-dom"
 import {useNavigate} from "react-router-dom"
 import {SupportedChainMetadata} from "@/serves/useInternalAssets"
 import useEvmTokenTransfer from "@/serves/useEvmTokenTransfer"
+import DialogEvmTransfer from "@/components/Dialogs/DialogEvmTransfer/DialogEvmTransfer"
 
 export interface EvmTokenTransaction {
     blockNum: string
@@ -162,7 +163,9 @@ export default function EvmNativeTokenPage() {
         if (!chartBoxRef.current || !chartData) return
 
         const handleResize = () => {
-            chart.applyOptions({ width: chartBoxRef.current!.clientWidth });
+            if (chartBoxRef.current) {
+                chart.applyOptions({ width: chartBoxRef.current!.clientWidth });
+            }
         };
 
         const chart = createChart(chartBoxRef.current, {
@@ -306,7 +309,9 @@ export default function EvmNativeTokenPage() {
                         }
                     </div>
                     <div className="flex flex-row justify-between text-sm">
-                        {allowedTransfer && <Button className="mr-2">{lang["Send"]}</Button>}
+                        {allowedTransfer && <DialogEvmTransfer className="mr-2" network={network!}>
+                            <div className="bg-gray-200 hover:bg-gray-300 data-[loading=true]:pointer-events-none data-[loading=true]:opacity-50 disabled:opacity-50 font-semibold w-full px-4 py-3 rounded-lg flex flex-row flex-nowrap items-center justify-center">{lang["Send"]}</div>
+                            </DialogEvmTransfer>}
                         <DialogXudtReceive address={internalAddress!} className="flex-1">
                             <Button className="text-white !bg-[#000] hover:opacity-80 hover:bg-[#000]"
                             >{lang["Receive"]}</Button>

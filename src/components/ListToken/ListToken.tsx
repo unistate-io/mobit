@@ -20,6 +20,8 @@ import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
 import BigNumber from "bignumber.js"
 import {InternalTokenBalance} from "@/serves/useInternalAssets"
 import {useNavigate} from "react-router-dom"
+import DialogEvmTokenTransfer from "@/components/Dialogs/DialogEvmTokenTransfer/DialogEvmTokenTransfer"
+import DialogEvmTransfer from "@/components/Dialogs/DialogEvmTransfer/DialogEvmTransfer"
 
 export interface TokenBalance extends TokenInfoWithAddress {
     amount: string
@@ -357,6 +359,35 @@ export default function ListToken({
                                                     </TooltipItem>
                                                 </DialogXudtTransfer>
                                             )}
+
+                                            {item.chain === "evm" && !!(item as InternalTokenBalance).contract_address &&
+                                                <DialogEvmTokenTransfer 
+                                                metadata={{
+                                                    name: item.name,
+                                                    symbol: item.symbol,
+                                                    decimals: (item as InternalTokenBalance).decimal!,
+                                                    logo: (item as InternalTokenBalance).assets_icon || null,
+                                                }}
+                                                network={(item as InternalTokenBalance).assets_chain!} 
+                                                tokenContract={(item as InternalTokenBalance).contract_address!}>
+                                                    <TooltipItem tip={lang["Send tokens to others"]}>
+                                                        <div className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
+                                                            {lang["Send"]}
+                                                        </div>
+                                                    </TooltipItem>
+                                                </DialogEvmTokenTransfer>
+                                            }
+
+                                            {item.chain === "evm" && !(item as InternalTokenBalance).contract_address &&
+                                                <DialogEvmTransfer 
+                                                    network={(item as InternalTokenBalance).assets_chain!}>
+                                                    <TooltipItem tip={lang["Send tokens to others"]}>
+                                                        <div className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
+                                                            {lang["Send"]}
+                                                        </div>
+                                                    </TooltipItem>
+                                                </DialogEvmTransfer>
+                                            }
                                         </div>
                                     )}
                                 </>
