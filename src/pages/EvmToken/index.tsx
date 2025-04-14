@@ -14,6 +14,8 @@ import { ChainIcons } from "@/components/TokenIcon/icons"
 import CopyText from "@/components/CopyText/CopyText"
 import ListEvmTokenHistory from "@/components/ListEvmTokenHistory"
 import { useParams } from "react-router-dom"
+import DialogEvmTokenTransfer from "@/components/Dialogs/DialogEvmTokenTransfer/DialogEvmTokenTransfer"
+import useEvmTokenTransfer from "@/serves/useEvmTokenTransfer";
 
 export interface EvmTokenTransaction {
     blockNum: string
@@ -47,6 +49,7 @@ export default function EvmTokenPage() {
     const {network, contract} = useParams<EvmTokenPropsSearchParams>()
     const { internalAddress, wallet, signer } = useContext(CKBContext)
     const { lang } = useContext(LangContext)
+    const {allowedTransfer} = useEvmTokenTransfer()
 
     const chartBoxRef = useRef<HTMLDivElement>(null)
 
@@ -157,7 +160,6 @@ export default function EvmTokenPage() {
     }, [contract, network])
 
     useEffect(() => {
-        console.log('wallet ==>', wallet, signer)
         getTokenTransactions()
         getBalance()
     }, [internalAddress, metadata])
@@ -315,7 +317,17 @@ export default function EvmTokenPage() {
                         }
                     </div>
                     <div className="flex flex-row justify-between text-sm">
-                        <Button className="mr-2">{lang['Send']}</Button>
+                        {allowedTransfer && <DialogEvmTokenTransfer 
+                        className="mr-2"
+                        network={network!} 
+                        metadata={metadata!}
+                        tokenContract={contract!}
+                        >
+                        <div 
+                        className="bg-gray-200 hover:bg-gray-300 data-[loading=true]:pointer-events-none data-[loading=true]:opacity-50 disabled:opacity-50 font-semibold w-full px-4 py-3 rounded-lg flex flex-row flex-nowrap items-center justify-center">
+                            {lang["Send"]}
+                            </div>
+                        </DialogEvmTokenTransfer>}
                         <DialogXudtReceive address={internalAddress!} className="flex-1">
                             <Button className="text-white !bg-[#000] hover:opacity-80 hover:bg-[#000]"
                             >{lang['Receive']}</Button>
