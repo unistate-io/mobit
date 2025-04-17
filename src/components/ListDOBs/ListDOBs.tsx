@@ -124,7 +124,7 @@ function DOBItem({ item, onPriceChange }: { item: SporesWithChainInfo, onPriceCh
     useEffect(() => {
         ; (async () => {
             const { name, image, plantText } = await renderDob(item, network)
-            await getUsdPrice()
+            getUsdPrice()
             setName(name)
             setImage(image)
             setPlantText(plantText)
