@@ -17,7 +17,7 @@ import useLayer1Assets from "@/serves/useLayer1Assets"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
 import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
-import {getInternalAddressChain, isBtcAddress} from "@/utils/common"
+import {isBtcAddress} from "@/utils/common"
 import useDotbit from "@/serves/useDotbit"
 import ListDotBit from "@/components/ListDotBit/ListDotBit"
 import DialogReceive from "@/components/Dialogs/DialogReceive/DialogReceive"
@@ -169,6 +169,8 @@ export default function Profile() {
 
     const [currtab, setCurrTab] = useState("All")
 
+    const [dobsValue, setDobsValue] = useState(0)
+
     return (
         <div>
             <div className="max-w-[--page-with] mx-auto relative">
@@ -195,7 +197,7 @@ export default function Profile() {
             <Background gradient={theme.bg} />
             <div className="max-w-[--page-with] mx-auto px-3 pb-10 relative">
                 <div className="absolute right-3 top-[40px] md:top-[80px]">
-                    <NetWorth balances={tokenData} />
+                    <NetWorth balances={tokenData} dobsValue={dobsValue} />
                 </div>
 
                 <div className="w-[200px] h-[200px] rounded-full overflow-hidden mt-[-100px] border-4 border-white hidden md:block">
@@ -243,7 +245,7 @@ export default function Profile() {
                     <a
                         href="https://www.nervdao.com/"
                         target="_blank"
-                        className="whitespace-nowrap !w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg"
+                        className="whitespace-nowrap !w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg" rel="noreferrer"
                     >
                         Nervos DAO ({lang["CKB Staking"]})
                     </a>
@@ -274,6 +276,9 @@ export default function Profile() {
                                 loaded={sporesDataLoaded}
                                 onChangePage={page => {
                                     setSporesDataPage(page)
+                                }}
+                                onPriceChange={price => {
+                                    setDobsValue(price)
                                 }}
                             />
                         </div>

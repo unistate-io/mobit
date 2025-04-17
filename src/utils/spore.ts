@@ -164,7 +164,6 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                 const tokenId = item.id.replace("\\", "").replace("x", "")
                 const decode: any = await decodeBob0(tokenId, decoderUrl)
                 const decodedData = JSON.parse(decode.render_output)
-                console.log('decodedData', decodedData)
                 res.traits = decodedData
                     .filter((trait: any) => {
                         return !trait.name.startsWith("prev.") && trait.name !== ("IMAGE")
@@ -193,7 +192,6 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                 })
                 // const svg = await renderByTokenKey(tokenId)
                 const svg = await renderByDobDecodeResponse(decode)
-                console.log('svg', svg)
                 res.image = await svgToBase64(svg)
                 resolve(res)
             } catch (e) {
@@ -236,4 +234,10 @@ export interface SporeDataView {
     contentType: string
     content: ccc.BytesLike
     clusterId?: ccc.HexLike
+}
+
+export const getDobPrice = async (type_hash: string): Promise<number> => {
+    const response = await fetch(`${process.env.REACT_APP_MARKET_API}/api/dob/price?type_hash=${type_hash}`)
+    const data = await response.json()
+    return data.usd_price as number
 }

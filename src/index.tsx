@@ -14,8 +14,7 @@ const root = ReactDOM.createRoot(
 
 const preferNetwork = localStorage.getItem('ckb_network') || 'mainnet';
 root.render(
-    <React.StrictMode>
-        <LangProvider>
+    <LangProvider>
             <ccc.Provider
                 defaultClient = {preferNetwork==='testnet'
                     ? new ccc.ClientPublicTestnet()
@@ -35,7 +34,6 @@ root.render(
                 </ToastProvider>
             </ccc.Provider>
         </LangProvider>
-    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

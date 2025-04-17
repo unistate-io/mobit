@@ -6,19 +6,23 @@ import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 
-export default function NetWorth(props: {balances:  TokenBalance[]}) {
+export default function NetWorth(props: {balances:  TokenBalance[], dobsValue: number}) {
     const {lang} = useContext(LangContext)
     const {prices, rates, currCurrency: currency, setCurrCurrency, status, currencySymbol} = useContext(MarketContext)
 
     const value = useMemo(() => {
-        const total = props.balances.reduce((acc, cur) => {
+        const tokenTotal = props.balances.reduce((acc, cur) => {
             const amount = BigNumber(cur.amount).div(10**cur.decimal)
             return acc.plus(amount.times(prices[cur.symbol] || 0))
         }, BigNumber(0))
 
-        return currency === 'usd' ? toDisplay(total.toString(), 0, true, 2) : toDisplay(total.times(rates.CNY).toString(), 0, true, 2)
+        const dobsValue = BigNumber(props.dobsValue)
 
-    }, [props.balances, currency, rates, prices])
+        return currency === 'usd' 
+        ? toDisplay(tokenTotal.plus(dobsValue).toString(), 0, true, 2) 
+        : toDisplay(tokenTotal.plus(dobsValue).times(rates.CNY).toString(), 0, true, 2)
+
+    }, [props.balances, currency, rates, prices, props.dobsValue])
 
     return <div className='min-w-[190px] shadow bg-white p-4 rounded-lg'>
         <div className="text-xs mb-2 flex flex-row items-center justify-between">
