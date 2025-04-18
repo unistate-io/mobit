@@ -96,6 +96,7 @@ export default function useInternalAssets(walletAddress?: string) {
                     return BigInt(item.tokenBalance).toString() !== "0"
                         && item.tokenPrices?.length > 0
                         && Number(item.tokenPrices[0].value) > 0.0001
+                        && !!item.tokenMetadata
                 })
             const displayTokenBalance = displayList.map((item: any) => {
                 return {
