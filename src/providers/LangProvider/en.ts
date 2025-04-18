@@ -150,6 +150,8 @@ const langEN = {
     "Confirm":"Confirm",
     "Melt":"Melt",
     "Token Info":"Token Info",
+    "Nervdao Deposited": "Nervdao Deposited",
+    "View on Nervdao": "View on Nervdao",
 }
 
 export type LangConfig = typeof langEN

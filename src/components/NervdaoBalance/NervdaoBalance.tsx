@@ -2,7 +2,6 @@ import {useContext, useEffect} from 'react'
 import {toDisplay} from "@/utils/number_display"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import useNervdao from "@/serves/useNervdao"
-import TokenIcon from "@/components/TokenIcon/TokenIcon"
 
 interface NervdaoBalanceProps {
     walletAddress: string;
@@ -23,14 +22,19 @@ export default function NervdaoBalance({walletAddress, className = ''}: NervdaoB
 
     return (
         <div className={`shadow bg-white p-4 rounded-lg ${className}`}>
-            <div className="text-xs mb-2 flex flex-row items-center">
+            <div className="text-xs mb-2 flex flex-row items-center justify-between">
                 <div className="flex items-center">
-                    <TokenIcon symbol="CKB" size={16} className="mr-1" />
-                    <span>Nervdao Balance</span>
+                    <img src="/images/nervdao_logo.svg" alt="Nervdao" className="w-4 h-4 mr-2 bg-black" />
+                    <span>{lang["Nervdao Deposited"]}</span>
                 </div>
+                <a href="https://www.nervdao.com" target="_blank" rel="noopener noreferrer" 
+                    className="flex flex-row items-center text-blue-500 hover:underline">
+                    <span>{lang["View on Nervdao"]} </span>
+                    <i className="uil uil-arrow-right text-lg" />
+                </a>
             </div>
             {status !== 'loading' ? (
-                <div className="text-lg sm:text-2xl font-semibold">{formattedBalance} CKB</div>
+                <div className="text-lg sm:text-xl font-semibold">{formattedBalance} CKB</div>
             ) : (
                 <div className="loading-bg h-[32px] rounded-lg"/>
             )}

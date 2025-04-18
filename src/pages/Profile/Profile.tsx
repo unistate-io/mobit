@@ -25,6 +25,7 @@ import {Link} from "react-router-dom"
 import NetWorth from "@/components/NetWorth"
 import Button from "@/components/Form/Button/Button"
 import useInternalAssets from "@/serves/useInternalAssets"
+import NervdaoBalance from "@/components/NervdaoBalance/NervdaoBalance"
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -161,6 +162,10 @@ export default function Profile() {
                 label: lang["DOBs"]
             },
             {
+                value: "NervDAO",
+                label: "NervDAO"
+            },
+            {
                 value: ".bit",
                 label: ".bit"
             }
@@ -242,13 +247,7 @@ export default function Profile() {
                             </Button>
                         )
                     })}
-                    <a
-                        href="https://www.nervdao.com/"
-                        target="_blank"
-                        className="whitespace-nowrap !w-auto bg-white h-10 !font-bold outline-none cursor-pointer py-2 px-4 rounded-lg" rel="noreferrer"
-                    >
-                        Nervos DAO ({lang["CKB Staking"]})
-                    </a>
+                   
                     <Button
                         key={"Activity"}
                         onClick={() => setCurrTab("Activity")}
@@ -260,6 +259,13 @@ export default function Profile() {
                 </div>
                 <div className="flex justify-between flex-col lg:flex-row">
                     <div className={`flex-1 lg:max-w-[780px] ${currtab !== "Activity" ? "block" : "hidden"}`}>
+                    
+                        {!!address && (
+                            <div className={`mt-4 ${currtab === "All" || currtab === "NervDAO" ? "block" : "hidden"}`}>
+                                <NervdaoBalance walletAddress={address} />
+                            </div>
+                        )}
+
                         <div className={`mt-4 ${currtab === "All" || currtab === "Tokens" ? "block" : "hidden"}`}>
                             <ListToken
                                 data={tokenData}
