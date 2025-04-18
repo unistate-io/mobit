@@ -152,6 +152,8 @@ const langCN: LangConfig = {
     "Token Info":"代币信息",
     "Nervdao Deposited": "Nervdao 已存入",
     "View on Nervdao": "在 Nervdao 上查看",
+    "Deposited": "已存入",
+    "Redeeming": "赎回中",
 }
 
 export default langCN

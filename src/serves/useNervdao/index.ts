@@ -8,6 +8,7 @@ export default function useNervdao() {
     const {network} = useContext(CKBContext)
     const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
     const [depositedCkb, setDepositedCkb] = useState<bigint>(BigInt(0))
+    const [redeemingCkb, setRedeemingCkb] = useState<bigint>(BigInt(0))
 
     const getDepositedCkb = async (walletAddress: string) => {
         if (network !== "mainnet") {
@@ -26,14 +27,34 @@ export default function useNervdao() {
             }
         })
 
-        const total = cells?.reduce((acc, cell) => acc + BigInt(cell.output.capacity), BigInt(0))
-        setDepositedCkb(total || BigInt(0))
+        let DepositedCkb = BigInt(0)
+        let RedeemingCkb = BigInt(0)
+
+        if (!cells || cells.length === 0) {
+            setDepositedCkb(BigInt(0))
+            setRedeemingCkb(BigInt(0))
+            setStatus("success")
+            return
+        }
+
+        for (const cell of cells) {
+            if (cell.outputData === '0x0000000000000000') {
+                DepositedCkb += BigInt(cell.output.capacity)
+            } else {
+                RedeemingCkb += BigInt(cell.output.capacity)
+            }
+        }
+
+        setDepositedCkb(DepositedCkb)
+        setRedeemingCkb(RedeemingCkb)
         setStatus("success")
     }
 
+  
     return {
         getDepositedCkb,
         depositedCkb,
-        status
+        status,
+        redeemingCkb
     }
 }
