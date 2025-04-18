@@ -26,7 +26,7 @@ export default function NervdaoBalance({walletAddress, className = ''}: NervdaoB
             <div className="text-xs mb-2 flex flex-row items-center justify-between">
                 <div className="flex items-center text-xl font-semibold mb-3">
                     <img src="/images/nervdao_logo.svg" alt="Nervdao" className="w-6 h-6 mr-2 bg-black" />
-                    <span>NervDAO</span>
+                    <span>Nervos DAO</span>
                 </div>
                 <a href="https://www.nervdao.com" target="_blank" rel="noopener noreferrer" 
                     className="flex flex-row items-center text-blue-500 hover:underline">

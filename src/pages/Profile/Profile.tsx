@@ -162,8 +162,8 @@ export default function Profile() {
                 label: lang["DOBs"]
             },
             {
-                value: "NervDAO",
-                label: "NervDAO"
+                value: "Nervos DAO",
+                label: "Nervos DAO"
             },
             {
                 value: ".bit",
@@ -261,7 +261,7 @@ export default function Profile() {
                     <div className={`flex-1 lg:max-w-[780px] ${currtab !== "Activity" ? "block" : "hidden"}`}>
                     
                         {!!address && (
-                            <div className={`mt-4 ${currtab === "All" || currtab === "NervDAO" ? "block" : "hidden"}`}>
+                            <div className={`mt-4 ${currtab === "All" || currtab === "Nervos DAO" ? "block" : "hidden"}`}>
                                 <NervdaoBalance walletAddress={address} />
                             </div>
                         )}
