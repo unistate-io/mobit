@@ -26,6 +26,7 @@ import NetWorth from "@/components/NetWorth"
 import Button from "@/components/Form/Button/Button"
 import useInternalAssets from "@/serves/useInternalAssets"
 import NervdaoBalance from "@/components/NervdaoBalance/NervdaoBalance"
+import BabylonBalance from "@/components/BabylonBalance/BabylonBalance"  
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -162,8 +163,8 @@ export default function Profile() {
                 label: lang["DOBs"]
             },
             {
-                value: "Nervos DAO",
-                label: "Nervos DAO"
+                value: "Staking",
+                label: lang["Staking"]
             },
             {
                 value: ".bit",
@@ -261,10 +262,16 @@ export default function Profile() {
                     <div className={`flex-1 lg:max-w-[780px] ${currtab !== "Activity" ? "block" : "hidden"}`}>
                     
                         {!!address && (
-                            <div className={`mt-4 ${currtab === "All" || currtab === "Nervos DAO" ? "block" : "hidden"}`}>
+                            <div className={`mt-4 ${currtab === "All" || currtab === "Staking" ? "block" : "hidden"}`}>
                                 <NervdaoBalance walletAddress={address} />
                             </div>
                         )}
+
+                        {!!internalAddress &&  isBtcAddress(internalAddress, network === "mainnet") && 
+                            <div className={`mt-4 ${currtab === "All" || currtab === "Staking" ? "block" : "hidden"}`}>
+                                <BabylonBalance walletAddress={internalAddress} />
+                            </div>
+                        }
 
                         <div className={`mt-4 ${currtab === "All" || currtab === "Tokens" ? "block" : "hidden"}`}>
                             <ListToken

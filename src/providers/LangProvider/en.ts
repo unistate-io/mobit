@@ -154,6 +154,10 @@ const langEN = {
     "View on Nervdao": "View on Nervdao",
     "Deposited": "Deposited",
     "Redeeming": "Redeeming",
+    "View on Babylon": "View on Babylon",
+    "Staked": "Staked",
+    "Unstaking": "Unstaking",
+    "Babylon": "Babylon",
 }
 
 export type LangConfig = typeof langEN

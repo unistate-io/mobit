@@ -154,6 +154,10 @@ const langCN: LangConfig = {
     "View on Nervdao": "在 Nervdao 上查看",
     "Deposited": "已存入",
     "Redeeming": "赎回中",
+    "View on Babylon": "在Babylon上查看",
+    "Staked": "质押中",
+    "Unstaking": "解锁中",
+    "Babylon": "Babylon",
 }
 
 export default langCN
