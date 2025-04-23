@@ -1,22 +1,14 @@
 import { useUtxoSwap } from "../useUtxoSwap"
 import {addressToScript} from "@nervosnetwork/ckb-sdk-utils"
-import {useContext, useState} from "react"
-import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
+import {useState} from "react"
 
-export default function useNervdao() {
+export default function useNervosdao() {
     const {collector} = useUtxoSwap()
-    const {network} = useContext(CKBContext)
     const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
     const [depositedCkb, setDepositedCkb] = useState<bigint>(BigInt(0))
     const [redeemingCkb, setRedeemingCkb] = useState<bigint>(BigInt(0))
 
     const getDepositedCkb = async (walletAddress: string) => {
-        if (network !== "mainnet") {
-            setDepositedCkb(BigInt(0))
-            setStatus("success")
-            return
-        }
-        
         setStatus("loading")
         const cells = await collector.getCells({
             lock: addressToScript(walletAddress),

@@ -1,7 +1,7 @@
 import {useContext, useEffect} from 'react'
 import {toDisplay} from "@/utils/number_display"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
-import useNervdao from "@/serves/useNervdao"
+import useNervdao from "@/serves/useNervosdao"
 
 interface NervdaoBalanceProps {
     walletAddress: string;
