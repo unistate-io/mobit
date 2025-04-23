@@ -86,8 +86,8 @@ export default function ListHistory({
                                         'text-neutral-500'
                                 return <div key={res.symbol} className="flex flex-row justify-between mt-1 text-xs">
                                     <div className="flex-row flex items-center">
-                                        <TokenIcon symbol={res.symbol || 'Inscription'} size={18}/>
-                                        {res.symbol || 'Inscription'}
+                                        <TokenIcon symbol={res.symbol || 'UNKNOWN ASSET'} size={18}/>
+                                        {res.symbol || 'UNKNOWN ASSET'}
                                     </div>
                                     <div className={`font-semibold ${color}`}>{res.delta}</div>
                                 </div>
@@ -103,8 +103,8 @@ export default function ListHistory({
                                         'text-neutral-500'
                                 return <div key={res.symbol} className="flex flex-row justify-between mt-1 text-xs">
                                     <div className="flex-row flex items-center">
-                                        <TokenIcon symbol={res.symbol || 'Inscription'} size={18}/>
-                                        {res.symbol || 'Inscription'}
+                                        <TokenIcon symbol={res.symbol || 'UNKNOWN ASSET'} size={18}/>
+                                        {res.symbol || 'UNKNOWN ASSET'}
                                     </div>
                                     <div className={`font-semibold ${color}`}>{res.delta}</div>
                                 </div>

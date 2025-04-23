@@ -118,7 +118,7 @@ const langCN: LangConfig = {
     "Records": "记录",
     "We value your feedback! Share any issues on Github or Telegram.":
         "我们重视您的反馈！请在Github或Telegram上分享任何问题。",
-    "Swap tokens via UTXO Swap": "通过UTXO Swap交换代币",
+    "Swap tokens via UTXO Swap": "通过UTXO Swap兑换​代币",
     "Send CKB to Others": "向他人发送CKB",
     "Receive assets from others": "接收他人的资产",
     "Leap tokens to CKB chain": "跨链代币到CKB链",
@@ -130,7 +130,7 @@ const langCN: LangConfig = {
     "Net Worth": "净值",
     "Value": "价值",
     "Staking": "质押",
-    "Swap": "swap",
+    "Swap": "兑换​",
     "Trade": "交易",
     "Select a token": "选择一个代币",
     "All Token": "全部代币",

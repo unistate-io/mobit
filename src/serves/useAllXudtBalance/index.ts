@@ -35,7 +35,7 @@ export const balance = async (addresses: string[], isMainnet: boolean): Promise<
 
             decimal: info?.decimal || 8,
             name: info?.name || '',
-            symbol: info?.symbol || 'Inscription',
+            symbol: info?.symbol || 'UNKNOWN ASSET',
             type_id: _l.type_id,
             transaction_hash: (info as any)?.transaction_hash || '',
             transaction_index: (info as any)?.transaction_hash || '',

@@ -48,7 +48,7 @@ const queryAssets = async (
                 cells[0].addressByTypeId.token_info || cells[0].addressByTypeId.inscription_infos[0] || undefined
 
             list.xudts.push({
-                name: info?.name || "Inscription",
+                name: info?.name || "UNKNOWN ASSET",
                 symbol: info.symbol || "",
                 decimal: info?.decimal || 0,
                 type_id: cells[0].type_id,

@@ -486,7 +486,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
                         loading={busy || ckbBalenceStatus === "loading"}
                         btntype={"primary"}
                     >
-                        Swap
+                       {lang["Swap"]}
                     </Button>
                 )}
 

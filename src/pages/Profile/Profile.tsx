@@ -186,7 +186,7 @@ export default function Profile() {
                             to="/trade"
                             className="mr-4 border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex"
                         >
-                            Swap
+                            {lang["Swap"]}
                         </Link>
                         <DialogReceive
                             addresses={
