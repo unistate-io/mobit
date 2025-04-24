@@ -1,7 +1,5 @@
 import {useContext, useMemo} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import { Network } from "alchemy-sdk"
-
 
 export const SupportedChainMetadata = [
     {
@@ -15,7 +13,7 @@ export const SupportedChainMetadata = [
     },
     {
         chain: "base-mainnet",
-        tokenSymbol: "BASE",
+        tokenSymbol: "ETH",
         name: "Base",
         chainId: "0x2105",
         rpcUrl: `https://base-mainnet.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
@@ -64,7 +62,7 @@ export const SupportedTestnetChainMetadata = [
     {
         chain: "base-sepolia",
         name: "Base",
-        tokenSymbol: "BASE",
+        tokenSymbol: "ETH",
         chainId: "0x14a33",
         rpcUrl: `https://base-sepolia.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
