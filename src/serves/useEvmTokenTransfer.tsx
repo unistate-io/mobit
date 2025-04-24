@@ -1,6 +1,6 @@
 import { CKBContext } from "@/providers/CKBProvider/CKBProvider";
 import { useContext, useMemo, useCallback } from "react";
-import { SupportedChainMetadata } from "./useInternalAssets";
+import useEvmNetwork from "./useEvmNetwork";
 
 // 定义 MetaMask ethereum 对象的类型
 declare global {
@@ -19,10 +19,10 @@ declare global {
 
 export default function useEvmTokenTransfer() {
     const { internalAddress, wallet, network } = useContext(CKBContext);
-
+    const SupportedEvmChainMetadata = useEvmNetwork()
+    
     const allowedTransfer = useMemo(() => {
-        return network === 'mainnet'
-         && !!internalAddress 
+        return !!internalAddress 
          && !!wallet?.signers?.find((signer: any) => signer.name === 'EVM')
     }, [wallet, network, internalAddress]);
 
@@ -32,7 +32,7 @@ export default function useEvmTokenTransfer() {
             throw new Error('evm wallet is not installed');
         }
 
-        const networkConfig = SupportedChainMetadata.find(chain => chain.chain === targetNetwork);
+        const networkConfig = SupportedEvmChainMetadata.find(chain => chain.chain === targetNetwork);
         if (!networkConfig) {
             throw new Error(`Unsupported network: ${targetNetwork}`);
         }
@@ -97,7 +97,7 @@ export default function useEvmTokenTransfer() {
             // 获取当前网络
             const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
             const targetNetwork = opts.network;
-            const targetChainConfig = SupportedChainMetadata.find(chain => chain.chain === targetNetwork);
+            const targetChainConfig = SupportedEvmChainMetadata.find(chain => chain.chain === targetNetwork);
             
             if (!targetChainConfig) {
                 throw new Error(`Unsupported network: ${targetNetwork}`);
@@ -166,7 +166,7 @@ export default function useEvmTokenTransfer() {
             // 获取当前网络并切换
             const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
             const targetNetwork = opts.network;
-            const targetChainConfig = SupportedChainMetadata.find(chain => chain.chain === targetNetwork);
+            const targetChainConfig = SupportedEvmChainMetadata.find(chain => chain.chain === targetNetwork);
 
             if (!targetChainConfig) {
                 throw new Error(`Unsupported network: ${targetNetwork}`);

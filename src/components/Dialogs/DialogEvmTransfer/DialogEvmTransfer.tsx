@@ -10,7 +10,7 @@ import {ChainIcons} from "@/components/TokenIcon/icons"
 import CopyText from "@/components/CopyText/CopyText"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
-import {SupportedChainMetadata} from "@/serves/useInternalAssets"
+import useEvmNetwork from "@/serves/useEvmNetwork"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 
 import * as dayjsLib from "dayjs"
@@ -21,7 +21,8 @@ export default function DialogEvmTransfer({children, className, network}: { chil
     const {transfer} = useEvmTokenTransfer()
     const {lang} = useContext(LangContext)
     const {internalAddress} = useContext(CKBContext)
-
+    const SupportedEvmChainMetadata = useEvmNetwork()
+    
     const [open, setOpen] = React.useState(false);
     const [formData, setFormData] = React.useState({
         network: network === 'matic-mainnet' ? 'polygon-mainnet' : network,
@@ -153,7 +154,7 @@ export default function DialogEvmTransfer({children, className, network}: { chil
         setTransactionError('')
     }, [step])
 
-    const metadata = SupportedChainMetadata.find(m => m.chain === formData.network)
+    const metadata = SupportedEvmChainMetadata.find(m => m.chain === formData.network)
 
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>

@@ -12,7 +12,7 @@ import dayjs from "dayjs"
 import ListEvmTokenHistory from "@/components/ListEvmTokenHistory"
 import {useParams} from "react-router-dom"
 import {useNavigate} from "react-router-dom"
-import {SupportedChainMetadata} from "@/serves/useInternalAssets"
+import useEvmNetwork from "@/serves/useEvmNetwork"
 import useEvmTokenTransfer from "@/serves/useEvmTokenTransfer"
 import DialogEvmTransfer from "@/components/Dialogs/DialogEvmTransfer/DialogEvmTransfer"
 
@@ -51,8 +51,9 @@ export default function EvmNativeTokenPage() {
         navigate("/", {replace: true})
     }
     const {allowedTransfer} = useEvmTokenTransfer()
+    const SupportedEvmChainMetadata = useEvmNetwork()
     
-    const metadata = SupportedChainMetadata.find(m => m.chain === network)
+    const metadata = SupportedEvmChainMetadata.find(m => m.chain === network)
     if (!metadata) {
         navigate("/", {replace: true})
     }

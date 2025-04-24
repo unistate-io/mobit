@@ -10,7 +10,7 @@ import {ChainIcons} from "@/components/TokenIcon/icons"
 import CopyText from "@/components/CopyText/CopyText"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
-import {SupportedChainMetadata} from "@/serves/useInternalAssets"
+import useEvmNetwork from "@/serves/useEvmNetwork"
 import { type TokenMetadataResponse } from 'alchemy-sdk';
 import TokenIcon from '@/components/TokenIcon/TokenIcon'
 
@@ -47,6 +47,7 @@ export default function DialogEvmTokenTransfer({
     const { transferErc20Token } = useEvmTokenTransfer()
     const {lang} = useContext(LangContext)
     const {internalAddress} = useContext(CKBContext)
+    const SupportedEvmChainMetadata = useEvmNetwork()
 
     const [open, setOpen] = React.useState(false);
 
@@ -222,7 +223,7 @@ export default function DialogEvmTokenTransfer({
         setTransactionError('')
     }, [step])
 
-    const chainMetadata = SupportedChainMetadata.find(m => m.chain === formData.network)
+    const chainMetadata = SupportedEvmChainMetadata.find(m => m.chain === formData.network)
 
     // 用于显示的代币图标，优先使用 metadata.logo
     const displayTokenIcon = formData.metadata?.logo || (chainMetadata && ChainIcons[chainMetadata.chain]);

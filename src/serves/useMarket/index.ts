@@ -1,4 +1,5 @@
-import {useEffect, useState} from "react"
+import {useEffect, useState, useContext} from "react"
+import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
 
 export interface TokenMarket {
     id: number
@@ -16,8 +17,15 @@ export default function useMarket() {
     const [status, setStatus] = useState<"loading" | "complete" | "error">("loading")
     const [data, setData] = useState<TokenMarket[]>([])
     const [error, setError] = useState<undefined | any>(undefined)
-
+    const {network} = useContext(CKBContext)
+    
     useEffect(() => {
+        if (network === 'testnet') {
+            setStatus("complete")
+            setData([])
+            return
+        }
+        
         setStatus("loading")
         fetch("https://price-monitoring.unistate.io/api/prices/latest")
             .then(res => res.json())
@@ -47,6 +55,7 @@ export default function useMarket() {
     }, [])
 
     const appendMarkets = (markets: TokenMarket[]) => {
+        if (network === 'testnet') return
         const newMarkets = data
         markets.forEach((item: TokenMarket) => {
             if (data.some((a: TokenMarket) => a.symbol !== a.symbol.toUpperCase())) {

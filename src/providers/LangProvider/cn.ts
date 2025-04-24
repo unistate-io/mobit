@@ -25,6 +25,7 @@ const langCN: LangConfig = {
     Receive: "接收",
     Send: "发送",
     ViewAll: "查看全部",
+    ViewLess: "收起",
     ShowMoreRecords: "显示更多记录",
     Price: "价格",
     MarketCap: "市值",
@@ -118,7 +119,7 @@ const langCN: LangConfig = {
     "Records": "记录",
     "We value your feedback! Share any issues on Github or Telegram.":
         "我们重视您的反馈！请在Github或Telegram上分享任何问题。",
-    "Swap tokens via UTXO Swap": "通过UTXO Swap兑换​代币",
+    "Swap tokens via UTXO Swap": "通过UTXO Swap兑换代币",
     "Send CKB to Others": "向他人发送CKB",
     "Receive assets from others": "接收他人的资产",
     "Leap tokens to CKB chain": "跨链代币到CKB链",
@@ -130,7 +131,7 @@ const langCN: LangConfig = {
     "Net Worth": "净值",
     "Value": "价值",
     "Staking": "质押",
-    "Swap": "兑换​",
+    "Swap": "兑换",
     "Trade": "交易",
     "Select a token": "选择一个代币",
     "All Token": "全部代币",
@@ -158,6 +159,7 @@ const langCN: LangConfig = {
     "Staked": "质押中",
     "Unstaking": "解锁中",
     "Babylon": "Babylon",
+    "LessThan": "小于",
 }
 
 export default langCN

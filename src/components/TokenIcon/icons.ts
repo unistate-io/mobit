@@ -14,7 +14,7 @@ export const TokenIcons:IconsUrl = {
     'MATIC': 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
     'OP': 'https://ik.imagekit.io/soladata/tf1p0294__n4jPmOjA',
     'ARB': 'https://ik.imagekit.io/soladata/bmmv61b8_k8XBMON2K',
-    'BASE': 'https://ik.imagekit.io/soladata/169j49np_AlaMKtpfZ',
+    'BASE': '/images/base_logo.svg',
     'USDT': 'https://ik.imagekit.io/soladata/041vywlb_vTdQI2CLS',
     'USDC': 'https://ik.imagekit.io/soladata/57yobknk_WoLp8Wvot',
 }
@@ -27,8 +27,14 @@ export const ChainIcons:IconsUrl = {
     'matic-mainnet': 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
     'arb-mainnet': 'https://ik.imagekit.io/soladata/bmmv61b8_k8XBMON2K',
     'opt-mainnet': 'https://ik.imagekit.io/soladata/tf1p0294__n4jPmOjA',
-    'base-mainnet': 'https://ik.imagekit.io/soladata/169j49np_AlaMKtpfZ',
-    'polygon-mainnet': 'https://ik.imagekit.io/soladata/p858lw0t_SRpkUhlAL'
+    'base-mainnet': '/images/base_logo.svg',
+    'polygon-mainnet': 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
+    'eth-sepolia': 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
+    'matic-amoy': 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
+    'arb-sepolia': 'https://ik.imagekit.io/soladata/bmmv61b8_k8XBMON2K',
+    'opt-sepolia': 'https://ik.imagekit.io/soladata/tf1p0294__n4jPmOjA',
+    'base-sepolia': '/images/base_logo.svg',
+    'polygon-amoy': 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png'
 }
 
 

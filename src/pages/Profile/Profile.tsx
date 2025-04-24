@@ -3,7 +3,7 @@ import {useContext, useEffect, useMemo, useState} from "react"
 import Background from "@/components/Background/Background"
 import Avatar from "@/components/Avatar/Avatar"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import ListToken, {TokenBalance} from "@/components/ListToken/ListToken"
+import {TokenBalance} from "@/components/ListToken/ListToken"
 import useAllXudtBalance from "@/serves/useAllXudtBalance"
 import useCkbBalance from "@/serves/useCkbBalance"
 import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
@@ -26,7 +26,8 @@ import NetWorth from "@/components/NetWorth"
 import Button from "@/components/Form/Button/Button"
 import useInternalAssets from "@/serves/useInternalAssets"
 import NervdaoBalance from "@/components/NervdaoBalance/NervdaoBalance"
-import BabylonBalance from "@/components/BabylonBalance/BabylonBalance"  
+import BabylonBalance from "@/components/BabylonBalance/BabylonBalance" 
+import ListTokenNew from "@/components/ListToken"
 
 export default function Profile() {
     const {address, isOwner, theme} = useContext(UserContext)
@@ -55,6 +56,10 @@ export default function Profile() {
 
         return isBtcAddress(internalAddress, network === "mainnet") ? internalAddress : undefined
     }, [internalAddress, address, addresses])
+
+    const isEvmAddress = useMemo(() => {
+        return !!internalAddress && internalAddress.startsWith("0x") && internalAddress.length === 42 && !!isOwner
+    }, [internalAddress, isOwner])
 
     const queryAddress = useMemo(() => {
         return !!addresses && addresses.includes(address!) ? addresses : [address!]
@@ -130,6 +135,39 @@ export default function Profile() {
                 : [ckbData!, ...xudtData, ...layer1Xudt, ...internalAssetsData]
         }
     }, [ckbData, layer1Btc, layer1Xudt, tokensStatus, xudtData, internalAssetsData])
+
+    const btcChainToken = useMemo(() => {
+        if (layer1DataStatus === "loading" || layer1DataStatus === "error") {
+            return [] as TokenBalance[]
+        } else if (!!layer1Btc) {
+            return [layer1Btc, ...(layer1Xudt || [])] as TokenBalance[]
+        } else {
+            return [...(layer1Xudt || [])]
+        }
+    }, [layer1Btc, layer1Xudt, layer1DataStatus])
+    
+
+    const ckbChainToken = useMemo(() => {
+        if (ckbDataStatus === "loading" || xudtDataStatus === "loading") {
+            return [] as TokenBalance[]
+        } else if (ckbDataStatus === "error" || xudtDataStatus === "error") {
+            return [] as TokenBalance[]
+        } else {
+            return [ckbData!, ...(xudtData || [])]
+        }
+    }, [ckbData, xudtData, ckbDataStatus, xudtDataStatus])
+
+    const ckbChainStatus = useMemo(() => {
+        if (ckbDataStatus === "loading" || xudtDataStatus === "loading") {
+            return "loading"
+        } else if (ckbDataStatus === "error" || xudtDataStatus === "error") {
+            return "error"
+        } else if (ckbDataStatus === "complete" && xudtDataStatus === "complete") {
+            return "complete"
+        }
+
+        return "loading"
+    }, [ckbDataStatus, xudtDataStatus])
 
     useEffect(() => {
         if (xudtDataErr) {
@@ -274,12 +312,17 @@ export default function Profile() {
                         }
 
                         <div className={`mt-4 ${currtab === "All" || currtab === "Tokens" ? "block" : "hidden"}`}>
-                            <ListToken
-                                data={tokenData}
-                                status={tokensStatus}
-                                internalAddress={internalAddress}
+                            <ListTokenNew 
+                                ckbdata={ckbChainToken}
+                                btcdata={btcChainToken}
+                                evmdata={internalAssetsData}
+                                ckbdataStatus={ckbChainStatus}
+                                btcDatastatus={layer1DataStatus}
+                                evmDataStatus={internalAssetsDataStatus}
                                 addresses={isOwner ? addresses : undefined}
-                            />
+                                isEvmAddress={isEvmAddress}
+                                isBtcAddress={!!btcAddress}
+                                />
                         </div>
 
                         <div className={`mt-6 ${currtab === "All" || currtab === "DOBs" ? "block" : "hidden"}`}>

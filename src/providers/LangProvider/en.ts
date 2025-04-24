@@ -23,6 +23,7 @@ const langEN = {
     Receive: "Receive",
     Send: "Send",
     ViewAll: "View All",
+    ViewLess: "View Less",
     ShowMoreRecords: "Show More Records",
     Price: "Price",
     MarketCap: "Market Cap",
@@ -158,6 +159,7 @@ const langEN = {
     "Staked": "Staked",
     "Unstaking": "Unstaking",
     "Babylon": "Babylon",
+    "LessThan": "Less than",
 }
 
 export type LangConfig = typeof langEN

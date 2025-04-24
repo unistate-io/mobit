@@ -4,59 +4,12 @@ import {useEffect} from "react"
 import {getInternalAddressChain} from "@/utils/common"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
-
-export const SupportedChainMetadata = [
-    {
-        chain: "eth-mainnet",
-        name: "Ethereum",
-        tokenSymbol: "ETH",
-        chainId: "0x1",
-        rpcUrl: "https://mainnet.infura.io/v3/",
-        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-        blockExplorerUrls: ["https://etherscan.io"]
-    },
-    {
-        chain: "base-mainnet",
-        tokenSymbol: "BASE",
-        name: "Base",
-        chainId: "0x2105",
-        rpcUrl: "https://mainnet.base.org",
-        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-        blockExplorerUrls: ["https://basescan.org"]
-    },
-    {
-        chain: "polygon-mainnet",
-        tokenSymbol: "MATIC",
-        name: "Matic",
-        chainId: "0x89",
-        rpcUrl: "https://polygon-rpc.com",
-        nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
-        blockExplorerUrls: ["https://polygonscan.com"]
-    },
-    {
-        chain: "arb-mainnet",
-        tokenSymbol: "ARB",
-        name: "Arbitrum",
-        chainId: "0xa4b1",
-        rpcUrl: "https://arb1.arbitrum.io/rpc",
-        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-        blockExplorerUrls: ["https://arbiscan.io"]
-    },
-    {
-        chain: "opt-mainnet",
-        tokenSymbol: "OP",
-        name: "Optimism",
-        chainId: "0xa",
-        rpcUrl: "https://mainnet.optimism.io",
-        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-        blockExplorerUrls: ["https://optimistic.etherscan.io"]
-    }
-]
-
+import useEvmNetwork from "./useEvmNetwork"
 export interface InternalTokenBalance extends TokenBalance {
     assets_chain: string,
     assets_icon?: string,
     contract_address?: string,
+    usd_price?: number
 }
 
 export default function useInternalAssets(walletAddress?: string) {
@@ -65,12 +18,12 @@ export default function useInternalAssets(walletAddress?: string) {
     const {network} = useContext(CKBContext)
     const [data, setData] = useState<InternalTokenBalance[]>([])
     const {setInternalAssetsMarket} = useContext(MarketContext)
+    const SupportedEvmChainMetadata = useEvmNetwork()
 
     const getInternalErc20Assets = async (chain: string): Promise<{
         balance: InternalTokenBalance[],
         markets: {[index: string]: any}
     }> => {
-        if (network === "testnet") return {balance: [], markets: {}}
         if (chain === "evm") {
             const data = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/tokens_balance`,
                 {
@@ -81,7 +34,7 @@ export default function useInternalAssets(walletAddress?: string) {
                     body: JSON.stringify(
                         {
                             address: walletAddress!,
-                            networks: SupportedChainMetadata.map((chain) => chain.chain)
+                            networks: SupportedEvmChainMetadata.map((chain) => chain.chain)
                         }
                     )
                 })
@@ -93,10 +46,7 @@ export default function useInternalAssets(walletAddress?: string) {
             const res = await data.json()
             const displayList = res.data.tokens
                 .filter((item: any) => {
-                    return BigInt(item.tokenBalance).toString() !== "0"
-                        && item.tokenPrices?.length > 0
-                        && Number(item.tokenPrices[0].value) > 0.0001
-                        && !!item.tokenMetadata
+                    return !!item.tokenMetadata &&  BigInt(item.tokenBalance).toString() !== "0"
                 })
             const displayTokenBalance = displayList.map((item: any) => {
                 return {
@@ -116,12 +66,15 @@ export default function useInternalAssets(walletAddress?: string) {
                     addressByInscriptionId: null,
                     amount: BigInt(item.tokenBalance).toString(),
                     type: "erc20",
-                    chain: "evm"
+                    chain: "evm",
+                    usd_price: item.tokenPrices?.[0]?.value
                 }
             })
             const market: {[index: string]: any} = {}
             displayList.forEach((item: any) => {
-                market[item.tokenMetadata.symbol] = item.tokenPrices[0].value
+                if (item.tokenPrices?.[0]?.value) {
+                    market[item.tokenMetadata.symbol] = item.tokenPrices[0].value
+                }
             })
             return {
                 balance: displayTokenBalance,
@@ -133,7 +86,6 @@ export default function useInternalAssets(walletAddress?: string) {
     }
 
     const getInternalBalance = async (chain: string) => {
-        if (network === "testnet") return []
         if (chain !== "evm") return []
 
         const data = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/balance`,
@@ -145,7 +97,7 @@ export default function useInternalAssets(walletAddress?: string) {
                 body: JSON.stringify(
                     {
                         address: walletAddress!,
-                        networks: SupportedChainMetadata.map((chain) => chain.chain)
+                        networks: SupportedEvmChainMetadata.map((chain) => chain.chain)
                     }
                 )
             })
@@ -161,8 +113,8 @@ export default function useInternalAssets(walletAddress?: string) {
                 // polygon mainnet => matic
                 return {
                     decimal: 18,
-                    name: SupportedChainMetadata[index].name,
-                    symbol: SupportedChainMetadata[index].tokenSymbol,
+                    name: SupportedEvmChainMetadata[index].name,
+                    symbol: SupportedEvmChainMetadata[index].tokenSymbol,
                     type_id: "",
                     assets_chain: b.chain,
                     address: {
@@ -177,23 +129,20 @@ export default function useInternalAssets(walletAddress?: string) {
                     chain: "evm"
                 } as InternalTokenBalance
             })
-            .filter((b) => {
-                return b.amount !== "0"
-            })
 
 
         return tokenBalance
     }
 
     const getInternalTokenMarket = async (chain: string) => {
-        if (network === "testnet") return {}
         if (chain !== "evm") return {}
+        if (network === 'testnet') return {}
 
         const res = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/market`, {
             method: "POST",
             headers: {accept: "application/json"},
             body: JSON.stringify({
-                symbols: SupportedChainMetadata.map((chain) => chain.tokenSymbol)
+                symbols: SupportedEvmChainMetadata.map((chain) => chain.tokenSymbol)
             })
         })
 
@@ -234,7 +183,7 @@ export default function useInternalAssets(walletAddress?: string) {
                 }
             }
         })()
-    }, [walletAddress])
+    }, [walletAddress, SupportedEvmChainMetadata])
 
     return {data, error, status}
 }
