@@ -19,11 +19,22 @@ export const query = async (query: string, variables?: any, isMainnet: boolean =
 export const queryXudtCell = async (addresses: string[], isMainnet: boolean = true): Promise<XudtCell[]> => {
     const condition = `where: {
       lock_address_id: {_in: ${JSON.stringify(addresses)}},
-      consumption_status: {consumed_by_tx_hash: {_is_null: true}}
+      _not: {
+        consumption_status: {
+          consumed_by_tx_hash: { _is_null: false }
+        }
+      }
     }`
     const doc = gql("xudt_cells", condition)
-    const res: any = await query(doc, undefined, isMainnet)
-    return res.xudt_cells as XudtCell[]
+    console.log("Executing GraphQL Query for Unspent XUDT Cells:\n", doc)
+    try {
+        const res: any = await query(doc, undefined, isMainnet)
+        console.log("Received GraphQL Response:", res)
+        return (res?.xudt_cells || []) as XudtCell[]
+    } catch (error) {
+        console.error("Error querying unspent XUDT cells:", error)
+        throw error
+    }
 }
 
 export const queryAddressInfoWithAddress = async (
