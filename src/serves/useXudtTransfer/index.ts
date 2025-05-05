@@ -5,7 +5,7 @@ import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
 import {CkbHelper, convertToTransaction, createTransferXudtTransaction} from "mobit-sdk"
 
 export default function useXudtTransfer() {
-    const {signer, network, wallet} = useContext(CKBContext)
+    const {signer, network} = useContext(CKBContext)
     const build = async ({
         froms,
         to,
@@ -22,9 +22,12 @@ export default function useXudtTransfer() {
         if (!signer) return null
 
         const ckbHelper = new CkbHelper(network === "mainnet")
+        const xudtType = tokenInfoToScript(tokenInfo)
+        if (!xudtType) throw new Error("Invalid token info")
+
         const tx = await createTransferXudtTransaction(
             {
-                xudtType: tokenInfoToScript(tokenInfo),
+                xudtType,
                 receivers: [{toAddress: to, transferAmount: BigInt(amount)}],
                 ckbAddresses: froms,
                 collector: ckbHelper.collector,

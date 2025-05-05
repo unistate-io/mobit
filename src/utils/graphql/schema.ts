@@ -1,117 +1,180 @@
-const xudt_cell = `xudt_cell(){
-        amount
-        lock_id
-        transaction_index
-        type_id
-        xudt_args
-        xudt_data
-        xudt_data_lock
-        xudt_owner_lock_script_hash
-        transaction_hash
-        is_consumed
-        addressByTypeId {
-            id
-            script_args
-            script_code_hash
-            script_hash_type
-            token_info {
-              decimal
-              name
-              symbol
-              transaction_hash
-              transaction_index
-            }
-            token_infos {
-              decimal
-              name
-              symbol
-              expected_supply
-              mint_limit
-              mint_status
-              udt_hash
-            }
-        }
-    }`
+const xudt_cells = `xudt_cells() {
+    amount
+    block_number
+    lock_address_id
+    output_index
+    owner_lock_hash
+    tx_hash
+    tx_timestamp
+    type_address_id
+    xudt_data_lock_hash
+    xudt_extension_args
+    xudt_extension_data
 
-const token_info = `token_info(){
-        decimal
-        name
-        symbol
-        transaction_hash
-        transaction_index
-        type_id
-    }`
+    address_by_lock_address_id {
+      address_id
+      script_args
+      script_code_hash
+      script_hash_type
+    }
 
-const token_info_address = `token_info(){
-        decimal
-        name
-        symbol
-        transaction_hash
-        transaction_index
-        type_id
-        addressByInscriptionId {
-            token_infos {
-                decimal
-                name
-                symbol
-                transaction_hash
-                transaction_index
-                type_id
-            }
-        }
-        address {
-          id
-          script_args
-          script_code_hash
-          script_hash_type
-        }
-    }`
+    address_by_type_address_id {
+      address_id
+      script_args
+      script_code_hash
+      script_hash_type
+    }
 
-const xudt_status_cell = `xudt_status_cell(){
-        input_transaction_hash
-        input_transaction_index
-        transaction_hash
-        transaction_index
-      }`
+    token_info_by_type_address_id {
+      name
+      symbol
+      decimal
+      udt_hash
+      expected_supply
+      mint_limit
+      mint_status
+      defining_tx_hash
+      defining_output_index
+    }
 
-const spores = `spores(){
-         id
-         content
-         cluster_id
-         is_burned
-         owner_address
-         content_type
-         created_at
-         updated_at
-         addressByTypeId {
-              id
-              script_args
-              script_code_hash
-              script_hash_type
-            }
-      }`
+    consumption_status {
+       consumed_by_tx_hash
+       consumed_by_input_index
+       consuming_block_number
+       consuming_tx_timestamp
+    }
+  }`
 
+const token_info = `token_info() {
+    block_number
+    decimal
+    defining_output_index
+    defining_tx_hash
+    expected_supply
+    inscription_address_id
+    mint_limit
+    mint_status
+    name
+    symbol
+    tx_timestamp
+    type_address_id
+    udt_hash
+}`
 
-const clusters = `clusters(){
-        cluster_description
+const token_info_with_details = `token_info() {
+    block_number
+    decimal
+    defining_output_index
+    defining_tx_hash
+    expected_supply
+    inscription_address_id
+    mint_limit
+    mint_status
+    name
+    symbol
+    tx_timestamp
+    type_address_id
+    udt_hash
+
+    address_by_type_address_id {
+      address_id
+      script_args
+      script_code_hash
+      script_hash_type
+    }
+
+    address_by_inscription_address_id {
+      address_id
+      script_args
+      script_code_hash
+      script_hash_type
+    }
+}`
+
+const transaction_outputs_status = `transaction_outputs_status() {
+    consumed_by_input_index
+    consumed_by_tx_hash
+    consuming_block_number
+    consuming_tx_timestamp
+    output_tx_hash
+    output_tx_index
+}`
+
+const spores = `spores() {
+    spore_id
+    content
+    cluster_id
+    is_burned
+    owner_address_id
+    content_type
+    created_at_block_number
+    created_at_output_index
+    created_at_timestamp
+    created_at_tx_hash
+    last_updated_at_block_number
+    last_updated_at_timestamp
+    last_updated_at_tx_hash
+    type_address_id
+
+    address_by_owner_address_id {
+        address_id
+        script_args
+        script_code_hash
+        script_hash_type
+    }
+
+    address_by_type_address_id {
+        address_id
+        script_args
+        script_code_hash
+        script_hash_type
+    }
+
+    cluster {
+        cluster_id
         cluster_name
-        created_at
-        id
-        is_burned
-        mutant_id
-        owner_address
-        updated_at
-      }`
+        cluster_description
+    }
+}`
 
+const clusters = `clusters() {
+    cluster_id
+    cluster_description
+    cluster_name
+    created_at_block_number
+    created_at_output_index
+    created_at_timestamp
+    created_at_tx_hash
+    is_burned
+    last_updated_at_block_number
+    last_updated_at_timestamp
+    last_updated_at_tx_hash
+    mutant_id
+    owner_address_id
+    type_address_id
 
+    address_by_owner_address_id {
+        address_id
+        script_args
+        script_code_hash
+        script_hash_type
+    }
+
+    address_by_type_address_id {
+        address_id
+        script_args
+        script_code_hash
+        script_hash_type
+    }
+}`
 
 const schema = {
-    xudt_cell,
+    xudt_cells,
     token_info,
-    xudt_status_cell,
+    transaction_outputs_status,
     spores,
     clusters,
-    token_info_address
+    token_info_with_details
 }
 
 export const gql = (type: keyof typeof schema, opt?: string) => {
@@ -121,7 +184,7 @@ export const gql = (type: keyof typeof schema, opt?: string) => {
         throw new Error(`Invalid query type: ${type}`)
     }
 
-    query = query.replace('()', opt ? `(${opt})` : '')
+    query = query.replace("()", opt ? `(${opt})` : "")
 
     query = `query MyQuery {
         ${query}
@@ -130,23 +193,23 @@ export const gql = (type: keyof typeof schema, opt?: string) => {
     return query
 }
 
-export const gqls = (props: { type: keyof typeof schema, key?: string, opt?: string }[]) => {
-    let query = ''
+export const gqls = (props: {type: keyof typeof schema; key?: string; opt?: string}[]) => {
+    let query = ""
 
-    props.forEach(({type, opt,key}) => {
+    props.forEach(({type, opt, key}) => {
         let q = schema[type]
 
         if (!q) {
             throw new Error(`Invalid query type: ${type}`)
         }
 
-        q = q.replace('()', opt ? `(${opt})` : '')
+        q = q.replace("()", opt ? `(${opt})` : "")
 
         if (key) {
             q = `${key}: ${q}`
         }
 
-        query += q + '\n'
+        query += q + "\n"
     })
 
     query = `query MyQuery {

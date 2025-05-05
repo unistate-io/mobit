@@ -41,19 +41,19 @@ export default function DobPage() {
         if (!data || !addresses || !addresses.length || !internalAddress) return false
 
         if (chain === "ckb") {
-            return addresses.includes(data.owner_address)
+            return data.owner_address_id ? addresses.includes(data.owner_address_id) : false
         }
 
         if (chain === "btc" && dobs.length) {
             console.log("dobs", dobs)
             const spore = dobs.find(dob => {
-                return dob.id.replace("\\x", "") === tokenid
+                return dob.spore_id.replace("\\x", "") === tokenid
             })
             return !!spore
         }
 
         return false
-    }, [addresses, internalAddress, data, chain, dobs])
+    }, [addresses, internalAddress, data, chain, dobs, tokenid])
 
     const handleComplete = () => {
         navigate(-1) // 返回上一个页面
@@ -92,16 +92,13 @@ export default function DobPage() {
                     {isOwner && chain !== "btc" && !!data && (
                         <div className="mt-3">
                             <DialogSporeTransfer spore={data} className="w-full" onComplete={handleComplete}>
-                                <div
-                                    className="cursor-pointer px-4 py-3 font-semibold bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
+                                <div className="cursor-pointer px-4 py-3 font-semibold bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">
                                     {lang["Transfer"]}
                                 </div>
                             </DialogSporeTransfer>
                             <div className="mt-3">
-                                <DialogSporeMelt spore={data} className="w-full"
-                                                 onComplete={handleComplete}>
-                                    <div
-                                        className="text-red-500 bg-neutral-100 font-semibold px-4 py-3 rounded-lg flex flex-row flex-nowrap justify-center hover:opacity-80">
+                                <DialogSporeMelt spore={data} className="w-full" onComplete={handleComplete}>
+                                    <div className="text-red-500 bg-neutral-100 font-semibold px-4 py-3 rounded-lg flex flex-row flex-nowrap justify-center hover:opacity-80">
                                         {lang["Melt"]}
                                     </div>
                                 </DialogSporeMelt>
@@ -160,10 +157,10 @@ export default function DobPage() {
                             <div className="text-sm mb-3">{lang["Owner"]}</div>
                             <div
                                 className="flex flex-row items-center text-sm font-semibold break-all"
-                                title={`0x${data.owner_address}`}
+                                title={data.owner_address_id ? `0x${data.owner_address_id}` : ""}
                             >
-                                <CopyText copyText={data.owner_address}>
-                                    {shortTransactionHash(data.owner_address, 10)}
+                                <CopyText copyText={data.owner_address_id || ""}>
+                                    {shortTransactionHash(data.owner_address_id || "", 10)}
                                 </CopyText>
                             </div>
 

@@ -18,7 +18,7 @@ export default function useSporeTransfer() {
 
         const {tx} = await transferSpore({
             to: toLock,
-            id: spore.id.replace("\\", "0"),
+            id: spore.spore_id.replace("\\", "0"),
             signer
         })
 

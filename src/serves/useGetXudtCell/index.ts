@@ -7,7 +7,7 @@ import {CkbHelper, convertToTransaction, createMergeXudtTransaction, createBurnX
 import {ccc} from "@ckb-ccc/connector-react"
 
 export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, addresses?: string[]) {
-    const {config, network, signer, wallet} = useContext(CKBContext)
+    const {config, network, signer} = useContext(CKBContext)
     const [data, setData] = useState<Cell[]>([])
     const [status, setStatus] = useState<"loading" | "error" | "complete">("loading")
     const [error, setError] = useState<any | null>(null)
@@ -30,9 +30,9 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
             })
 
             const typeScript: any = {
-                codeHash: tokenInfo.address.script_code_hash.replace("\\", "0"),
-                hashType: hashType[tokenInfo.address.script_hash_type],
-                args: tokenInfo.address.script_args.replace("\\", "0")
+                codeHash: tokenInfo.address_by_type_address_id?.script_code_hash.replace("\\", "0") ?? "",
+                hashType: hashType[tokenInfo.address_by_type_address_id?.script_hash_type ?? 0],
+                args: tokenInfo.address_by_type_address_id?.script_args.replace("\\", "0") ?? ""
             }
 
             let collected: Cell[] = []
@@ -54,15 +54,18 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
                 setError(e)
             }
         })()
-    }, [tokenInfo?.type_id, addresses, config.ckb_indexer, config.ckb_rpc, network])
+    }, [tokenInfo, addresses, config.ckb_indexer, config.ckb_rpc, network])
 
     const createMergeXudtCellTx = async (feeRate: ccc.NumLike) => {
         if (!tokenInfo || !addresses || !addresses.length || !signer) return null
 
         const ckbHelper = new CkbHelper(network === "mainnet")
+        const xudtType = tokenInfoToScript(tokenInfo)
+        if (!xudtType) return null
+
         let tx = await createMergeXudtTransaction(
             {
-                xudtType: tokenInfoToScript(tokenInfo),
+                xudtType,
                 ckbAddresses: addresses,
                 collector: ckbHelper.collector,
                 isMainnet: network === "mainnet"
@@ -79,8 +82,11 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
     const createBurnXudtCellTx = async (burnAmount: bigint, feeRate: ccc.NumLike) => {
         if (!tokenInfo || !addresses || !addresses.length || burnAmount === BigInt(0) || !signer) return null
         const ckbHelper = new CkbHelper(network === "mainnet")
+        const xudtType = tokenInfoToScript(tokenInfo)
+        if (!xudtType) return null
+
         let tx = await createBurnXudtTransaction({
-            xudtType: tokenInfoToScript(tokenInfo),
+            xudtType,
             ckbAddress: addresses[0],
             burnAmount: burnAmount,
             collector: ckbHelper.collector,

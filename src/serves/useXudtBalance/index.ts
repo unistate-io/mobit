@@ -1,6 +1,6 @@
 // @ts-ignore
 
-import {useCallback, useContext, useEffect, useRef, useState} from "react"
+import {useCallback, useContext, useEffect, useState} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
@@ -8,20 +8,23 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {Collector} from "@/libs/rgnpp_collector"
 import {leToU128} from "@rgbpp-sdk/ckb"
 import {addressToScript} from "@nervosnetwork/ckb-sdk-utils"
-import {hashType} from "@/serves/useXudtTransfer/lib"
 
 const emptyToken: TokenInfoWithAddress = {
     decimal: 0,
     name: "",
     symbol: "--",
-    type_id: "",
-    address: {
-        id: "",
+    defining_tx_hash: "",
+    defining_output_index: 0,
+    type_address_id: "",
+    block_number: "",
+    tx_timestamp: "",
+    address_by_type_address_id: {
+        address_id: "",
         script_args: "",
         script_code_hash: "",
-        script_hash_type: ""
+        script_hash_type: 0
     },
-    addressByInscriptionId: null
+    address_by_inscription_address_id: undefined
 }
 
 export const getXudtBalance = async (addresses: string[], tokenType: CKBComponents.Script, collector: Collector) => {
@@ -50,7 +53,6 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfoWi
         type: "xudt",
         chain: "ckb"
     } as TokenBalance)
-    const [error, setError] = useState<undefined | any>(undefined)
     const {config} = useContext(CKBContext)
 
     const refresh = useCallback(async () => {
@@ -67,7 +69,13 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfoWi
             ckbIndexerUrl: config.ckb_indexer!
         })
 
-        const balance = await getXudtBalance(addresses, tokenInfoToScript(token), collector)
+        const tokenScript = tokenInfoToScript(token)
+        if (!tokenScript) {
+            setStatus("complete")
+            return
+        }
+
+        const balance = await getXudtBalance(addresses, tokenScript, collector)
 
         setData({
             ...token,
@@ -85,7 +93,6 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfoWi
     return {
         status,
         data,
-        error,
         refresh
     }
 }

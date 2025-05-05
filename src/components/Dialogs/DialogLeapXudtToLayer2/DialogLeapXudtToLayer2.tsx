@@ -61,7 +61,10 @@ export default function DialogLeapXudtToLayer2({
             return "0"
         }
 
-        const targetToken = xudtsBalance.find(t => t.type_id === token.type_id)
+        const targetToken = xudtsBalance.find(
+            t =>
+                t.defining_tx_hash === token.defining_tx_hash && t.defining_output_index === token.defining_output_index
+        )
         return !!token ? token.amount : "0"
     }, [xudtsBalance, xudtsBalanceStatus, token])
 
@@ -119,10 +122,14 @@ export default function DialogLeapXudtToLayer2({
         setBusy(true)
         setBuildError("")
         try {
+            const xudtType = tokenInfoToScript(token)
+            if (!xudtType) {
+                throw new Error("Invalid token script")
+            }
             const tx = await build({
                 fromBtcAccount: internalAddress!,
                 toCkbAddress: formData.to,
-                xudtType: tokenInfoToScript(token),
+                xudtType,
                 amount: BigNumber(formData.amount)
                     .multipliedBy(10 ** token.decimal)
                     .toString()
@@ -142,10 +149,14 @@ export default function DialogLeapXudtToLayer2({
         setBusy(true)
         setTransactionError("")
         try {
+            const xudtType = tokenInfoToScript(token)
+            if (!xudtType) {
+                throw new Error("Invalid token script")
+            }
             const txResult = await leap({
                 fromBtcAccount: internalAddress!,
                 toCkbAddress: formData.to,
-                xudtType: tokenInfoToScript(token),
+                xudtType,
                 amount: BigNumber(formData.amount)
                     .multipliedBy(10 ** token.decimal)
                     .toString(),

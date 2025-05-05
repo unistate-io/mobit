@@ -10,13 +10,13 @@ export const balance = async (addresses: string[], isMainnet: boolean): Promise<
     const cells = await queryXudtCell(addresses, isMainnet)
 
     if (cells.length === 0) {
-        console.log('enpty')
+        console.log("empty")
         return []
     }
 
-    let list:XudtCell[] = []
+    let list: XudtCell[] = []
     cells.forEach(c => {
-        const exist = list.find(l => l.type_id === c.type_id)
+        const exist = list.find(l => l.type_address_id === c.type_address_id)
         if (!exist) {
             c.amount = c.amount.toString()
             list.push(c)
@@ -26,27 +26,20 @@ export const balance = async (addresses: string[], isMainnet: boolean): Promise<
     })
 
     const _list = list.map(_l => {
-        const info = _l.addressByTypeId?.token_info || _l.addressByTypeId?.token_infos[0] || undefined
+        const tokenInfo = _l.token_info_by_type_address_id
 
         return {
             amount: _l.amount,
-            type: 'xudt',
-            chain: 'ckb',
-
-            decimal: info?.decimal || 8,
-            name: info?.name || '',
-            symbol: info?.symbol || 'UNKNOWN ASSET',
-            type_id: _l.type_id,
-            transaction_hash: (info as any)?.transaction_hash || '',
-            transaction_index: (info as any)?.transaction_hash || '',
-
-            address: {
-                id: _l.addressByTypeId?.id || '',
-                script_args: _l.addressByTypeId?.script_args || '',
-                script_code_hash: _l.addressByTypeId?.script_code_hash || '',
-                script_hash_type: _l.addressByTypeId?.script_hash_type || ''
-            }
-
+            type: "xudt",
+            chain: "ckb",
+            decimal: tokenInfo?.decimal || 8,
+            name: tokenInfo?.name || "",
+            symbol: tokenInfo?.symbol || "UNKNOWN ASSET",
+            type_address_id: _l.type_address_id,
+            defining_tx_hash: tokenInfo?.defining_tx_hash || "",
+            defining_output_index: tokenInfo?.defining_output_index || 0,
+            address_by_type_address_id: _l.address_by_type_address_id,
+            inscription_address_id: tokenInfo?.inscription_address_id
         } as TokenBalance
     })
 
@@ -54,29 +47,27 @@ export const balance = async (addresses: string[], isMainnet: boolean): Promise<
 }
 
 export default function useAllXudtBalance(addresses: string[]) {
-    const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
+    const [status, setStatus] = useState<"loading" | "complete" | "error">("loading")
     const [data, setData] = useState<TokenBalance[]>([])
     const [error, setError] = useState<undefined | any>(undefined)
     const {network} = useContext(CKBContext)
 
-
-    const historyRef = useRef('')
+    const historyRef = useRef("")
 
     useEffect(() => {
-        if (!addresses || !addresses.length ||  historyRef.current === addresses.join(',')) return
-        historyRef.current = addresses.join(',')
-        setStatus('loading')
-        setData([]);
-
-        (async () => {
+        if (!addresses || !addresses.length || historyRef.current === addresses.join(",")) return
+        historyRef.current = addresses.join(",")
+        setStatus("loading")
+        setData([])
+        ;(async () => {
             try {
-                const res = await balance(addresses, network === 'mainnet')
+                const res = await balance(addresses, network === "mainnet")
                 setData(res)
-                setStatus('complete')
+                setStatus("complete")
             } catch (e: any) {
                 console.error(e)
                 setError(e)
-                setStatus('error')
+                setStatus("error")
             }
         })()
     }, [addresses])

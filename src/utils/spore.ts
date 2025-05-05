@@ -2,11 +2,7 @@ import {hexToBytes, toBigEndian} from "@nervosnetwork/ckb-sdk-utils"
 import {SporesWithChainInfo} from "@/serves/useSpores"
 import {bufferToRawString} from "@spore-sdk/core"
 import {queryClustersByIds} from "@/utils/graphql"
-import {
-    svgToBase64,
-    config,
-    renderByDobDecodeResponse,
-} from "@nervina-labs/dob-render"
+import {svgToBase64, config, renderByDobDecodeResponse} from "@nervina-labs/dob-render"
 import {ccc} from "@ckb-ccc/connector-react"
 
 export const hexToUtf8 = (value: string = "") => {
@@ -79,7 +75,7 @@ export const getImgFromSporeCell = (content: string, contentType: string) => {
     return DEFAULT_URL
 }
 
-export const isDob0 = (item: { standard: string | null; cell: { data: string | null } | null }) => {
+export const isDob0 = (item: {standard: string | null; cell: {data: string | null} | null}) => {
     if (item.standard !== "spore") return false
     if (!item.cell?.data) return false
     try {
@@ -97,7 +93,7 @@ export interface DobRenderRes {
     video: string
     plantText: string
     description: string
-    traits: { key: string; value: any }[]
+    traits: {key: string; value: any}[]
     dna?: string
     id?: string
 }
@@ -129,6 +125,10 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
             }
         }
 
+        if (!item.content_type || !item.content) {
+            return resolve(res)
+        }
+
         if (item.content_type === "application/json") {
             try {
                 const json = JSON.parse(bufferToRawString(item.content.replace("\\", "0")))
@@ -158,35 +158,35 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
             resolve(res)
         } else if (item.content_type.includes("dob")) {
             try {
-                const decoderUrl = network === 'mainnet'
-                    ? 'https://dob-decoder.rgbpp.io/'
-                    : 'https://dob0-decoder-dev.omiga.io'
-                const tokenId = item.id.replace("\\", "").replace("x", "")
+                const decoderUrl =
+                    network === "mainnet" ? "https://dob-decoder.rgbpp.io/" : "https://dob0-decoder-dev.omiga.io"
+                const tokenId = item.spore_id.replace("\\", "").replace("x", "")
                 const decode: any = await decodeBob0(tokenId, decoderUrl)
                 const decodedData = JSON.parse(decode.render_output)
                 res.traits = decodedData
                     .filter((trait: any) => {
-                        return !trait.name.startsWith("prev.") && trait.name !== ("IMAGE")
+                        return !trait.name.startsWith("prev.") && trait.name !== "IMAGE"
                     })
                     .map((trait: any) => {
-                        const value = trait.traits[0].String
-                            || trait.traits[0].string
-                            || trait.traits[0].Number
-                            || trait.traits[0].number
-                            || trait.traits[0].Timestamp
-                            || trait.traits[0].timestamp
-                            || trait.traits[0].Date
-                            || trait.traits[0].date
-                            || trait.traits[0].boolean?.toString()
-                            || trait.traits[0].Boolean?.toString()
-                            || '--'
+                        const value =
+                            trait.traits[0].String ||
+                            trait.traits[0].string ||
+                            trait.traits[0].Number ||
+                            trait.traits[0].number ||
+                            trait.traits[0].Timestamp ||
+                            trait.traits[0].timestamp ||
+                            trait.traits[0].Date ||
+                            trait.traits[0].date ||
+                            trait.traits[0].boolean?.toString() ||
+                            trait.traits[0].Boolean?.toString() ||
+                            "--"
                         return {key: trait.name, value}
                     })
                 res.dna = decode.dob_content.dna || ""
                 res.id = decode.dob_content.id || ""
 
                 config.setDobDecodeServerURL(decoderUrl)
-                config.setQueryBtcFsFn(async (uri) => {
+                config.setQueryBtcFsFn(async uri => {
                     const response = await fetch(`https://api.omiga.io/api/v1/nfts/dob_imgs?uri=${uri}`)
                     return response.json()
                 })

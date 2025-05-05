@@ -43,13 +43,18 @@ export default function useCkbBalance(addresses?: string[]) {
                 type: "ckb",
                 amount: _balance.toString(),
                 chain: "ckb",
-                address: {
-                    id: "",
+                defining_tx_hash: "",
+                defining_output_index: 0,
+                type_address_id: "",
+                block_number: "",
+                tx_timestamp: "",
+                address_by_type_address_id: {
+                    address_id: "",
                     script_args: "",
                     script_code_hash: "",
-                    script_hash_type: ""
+                    script_hash_type: 0
                 },
-                addressByInscriptionId: null
+                address_by_inscription_address_id: undefined
             } as TokenBalance)
             setStatus("complete")
         } catch (e: any) {
