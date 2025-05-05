@@ -26,7 +26,7 @@ import NetWorth from "@/components/NetWorth"
 import Button from "@/components/Form/Button/Button"
 import useInternalAssets from "@/serves/useInternalAssets"
 import NervdaoBalance from "@/components/NervdaoBalance/NervdaoBalance"
-import BabylonBalance from "@/components/BabylonBalance/BabylonBalance" 
+import BabylonBalance from "@/components/BabylonBalance/BabylonBalance"
 import ListTokenNew from "@/components/ListToken"
 
 export default function Profile() {
@@ -98,16 +98,34 @@ export default function Profile() {
         loadAll: rgbppHistoryLoadAll
     } = useTransactionsHistory(btcAddress)
 
-    const {status: internalAssetsDataStatus, data: internalAssetsData} = useInternalAssets(isOwner ? internalAddress : undefined)
+    const {status: internalAssetsDataStatus, data: internalAssetsData} = useInternalAssets(
+        isOwner ? internalAddress : undefined
+    )
 
     const {domains, status: domainStatus} = useDotbit(address)
 
     const tokensStatus = useMemo(() => {
-        if (xudtDataStatus === "loading" || ckbDataStatus === "loading" || layer1DataStatus === "loading" || internalAssetsDataStatus=== "loading") {
+        if (
+            xudtDataStatus === "loading" ||
+            ckbDataStatus === "loading" ||
+            layer1DataStatus === "loading" ||
+            internalAssetsDataStatus === "loading"
+        ) {
             return "loading"
-        } else if (xudtDataStatus === "error" || ckbDataStatus === "error" || layer1DataStatus === "error" || internalAssetsDataStatus === "error") {
+        } else if (
+            xudtDataStatus === "error" ||
+            ckbDataStatus === "error" ||
+            layer1DataStatus === "error" ||
+            internalAssetsDataStatus === "error"
+        ) {
             return "error"
-        } else if (xudtDataStatus === "complete" && ckbDataStatus === "complete" && ckbData && layer1DataStatus === "complete" && internalAssetsDataStatus === "complete") {
+        } else if (
+            xudtDataStatus === "complete" &&
+            ckbDataStatus === "complete" &&
+            ckbData &&
+            layer1DataStatus === "complete" &&
+            internalAssetsDataStatus === "complete"
+        ) {
             return "complete"
         }
 
@@ -145,16 +163,20 @@ export default function Profile() {
             return [...(layer1Xudt || [])]
         }
     }, [layer1Btc, layer1Xudt, layer1DataStatus])
-    
 
     const ckbChainToken = useMemo(() => {
         if (ckbDataStatus === "loading" || xudtDataStatus === "loading") {
             return [] as TokenBalance[]
         } else if (ckbDataStatus === "error" || xudtDataStatus === "error") {
+            console.error("Error loading CKB or XUDT data")
             return [] as TokenBalance[]
-        } else {
-            return [ckbData!, ...(xudtData || [])]
+        } else if (ckbDataStatus === "complete" && xudtDataStatus === "complete") {
+            const ckbTokenIfExists = ckbData ? [ckbData] : []
+            const xudtTokens = xudtData || []
+            return [...ckbTokenIfExists, ...xudtTokens]
         }
+
+        return [] as TokenBalance[]
     }, [ckbData, xudtData, ckbDataStatus, xudtDataStatus])
 
     const ckbChainStatus = useMemo(() => {
@@ -286,7 +308,7 @@ export default function Profile() {
                             </Button>
                         )
                     })}
-                   
+
                     <Button
                         key={"Activity"}
                         onClick={() => setCurrTab("Activity")}
@@ -298,21 +320,20 @@ export default function Profile() {
                 </div>
                 <div className="flex justify-between flex-col lg:flex-row">
                     <div className={`flex-1 lg:max-w-[780px] ${currtab !== "Activity" ? "block" : "hidden"}`}>
-                    
                         {!!address && (
                             <div className={`mt-4 ${currtab === "All" || currtab === "Staking" ? "block" : "hidden"}`}>
                                 <NervdaoBalance walletAddress={address} />
                             </div>
                         )}
 
-                        {!!internalAddress &&  isBtcAddress(internalAddress, network === "mainnet") && 
+                        {!!internalAddress && isBtcAddress(internalAddress, network === "mainnet") && (
                             <div className={`mt-4 ${currtab === "All" || currtab === "Staking" ? "block" : "hidden"}`}>
                                 <BabylonBalance walletAddress={internalAddress} />
                             </div>
-                        }
+                        )}
 
                         <div className={`mt-4 ${currtab === "All" || currtab === "Tokens" ? "block" : "hidden"}`}>
-                            <ListTokenNew 
+                            <ListTokenNew
                                 ckbdata={ckbChainToken}
                                 btcdata={btcChainToken}
                                 evmdata={internalAssetsData}
@@ -322,7 +343,7 @@ export default function Profile() {
                                 addresses={isOwner ? addresses : undefined}
                                 isEvmAddress={isEvmAddress}
                                 isBtcAddress={!!btcAddress}
-                                />
+                            />
                         </div>
 
                         <div className={`mt-6 ${currtab === "All" || currtab === "DOBs" ? "block" : "hidden"}`}>
