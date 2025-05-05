@@ -1,15 +1,15 @@
-import { ChainIcons } from "@/components/TokenIcon/icons"
-import { useContext, useEffect, useRef, useState } from "react"
-import { shortTransactionHash } from "@/utils/number_display"
-import { Link } from "react-router-dom"
-import { LangContext } from "@/providers/LangProvider/LangProvider"
-import { SporesWithChainInfo } from "@/serves/useSpores"
-import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
-import { getDobPrice, renderDob } from "@/utils/spore"
-import { scriptToHash } from "@nervosnetwork/ckb-sdk-utils"
-import { hashType } from "@/serves/useXudtTransfer/lib"
-import { toDisplay } from "@/utils/number_display"
-import { MarketContext } from "@/providers/MarketProvider/MarketProvider"
+import {ChainIcons} from "@/components/TokenIcon/icons"
+import {useContext, useEffect, useRef, useState} from "react"
+import {shortTransactionHash} from "@/utils/number_display"
+import {Link} from "react-router-dom"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
+import {SporesWithChainInfo} from "@/serves/useSpores"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import {getDobPrice, renderDob} from "@/utils/spore"
+import {scriptToHash} from "@nervosnetwork/ckb-sdk-utils"
+import {hashType} from "@/serves/useXudtTransfer/lib"
+import {toDisplay} from "@/utils/number_display"
+import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
 import BigNumber from "bignumber.js"
 // import DialogSporeCreate from "@/components/Dialogs/DialogSporeCreate/DialogSporeCreate"
 
@@ -27,7 +27,7 @@ export default function ListDOBs({
     onPriceChange?: (price: number) => any
 }) {
     const [page, setPage] = useState<number>(1)
-    const { lang } = useContext(LangContext)
+    const {lang} = useContext(LangContext)
     const dobsValue = useRef<number>(0)
 
     const handlePriceChange = (price: number) => {
@@ -60,7 +60,7 @@ export default function ListDOBs({
                 <div className="grid-cols-2 sm:grid-cols-3 grid">
                     {status !== "loading" &&
                         data.map((item, index) => {
-                            return <DOBItem item={item} key={item.id} onPriceChange={handlePriceChange} />
+                            return <DOBItem item={item} key={item.spore_id} onPriceChange={handlePriceChange} />
                         })}
                 </div>
 
@@ -80,27 +80,31 @@ export default function ListDOBs({
     )
 }
 
-function DOBItem({ item, onPriceChange }: { item: SporesWithChainInfo, onPriceChange?: (price: number) => any }) {
+function DOBItem({item, onPriceChange}: {item: SporesWithChainInfo; onPriceChange?: (price: number) => any}) {
     const {currCurrency, rates, currencySymbol} = useContext(MarketContext)
-    
+
     const [image, setImage] = useState<string | null>(null)
     const [video, setVideo] = useState(null)
     const [name, setName] = useState("")
     const [plantText, setPlantText] = useState("")
-    const { network } = useContext(CKBContext)
+    const {network} = useContext(CKBContext)
     const [typeHash, setTypeHash] = useState("")
 
     const [usdPrice, setUsdPrice] = useState(0)
 
     const getUsdPrice = async () => {
-        if (network !== 'mainnet') {
+        if (network !== "mainnet") {
             return 0
         }
-        
+
         const typeHash = scriptToHash({
-            args: item.addressByTypeId.script_args.replace("\\", "0"),
-            codeHash: item.addressByTypeId.script_code_hash.replace("\\", "0"),
-            hashType: hashType[item.addressByTypeId.script_hash_type]
+            args: item.address_by_type_address_id?.script_args
+                ? `0x${item.address_by_type_address_id.script_args.startsWith("\\x") ? item.address_by_type_address_id.script_args.substring(2) : item.address_by_type_address_id.script_args}`
+                : "0x",
+            codeHash: item.address_by_type_address_id?.script_code_hash
+                ? `0x${item.address_by_type_address_id.script_code_hash.startsWith("\\x") ? item.address_by_type_address_id.script_code_hash.substring(2) : item.address_by_type_address_id.script_code_hash}`
+                : "0x",
+            hashType: hashType[item.address_by_type_address_id?.script_hash_type ?? 0] ?? "type"
         })
         setTypeHash(typeHash)
         const usdPrice = await getDobPrice(typeHash)
@@ -110,10 +114,7 @@ function DOBItem({ item, onPriceChange }: { item: SporesWithChainInfo, onPriceCh
 
     const calculatePrice = (price: number) => {
         let value = toDisplay(
-            BigNumber("1")
-                .times(price.toString())
-                .times(rates[currCurrency.toUpperCase()])
-                .toString(),
+            BigNumber("1").times(price.toString()).times(rates[currCurrency.toUpperCase()]).toString(),
             0,
             true,
             4
@@ -122,8 +123,8 @@ function DOBItem({ item, onPriceChange }: { item: SporesWithChainInfo, onPriceCh
     }
 
     useEffect(() => {
-        ; (async () => {
-            const { name, image, plantText } = await renderDob(item, network)
+        ;(async () => {
+            const {name, image, plantText} = await renderDob(item, network)
             getUsdPrice()
             setName(name)
             setImage(image)
@@ -132,7 +133,10 @@ function DOBItem({ item, onPriceChange }: { item: SporesWithChainInfo, onPriceCh
     }, [])
 
     return (
-        <Link to={`/dob/${item.id.replace("\\", "").replace("x", "")}?chain=${item.chain}`} className="box-border p-2">
+        <Link
+            to={`/dob/${item.spore_id.replace("\\", "").replace("x", "")}?chain=${item.chain}`}
+            className="box-border p-2"
+        >
             <div className="relative w-full sm:h-[240px] h-[180px] overflow-hidden rounded-sm border border-1">
                 <img className="object-cover w-full h-full" src={image || "/images/spore_placeholder.svg"} alt="" />
                 {!!ChainIcons[item.chain] && (
@@ -148,11 +152,16 @@ function DOBItem({ item, onPriceChange }: { item: SporesWithChainInfo, onPriceCh
             <div className="mt-1 text-base font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis h-[24px]">
                 {name || plantText}
             </div>
-            <div className="text-xs">{shortTransactionHash(item.id.replace("\\", "0"))}</div>
+            <div className="text-xs">{shortTransactionHash(item.spore_id.replace("\\", "0"))}</div>
             <div className="h-6 flex justify-end w-full flex-row">
                 {!!usdPrice && !!typeHash && (
-                    <div className="text-xs bg-black text-white py-3 px-2 rounded-md flex flex-row items-center" 
-                        onClick={(e) => {e.preventDefault();window.open(`https://omiga.io/info/dobs/${typeHash}`, '_blank')}}>
+                    <div
+                        className="text-xs bg-black text-white py-3 px-2 rounded-md flex flex-row items-center"
+                        onClick={e => {
+                            e.preventDefault()
+                            window.open(`https://omiga.io/info/dobs/${typeHash}`, "_blank")
+                        }}
+                    >
                         <img src="/images/omiga_logo.png" className="w-4 h-4 mr-1" alt="" />
                         {calculatePrice(usdPrice)}
                     </div>

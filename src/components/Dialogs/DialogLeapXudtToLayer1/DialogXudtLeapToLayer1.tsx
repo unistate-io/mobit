@@ -92,6 +92,10 @@ export default function DialogLeapXudtToLayer1({
     const handleStep3 = async () => {
         try {
             setBusy(true)
+            const tokenScript = tokenInfoToScript(token!)
+            if (!tokenScript) {
+                throw new Error("Invalid token script")
+            }
             const tx = await buildLeapTx({
                 outIndex: selectedUtxo!.vout,
                 btcTxId: selectedUtxo!.txid,
@@ -100,7 +104,7 @@ export default function DialogLeapXudtToLayer1({
                         .times(10 ** token!.decimal)
                         .toString()
                 ),
-                xudtType: tokenInfoToScript(token!),
+                xudtType: tokenScript,
                 feeRate: BigInt(5000)
             })
             setBuildError('')

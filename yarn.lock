@@ -2605,12 +2605,12 @@
     "@types/yargs" "^17.0.8"
     chalk "^4.0.0"
 
-"@joyid/bitcoin@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@joyid/bitcoin/-/bitcoin-0.1.5.tgz#81a187e7fc957330460d716049af7e4413605fb7"
-  integrity sha512-zbzZGIcgOw4geyEdguAyOTbVZUTTwoIRqpIC5tldamEMy0T4nDfxEL5qy/lL1Styeu1r5pjpbmipTFG2/OP9pg==
+"@joyid/bitcoin@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@joyid/bitcoin/-/bitcoin-0.1.6.tgz#5acd282fbf80208b33676e8f94a966f8acf51c0c"
+  integrity sha512-QtkTuW7R1ElcrzTkCEwuwnj3vO/nouIMvzwwC6lOvWOJDIgL4y+m9BPwuJOcx+SZo++jUHiEk8J/KMvxrBtIKw==
   dependencies:
-    "@joyid/common" "0.2.0"
+    "@joyid/common" "0.2.1"
 
 "@joyid/ckb@^0.0.8":
   version "0.0.8"
@@ -2633,6 +2633,14 @@
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@joyid/common/-/common-0.2.0.tgz#06c937ff1a8810037c19bb200ccf57400d5db4f8"
   integrity sha512-WBZtgdEccWxjiGHIoDgRFIbnC42ZvmfvFRCTxmx9D4BLvtiFdhAa+g70lUmiHwO28GjgHIHgzHRGNRdLuk81xw==
+  dependencies:
+    abitype "0.8.7"
+    type-fest "4.6.0"
+
+"@joyid/common@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@joyid/common/-/common-0.2.1.tgz#4e371d9e119be6d8908165b1e139615a65e1e835"
+  integrity sha512-DjA+Cy0koTCmPzhkhHkPc0icRLE78ktZY46rXHXfkSqxwQIJ/ED/whPoeF5tkTrN+teIC/hfzVRVkEE4zh/ASQ==
   dependencies:
     abitype "0.8.7"
     type-fest "4.6.0"
@@ -2739,7 +2747,7 @@
     axios "1.7.4"
     tslib "2.3.1"
 
-"@nervosnetwork/ckb-sdk-utils@0.109.3", "@nervosnetwork/ckb-sdk-utils@0.109.4", "@nervosnetwork/ckb-sdk-utils@0.109.5", "@nervosnetwork/ckb-sdk-utils@^0.109.1", "@nervosnetwork/ckb-sdk-utils@^0.109.2":
+"@nervosnetwork/ckb-sdk-utils@0.109.3", "@nervosnetwork/ckb-sdk-utils@0.109.5", "@nervosnetwork/ckb-sdk-utils@^0.109.1", "@nervosnetwork/ckb-sdk-utils@^0.109.2":
   version "0.109.5"
   resolved "https://registry.yarnpkg.com/@nervosnetwork/ckb-sdk-utils/-/ckb-sdk-utils-0.109.5.tgz#5f760cf2a4ec8f76d5ee42ce7408c8859646073b"
   integrity sha512-Tx642hcJWbN8W3KzCIhIo49yzJ8LMqWopQCSBDKuRmwHesO/bvJqYojCVwfrOyROtFOPhgjyiGm5RXBuxm0KpQ==
@@ -3160,23 +3168,23 @@
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.21.0.tgz#c65ae4262bdcfe415dbd4f64ec87676e4a56e2b5"
   integrity sha512-xfSkCAchbdG5PnbrKqFWwia4Bi61nH+wm8wLEqfHDyp7Y3dZzgqS2itV8i4gAq9pC2HsTpwyBC6Ds8VHZ96JlA==
 
-"@rgbpp-sdk/btc@0.6.0", "@rgbpp-sdk/btc@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@rgbpp-sdk/btc/-/btc-0.6.0.tgz#a72b1220786243e93a224a973238527a21162903"
-  integrity sha512-hnbEo9Hbba8vcVrqINnfnf8+XulRvvwn3Iq9xMEwA3b1WMsuZDSfRujp6rtbCiIKOMbBTOX1DgsC07RyvCZ7VQ==
+"@rgbpp-sdk/btc@0.7.0", "@rgbpp-sdk/btc@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@rgbpp-sdk/btc/-/btc-0.7.0.tgz#cf30882e508770e70610a2a842ddee2a7f4a6c40"
+  integrity sha512-QYtl8Ez3z4FwhGzaBngVqG5WaIdmesD5J+m3RFoBUHvx5MfOgHD+ofgkZreEyRIkp7fwwsicCZ57GCiB/Yq2Dg==
   dependencies:
     "@bitcoinerlab/secp256k1" "^1.1.1"
     "@ckb-lumos/codec" "0.22.2"
-    "@nervosnetwork/ckb-types" "0.109.3"
-    "@rgbpp-sdk/ckb" "^0.6.0"
-    "@rgbpp-sdk/service" "^0.6.0"
+    "@nervosnetwork/ckb-types" "0.109.5"
+    "@rgbpp-sdk/ckb" "^0.7.0"
+    "@rgbpp-sdk/service" "^0.7.0"
     bip32 "^4.0.0"
     bitcoinjs-lib "^6.1.5"
     ecpair "^2.1.0"
     lodash "^4.17.21"
     p-limit "^3.1.0"
 
-"@rgbpp-sdk/ckb@0.6.0", "@rgbpp-sdk/ckb@^0.6.0":
+"@rgbpp-sdk/ckb@0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@rgbpp-sdk/ckb/-/ckb-0.6.0.tgz#df0f4500f8d9239c9a5d153c63ca8ca41424be7e"
   integrity sha512-SCR3vtw7nizqKTl53VqWGLX4KkpqOu1ujP3LXmWsBE07RJ2d0hTiQDVO2Y4wYsFT2RCl2cOfEMeAx2/VAvk4Fg==
@@ -3193,7 +3201,34 @@
     camelcase-keys "^7.0.2"
     js-sha256 "^0.11.0"
 
-"@rgbpp-sdk/service@0.6.0", "@rgbpp-sdk/service@^0.6.0":
+"@rgbpp-sdk/ckb@0.7.0", "@rgbpp-sdk/ckb@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@rgbpp-sdk/ckb/-/ckb-0.7.0.tgz#81cb4f48c88e662d14d6a80bc79fc9aa2aa61316"
+  integrity sha512-OBUuapLVtKR+72XwY40+UlBhalWZx99Oo1fWM3KihGwObruvvrA092daaaEi9oSbfVvzzl4B9XhSnLM6W5GPHA==
+  dependencies:
+    "@ckb-lumos/base" "^0.22.2"
+    "@ckb-lumos/codec" "^0.22.2"
+    "@exact-realty/multipart-parser" "^1.0.13"
+    "@nervosnetwork/ckb-sdk-core" "0.109.5"
+    "@nervosnetwork/ckb-sdk-utils" "0.109.5"
+    "@nervosnetwork/ckb-types" "0.109.5"
+    "@rgbpp-sdk/service" "^0.7.0"
+    "@spore-sdk/core" "^0.2.0-beta.6"
+    axios "^1.7.4"
+    camelcase-keys "^7.0.2"
+    js-sha256 "^0.11.0"
+
+"@rgbpp-sdk/service@0.7.0", "@rgbpp-sdk/service@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@rgbpp-sdk/service/-/service-0.7.0.tgz#23ba68c7c8c4219d5ab837d22b4c8be6cb22f90a"
+  integrity sha512-iz21HjUhA0jbfIefFa1Jfoigrofuu/ulVbfpBw63TJT7pQUVxtw9HgnW9mGb4nIQHgx+1wJeqnjFYojFuJ17fw==
+  dependencies:
+    "@ckb-lumos/base" "0.22.2"
+    "@ckb-lumos/codec" "0.22.2"
+    "@nervosnetwork/ckb-types" "0.109.5"
+    lodash "^4.17.21"
+
+"@rgbpp-sdk/service@^0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@rgbpp-sdk/service/-/service-0.6.0.tgz#0f46a798075e1d7ec5a5fd174c6d92f5209acb5f"
   integrity sha512-R+5VyzxvfwtCYEibhV+UjBXSJDL7IfxuBSgjd6M4tN9sg5ScpCTlrrJJAjjWb/euiV1Qnd/tFsX4fTZBeWnXRQ==
@@ -9719,29 +9754,43 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mobit-sdk@^1.17.2:
-  version "1.17.2"
-  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-1.17.2.tgz#5d204472c12a904ed7952dc109c648d15ae8950c"
-  integrity sha512-UZiiB3HgJg80RMleEiG0r5gSysvPxHEhDMlLsJbWUAQG/QnKBayeqxx8E7Ev1utT+1bce815DDBFSEnCar/tGg==
+mobit-sdk@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-2.1.0.tgz#62ba6a564cbe66f0963e5f0c5f25c6657a5a3d85"
+  integrity sha512-6Vkk63tl8Lveq4Gv8v2fwX3+OTkCQPYc+PIR4fZ2jlUcKP1DiceqiYYDen32OfxXmcrpgbMlEM/UA4CgDnE5Vw==
   dependencies:
     "@apollo/client" "^3.12.4"
     "@ckb-ccc/core" "^1.2.3"
     "@ckb-ccc/spore" "^1.0.8"
-    "@nervosnetwork/ckb-sdk-utils" "0.109.4"
-    "@rgbpp-sdk/btc" "^0.6.0"
-    "@rgbpp-sdk/ckb" "^0.6.0"
-    "@rgbpp-sdk/service" "^0.6.0"
-    rgbpp "^0.6.0"
+    "@nervosnetwork/ckb-sdk-utils" "0.109.5"
+    "@rgbpp-sdk/btc" "^0.7.0"
+    "@rgbpp-sdk/ckb" "^0.7.0"
+    "@rgbpp-sdk/service" "^0.7.0"
+    rgbpp "^0.7.0"
 
-mobit-wallet@^0.5.8:
-  version "0.5.8"
-  resolved "https://registry.yarnpkg.com/mobit-wallet/-/mobit-wallet-0.5.8.tgz#30cd4b194b84067e0ee1b163748a12ebf25b946a"
-  integrity sha512-f++WG/sRz5oqWa4VDmnb2azWPay6jLaFP8YXfX9svVa1bdd7Swmhg/Lo2X+nJo7hu6JxjbeItW8LPMTxdVX9xQ==
+mobit-sdk@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-2.1.1.tgz#e73eb61803f7473af1e3233aae589ba42cd04608"
+  integrity sha512-No02Ym6l6MTJmWYAj9mCW7OrdNDrKtLdJ2CRGpax8XfV1BrSd1TAjr1LG9dPl3T+Mea+R5Dv4JsAy+EOKOKAfA==
   dependencies:
-    "@joyid/bitcoin" "^0.1.5"
-    "@rgbpp-sdk/btc" "^0.6.0"
-    "@rgbpp-sdk/service" "^0.6.0"
-    mobit-sdk "^1.17.2"
+    "@apollo/client" "^3.12.4"
+    "@ckb-ccc/core" "^1.2.3"
+    "@ckb-ccc/spore" "^1.0.8"
+    "@nervosnetwork/ckb-sdk-utils" "0.109.5"
+    "@rgbpp-sdk/btc" "^0.7.0"
+    "@rgbpp-sdk/ckb" "^0.7.0"
+    "@rgbpp-sdk/service" "^0.7.0"
+    rgbpp "^0.7.0"
+
+mobit-wallet@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/mobit-wallet/-/mobit-wallet-0.6.1.tgz#caf6791ac010906ef80874dc74697fb60fa20aa3"
+  integrity sha512-65t1MPwmCUCjmPtPzEwSfVtLeAKCF6qYldBjA/dROwP9gHThgu1zpw+TeVtHk8uQyMdE2AqtUZtp/IQoVf5JcQ==
+  dependencies:
+    "@joyid/bitcoin" "^0.1.6"
+    "@rgbpp-sdk/btc" "^0.7.0"
+    "@rgbpp-sdk/service" "^0.7.0"
+    mobit-sdk "^2.1.0"
 
 ms@2.0.0:
   version "2.0.0"
@@ -11537,17 +11586,17 @@ reusify@^1.0.4:
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
-rgbpp@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/rgbpp/-/rgbpp-0.6.0.tgz#88e1b6540aad6fa8085b6d51f853eea7607dc0aa"
-  integrity sha512-85HeHe5qImMYuFPB2gJej6vkn0ItQAHdJPdqCOpVEaPcl7ExIeUzevewbk853wOsggMBQEONRUQl9LgLTKD0PA==
+rgbpp@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/rgbpp/-/rgbpp-0.7.0.tgz#c64f7777700a4abf0f7a71af88e6d921701a9bc3"
+  integrity sha512-ya51ukCY6YpHpWOuAh8n6faWVhMWzSfXvqHFHrneumerxng+9JR0/N+nYeFDj2QDpdMlYc+V7OO2T2zUuB7u2A==
   dependencies:
     "@ckb-lumos/base" "^0.22.2"
     "@ckb-lumos/codec" "^0.22.2"
-    "@nervosnetwork/ckb-sdk-utils" "0.109.3"
-    "@rgbpp-sdk/btc" "0.6.0"
-    "@rgbpp-sdk/ckb" "0.6.0"
-    "@rgbpp-sdk/service" "0.6.0"
+    "@nervosnetwork/ckb-sdk-utils" "0.109.5"
+    "@rgbpp-sdk/btc" "0.7.0"
+    "@rgbpp-sdk/ckb" "0.7.0"
+    "@rgbpp-sdk/service" "0.7.0"
 
 rimraf@^3.0.0, rimraf@^3.0.2:
   version "3.0.2"

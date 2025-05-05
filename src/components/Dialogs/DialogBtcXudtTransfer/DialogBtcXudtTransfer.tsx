@@ -140,7 +140,6 @@ export default function DialogBtcXudtTransfer({
             console.error(e)
         }
     }
-
     const HandleSignAndSend = async () => {
         const amount = BigNumber(formData.amount)
             .multipliedBy(10 ** token.decimal)
@@ -148,11 +147,15 @@ export default function DialogBtcXudtTransfer({
         setSending(true)
         setTransactionError("")
         try {
+            const xudtType = tokenInfoToScript(token)
+            if (!xudtType) {
+                throw new Error("Invalid token script")
+            }
             const tx = await signAndSend({
                 from: btcAddress!,
                 to: formData.to,
                 amount: amount,
-                xudtType: tokenInfoToScript(token),
+                xudtType,
                 feeRate: btcFeeRate
             })
             setTxHash(tx)

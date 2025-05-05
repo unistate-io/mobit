@@ -1,10 +1,9 @@
-// @ts-ignore
 import BigNumber from "bignumber.js"
 import {useEffect, useState, useContext} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {SporesWithChainInfo} from "@/serves/useSpores"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {RgbppSDK} from "mobit-sdk"
+import {ProcessedSporeAction, ProcessedXudtCell, RgbppSDK} from "mobit-sdk"
 
 const queryAssets = async (
     btcAddress: string,
@@ -14,7 +13,10 @@ const queryAssets = async (
     dobs: SporesWithChainInfo[]
     btc: TokenBalance
 }> => {
-    const sdk = new RgbppSDK(isMainnet, isMainnet ? undefined : "Testnet3")
+    const sdk = new RgbppSDK(
+        isMainnet ? "https://mainnet.unistate.io/v1/graphql" : "https://testnet.unistate.io/v1/graphql",
+        isMainnet ? undefined : "Testnet3"
+    )
     const json = await sdk.fetchAssetsAndQueryDetails(btcAddress)
 
     console.log("layer 1 assets", json)
@@ -26,87 +28,93 @@ const queryAssets = async (
             decimal: 8,
             name: "Bitcoin",
             symbol: "BTC",
-            type_id: "",
+            type_address_id: "",
             amount: json.balance.total_satoshi.toString(),
             type: "btc",
-            chain: "btc"
+            chain: "btc",
+            defining_tx_hash: "",
+            defining_output_index: 0,
+            block_number: "",
+            tx_timestamp: "",
+            addressByTypeId: {
+                id: "",
+                script_args: "",
+                script_code_hash: "",
+                script_hash_type: ""
+            },
+            addressByInscriptionId: null
         } as TokenBalance
     }
 
     if (json.assets.xudtCells.length) {
         let tokens: string[] = []
-        json.assets.xudtCells.forEach((t: any) => {
-            if (!tokens.includes(t.type_id)) {
-                tokens.push(t.type_id)
+        json.assets.xudtCells.forEach((t: ProcessedXudtCell) => {
+            if (!tokens.includes(t.type_address_id)) {
+                tokens.push(t.type_address_id)
             }
         })
 
         tokens.forEach(t => {
-            const cells = json.assets.xudtCells.filter((c: any) => c.type_id === t)
-            const balance = cells.reduce((acc: BigNumber, c: any) => acc.plus(c.amount), new BigNumber(0))
-            const info =
-                cells[0].addressByTypeId.token_info || cells[0].addressByTypeId.inscription_infos[0] || undefined
+            const cells = json.assets.xudtCells.filter((c: ProcessedXudtCell) => c.type_address_id === t)
+            const balance = cells.reduce(
+                (acc: BigNumber, c: ProcessedXudtCell) => acc.plus(new BigNumber(c.amount.toString())),
+                new BigNumber(0)
+            )
+            const info = cells[0].token_info
 
             list.xudts.push({
                 name: info?.name || "UNKNOWN ASSET",
-                symbol: info.symbol || "",
+                symbol: info?.symbol || "",
                 decimal: info?.decimal || 0,
-                type_id: cells[0].type_id,
+                type_address_id: cells[0].type_address_id,
                 amount: balance.toString(),
                 type: "xudt",
                 chain: "btc",
-                address: {
-                    id: "",
-                    script_args: cells[0].addressByTypeId.script_args.replace("\\", "0"),
-                    script_code_hash: cells[0].addressByTypeId.script_code_hash.replace("\\", "0"),
-                    script_hash_type: cells[0].addressByTypeId.script_hash_type.toString()
-                },
-                addressByInscriptionId: null
+                defining_tx_hash: "",
+                defining_output_index: 0,
+                block_number: "",
+                tx_timestamp: "",
+                address_by_type_address_id: cells[0].type_script
+                    ? {
+                          address_id: "",
+                          script_args: cells[0].type_script.args,
+                          script_code_hash: cells[0].type_script.code_hash,
+                          script_hash_type: cells[0].type_script.hash_type
+                      }
+                    : undefined
             })
         })
     }
 
     if (json.assets.sporeActions && json.assets.sporeActions.length) {
-        json.assets.sporeActions.forEach((t: any) => {
+        json.assets.sporeActions.forEach((t: ProcessedSporeAction) => {
+            if (!t.spore_id) return
+
             list.dobs.push({
-                id: t.spore.id,
-                content: t.spore.content,
-                cluster_id: t.spore.cluster_id,
-                is_burned: t.spore.is_burned,
-                owner_address: t.spore.owner_address,
-                content_type: t.spore.content_type,
-                created_at: t.spore.created_at,
-                updated_at: t.spore.updated_at,
-                chain: "btc",
-                addressByTypeId: {
-                    id: "",
-                    script_args: t.spore.addressByTypeId.script_args,
-                    script_code_hash: t.spore.addressByTypeId.script_code_hash,
-                    script_hash_type: t.spore.addressByTypeId.script_hash_type
-                }
-            } as any)
+                spore_id: t.spore_id,
+                content: "",
+                cluster_id: t.cluster_id || undefined,
+                is_burned: false,
+                owner_address_id: t.to_address_id || "",
+                content_type: "",
+                created_at_block_number: "",
+                created_at_output_index: 0,
+                created_at_timestamp: t.tx_timestamp,
+                created_at_tx_hash: "",
+                last_updated_at_block_number: "",
+                last_updated_at_timestamp: t.tx_timestamp,
+                last_updated_at_tx_hash: "",
+                type_address_id: "",
+                address_by_owner_address_id: undefined,
+                address_by_type_address_id: undefined,
+                cluster: undefined,
+                chain: "btc"
+            } as SporesWithChainInfo)
         })
     }
 
     console.log("list", list)
     return list
-}
-
-const btcEmpty: TokenBalance = {
-    decimal: 8,
-    name: "Bitcoin",
-    symbol: "BTC",
-    type_id: "",
-    amount: "0",
-    type: "btc",
-    chain: "btc",
-    address: {
-        id: "",
-        script_args: "",
-        script_code_hash: "",
-        script_hash_type: ""
-    },
-    addressByInscriptionId: null
 }
 
 export default function useLayer1Assets(btcAddress?: string, polling?: boolean) {
@@ -146,7 +154,7 @@ export default function useLayer1Assets(btcAddress?: string, polling?: boolean) 
                 setStatus("error")
                 setError(e)
             })
-    }, [btcAddress])
+    }, [btcAddress, network])
 
     useEffect(() => {
         if (polling) {
@@ -165,7 +173,7 @@ export default function useLayer1Assets(btcAddress?: string, polling?: boolean) 
             }, pollingInterval)
             return () => clearInterval(interval)
         }
-    }, [polling, network, btcAddress])
+    }, [polling, network, btcAddress, pollingInterval])
 
     return {
         status,

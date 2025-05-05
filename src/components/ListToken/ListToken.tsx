@@ -26,7 +26,7 @@ import DialogEvmTransfer from "@/components/Dialogs/DialogEvmTransfer/DialogEvmT
 export interface TokenBalance extends TokenInfoWithAddress {
     amount: string
     type: string
-    chain: "ckb" | "btc" | 'evm'
+    chain: "ckb" | "btc" | "evm"
 }
 
 export default function ListToken({
@@ -47,28 +47,27 @@ export default function ListToken({
     const {supportTokens} = useUtxoSwap()
     const {isBtcWallet} = useBtcWallet()
     const {prices, currCurrency, rates, currencySymbol} = useContext(MarketContext)
-    const navigate= useNavigate()
+    const navigate = useNavigate()
 
     const isSupportSwap = useCallback(
         (token: TokenBalance) => {
-            if (token.chain === "btc" || token.chain === 'evm') return ""
+            if (token.chain === "btc" || token.chain === "evm") return ""
 
             if (token.symbol === "CKB") {
                 return "0x0000000000000000000000000000000000000000000000000000000000000000"
             }
 
+            const typeAddress = token.address_by_type_address_id
+            if (!typeAddress) return ""
+
             const typeHash = scriptToHash({
-                args: token.address.script_args.replace("\\", "0"),
-                codeHash: token.address.script_code_hash.replace("\\", "0"),
-                hashType: hashType[token.address.script_hash_type]
+                args: typeAddress.script_args.replace("\\", "0"),
+                codeHash: typeAddress.script_code_hash.replace("\\", "0"),
+                hashType: hashType[typeAddress.script_hash_type]
             })
 
             const findToken = supportTokens.find(t => t.typeHash === typeHash)
-            if (!findToken) {
-                return ""
-            } else {
-                return typeHash
-            }
+            return findToken ? typeHash : ""
         },
         [supportTokens]
     )
@@ -83,17 +82,17 @@ export default function ListToken({
             return "/token"
         } else if (token.symbol === "BTC") {
             return "/bitcoin"
-        } else if (token.chain === 'ckb') {
-            return `/token/${token.type_id}`
-        } else if (token.chain === 'evm') {
+        } else if (token.chain === "ckb") {
+            return `/token/${token.type_address_id}`
+        } else if (token.chain === "evm") {
             const contract = (token as InternalTokenBalance).contract_address
-            let  network = (token as InternalTokenBalance).assets_chain
-            if (network === 'matic-mainnet') {
-                network = 'polygon-mainnet'
+            let network = (token as InternalTokenBalance).assets_chain
+            if (network === "matic-mainnet") {
+                network = "polygon-mainnet"
             }
             return contract ? `/evm/token/${network}/${contract}` : `/evm/token/${network}`
         } else {
-            return ''
+            return ""
         }
     }
 
@@ -114,10 +113,7 @@ export default function ListToken({
 
     const calculatePrice = (token: TokenBalance) => {
         let value = toDisplay(
-            BigNumber("1")
-                .times(prices[token.symbol].toString())
-                .times(rates[currCurrency.toUpperCase()])
-                .toString(),
+            BigNumber("1").times(prices[token.symbol].toString()).times(rates[currCurrency.toUpperCase()]).toString(),
             0,
             true,
             4
@@ -174,10 +170,11 @@ export default function ListToken({
                                 key={index}
                                 className={`whitespace-nowrap grid ${
                                     !!addresses ? "sm:grid-cols-5 grid-cols-3" : "sm:grid-cols-4 grid-cols-2"
-                                } ${getLink(item) ? 'cursor-pointer' : '!cursor-default'} px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100`}
+                                } ${getLink(item) ? "cursor-pointer" : "!cursor-default"} px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100`}
                             >
-                                <div className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center"
-                                     title={item.symbol!}
+                                <div
+                                    className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center"
+                                    title={item.symbol!}
                                 >
                                     <TokenIcon
                                         symbol={item.symbol!}
@@ -185,7 +182,9 @@ export default function ListToken({
                                         chain={(item as InternalTokenBalance).assets_chain || item.chain}
                                         url={(item as InternalTokenBalance).assets_icon}
                                     />
-                                    <div className={'max-w-[80px] overflow-hidden whitespace-nowrap overflow-ellipsis'}>{item.symbol!}</div>
+                                    <div className={"max-w-[80px] overflow-hidden whitespace-nowrap overflow-ellipsis"}>
+                                        {item.symbol!}
+                                    </div>
                                 </div>
                                 <>
                                     <div className="flex-row hidden items-center sm:flex">
@@ -237,10 +236,12 @@ export default function ListToken({
                                                                             tip={lang["Swap tokens via UTXO Swap"]}
                                                                         >
                                                                             <div
-                                                                                onClick={() => { window.location.href=`/trade?sell-token=${typeHash}`}}
+                                                                                onClick={() => {
+                                                                                    window.location.href = `/trade?sell-token=${typeHash}`
+                                                                                }}
                                                                                 className="mb-1 cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex"
                                                                             >
-                                                                              {lang["Swap"]}
+                                                                                {lang["Swap"]}
                                                                             </div>
                                                                         </TooltipItem>
                                                                     )}
@@ -316,8 +317,12 @@ export default function ListToken({
                                             {item.symbol === "CKB" && (
                                                 <>
                                                     <TooltipItem tip={lang["Swap tokens via UTXO Swap"]}>
-                                                        <div onClick={() => { window.location.href=`/trade?sell-token=${typeHash}`}}
-                                                             className="tooltip cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1">
+                                                        <div
+                                                            onClick={() => {
+                                                                window.location.href = `/trade?sell-token=${typeHash}`
+                                                            }}
+                                                            className="tooltip cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1"
+                                                        >
                                                             {lang["Swap"]}
                                                         </div>
                                                     </TooltipItem>
@@ -360,34 +365,38 @@ export default function ListToken({
                                                 </DialogXudtTransfer>
                                             )}
 
-                                            {item.chain === "evm" && !!(item as InternalTokenBalance).contract_address &&
-                                                <DialogEvmTokenTransfer 
-                                                metadata={{
-                                                    name: item.name,
-                                                    symbol: item.symbol,
-                                                    decimals: (item as InternalTokenBalance).decimal!,
-                                                    logo: (item as InternalTokenBalance).assets_icon || null,
-                                                }}
-                                                network={(item as InternalTokenBalance).assets_chain!} 
-                                                tokenContract={(item as InternalTokenBalance).contract_address!}>
-                                                    <TooltipItem tip={lang["Send tokens to others"]}>
-                                                        <div className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
-                                                            {lang["Send"]}
-                                                        </div>
-                                                    </TooltipItem>
-                                                </DialogEvmTokenTransfer>
-                                            }
+                                            {item.chain === "evm" &&
+                                                !!(item as InternalTokenBalance).contract_address && (
+                                                    <DialogEvmTokenTransfer
+                                                        metadata={{
+                                                            name: item.name,
+                                                            symbol: item.symbol,
+                                                            decimals: (item as InternalTokenBalance).decimal!,
+                                                            logo: (item as InternalTokenBalance).assets_icon || null
+                                                        }}
+                                                        network={(item as InternalTokenBalance).assets_chain!}
+                                                        tokenContract={(item as InternalTokenBalance).contract_address!}
+                                                    >
+                                                        <TooltipItem tip={lang["Send tokens to others"]}>
+                                                            <div className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
+                                                                {lang["Send"]}
+                                                            </div>
+                                                        </TooltipItem>
+                                                    </DialogEvmTokenTransfer>
+                                                )}
 
-                                            {item.chain === "evm" && !(item as InternalTokenBalance).contract_address &&
-                                                <DialogEvmTransfer 
-                                                    network={(item as InternalTokenBalance).assets_chain!}>
-                                                    <TooltipItem tip={lang["Send tokens to others"]}>
-                                                        <div className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
-                                                            {lang["Send"]}
-                                                        </div>
-                                                    </TooltipItem>
-                                                </DialogEvmTransfer>
-                                            }
+                                            {item.chain === "evm" &&
+                                                !(item as InternalTokenBalance).contract_address && (
+                                                    <DialogEvmTransfer
+                                                        network={(item as InternalTokenBalance).assets_chain!}
+                                                    >
+                                                        <TooltipItem tip={lang["Send tokens to others"]}>
+                                                            <div className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
+                                                                {lang["Send"]}
+                                                            </div>
+                                                        </TooltipItem>
+                                                    </DialogEvmTransfer>
+                                                )}
                                         </div>
                                     )}
                                 </>

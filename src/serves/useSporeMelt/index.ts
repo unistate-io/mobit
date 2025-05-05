@@ -13,7 +13,7 @@ export default function useSporeMelt() {
         }
 
         const {tx} = await meltSpore({
-            id: spore.id.replace("\\", "0"),
+            id: spore.spore_id.replace("\\", "0"),
             signer
         })
 

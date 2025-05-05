@@ -15,13 +15,13 @@ import {useNavigate} from "react-router-dom"
 export interface TokenBalance extends TokenInfoWithAddress {
     amount: string
     type: string
-    chain: "ckb" | "btc" | 'evm'
+    chain: "ckb" | "btc" | "evm"
 }
 
 export default function ListTokenBtcChain({
     data,
     status,
-    addresses,
+    addresses
 }: {
     data: Array<TokenBalance | InternalTokenBalance>
     status: string
@@ -34,11 +34,11 @@ export default function ListTokenBtcChain({
     const navigate = useNavigate()
 
     const displayData = useMemo(() => {
-        return data.filter(item => item.symbol !== 'UNKNOWN ASSET')
+        return data.filter(item => item.symbol !== "UNKNOWN ASSET")
     }, [data])
 
     const hiddenData = useMemo(() => {
-        return data.filter(item => item.symbol === 'UNKNOWN ASSET')
+        return data.filter(item => item.symbol === "UNKNOWN ASSET")
     }, [data])
 
     const list = useMemo(() => {
@@ -52,9 +52,9 @@ export default function ListTokenBtcChain({
     const getLink = (token: TokenBalance | InternalTokenBalance) => {
         if (token.symbol === "BTC") {
             return "/bitcoin"
-        } else if (token.chain === 'btc') {
-            return `/bitcoin/token/${token.type_id}`
-        } else return ''
+        } else if (token.chain === "btc") {
+            return `/bitcoin/token/${token.type_address_id}`
+        } else return ""
     }
 
     const calculateValue = (token: TokenBalance) => {
@@ -74,10 +74,7 @@ export default function ListTokenBtcChain({
 
     const calculatePrice = (token: TokenBalance) => {
         let value = toDisplay(
-            BigNumber("1")
-                .times(prices[token.symbol].toString())
-                .times(rates[currCurrency.toUpperCase()])
-                .toString(),
+            BigNumber("1").times(prices[token.symbol].toString()).times(rates[currCurrency.toUpperCase()]).toString(),
             0,
             true,
             4
@@ -129,10 +126,11 @@ export default function ListTokenBtcChain({
                                 key={index}
                                 className={`whitespace-nowrap grid ${
                                     !!addresses ? "sm:grid-cols-5 grid-cols-3" : "sm:grid-cols-4 grid-cols-2"
-                                } ${getLink(item) ? 'cursor-pointer' : '!cursor-default'} px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100`}
+                                } ${getLink(item) ? "cursor-pointer" : "!cursor-default"} px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100`}
                             >
-                                <div className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center"
-                                     title={item.symbol!}
+                                <div
+                                    className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center"
+                                    title={item.symbol!}
                                 >
                                     <TokenIcon
                                         symbol={item.symbol!}
@@ -140,7 +138,9 @@ export default function ListTokenBtcChain({
                                         chain={(item as InternalTokenBalance).assets_chain || item.chain}
                                         url={(item as InternalTokenBalance).assets_icon}
                                     />
-                                    <div className={'max-w-[80px] overflow-hidden whitespace-nowrap overflow-ellipsis'}>{item.symbol!}</div>
+                                    <div className={"max-w-[80px] overflow-hidden whitespace-nowrap overflow-ellipsis"}>
+                                        {item.symbol!}
+                                    </div>
                                 </div>
                                 <>
                                     <div className="flex-row hidden items-center sm:flex">
