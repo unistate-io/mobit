@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js"
 import {useEffect, useState, useRef, useContext} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {XudtCell} from "@/utils/graphql/types"
+import {TokenInfo, XudtCell} from "@/utils/graphql/types"
 
 export const balance = async (addresses: string[], isMainnet: boolean): Promise<TokenBalance[]> => {
     const cells = await queryXudtCell(addresses, isMainnet)
@@ -26,13 +26,24 @@ export const balance = async (addresses: string[], isMainnet: boolean): Promise<
     })
 
     const _list = list.map(_l => {
-        const tokenInfo = _l.token_info_by_type_address_id
+        let tokenInfo = _l.token_info_by_type_address_id
+
+        // USDI xudt
+        if (_l.type_address_id === 'ckb1qzl6xk5u8zn8v6ptvkk73uptu9jdfp3j9q280cm03hp0g8meu44lcqw4j84ac6tzver7q4hpxdzlmqcv3wrkhvr25pa6vyz8n6mhz5l2nutl20za') {
+            tokenInfo = {
+                    name: 'USDI',
+                    symbol: 'USDI',
+                    decimal: 6,
+                    defining_tx_hash: '',
+                    type_address_id: 'ckb1qzl6xk5u8zn8v6ptvkk73uptu9jdfp3j9q280cm03hp0g8meu44lcqw4j84ac6tzver7q4hpxdzlmqcv3wrkhvr25pa6vyz8n6mhz5l2nutl20za'
+            } as TokenInfo
+        }
 
         return {
             amount: _l.amount,
             type: "xudt",
             chain: "ckb",
-            decimal: tokenInfo?.decimal || 8,
+            decimal: tokenInfo?.decimal ?? 8,
             name: tokenInfo?.name || "",
             symbol: tokenInfo?.symbol || "UNKNOWN ASSET",
             type_address_id: _l.type_address_id,

@@ -17,6 +17,7 @@ export const TokenIcons:IconsUrl = {
     'BASE': '/images/base_logo.svg',
     'USDT': 'https://ik.imagekit.io/soladata/041vywlb_vTdQI2CLS',
     'USDC': 'https://ik.imagekit.io/soladata/57yobknk_WoLp8Wvot',
+    'USDI': '/images/usdi_logo.svg',
 }
 
 export const ChainIcons:IconsUrl = {
