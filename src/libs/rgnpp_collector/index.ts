@@ -89,7 +89,7 @@ export class Collector {
             id: Math.floor(Math.random() * 100000),
             jsonrpc: "2.0",
             method: "get_cells",
-            params: [searchKey, "asc", "0x3E8"]
+            params: [searchKey, "asc", "0x190"]
         }
         const body = JSON.stringify(payload, null, "  ")
         const response = (
