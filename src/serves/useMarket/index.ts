@@ -34,17 +34,31 @@ export default function useMarket() {
                 setStatus("error")
             })
             .then(res => {
-                setData(
-                    res.data
-                        .sort((a: TokenMarket, b: TokenMarket) => {
-                            return a.symbol < b.symbol ? -1 : 1
-                        })
-                        .map((a: TokenMarket) => {
-                            return {
-                                ...a,
-                                symbol: a.symbol.toUpperCase()
-                            }
-                        })
+                const marketData = res.data
+                .sort((a: TokenMarket, b: TokenMarket) => {
+                    return a.symbol < b.symbol ? -1 : 1
+                })
+                .map((a: TokenMarket) => {
+                    return {
+                        ...a,
+                        symbol: a.symbol
+                    }
+                })
+                
+                // add USDI to the market data
+                const usdi = {
+                    id: 0,
+                    symbol: 'USDI',
+                    price: 1,
+                    market_cap: 0,
+                    change_1h: 0,
+                    change_24h: 0,
+                    change_7d: 0,
+                    inserted_at: '',
+                    updated_at: ''
+                }
+                
+                setData([...marketData, usdi]
                 )
                 setStatus("complete")
             })

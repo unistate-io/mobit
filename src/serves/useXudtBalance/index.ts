@@ -1,6 +1,6 @@
 // @ts-ignore
 
-import {useCallback, useContext, useEffect, useState} from "react"
+import {useCallback, useContext, useEffect, useRef, useState} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
@@ -55,13 +55,10 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfoWi
     } as TokenBalance)
     const {config} = useContext(CKBContext)
 
-    const refresh = useCallback(async () => {
-        if (!addresses || !addresses.length || !token) {
-            setStatus("complete")
-            setData({...emptyToken, amount: "0", type: "xudt", chain: "ckb"} as TokenBalance)
-            return
-        }
+    const addressesHistoryRef = useRef('')
+    const tokenSymbolRef = useRef('')
 
+    const refresh = async () => {
         setStatus("loading")
 
         const collector = new Collector({
@@ -69,13 +66,14 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfoWi
             ckbIndexerUrl: config.ckb_indexer!
         })
 
-        const tokenScript = tokenInfoToScript(token)
+        console.log('load ====>')
+        const tokenScript = tokenInfoToScript(token!)
         if (!tokenScript) {
             setStatus("complete")
             return
         }
 
-        const balance = await getXudtBalance(addresses, tokenScript, collector)
+        const balance = await getXudtBalance(addresses!, tokenScript, collector)
 
         setData({
             ...token,
@@ -84,11 +82,28 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfoWi
             chain: "ckb"
         } as TokenBalance)
         setStatus("complete")
-    }, [addresses, token, config])
+    }
 
     useEffect(() => {
-        refresh()
-    }, [addresses, token, config, refresh])
+        if (!addresses || !addresses.length || !token) {
+            setStatus("complete")
+            setData({...emptyToken, amount: "0", type: "xudt", chain: "ckb"} as TokenBalance)
+            return
+        }
+
+
+        if (addressesHistoryRef.current !== addresses?.join(',') || tokenSymbolRef.current !== token?.symbol) {
+            addressesHistoryRef.current = addresses?.join(',') || ''
+            tokenSymbolRef.current = token?.symbol || ''
+            refresh()
+        }
+    }, [addresses, token])
+
+   
+
+    useEffect(() => {
+        console.log('token', token)
+    }, [token])
 
     return {
         status,
