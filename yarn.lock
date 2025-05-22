@@ -54,6 +54,25 @@
     tslib "^2.3.0"
     zen-observable-ts "^1.2.5"
 
+"@apollo/client@^3.13.8":
+  version "3.13.8"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.13.8.tgz#ef1d49a5b134c69a55e3f137164a8e323aef4e2a"
+  integrity sha512-YM9lQpm0VfVco4DSyKooHS/fDTiKQcCHfxr7i3iL6a0kP/jNO5+4NFK6vtRDxaYisd5BrwOZHLJpPBnvRVpKPg==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.1"
+    "@wry/caches" "^1.0.0"
+    "@wry/equality" "^0.5.6"
+    "@wry/trie" "^0.5.0"
+    graphql-tag "^2.12.6"
+    hoist-non-react-statics "^3.3.2"
+    optimism "^0.18.0"
+    prop-types "^15.7.2"
+    rehackt "^0.1.0"
+    symbol-observable "^4.0.0"
+    ts-invariant "^0.10.3"
+    tslib "^2.3.0"
+    zen-observable-ts "^1.2.5"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.16.0", "@babel/code-frame@^7.25.9", "@babel/code-frame@^7.26.0", "@babel/code-frame@^7.26.2", "@babel/code-frame@^7.8.3":
   version "7.26.2"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.26.2.tgz#4b5fab97d33338eff916235055f0ebc21e573a85"
@@ -1128,35 +1147,35 @@
   dependencies:
     "@noble/curves" "^1.7.0"
 
-"@ckb-ccc/ccc@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/ccc/-/ccc-1.0.7.tgz#f4cc81cfc5b008fa313615e921fda58ffc85462e"
-  integrity sha512-ytmcVCp5NiWzFVFxthESaOLhF7RuLK28Vu8bognertJIztFrzb4J044yCM5KLkruJNzt5el46rAKsir/GnG7FA==
+"@ckb-ccc/ccc@1.1.9":
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/ccc/-/ccc-1.1.9.tgz#daa80e07bfd428dea22d2a84004a1365136130fb"
+  integrity sha512-+kyXTJtTfo02TylPDYT3+TKH2KVgr/ud1K8/4yTSSKKXoQ5rO6vtoPoNXCe8TexT1OO5RMDz/pEX3xUvRGyrAg==
   dependencies:
-    "@ckb-ccc/core" "1.2.3"
-    "@ckb-ccc/eip6963" "1.0.7"
-    "@ckb-ccc/joy-id" "1.0.7"
-    "@ckb-ccc/nip07" "1.0.7"
-    "@ckb-ccc/okx" "1.0.7"
-    "@ckb-ccc/rei" "1.0.7"
-    "@ckb-ccc/uni-sat" "1.0.7"
-    "@ckb-ccc/utxo-global" "1.0.7"
-    "@ckb-ccc/xverse" "1.0.7"
+    "@ckb-ccc/eip6963" "1.0.17"
+    "@ckb-ccc/joy-id" "1.0.17"
+    "@ckb-ccc/nip07" "1.0.17"
+    "@ckb-ccc/okx" "1.0.17"
+    "@ckb-ccc/rei" "1.0.17"
+    "@ckb-ccc/shell" "1.1.9"
+    "@ckb-ccc/uni-sat" "1.0.17"
+    "@ckb-ccc/utxo-global" "1.0.17"
+    "@ckb-ccc/xverse" "1.0.17"
 
-"@ckb-ccc/connector-react@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/connector-react/-/connector-react-1.0.7.tgz#6fe5fa4885fb1fa18b3db2609eb56ae16dadd75f"
-  integrity sha512-0EVLVf1WTbIoalbSUg9K3iDKQtgRaIfHnyPySBWS7aTyM3jHlhwULtUC2buefMg1R1z9K4qrhhDxLvTiAQ+ElQ==
+"@ckb-ccc/connector-react@^1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/connector-react/-/connector-react-1.0.17.tgz#8c8eb935932dac5f85422203fb3b75287b18fa9a"
+  integrity sha512-VBZVPOA86+HRAUwqz4TzTm9YSEP+6eGDDGoOK6Cp+9mrs3KR6yiwZLk1YFHlb+BmiWroVQcfIjlj7Ps0tnCJKA==
   dependencies:
-    "@ckb-ccc/connector" "1.0.7"
+    "@ckb-ccc/connector" "1.0.17"
     "@lit/react" "^1.0.5"
 
-"@ckb-ccc/connector@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/connector/-/connector-1.0.7.tgz#2cc75d563b9050ad04962afae57a526725395d20"
-  integrity sha512-rtMiIOsjGhPjh84mU9L1ANI5XR8S9siIQAvbIVwloKNmwSCw9xhgeWH8oS7ndB7Z/339F8unlpcF3vYvtv9mkg==
+"@ckb-ccc/connector@1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/connector/-/connector-1.0.17.tgz#4b08aa2271ec827d6405b0337069d46f1bc0ecc5"
+  integrity sha512-dsjZu42/XRvMiFwxauOVmhDW/Jsjkc5/y7En8KDtspbAOFXjnnH3BV7lXxpB2jFBrgY5Ms07gExicqoGFLi0kw==
   dependencies:
-    "@ckb-ccc/ccc" "1.0.7"
+    "@ckb-ccc/ccc" "1.1.9"
     lit "^3.1.3"
 
 "@ckb-ccc/core@1.2.3", "@ckb-ccc/core@^1.2.3":
@@ -1178,44 +1197,81 @@
     isomorphic-ws "^5.0.0"
     ws "^8.18.0"
 
-"@ckb-ccc/eip6963@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/eip6963/-/eip6963-1.0.7.tgz#9459faaef94eea1cd29104f9f647ab3d311b4c04"
-  integrity sha512-vM8/3/iCdEUkogGwDFduI9JvWjumJLAGrz0r1+LNWNmPPzuflpCu8mIH322gpvFpfJRzlnHZGDuLEE7MmfgxrQ==
+"@ckb-ccc/core@1.8.1", "@ckb-ccc/core@^1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/core/-/core-1.8.1.tgz#9ad7f38fffc5584499108bca6081b30213b28a3d"
+  integrity sha512-xdiFORZ/qb9Q0cdvppnaF1BHz8KksT342AVdv3pDR+A3IwGk6HAPqRqmX/5VLg3LSf/se9nlJQry1sGdbu/iyA==
   dependencies:
-    "@ckb-ccc/core" "1.2.3"
+    "@joyid/ckb" "^1.1.1"
+    "@noble/ciphers" "^0.5.3"
+    "@noble/curves" "^1.4.2"
+    "@noble/hashes" "^1.4.0"
+    abort-controller "^3.0.0"
+    bech32 "^2.0.0"
+    bitcoinjs-message "^2.2.0"
+    bs58check "^4.0.0"
+    buffer "^6.0.3"
+    cross-fetch "^4.0.0"
+    ethers "^6.13.1"
+    isomorphic-ws "^5.0.0"
+    ws "^8.18.0"
 
-"@ckb-ccc/joy-id@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/joy-id/-/joy-id-1.0.7.tgz#14c9fbd54d0a73dfe482adc84444442e091ebaa0"
-  integrity sha512-V6hPpIHXcUuHkMlTz4+Yn+XKqxVrgDSUmbZuuOzJPXHDvhI3vYHz5IWb9Vl5Dm0ZQ1uF71j2NcQSK4/GgN+tmg==
+"@ckb-ccc/eip6963@1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/eip6963/-/eip6963-1.0.17.tgz#01de64bfa679c09ff0f014af3b9c91baad4fac21"
+  integrity sha512-e3d/PLhkQzMFXQcI/0pZKEBsbUEfJ3+uxrQCbmbxkKXjTe4UYob8k6EFAhP5hn8uLmshx2N41jaOzueID0eWgQ==
   dependencies:
-    "@ckb-ccc/core" "1.2.3"
-    "@joyid/ckb" "^1.0.1"
+    "@ckb-ccc/core" "1.8.1"
+
+"@ckb-ccc/joy-id@1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/joy-id/-/joy-id-1.0.17.tgz#5a5b552fdbebe1bc242a3faa833258295148f22f"
+  integrity sha512-cmkJS7WqY+CkOAQVzb8Cc9J1BETPbSyAvbLR1IT+DQ0tmKsBaX8/QUIOYfHvAPnT+I43CxvyTqGtG7lR0ib4+A==
+  dependencies:
+    "@ckb-ccc/core" "1.8.1"
+    "@joyid/ckb" "^1.1.1"
     "@joyid/common" "^0.2.0"
 
-"@ckb-ccc/nip07@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/nip07/-/nip07-1.0.7.tgz#bfd3597acfc5baea2fc765b481bc13ed512e731b"
-  integrity sha512-JTprK+g4vTYKvK/BHDLjayAWKD0hM0ShHoL7RD92umwK1jZNhadgyJh7eqro0+yWd+CDPZadSdfgnkMqFmU0Cw==
+"@ckb-ccc/nip07@1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/nip07/-/nip07-1.0.17.tgz#0636a3a19508cc4e0141f4481818563b5a6e1478"
+  integrity sha512-YWIkOGlbVDAlk/2I+rYJ4xTOcVltjzPSkqvfvHb+Wlm5rzDPM7Vdv4X4b4Bq67NDZX7NfeFiwYRHmFWH3G6/iw==
   dependencies:
-    "@ckb-ccc/core" "1.2.3"
+    "@ckb-ccc/core" "1.8.1"
 
-"@ckb-ccc/okx@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/okx/-/okx-1.0.7.tgz#61ceaf107a76df4a9bc4cb3d98ae3ee6da37ffc6"
-  integrity sha512-ZCnD5Lr5bfI92T+DF1IO754/jaTHR+NIFcMpW8Thm1d74ccSmODYhyrr0tE7iMxZHGCjMuocjZ0CjCXarqCurw==
+"@ckb-ccc/okx@1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/okx/-/okx-1.0.17.tgz#779b55579f5c403016d6e02d45e82050b8626b29"
+  integrity sha512-sjWIepOVhW+92nG4ylGihtHnqI7hg+WLimUVDsDUCmKCLQmlIyeRWScut1FjaH5MtuJtzSNT++WOB8mgBzHUUw==
   dependencies:
-    "@ckb-ccc/core" "1.2.3"
-    "@ckb-ccc/nip07" "1.0.7"
-    "@ckb-ccc/uni-sat" "1.0.7"
+    "@ckb-ccc/core" "1.8.1"
+    "@ckb-ccc/nip07" "1.0.17"
+    "@ckb-ccc/uni-sat" "1.0.17"
 
-"@ckb-ccc/rei@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/rei/-/rei-1.0.7.tgz#67b1a95ecc4376b5acc06c255712b8c64d41b78a"
-  integrity sha512-X2o5x1rhgpmWcYmXmHNtipc9TMd6pii7uMUcFPffxGTP+6Tp2qVaeM7/OzEdQ+q7tBt8qWobqtHo2NED0WDgDQ==
+"@ckb-ccc/rei@1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/rei/-/rei-1.0.17.tgz#e4700c441b082a307619030ae419ef98adf1d5d3"
+  integrity sha512-EtzpRJcRW7G6iVaqPeLcB0LXLToz8yWNpAyUFK3iBo+6Xw9qRa4WHq6pr03euMwWAP7GCDpfTXScZ/G1M8UExA==
   dependencies:
-    "@ckb-ccc/core" "1.2.3"
+    "@ckb-ccc/core" "1.8.1"
+
+"@ckb-ccc/shell@1.1.9":
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/shell/-/shell-1.1.9.tgz#51397f555ac23a616598d3cbd8a699965ba5194e"
+  integrity sha512-UPmyY86LkvB7JrL1sDh3/5ZJeJk3RG2HHBGQ1jB82cIpXV6w0TnpBLiQqC50ZMNZjykeCz95K9cCKXtVHYyfFg==
+  dependencies:
+    "@ckb-ccc/core" "1.8.1"
+    "@ckb-ccc/spore" "1.5.1"
+    "@ckb-ccc/ssri" "0.2.7"
+    "@ckb-ccc/udt" "0.1.9"
+
+"@ckb-ccc/spore@1.5.1", "@ckb-ccc/spore@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/spore/-/spore-1.5.1.tgz#9615eb6162ec4c1aa4352cf6b29d6e54ab633df1"
+  integrity sha512-5DLic66m1NE4I0E2in47A16Zg1PT+L2EywhOTeaYoFlPPN4W0YmW1qB07Fov1Ac56uPcVqaltuIHbEJCSznJIA==
+  dependencies:
+    "@ckb-ccc/core" "1.8.1"
+    axios "^1.7.7"
 
 "@ckb-ccc/spore@^1.0.8":
   version "1.0.8"
@@ -1225,26 +1281,41 @@
     "@ckb-ccc/core" "1.2.3"
     axios "^1.7.7"
 
-"@ckb-ccc/uni-sat@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/uni-sat/-/uni-sat-1.0.7.tgz#b9f6b928707e9f761c25a53d42f97d6563142660"
-  integrity sha512-rJCx36a+lF9OTm3H0ZUG1zvI4uGUgzEMqK0AGBrsS5DArnhiSJTvmls2r3PYzohuUWENHKiuvK0pzD8lZZcT9A==
+"@ckb-ccc/ssri@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/ssri/-/ssri-0.2.7.tgz#fc0db6dcdc6e09e35d225fe00057b9c65fd1bc3f"
+  integrity sha512-1oXXCuXQOdlS4l/GZGca5MHk8ABv01S533NirX37DNl2PPk7Ct0EikdpRWte+tbogBFijTWr/OGvopQTVNi2Lg==
   dependencies:
-    "@ckb-ccc/core" "1.2.3"
+    "@ckb-ccc/core" "1.8.1"
 
-"@ckb-ccc/utxo-global@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/utxo-global/-/utxo-global-1.0.7.tgz#4016088948d67fb7b7cbd95908b9de4143b5c43a"
-  integrity sha512-6fEDTJG3WpFrtxbHX+kvRNLhQRatHUPWyWDooH34XLtG8pAcZKyiUYM0x0d2TeEH4m3XuzDfrU3hZKU1JdU5hQ==
+"@ckb-ccc/udt@0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/udt/-/udt-0.1.9.tgz#4d5fe6ef337b3a37f8d79aa3926950a131dc5e30"
+  integrity sha512-V6q1J1eKTNbrqar15lnu3PSQYXEYn1hfn+6I8O8WAuWNxqmEBTNuhS4gbAZj08oQw8aMuNRelZ57c+rCNaNRcQ==
   dependencies:
-    "@ckb-ccc/core" "1.2.3"
+    "@ckb-ccc/core" "1.8.1"
+    "@ckb-ccc/ssri" "0.2.7"
 
-"@ckb-ccc/xverse@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/xverse/-/xverse-1.0.7.tgz#4c6bf157e2acec6b708a2d0e3d4e9a91d8444c1b"
-  integrity sha512-d8EWKfinz4Cz8BxeX7/ZHLthUMHj38s6oHgBvCniNUIld5HOSkBPbdbgS978FSIu2HJC+P2SjihP1ipfCNs8qA==
+"@ckb-ccc/uni-sat@1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/uni-sat/-/uni-sat-1.0.17.tgz#53414aa6ab8b605d28b38cf8c76e7f0f60652658"
+  integrity sha512-YIUdlRaZHO3tMP8FIV14t8AJ0x9eA4Q+kMEnpSXcV58xm3e413hp1nm7S4EwWgS3kkw6eZNqZViyRLh56BIU1A==
   dependencies:
-    "@ckb-ccc/core" "1.2.3"
+    "@ckb-ccc/core" "1.8.1"
+
+"@ckb-ccc/utxo-global@1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/utxo-global/-/utxo-global-1.0.17.tgz#7edacc4245ba2afdd5e61a3ae6e6a9aceff62dda"
+  integrity sha512-RtV1m+enBg7Ag/g60b/XKmMvMhgXhVkXyMfAi8kjnNPQL3iJPSCnLy8K7yH6bd5RwGILPIm2/Plo6x62t0EF2A==
+  dependencies:
+    "@ckb-ccc/core" "1.8.1"
+
+"@ckb-ccc/xverse@1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/xverse/-/xverse-1.0.17.tgz#97ee46bfb3c194c6dc3d13ed297125b1d4d03785"
+  integrity sha512-c/RXBOf8k9fuD4AzibZsrD6tJlbhi5H90gaGPiUKkTfqLSZiY2afONB8My62pF5a5XtYjZ1iY/1EbPYBC7YLqQ==
+  dependencies:
+    "@ckb-ccc/core" "1.8.1"
     valibot "^0.42.1"
 
 "@ckb-lumos/base@0.0.0-canary-d279b87-20240624101315":
@@ -2629,6 +2700,16 @@
     cross-fetch "4.0.0"
     uncrypto "^0.1.3"
 
+"@joyid/ckb@^1.1.1":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@joyid/ckb/-/ckb-1.1.2.tgz#f24c1fdb12f17cbca82f3722df8a40d5249e4664"
+  integrity sha512-+e+ISF566zaKNhKNSSS5kBw8or4Kb5Xqxe/2jVkUXKkqVHSS02Trrqe0g4IjSyeN9bszzolr1XgStv2hz62tqA==
+  dependencies:
+    "@joyid/common" "0.2.1"
+    "@nervosnetwork/ckb-sdk-utils" "^0.109.5"
+    cross-fetch "4.0.0"
+    uncrypto "^0.1.3"
+
 "@joyid/common@0.2.0", "@joyid/common@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@joyid/common/-/common-0.2.0.tgz#06c937ff1a8810037c19bb200ccf57400d5db4f8"
@@ -2747,7 +2828,7 @@
     axios "1.7.4"
     tslib "2.3.1"
 
-"@nervosnetwork/ckb-sdk-utils@0.109.3", "@nervosnetwork/ckb-sdk-utils@0.109.5", "@nervosnetwork/ckb-sdk-utils@^0.109.1", "@nervosnetwork/ckb-sdk-utils@^0.109.2":
+"@nervosnetwork/ckb-sdk-utils@0.109.3", "@nervosnetwork/ckb-sdk-utils@0.109.5", "@nervosnetwork/ckb-sdk-utils@^0.109.1", "@nervosnetwork/ckb-sdk-utils@^0.109.2", "@nervosnetwork/ckb-sdk-utils@^0.109.5":
   version "0.109.5"
   resolved "https://registry.yarnpkg.com/@nervosnetwork/ckb-sdk-utils/-/ckb-sdk-utils-0.109.5.tgz#5f760cf2a4ec8f76d5ee42ce7408c8859646073b"
   integrity sha512-Tx642hcJWbN8W3KzCIhIo49yzJ8LMqWopQCSBDKuRmwHesO/bvJqYojCVwfrOyROtFOPhgjyiGm5RXBuxm0KpQ==
@@ -9768,15 +9849,15 @@ mobit-sdk@^2.1.0:
     "@rgbpp-sdk/service" "^0.7.0"
     rgbpp "^0.7.0"
 
-mobit-sdk@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-2.1.1.tgz#e73eb61803f7473af1e3233aae589ba42cd04608"
-  integrity sha512-No02Ym6l6MTJmWYAj9mCW7OrdNDrKtLdJ2CRGpax8XfV1BrSd1TAjr1LG9dPl3T+Mea+R5Dv4JsAy+EOKOKAfA==
+mobit-sdk@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-2.2.1.tgz#19d4b9484ea514bad7e373da1c5b74834645bc93"
+  integrity sha512-2uDOrtJmakh9jHTFrLr9LeztVZsAsOvlmIZLj6bsH9l8TIAkMhEpJFbvsC4NPbRYZhPKrsOtKef5WZgj6gV5cg==
   dependencies:
-    "@apollo/client" "^3.12.4"
-    "@ckb-ccc/core" "^1.2.3"
-    "@ckb-ccc/spore" "^1.0.8"
-    "@nervosnetwork/ckb-sdk-utils" "0.109.5"
+    "@apollo/client" "^3.13.8"
+    "@ckb-ccc/core" "^1.8.1"
+    "@ckb-ccc/spore" "^1.5.1"
+    "@nervosnetwork/ckb-sdk-utils" "^0.109.5"
     "@rgbpp-sdk/btc" "^0.7.0"
     "@rgbpp-sdk/ckb" "^0.7.0"
     "@rgbpp-sdk/service" "^0.7.0"
