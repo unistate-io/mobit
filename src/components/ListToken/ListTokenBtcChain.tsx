@@ -53,7 +53,7 @@ export default function ListTokenBtcChain({
         if (token.symbol === "BTC") {
             return "/bitcoin"
         } else if (token.chain === "btc") {
-            return `/bitcoin/token/${token.type_address_id}`
+            return `/token/${token.type_address_id}`
         } else return ""
     }
 
