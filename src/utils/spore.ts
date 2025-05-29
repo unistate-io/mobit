@@ -1,9 +1,9 @@
-import {hexToBytes, toBigEndian} from "@nervosnetwork/ckb-sdk-utils"
-import {SporesWithChainInfo} from "@/serves/useSpores"
-import {bufferToRawString} from "@spore-sdk/core"
-import {queryClustersByIds} from "@/utils/graphql"
-import {svgToBase64, config, renderByDobDecodeResponse} from "@nervina-labs/dob-render"
-import {ccc} from "@ckb-ccc/connector-react"
+import { hexToBytes, toBigEndian } from "@nervosnetwork/ckb-sdk-utils"
+import { SporesWithChainInfo } from "@/serves/useSpores"
+import { bufferToRawString } from "@spore-sdk/core"
+import { queryClustersByIds } from "@/utils/graphql"
+import { svgToBase64, config, renderByDobDecodeResponse, renderByTokenKey, } from "@nervina-labs/dob-render"
+import { ccc } from "@ckb-ccc/connector-react"
 
 export const hexToUtf8 = (value: string = "") => {
     try {
@@ -34,7 +34,7 @@ export function parseSporeClusterData(hexData: string) {
     const name = hexToUtf8(`0x${data.slice(nameOffset + 8, descriptionOffset)}`)
     const description = hexToUtf8(`0x${data.slice(descriptionOffset + 8)}`)
 
-    return {name, description}
+    return { name, description }
 }
 
 // parse spore cell data guideline: https://github.com/sporeprotocol/spore-sdk/blob/beta/docs/recipes/handle-cell-data.md
@@ -50,10 +50,10 @@ export function parseSporeCellData(hexData: string) {
     const clusterId = `0x${data.slice(clusterIdOffset + 8)}`
 
     if (clusterId !== "0x") {
-        return {contentType, content, clusterId}
+        return { contentType, content, clusterId }
     }
 
-    return {contentType, content}
+    return { contentType, content }
 }
 
 export const getImgFromSporeCell = (content: string, contentType: string) => {
@@ -75,7 +75,7 @@ export const getImgFromSporeCell = (content: string, contentType: string) => {
     return DEFAULT_URL
 }
 
-export const isDob0 = (item: {standard: string | null; cell: {data: string | null} | null}) => {
+export const isDob0 = (item: { standard: string | null; cell: { data: string | null } | null }) => {
     if (item.standard !== "spore") return false
     if (!item.cell?.data) return false
     try {
@@ -93,7 +93,7 @@ export interface DobRenderRes {
     video: string
     plantText: string
     description: string
-    traits: {key: string; value: any}[]
+    traits: { key: string; value: any }[]
     dna?: string
     id?: string
 }
@@ -125,42 +125,11 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
             }
         }
 
-        if (!item.content_type || !item.content) {
-            return resolve(res)
-        }
-
-        if (item.content_type === "application/json") {
-            try {
-                const json = JSON.parse(bufferToRawString(item.content.replace("\\", "0")))
-                if (json.resource?.type.includes("image")) {
-                    const img = new Image()
-                    img.src = json.resource.url
-                    img.onload = () => {
-                        res.image = json.resource.url
-                        resolve(res)
-                    }
-                } else if (json.resource?.type.includes("video")) {
-                    res.video = json.resource.url
-                    resolve(res)
-                } else {
-                    resolve(res)
-                }
-            } catch (e: any) {
-                console.error(e)
-                reject(e)
-            }
-        } else if (item.content_type.includes("text/plain")) {
-            res.plantText = bufferToRawString(item.content.replace("\\", "0"))
-            resolve(res)
-        } else if (item.content_type.includes("image")) {
-            const data = item.content.replace("\\x", "")
-            res.image = getImgFromSporeCell(data, item.content_type)
-            resolve(res)
-        } else if (item.content_type.includes("dob")) {
+        if (!item.content_type || item.content_type.includes("dob")) {
             try {
                 const decoderUrl =
                     network === "mainnet" ? "https://dob-decoder.rgbpp.io/" : "https://dob0-decoder-dev.omiga.io"
-                const tokenId = item.spore_id.replace("\\", "").replace("x", "")
+                const tokenId = item.spore_id.startsWith('0x') ? item.spore_id.replace("0x", "") : item.spore_id.replace("\\", "").replace("x", "")
                 const decode: any = await decodeBob0(tokenId, decoderUrl)
                 const decodedData = JSON.parse(decode.render_output)
                 res.traits = decodedData
@@ -180,7 +149,7 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                             trait.traits[0].boolean?.toString() ||
                             trait.traits[0].Boolean?.toString() ||
                             "--"
-                        return {key: trait.name, value}
+                        return { key: trait.name, value }
                     })
                 res.dna = decode.dob_content.dna || ""
                 res.id = decode.dob_content.id || ""
@@ -190,7 +159,7 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                     const response = await fetch(`https://api.omiga.io/api/v1/nfts/dob_imgs?uri=${uri}`)
                     return response.json()
                 })
-                // const svg = await renderByTokenKey(tokenId)
+
                 const svg = await renderByDobDecodeResponse(decode)
                 res.image = await svgToBase64(svg)
                 resolve(res)
@@ -198,7 +167,36 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                 console.error(e)
                 reject(e)
             }
-        } else resolve(res)
+        } else if (item.content_type === "application/json" && item.content) {
+            try {
+                const json = JSON.parse(bufferToRawString(item.content.replace("\\", "0")))
+                if (json.resource?.type.includes("image")) {
+                    const img = new Image()
+                    img.src = json.resource.url
+                    img.onload = () => {
+                        res.image = json.resource.url
+                        resolve(res)
+                    }
+                } else if (json.resource?.type.includes("video")) {
+                    res.video = json.resource.url
+                    resolve(res)
+                } else {
+                    resolve(res)
+                }
+            } catch (e: any) {
+                console.error(e)
+                reject(e)
+            }
+        } else if (item.content_type.includes("text/plain") && item.content) {
+            res.plantText = bufferToRawString(item.content.replace("\\", "0"))
+            resolve(res)
+        } else if (item.content_type.includes("image") && item.content) {
+            const data = item.content.replace("\\x", "")
+            res.image = getImgFromSporeCell(data, item.content_type)
+            resolve(res)
+        } else {
+            resolve(res)
+        }
     })
 }
 
@@ -219,6 +217,10 @@ export function decodeBob0(tokenid: string, decoderUrl?: string) {
             })
         })
             .then(res => {
+                if (!res.ok) {
+                    reject(res)
+                    return
+                }
                 return res.json()
             })
             .then(res => {

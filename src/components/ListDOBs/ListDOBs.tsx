@@ -132,9 +132,11 @@ function DOBItem({item, onPriceChange}: {item: SporesWithChainInfo; onPriceChang
         })()
     }, [])
 
+    const id = item.spore_id.startsWith('0x') ? item.spore_id.replace("0x", "") : item.spore_id.replace("\\", "").replace("x", "")
+
     return (
         <Link
-            to={`/dob/${item.spore_id.replace("\\", "").replace("x", "")}?chain=${item.chain}`}
+            to={`/dob/${id}?chain=${item.chain}`}
             className="box-border p-2"
         >
             <div className="relative w-full sm:h-[240px] h-[180px] overflow-hidden rounded-sm border border-1">
