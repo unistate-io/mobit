@@ -106,7 +106,7 @@ const queryAssets = async (
                 last_updated_at_tx_hash: "",
                 type_address_id: "",
                 address_by_owner_address_id: undefined,
-                address_by_type_address_id: undefined,
+                address_by_type_address_id: t.address_by_type_address_id,
                 cluster: undefined,
                 chain: "btc"
             } as SporesWithChainInfo)

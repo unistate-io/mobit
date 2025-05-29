@@ -9851,7 +9851,7 @@ mobit-sdk@^2.1.0:
 
 "mobit-sdk@git+https://github.com/unistate-io/mobit-sdk.git":
   version "2.2.6"
-  resolved "git+https://github.com/unistate-io/mobit-sdk.git#cfc182b21b2a8a8b68e90b8a4b0c6a8810192636"
+  resolved "git+https://github.com/unistate-io/mobit-sdk.git#84ea6a7c627bc17bc208fe8ff04e70df2328f2cc"
   dependencies:
     "@apollo/client" "^3.13.8"
     "@ckb-ccc/core" "^1.8.1"

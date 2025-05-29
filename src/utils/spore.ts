@@ -1,9 +1,10 @@
-import { hexToBytes, toBigEndian } from "@nervosnetwork/ckb-sdk-utils"
+import { hexToBytes, scriptToHash, toBigEndian } from "@nervosnetwork/ckb-sdk-utils"
 import { SporesWithChainInfo } from "@/serves/useSpores"
 import { bufferToRawString } from "@spore-sdk/core"
 import { queryClustersByIds } from "@/utils/graphql"
 import { svgToBase64, config, renderByDobDecodeResponse, renderByTokenKey, } from "@nervina-labs/dob-render"
 import { ccc } from "@ckb-ccc/connector-react"
+import { hashType } from "@/serves/useXudtTransfer/lib"
 
 export const hexToUtf8 = (value: string = "") => {
     try {
@@ -122,6 +123,36 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                         res.description = clusters.cluster_description
                     }
                 }
+            }
+        }
+
+        if (item.address_by_type_address_id) {
+            const typeHash = scriptToHash({
+                args: item.address_by_type_address_id?.script_args
+                    ? `0x${item.address_by_type_address_id.script_args.startsWith("\\x") ? item.address_by_type_address_id.script_args.substring(2) : item.address_by_type_address_id.script_args}`
+                    : "0x",
+                codeHash: item.address_by_type_address_id?.script_code_hash
+                    ? `0x${item.address_by_type_address_id.script_code_hash.startsWith("\\x") ? item.address_by_type_address_id.script_code_hash.substring(2) : item.address_by_type_address_id.script_code_hash}`
+                    : "0x",
+                hashType: hashType[item.address_by_type_address_id?.script_hash_type ?? 0] ?? "type"
+            })
+
+            try {
+                const apiurl = network === "mainnet" ? "https://api.omiga.io/api/v1/nfts/info" : "https://test-api.omiga.io/api/v1/nfts/info"
+                const detailFetch = await fetch(`${apiurl}?type_hash=${typeHash}`)
+                const detail = await detailFetch.json()
+                console.log('figmadetail', detail)
+                const des = detail.data?.info_cell?.cluster?.description
+                const name = detail.data?.info_cell?.cluster?.name
+                if (des) {
+                    const desJson = JSON.parse(des)
+                    res.description = desJson.description
+                }
+                if (name) {
+                    res.name = name
+                }
+            } catch (e) {
+                console.error('faile to featch detail form figma:', e)
             }
         }
 

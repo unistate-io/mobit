@@ -16,8 +16,9 @@ export default function useSporeDetail(tokenid: string, chain: 'ckb' | 'btc' = '
 
     useEffect(() => {
         (async () => {
-            const spore = await querySporesById(`\\\\x${tokenid}`, network === 'mainnet')
+            const spore = await querySporesById(`\\x${tokenid}`, network === 'mainnet')
             if (!spore) {
+                alert("spore not found")
                 setStatus("complete")
             } else {
                 setStatus("loading")
