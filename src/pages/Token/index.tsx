@@ -28,7 +28,6 @@ export default function TokenPage() {
 
     const btcAddress = useMemo(() => {
         if (!internalAddress) return undefined
-
         return internalAddress.startsWith('bc') || internalAddress.startsWith('tb') ? internalAddress : undefined
     }, [internalAddress])
 

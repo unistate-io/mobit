@@ -1,8 +1,11 @@
 import {useEffect, useState} from "react"
 import {TransactionHistory} from "@/components/ListHistory/ListHistory"
 import network_config from "@/providers/CKBProvider/network_config";
+import { CKBContext } from "@/providers/CKBProvider/CKBProvider";
+import { useContext } from "react";
 
 export default function useTransactions(address?: string, pageSize?: number) {
+    const {config} = useContext(CKBContext)
     const [data, setData] = useState<TransactionHistory[]>([])
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [error, setError] = useState<undefined | any>(undefined)
@@ -22,8 +25,9 @@ export default function useTransactions(address?: string, pageSize?: number) {
             setError(undefined)
         } else {
             setStatus('loading')
-            const config = address.startsWith('ckt') ? network_config['testnet'] : network_config['mainnet']
-            fetch(`${config.explorer_api}/address_transactions/${address}?page=${page}&page_size=${size}&sort=time.desc`, {
+            const url = `${config.explorer_api}/address_transactions/${address}?page=${page}&page_size=${size}&sort=time.desc`
+            console.log('url', url)
+            fetch(url, {
                 method: 'GET',
                 headers: {
                     "Accept": 'application/vnd.api+json',
