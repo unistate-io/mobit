@@ -9849,10 +9849,9 @@ mobit-sdk@^2.1.0:
     "@rgbpp-sdk/service" "^0.7.0"
     rgbpp "^0.7.0"
 
-mobit-sdk@^2.2.5:
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-2.2.5.tgz#fea79fb12bdd9cda887e78de5b30d62f1d6f7208"
-  integrity sha512-Yd2+GlqUQ9h3Ee+2Vr6e+NQ8E2IbveGm4mw4sCLQspm7aOu1efvQBQYrNmWp9UREc4yrvwWzgAiRlddgjUkoQA==
+"mobit-sdk@git+https://github.com/unistate-io/mobit-sdk.git":
+  version "2.2.6"
+  resolved "git+https://github.com/unistate-io/mobit-sdk.git#cfc182b21b2a8a8b68e90b8a4b0c6a8810192636"
   dependencies:
     "@apollo/client" "^3.13.8"
     "@ckb-ccc/core" "^1.8.1"
