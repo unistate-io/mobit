@@ -61,8 +61,17 @@ export const tokenInfoToScript = (tokenInfo: TokenInfoWithAddress): CKBComponent
         console.warn("tokenInfoToScript: Missing address_by_type_address_id for", tokenInfo.type_address_id)
         return null
     }
-    const formatHex = (hex: string | null | undefined) =>
-        hex ? `0x${hex.startsWith("\\x") ? hex.substring(2) : hex}` : "0x"
+    
+    const formatHex = (hex: string | null | undefined) => {
+        if (!hex) return "0x"
+        if (hex.startsWith("\\x")) {
+            return `0x${hex.substring(2)}`
+        }
+        if (hex.startsWith("0x")) {
+            return hex
+        }
+        return `0x${hex}`
+    }
 
     return {
         args: formatHex(typeAddress.script_args),
