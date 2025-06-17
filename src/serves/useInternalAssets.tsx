@@ -44,7 +44,7 @@ export default function useInternalAssets(walletAddress?: string) {
 
             const res = await data.json()
             const displayList = res.data.tokens.filter((item: any) => {
-                return !!item.tokenMetadata && BigInt(item.tokenBalance).toString() !== "0"
+                return !!item.tokenMetadata && BigInt(item.tokenBalance).toString() !== "0" && !!item.tokenMetadata.symbol
             })
             const displayTokenBalance = displayList.map((item: any) => {
                 return {
