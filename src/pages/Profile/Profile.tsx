@@ -320,9 +320,15 @@ export default function Profile() {
                 </div>
                 <div className="flex justify-between flex-col lg:flex-row">
                     <div className={`flex-1 lg:max-w-[780px] ${currtab !== "Activity" ? "block" : "hidden"}`}>
-                        {!!address && (
+                        {!!isOwner && !!addresses && (
                             <div className={`mt-4 ${currtab === "All" || currtab === "Staking" ? "block" : "hidden"}`}>
-                                <NervdaoBalance walletAddress={address} />
+                                <NervdaoBalance walletAddresses={addresses} />
+                            </div>
+                        )}
+
+                        {!isOwner && !!address && (
+                            <div className={`mt-4 ${currtab === "All" || currtab === "Staking" ? "block" : "hidden"}`}>
+                                <NervdaoBalance walletAddresses={[address]} />
                             </div>
                         )}
 

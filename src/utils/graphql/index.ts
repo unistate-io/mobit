@@ -26,7 +26,7 @@ export const queryXudtCell = async (addresses: string[], isMainnet: boolean = tr
       }
     }`
     const doc = gql("xudt_cells", condition)
-    console.log("Executing GraphQL Query for Unspent XUDT Cells:\n", doc)
+    // console.log("Executing GraphQL Query for Unspent XUDT Cells:\n", doc)
     try {
         const res: any = await query(doc, undefined, isMainnet)
         console.log("Received GraphQL Response:", res)

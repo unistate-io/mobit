@@ -4,19 +4,19 @@ import {LangContext} from "@/providers/LangProvider/LangProvider"
 import useNervdao from "@/serves/useNervosdao"
 
 interface NervdaoBalanceProps {
-    walletAddress: string;
+    walletAddresses: string[];
     className?: string;
 }
 
-export default function NervdaoBalance({walletAddress, className = ''}: NervdaoBalanceProps) {
+export default function NervdaoBalance({walletAddresses, className = ''}: NervdaoBalanceProps) {
     const {lang} = useContext(LangContext)
     const {getDepositedCkb, depositedCkb, status, redeemingCkb} = useNervdao()
 
     useEffect(() => {
-        if (walletAddress) {
-            getDepositedCkb(walletAddress)
+        if (walletAddresses.length > 0) {
+            getDepositedCkb(walletAddresses)
         }
-    }, [walletAddress])
+    }, [walletAddresses])
 
     const formattedBalance = toDisplay(depositedCkb.toString(), 8, false, 8)
     const formattedRedeemingBalance = toDisplay(redeemingCkb.toString(), 8, false, 8)
