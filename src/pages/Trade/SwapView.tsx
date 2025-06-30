@@ -86,7 +86,11 @@ export default function SwapView({ className, sellToken }: { className?: string;
             })
         }
 
-        return tokens.map(t => ({
+        return tokens
+        .filter((token) => {
+            return (token as any).isWhiteList
+        })
+        .map(t => ({
             id: t.typeHash,
             label: t.symbol,
             token: t

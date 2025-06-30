@@ -4,6 +4,7 @@ import { LangContext } from '@/providers/LangProvider/LangProvider'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Token } from '@utxoswap/swap-sdk-js'
 import { useContext, useMemo, useState } from "react"
+import {shortTransactionHash} from "@/utils/common"
 
 export interface SelectOption {
     label: string
@@ -84,7 +85,7 @@ export const DialogExchange = ({ className, value, options = [], onChange }: Pro
 
                 <div className="mt-6 flex flex-col gap-1">
                     <span className='text-[#7B7C7B] text-sm'>{lang['All Token']}</span>
-                    <div className='flex flex-col gap-4 overflow-scroll max-h-[400px]'>
+                    <div className='flex flex-col gap-4 overflow-auto max-h-[400px]'>
                         {
                             filteredOptions.map(({ token }, i) => {
                                 return <div className='flex gap-[6px] items-center cursor-pointer'
