@@ -163,7 +163,7 @@ export default function DobPage() {
                             <div className="text-sm mb-3">{lang["Token ID"]}</div>
                             <div
                                 className="flex flex-row items-center text-sm font-semibold break-all"
-                                title={`0x${tokenid}`}
+                                title={typeHash}
                             >
                                 <CopyText copyText={typeHash}>
                                     {shortTransactionHash(typeHash, 10)}
