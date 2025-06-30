@@ -160,6 +160,7 @@ const langCN: LangConfig = {
     "Unstaking": "解锁中",
     "Babylon": "Babylon",
     "LessThan": "小于",
+    "Type Hash": "类型哈希",
 }
 
 export default langCN

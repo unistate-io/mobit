@@ -163,13 +163,27 @@ export default function DobPage() {
                             <div className="text-sm mb-3">{lang["Token ID"]}</div>
                             <div
                                 className="flex flex-row items-center text-sm font-semibold break-all"
-                                title={typeHash}
+                                title={`0x${tokenid}`}
                             >
-                                <CopyText copyText={typeHash}>
-                                    {shortTransactionHash(typeHash, 10)}
+                                <CopyText copyText={`0x${tokenid}`}>
+                                    {shortTransactionHash(`0x${tokenid}`, 10)}
                                 </CopyText>
                             </div>
                         </div>
+
+                        {!!typeHash &&
+                            <div className="text-sm mb-6">
+                                <div className="text-sm mb-3">{lang["Type Hash"]}</div>
+                                <div
+                                    className="flex flex-row items-center text-sm font-semibold break-all"
+                                    title={typeHash}
+                                >
+                                    <CopyText copyText={typeHash}>
+                                        {shortTransactionHash(typeHash, 10)}
+                                    </CopyText>
+                                </div>
+                            </div>
+                        }
 
                         <div className="text-sm mb-6">
                             <div className="text-sm mb-3">{lang["Owner"]}</div>
