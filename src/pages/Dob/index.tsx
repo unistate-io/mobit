@@ -1,26 +1,28 @@
-import {useNavigate, useParams, useSearchParams} from "react-router-dom"
-import {useContext, useMemo} from "react"
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"
+import { useContext, useMemo } from "react"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import useSporeDetail from "@/serves/useSporeDetail"
 import CopyText from "@/components/CopyText/CopyText"
-import {isBtcAddress, shortTransactionHash} from "@/utils/common"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import { isBtcAddress, shortTransactionHash } from "@/utils/common"
+import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
 import useLayer1Assets from "@/serves/useLayer1Assets"
 import DialogSporeTransfer from "@/components/Dialogs/DialogSporeTransfer/DialogSporeTransfer"
 import DialogSporeMelt from "@/components/Dialogs/DialogSporeMelt/DialogSporeMelt"
-import {LangContext} from "@/providers/LangProvider/LangProvider"
+import { LangContext } from "@/providers/LangProvider/LangProvider"
+import { scriptToHash } from "@nervosnetwork/ckb-sdk-utils"
+import { hashType } from "@/serves/useXudtTransfer/lib"
 
 export default function DobPage() {
-    const {tokenid} = useParams()
+    const { tokenid } = useParams()
     const navigate = useNavigate()
 
     if (!tokenid) {
         throw new Error("tokenid needed")
     }
 
-    const {status, data} = useSporeDetail(tokenid)
-    const {addresses, internalAddress, network} = useContext(CKBContext)
-    const {lang} = useContext(LangContext)
+    const { status, data } = useSporeDetail(tokenid)
+    const { addresses, internalAddress, network } = useContext(CKBContext)
+    const { lang } = useContext(LangContext)
     const [searchParams] = useSearchParams()
 
     const chain = useMemo(() => {
@@ -31,7 +33,23 @@ export default function DobPage() {
         return chain
     }, [searchParams])
 
-    const {dobs, status: l1DataStatus} = useLayer1Assets(
+    const typeHash = useMemo(() => {
+        if (data?.address_by_type_address_id?.script_args && data?.address_by_type_address_id?.script_code_hash && data?.address_by_type_address_id?.script_hash_type) {
+            return scriptToHash({
+                args: data.address_by_type_address_id?.script_args
+                    ? `0x${data.address_by_type_address_id.script_args.startsWith("\\x") ? data.address_by_type_address_id.script_args.substring(2) : data.address_by_type_address_id.script_args}`
+                    : "0x",
+                codeHash: data.address_by_type_address_id?.script_code_hash
+                    ? `0x${data.address_by_type_address_id.script_code_hash.startsWith("\\x") ? data.address_by_type_address_id.script_code_hash.substring(2) : data.address_by_type_address_id.script_code_hash}`
+                    : "0x",
+                hashType: hashType[data.address_by_type_address_id?.script_hash_type ?? 0] ?? "type"
+            })
+        } else {
+            return ""
+        }
+    }, [data])
+
+    const { dobs, status: l1DataStatus } = useLayer1Assets(
         chain === "btc" && !!internalAddress && isBtcAddress(internalAddress, network === "mainnet")
             ? internalAddress
             : undefined
@@ -147,8 +165,8 @@ export default function DobPage() {
                                 className="flex flex-row items-center text-sm font-semibold break-all"
                                 title={`0x${tokenid}`}
                             >
-                                <CopyText copyText={`0x${tokenid}`}>
-                                    {shortTransactionHash(`0x${tokenid}`, 10)}
+                                <CopyText copyText={typeHash}>
+                                    {shortTransactionHash(typeHash, 10)}
                                 </CopyText>
                             </div>
                         </div>
