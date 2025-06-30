@@ -97,7 +97,7 @@ export default function DobPage() {
                                 </div>
                             </DialogSporeTransfer>
                             <div className="mt-3">
-                                <DialogSporeMelt spore={data} className="w-full" onComplete={handleComplete}>
+                                <DialogSporeMelt spore={data} className="w-full" onComplete={handleComplete} cover={data.details.image}>
                                     <div className="text-red-500 bg-neutral-100 font-semibold px-4 py-3 rounded-lg flex flex-row flex-nowrap justify-center hover:opacity-80">
                                         {lang["Melt"]}
                                     </div>
