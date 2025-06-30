@@ -2,9 +2,22 @@ import { hexToBytes, scriptToHash, toBigEndian } from "@nervosnetwork/ckb-sdk-ut
 import { SporesWithChainInfo } from "@/serves/useSpores"
 import { bufferToRawString } from "@spore-sdk/core"
 import { queryClustersByIds } from "@/utils/graphql"
-import { svgToBase64, config, renderByDobDecodeResponse, renderByTokenKey, } from "@nervina-labs/dob-render"
+import { svgToBase64, config, renderByDobDecodeResponse } from "@nervina-labs/dob-render"
 import { ccc } from "@ckb-ccc/connector-react"
 import { hashType } from "@/serves/useXudtTransfer/lib"
+
+
+export function extractBracketContent(str: string, index?: number) {
+    const regex = /^\(%[^)]+\):\[(['"][^\]\[]*['"](?:,\s*['"][^\]\[]*['"])*)\]/;
+    const match = str.match(regex);
+
+    if (match && index !== undefined) {
+        const match2 =  match[1]!.match(/'([^']*)'/g)!.map(match => match.slice(1, -1))
+        return match2[index % match2.length].replace('<~>', '');
+    } else {
+        return str;
+    }
+}
 
 export const hexToUtf8 = (value: string = "") => {
     try {
@@ -163,13 +176,21 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                 const tokenId = item.spore_id.startsWith('0x') ? item.spore_id.replace("0x", "") : item.spore_id.replace("\\", "").replace("x", "")
                 const decode: any = await decodeBob0(tokenId, decoderUrl)
                 const decodedData = JSON.parse(decode.render_output)
+                let unicoinTraitIndex: undefined | number = undefined
+                const firstTrait = decodedData[0]?.traits[0]?.String
+                if (!!firstTrait && /^\d+<_>$/.test(firstTrait)) {
+                    unicoinTraitIndex = firstTrait.match(/\d+(\.\d+)?/g).map(Number)[0]
+                }
                 res.traits = decodedData
                     .filter((trait: any) => {
-                        return !trait.name.startsWith("prev.") && trait.name !== "IMAGE"
+                        return !trait.name.startsWith("prev.") 
+                        && trait.name !== "IMAGE"
+                        && trait.name !== "prev<%v>"
+                        && !trait.traits[0]?.String?.includes('<_>')
                     })
                     .map((trait: any) => {
                         const value =
-                            trait.traits[0].String ||
+                            (trait.traits[0].String ? extractBracketContent(trait.traits[0].String, unicoinTraitIndex) : trait.traits[0].String )||
                             trait.traits[0].string ||
                             trait.traits[0].Number ||
                             trait.traits[0].number ||
@@ -274,3 +295,4 @@ export const getDobPrice = async (type_hash: string): Promise<number> => {
     const data = await response.json()
     return data.usd_price as number
 }
+
