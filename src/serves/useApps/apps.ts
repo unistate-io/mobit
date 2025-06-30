@@ -29,15 +29,6 @@ const apps: CkbApp[] = [
         }
     },
     {
-        logo: 'https://ik.imagekit.io/soladata/z8hkvqw5_4OsLMde3-',
-        name: 'Huehub',
-        url: 'https://huehub.xyz/',
-        description:{
-            en: 'RGB++ Assets Marketplace',
-            zh: 'RGB++ 资产市场'
-        }
-    },
-    {
         logo: 'https://ik.imagekit.io/soladata/dx2hgk3e_0OXl2mDX9',
         name: 'Omiga',
         url: 'https://omiga.io/',
