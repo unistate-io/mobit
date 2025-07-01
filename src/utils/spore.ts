@@ -220,8 +220,9 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                 res.image = await svgToBase64(svg)
                 resolve(res)
             } catch (e) {
-                console.error(e)
-                reject(e)
+                console.warn(e, item)
+                resolve(res)
+                // reject(e)
             }
         } else if (item.content_type === "application/json" && item.content) {
             try {
@@ -280,7 +281,11 @@ export function decodeBob0(tokenid: string, decoderUrl?: string) {
                 return res.json()
             })
             .then(res => {
-                resolve(JSON.parse(res.result))
+                if (res.result) {
+                    resolve(JSON.parse(res.result))
+                } else {
+                    reject(res)
+                }
             })
             .catch((e: any) => {
                 reject(e)
