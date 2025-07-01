@@ -1,8 +1,9 @@
 import {useEffect, useState, useContext} from "react"
-import {querySporesById} from "@/utils/graphql"
+import {querySporesById, querySporeActionsBySporeIds} from "@/utils/graphql"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {SporesWithChainInfo} from "@/serves/useSpores"
 import {DobRenderRes, renderDob} from "@/utils/spore"
+import {SporesActions} from "@/utils/graphql/types"
 
 export interface SporeDetail extends SporesWithChainInfo {
     details: DobRenderRes
@@ -22,7 +23,10 @@ export default function useSporeDetail(tokenid: string, chain: 'ckb' | 'btc' = '
                 setStatus("complete")
             } else {
                 setStatus("loading")
-               const details = await renderDob({...spore, chain}, network)
+                const sporeActions = await querySporeActionsBySporeIds([spore?.spore_id], network === 'mainnet')
+                const isBurned = sporeActions.some((a: SporesActions) => a.spore_id === spore?.spore_id && a.action_type === 'BurnSpore')
+                spore.is_burned = isBurned
+                const details = await renderDob({...spore, chain}, network)
                 setData({
                     ...spore,
                     chain,

@@ -161,6 +161,7 @@ const langEN = {
     "Babylon": "Babylon",
     "LessThan": "Less than",
     "Type Hash": "Type Hash",
+    "Melted": "Melted",
 }
 
 export type LangConfig = typeof langEN

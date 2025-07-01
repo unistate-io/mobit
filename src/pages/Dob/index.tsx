@@ -98,7 +98,14 @@ export default function DobPage() {
                     {status !== "loading" && !!data && (
                         <>
                             <div className="font-semibold text-lg mb-3">
+                                {data.is_burned && 
+                                    <div className="mr-3 bg-red-500 text-white text-xs px-2 rounded-md shadow-sm inline-flex flex-row items-center">
+                                        <i className="uil-info-circle mr-1 text-base" />
+                                        {lang["Melted"]}
+                                    </div>
+                                }
                                 {data.details.name || data.details.plantText || ""}
+                               
                             </div>
 
                             <div className="flex flex-row justify-between text-sm">
@@ -107,7 +114,7 @@ export default function DobPage() {
                         </>
                     )}
 
-                    {isOwner && chain !== "btc" && !!data && (
+                    {isOwner && chain !== "btc" && !!data && !data.is_burned && (
                         <div className="mt-3">
                             <DialogSporeTransfer spore={data} className="w-full" onComplete={handleComplete}>
                                 <div className="cursor-pointer px-4 py-3 font-semibold bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center flex">

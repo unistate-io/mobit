@@ -1,15 +1,15 @@
-import {ChainIcons} from "@/components/TokenIcon/icons"
-import {useContext, useEffect, useRef, useState} from "react"
-import {shortTransactionHash} from "@/utils/number_display"
-import {Link} from "react-router-dom"
-import {LangContext} from "@/providers/LangProvider/LangProvider"
-import {SporesWithChainInfo} from "@/serves/useSpores"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {getDobPrice, renderDob} from "@/utils/spore"
-import {scriptToHash} from "@nervosnetwork/ckb-sdk-utils"
-import {hashType} from "@/serves/useXudtTransfer/lib"
-import {toDisplay} from "@/utils/number_display"
-import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
+import { ChainIcons } from "@/components/TokenIcon/icons"
+import { useContext, useEffect, useRef, useState } from "react"
+import { shortTransactionHash } from "@/utils/number_display"
+import { Link } from "react-router-dom"
+import { LangContext } from "@/providers/LangProvider/LangProvider"
+import { SporesWithChainInfo } from "@/serves/useSpores"
+import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
+import { getDobPrice, renderDob } from "@/utils/spore"
+import { scriptToHash } from "@nervosnetwork/ckb-sdk-utils"
+import { hashType } from "@/serves/useXudtTransfer/lib"
+import { toDisplay } from "@/utils/number_display"
+import { MarketContext } from "@/providers/MarketProvider/MarketProvider"
 import BigNumber from "bignumber.js"
 // import DialogSporeCreate from "@/components/Dialogs/DialogSporeCreate/DialogSporeCreate"
 
@@ -27,7 +27,7 @@ export default function ListDOBs({
     onPriceChange?: (price: number) => any
 }) {
     const [page, setPage] = useState<number>(1)
-    const {lang} = useContext(LangContext)
+    const { lang } = useContext(LangContext)
     const dobsValue = useRef<number>(0)
 
     const handlePriceChange = (price: number) => {
@@ -80,14 +80,14 @@ export default function ListDOBs({
     )
 }
 
-function DOBItem({item, onPriceChange}: {item: SporesWithChainInfo; onPriceChange?: (price: number) => any}) {
-    const {currCurrency, rates, currencySymbol} = useContext(MarketContext)
-
+function DOBItem({ item, onPriceChange }: { item: SporesWithChainInfo; onPriceChange?: (price: number) => any }) {
+    const { currCurrency, rates, currencySymbol } = useContext(MarketContext)
+    const { lang } = useContext(LangContext)
     const [image, setImage] = useState<string | null>(null)
     const [video, setVideo] = useState(null)
     const [name, setName] = useState("")
     const [plantText, setPlantText] = useState("")
-    const {network} = useContext(CKBContext)
+    const { network } = useContext(CKBContext)
     const [typeHash, setTypeHash] = useState("")
 
     const [usdPrice, setUsdPrice] = useState(0)
@@ -123,8 +123,8 @@ function DOBItem({item, onPriceChange}: {item: SporesWithChainInfo; onPriceChang
     }
 
     useEffect(() => {
-        ;(async () => {
-            const {name, image, plantText} = await renderDob(item, network)
+        ; (async () => {
+            const { name, image, plantText } = await renderDob(item, network)
             getUsdPrice()
             setName(name)
             setImage(image)
@@ -149,6 +149,13 @@ function DOBItem({item, onPriceChange}: {item: SporesWithChainInfo; onPriceChang
                         width={24}
                         className="absolute top-3 right-3"
                     />
+                )}
+
+                {!!item.is_burned && (
+                    <div className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 rounded-md shadow-sm flex flex-row items-center">
+                        <i className="uil-info-circle mr-1 text-base" />
+                        {lang["Melted"]}
+                    </div>
                 )}
             </div>
             <div className="mt-1 text-base font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis h-[24px]">

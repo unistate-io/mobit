@@ -122,3 +122,8 @@ export interface Clusters {
     address_by_owner_address_id?: AddressDetails
     address_by_type_address_id?: AddressDetails
 }
+
+export interface SporesActions {
+    action_type: string
+    spore_id: string
+}

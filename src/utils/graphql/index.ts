@@ -1,7 +1,7 @@
 // @ts-ignore
 import {request} from "graphql-request"
 import {gql} from "@/utils/graphql/schema"
-import {XudtCell, Spores, Clusters, TokenInfoWithAddress} from "./types" // Added TransactionOutputStatus
+import {XudtCell, Spores, Clusters, TokenInfoWithAddress, SporesActions} from "./types" // Added TransactionOutputStatus
 
 const api = {
     mainnet: "https://mainnet.unistate.io/v1/graphql",
@@ -69,6 +69,20 @@ export const querySporesByAddress = async (
     const doc = gql("spores", condition)
     const res: any = await query(doc, undefined, isMainnet)
     return res.spores as Spores[]
+}
+
+export const querySporeActionsBySporeIds = async (
+    ids: string[],
+    isMainnet = true
+): Promise<SporesActions[]> => {
+    let whereClause = `{ spore_id: { _in: ${JSON.stringify(ids)} }}`
+
+    const condition = `
+      where: ${whereClause},
+    `
+    const doc = gql("spore_actions", condition)
+    const res: any = await query(doc, undefined, isMainnet)
+    return res.spore_actions as SporesActions[]
 }
 
 export const querySporesById = async (id: string, isMainnet = true): Promise<Spores | null> => {

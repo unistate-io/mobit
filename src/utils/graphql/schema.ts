@@ -137,6 +137,11 @@ const spores = `spores() {
     }
 }`
 
+const spore_actions = `spore_actions() {
+    action_type
+    spore_id
+}`
+
 const clusters = `clusters() {
     cluster_id
     cluster_description
@@ -174,7 +179,8 @@ const schema = {
     transaction_outputs_status,
     spores,
     clusters,
-    token_info_with_details
+    token_info_with_details,
+    spore_actions
 }
 
 export const gql = (type: keyof typeof schema, opt?: string) => {

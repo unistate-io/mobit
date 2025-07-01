@@ -158,8 +158,12 @@ export const renderDob = async (item: SporesWithChainInfo, network: string) => {
                 const des = detail.data?.info_cell?.cluster?.description
                 const name = detail.data?.info_cell?.cluster?.name
                 if (des) {
-                    const desJson = JSON.parse(des)
-                    res.description = desJson.description
+                    try {
+                        const desJson = JSON.parse(des)
+                        res.description = desJson.description
+                    } catch {
+                        res.description = des
+                    }
                 }
                 if (name) {
                     res.name = name

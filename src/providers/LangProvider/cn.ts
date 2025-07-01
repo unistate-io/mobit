@@ -161,6 +161,7 @@ const langCN: LangConfig = {
     "Babylon": "Babylon",
     "LessThan": "小于",
     "Type Hash": "类型哈希",
+    "Melted": "已销毁",
 }
 
 export default langCN

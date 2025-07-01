@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState, useContext} from "react"
-import {Spores} from "@/utils/graphql/types"
-import {querySporesByAddress} from "@/utils/graphql"
+import {Spores, SporesActions} from "@/utils/graphql/types"
+import {querySporesByAddress, querySporeActionsBySporeIds} from "@/utils/graphql"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
 export interface SporesWithChainInfo extends Spores {
@@ -41,8 +41,17 @@ export default function useSpores(addresses: string[]) {
         (async () => {
             try {
                 const spores = await querySporesByAddress(addresses, page, pageSize, undefined, network === 'mainnet')
+                const sporeActions = await querySporeActionsBySporeIds(spores.map((s: Spores) => s.spore_id), network === 'mainnet')
+                const checkSporesburned = spores.map((s: Spores) => {
+                   const isBurned = sporeActions.some((a: SporesActions) => a.spore_id === s.spore_id && a.action_type === 'BurnSpore')
+                   console.log('isBurned', s.spore_id, isBurned)
+                   return  {
+                    ...s,
+                    is_burned: isBurned
+                   }
+                })
                 setLoaded(spores.length < pageSize)
-                const list = page === 1 ? spores : [...data, ...spores]
+                const list = page === 1 ? checkSporesburned : [...data, ...checkSporesburned]
                 setData(list.map((s: Spores) => {
                     return {
                         ...s,
