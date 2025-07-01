@@ -44,7 +44,11 @@ export default function useMarket() {
                         symbol: a.symbol
                     }
                 })
-                
+
+                const deduplication = marketData.filter((item: TokenMarket, index: number, self: TokenMarket[]) =>
+                    index === self.findIndex((t: TokenMarket) => t.symbol === item.symbol)
+                )
+            
                 // add USDI to the market data
                 const usdi = {
                     id: 0,
@@ -58,7 +62,7 @@ export default function useMarket() {
                     updated_at: ''
                 }
                 
-                setData([...marketData, usdi]
+                setData([...deduplication, usdi]
                 )
                 setStatus("complete")
             })
