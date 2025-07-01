@@ -81,7 +81,7 @@ export const DialogExchange = ({ className, value, options = [], onChange }: Pro
                     </div>
                 </div>
 
-                <Input className='h-[50px]' startIcon={<i className="uil-search text-black" />} onChange={handleInput} />
+                <Input className='h-[50px]' startIcon={<i className="uil-search text-black" />} value={searchWord} onChange={handleInput} />
 
                 <div className="mt-6 flex flex-col gap-1">
                     <span className='text-[#7B7C7B] text-sm'>{lang['All Token']}</span>
