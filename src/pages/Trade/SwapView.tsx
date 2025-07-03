@@ -87,6 +87,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
         }
 
         return tokens
+        .filter(t => !!t.logo)
         .map(t => ({
             id: t.typeHash,
             label: t.symbol,
@@ -120,6 +121,7 @@ export default function SwapView({ className, sellToken }: { className?: string;
         }
 
         return tokens
+        .filter(t => !!t.logo)
         .map(t => ({
             id: t.typeHash,
             label: t.symbol,
