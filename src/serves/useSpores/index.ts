@@ -12,9 +12,9 @@ export default function useSpores(addresses: string[]) {
     const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading')
     const [error, setError] = useState<undefined | any>(undefined)
     const [page, setPage] = useState(1)
-    const [loaded, setLoaded] = useState(false)
+    const [loaded, setLoaded] = useState(true)
     const {network} = useContext(CKBContext)
-    const pageSize = 3
+    const pageSize = 200
 
     const historyRef = useRef('')
 
@@ -42,13 +42,9 @@ export default function useSpores(addresses: string[]) {
             try {
                 const spores = await querySporesByAddress(addresses, page, pageSize, undefined, network === 'mainnet')
                 const sporeActions = await querySporeActionsBySporeIds(spores.map((s: Spores) => s.spore_id), network === 'mainnet')
-                const checkSporesburned = spores.map((s: Spores) => {
+                const checkSporesburned = spores.filter((s: Spores) => {
                    const isBurned = sporeActions.some((a: SporesActions) => a.spore_id === s.spore_id && a.action_type === 'BurnSpore')
-                   console.log('isBurned', s.spore_id, isBurned)
-                   return  {
-                    ...s,
-                    is_burned: isBurned
-                   }
+                   return !isBurned
                 })
                 setLoaded(spores.length < pageSize)
                 const list = page === 1 ? checkSporesburned : [...data, ...checkSporesburned]

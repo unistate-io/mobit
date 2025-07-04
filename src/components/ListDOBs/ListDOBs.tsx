@@ -89,6 +89,7 @@ function DOBItem({ item, onPriceChange }: { item: SporesWithChainInfo; onPriceCh
     const [plantText, setPlantText] = useState("")
     const { network } = useContext(CKBContext)
     const [typeHash, setTypeHash] = useState("")
+    const [hasRendered, setHasRendered] = useState(false)
 
     const [usdPrice, setUsdPrice] = useState(0)
 
@@ -123,19 +124,31 @@ function DOBItem({ item, onPriceChange }: { item: SporesWithChainInfo; onPriceCh
     }
 
     useEffect(() => {
-        ; (async () => {
-            const { name, image, plantText } = await renderDob(item, network)
-            getUsdPrice()
-            setName(name)
-            setImage(image)
-            setPlantText(plantText)
-        })()
-    }, [])
+        // 监听item是否在视口内，如果进入视口，则渲染
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(async (entry) => {
+                if (entry.isIntersecting && !hasRendered) {
+                    setHasRendered(true)
+                    const { name, image, plantText } = await renderDob(item, network)
+                    getUsdPrice()
+                    setName(name)
+                    setImage(image)
+                    setPlantText(plantText)
+                }
+            })
+        })
+        observer.observe(document.getElementById(item.spore_id)!)
+
+        return () => {
+            observer.disconnect()
+        }
+    }, [hasRendered])
 
     const id = item.spore_id.startsWith('0x') ? item.spore_id.replace("0x", "") : item.spore_id.replace("\\", "").replace("x", "")
 
     return (
         <Link
+            id={item.spore_id}
             to={`/dob/${id}?chain=${item.chain}`}
             className="box-border p-2"
         >
