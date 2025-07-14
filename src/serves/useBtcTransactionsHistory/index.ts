@@ -8,7 +8,10 @@ export const getBtcTransactionsHistory = async (address: string, isMainnet: bool
         isMainnet ? "https://mainnet.unistate.io/v1/graphql" : "https://testnet.unistate.io/v1/graphql",
         isMainnet ? undefined : "Testnet3"
     )
-    return (await sdk.fetchTxsDetails(address)) as BtcApiTransaction[]
+    return (await sdk.fetchTxsDetails(address))
+    .sort((a, b) => {
+        return b.status.block_time - a.status.block_time
+    }) as BtcApiTransaction[]
 }
 
 export default function useBtcTransactionsHistory(address?: string) {

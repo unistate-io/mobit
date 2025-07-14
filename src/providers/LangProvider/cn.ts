@@ -107,7 +107,7 @@ const langCN: LangConfig = {
     "items": "条",
     "Information": "信息",
     "Owner": "所有者",
-    "Token ID": "Token ID",
+    "Token ID": "代币ID",
     "Cluster": "合集",
     "Traits": "特征",
     "No data to show": "没有数据",
