@@ -72,7 +72,7 @@
         "json-bigint": "^1.0.0",
         "lightweight-charts": "^5.0.5",
         "mini-css-extract-plugin": "^2.4.5",
-        "mobit-sdk": "git+https://github.com/unistate-io/mobit-sdk.git",
+        "mobit-sdk": "^2.3.1",
         "mobit-wallet": "^0.6.1",
         "node-polyfill-webpack-plugin": "^4.0.0",
         "path-browserify": "^1.0.1",

@@ -58,7 +58,7 @@ export default function useLeapXudtToLayer1() {
             ckbAddress: address!
         })
 
-        const skeleton = convertToTransaction(tx)
+        const skeleton = convertToTransaction(tx) as unknown as ccc.Transaction
         console.log(
             "Transaction skeleton before fee completion:",
             JSON.stringify(skeleton, (key, value) => (typeof value === "bigint" ? value.toString() : value), 2)

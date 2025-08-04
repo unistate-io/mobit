@@ -53,6 +53,25 @@
     tslib "^2.3.0"
     zen-observable-ts "^1.2.5"
 
+"@apollo/client@^3.13.9":
+  version "3.13.9"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.13.9.tgz#311e0df1734aaa5598e01a292bb7982df49cc062"
+  integrity sha512-RStSzQfL1XwL6/NWd7W8avhGQYTgPCtJ+qHkkTTSj9Upp3VVm6Oppv81YWdXG1FgEpDPW4hvCrTUELdcC4inCQ==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.1"
+    "@wry/caches" "^1.0.0"
+    "@wry/equality" "^0.5.6"
+    "@wry/trie" "^0.5.0"
+    graphql-tag "^2.12.6"
+    hoist-non-react-statics "^3.3.2"
+    optimism "^0.18.0"
+    prop-types "^15.7.2"
+    rehackt "^0.1.0"
+    symbol-observable "^4.0.0"
+    ts-invariant "^0.10.3"
+    tslib "^2.3.0"
+    zen-observable-ts "^1.2.5"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.16.0", "@babel/code-frame@^7.25.9", "@babel/code-frame@^7.26.0", "@babel/code-frame@^7.26.2", "@babel/code-frame@^7.8.3":
   version "7.26.2"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.26.2.tgz#4b5fab97d33338eff916235055f0ebc21e573a85"
@@ -1177,6 +1196,25 @@
     isomorphic-ws "^5.0.0"
     ws "^8.18.0"
 
+"@ckb-ccc/core@1.9.0", "@ckb-ccc/core@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/core/-/core-1.9.0.tgz#92f55c6c400d9075fca6e8148ebaf14ee722d5e7"
+  integrity sha512-znKLUJ9rTThtkyUKykZXfNM+Pj1GqCrlhYwl3LZ2EZSPQnQLTD6OquWoEaXLQppgGQ3+GYGjl6ZZDJhu796mHA==
+  dependencies:
+    "@joyid/ckb" "^1.1.1"
+    "@noble/ciphers" "^0.5.3"
+    "@noble/curves" "^1.4.2"
+    "@noble/hashes" "^1.4.0"
+    abort-controller "^3.0.0"
+    bech32 "^2.0.0"
+    bitcoinjs-message "^2.2.0"
+    bs58check "^4.0.0"
+    buffer "^6.0.3"
+    cross-fetch "^4.0.0"
+    ethers "^6.13.1"
+    isomorphic-ws "^5.0.0"
+    ws "^8.18.0"
+
 "@ckb-ccc/eip6963@1.0.17":
   version "1.0.17"
   resolved "https://registry.yarnpkg.com/@ckb-ccc/eip6963/-/eip6963-1.0.17.tgz#01de64bfa679c09ff0f014af3b9c91baad4fac21"
@@ -1232,6 +1270,14 @@
   integrity sha512-5DLic66m1NE4I0E2in47A16Zg1PT+L2EywhOTeaYoFlPPN4W0YmW1qB07Fov1Ac56uPcVqaltuIHbEJCSznJIA==
   dependencies:
     "@ckb-ccc/core" "1.8.1"
+    axios "^1.7.7"
+
+"@ckb-ccc/spore@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/spore/-/spore-1.5.2.tgz#c99ccb3d392c95e52102291502d7de0c9f86b163"
+  integrity sha512-QgZTPUbNaBj6y2wtZtSyE2nE7wM90SmEhNzFyq70V30c4DervbzzuxlEnnXnYn6Aan+ADq3pW3FgQ1wjd/w3NA==
+  dependencies:
+    "@ckb-ccc/core" "1.9.0"
     axios "^1.7.7"
 
 "@ckb-ccc/ssri@0.2.7":
@@ -9792,13 +9838,14 @@ mobit-sdk@^2.1.0:
     "@rgbpp-sdk/service" "^0.7.0"
     rgbpp "^0.7.0"
 
-"mobit-sdk@git+https://github.com/unistate-io/mobit-sdk.git":
-  version "2.2.7"
-  resolved "git+https://github.com/unistate-io/mobit-sdk.git#a0ce0c87b9706ee25d3f2426511b850a7819f844"
+mobit-sdk@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-2.3.1.tgz#dd42ffa9cf0ccd9cbd7c20dd6e6d75ed93a57128"
+  integrity sha512-aZJjrRzHWt7gWPGoi9/VJQ1kjL5RYFf+yT19IdF4BNgEITogU/BE83nqI1YCU1b6t/G7Y2W1lmSP0be61B6/fQ==
   dependencies:
-    "@apollo/client" "^3.13.8"
-    "@ckb-ccc/core" "^1.8.1"
-    "@ckb-ccc/spore" "^1.5.1"
+    "@apollo/client" "^3.13.9"
+    "@ckb-ccc/core" "^1.9.0"
+    "@ckb-ccc/spore" "^1.5.2"
     "@nervosnetwork/ckb-sdk-utils" "^0.109.5"
     "@rgbpp-sdk/btc" "^0.7.0"
     "@rgbpp-sdk/ckb" "^0.7.0"

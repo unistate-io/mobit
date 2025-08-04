@@ -38,7 +38,7 @@ export default function useXudtTransfer() {
 
         console.log(tx)
 
-        const skeleton = convertToTransaction(tx)
+        const skeleton = convertToTransaction(tx) as unknown as ccc.Transaction
         await skeleton.completeFeeBy(signer, feeRate)
 
         console.log(skeleton)

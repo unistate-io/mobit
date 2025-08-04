@@ -73,7 +73,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
             addresses[0]
         )
 
-        let txSkeleton = convertToTransaction(tx)
+        let txSkeleton = convertToTransaction(tx) as unknown as ccc.Transaction
         await txSkeleton.completeFeeBy(signer, feeRate)
         console.log("txSkeleton", txSkeleton)
         return txSkeleton
@@ -93,7 +93,7 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
             isMainnet: network === "mainnet"
         })
 
-        const txSkeleton = convertToTransaction(tx)
+        const txSkeleton = convertToTransaction(tx) as unknown as ccc.Transaction
         await txSkeleton.completeFeeBy(signer, feeRate)
 
         console.log("txSkeleton", txSkeleton)
