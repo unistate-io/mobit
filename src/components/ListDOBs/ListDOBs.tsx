@@ -11,6 +11,7 @@ import { hashType } from "@/serves/useXudtTransfer/lib"
 import { toDisplay } from "@/utils/number_display"
 import { MarketContext } from "@/providers/MarketProvider/MarketProvider"
 import BigNumber from "bignumber.js"
+import {querySporesById } from "@/utils/graphql"
 // import DialogSporeCreate from "@/components/Dialogs/DialogSporeCreate/DialogSporeCreate"
 
 export default function ListDOBs({
@@ -129,7 +130,9 @@ function DOBItem({ item, onPriceChange }: { item: SporesWithChainInfo; onPriceCh
             entries.forEach(async (entry) => {
                 if (entry.isIntersecting && !hasRendered) {
                     setHasRendered(true)
-                    const { name, image, plantText } = await renderDob(item, network)
+                    const _id = item.spore_id.startsWith('0x') ? item.spore_id.replace("0x", "\\x") : item.spore_id
+                    const _item = await querySporesById(_id, network === 'mainnet') 
+                    const { name, image, plantText } = await renderDob({...item, ..._item}, network)
                     getUsdPrice()
                     setName(name)
                     setImage(image)
