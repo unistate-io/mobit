@@ -1,11 +1,10 @@
-import React, {useLayoutEffect} from 'react'
+import React, {useLayoutEffect} from "react"
 import {useLocation} from "react-router-dom"
 import Header from "@/components/Header/Header"
 import CKBProvider from "@/providers/CKBProvider/CKBProvider"
 import Feedback from "@/components/Feedback"
 // @ts-ignore
-import {KeepAliveOutlet} from 'react-alive-outlet'
-
+import {KeepAliveOutlet} from "react-alive-outlet"
 
 function Home() {
     const location = useLocation()
@@ -18,9 +17,9 @@ function Home() {
     return (
         <CKBProvider>
             <div className="App">
-                <Header/>
+                <Header />
                 <div>
-                    <KeepAliveOutlet/>
+                    <KeepAliveOutlet />
                 </div>
                 {location.pathname !== "/trade" && <Feedback />}
             </div>
@@ -28,4 +27,4 @@ function Home() {
     )
 }
 
-export default Home;
+export default Home

@@ -1,5 +1,9 @@
 import {hashType} from "@/serves/useXudtTransfer/lib"
 
+export interface BlockHeight {
+    height: string
+}
+
 interface AddressDetails {
     address_id: string
     script_args: string
@@ -61,7 +65,7 @@ export const tokenInfoToScript = (tokenInfo: TokenInfoWithAddress): CKBComponent
         console.warn("tokenInfoToScript: Missing address_by_type_address_id for", tokenInfo.type_address_id)
         return null
     }
-    
+
     const formatHex = (hex: string | null | undefined) => {
         if (!hex) return "0x"
         if (hex.startsWith("\\x")) {

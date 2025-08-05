@@ -1,3 +1,7 @@
+const block_height = `block_height() {
+    height
+}`
+
 const xudt_cells = `xudt_cells() {
     amount
     block_number
@@ -174,6 +178,7 @@ const clusters = `clusters() {
 }`
 
 const schema = {
+    block_height,
     xudt_cells,
     token_info,
     transaction_outputs_status,

@@ -1,7 +1,7 @@
 // @ts-ignore
 import {request} from "graphql-request"
 import {gql} from "@/utils/graphql/schema"
-import {XudtCell, Spores, Clusters, TokenInfoWithAddress, SporesActions} from "./types" // Added TransactionOutputStatus
+import {XudtCell, Spores, Clusters, TokenInfoWithAddress, SporesActions, BlockHeight} from "./types" // Added TransactionOutputStatus
 
 const api = {
     mainnet: "https://mainnet.unistate.io/v1/graphql",
@@ -71,10 +71,7 @@ export const querySporesByAddress = async (
     return res.spores as Spores[]
 }
 
-export const querySporeActionsBySporeIds = async (
-    ids: string[],
-    isMainnet = true
-): Promise<SporesActions[]> => {
+export const querySporeActionsBySporeIds = async (ids: string[], isMainnet = true): Promise<SporesActions[]> => {
     let whereClause = `{ spore_id: { _in: ${JSON.stringify(ids)} }}`
 
     const condition = `
@@ -97,4 +94,11 @@ export const queryClustersByIds = async (id: string, isMainnet = true): Promise<
     const doc = gql("clusters", condition)
     const res: {clusters: Clusters[]} = await query(doc, undefined, isMainnet)
     return res.clusters && res.clusters.length > 0 ? res.clusters[0] : null
+}
+
+export const queryBlockHeight = async (isMainnet = true): Promise<BlockHeight | null> => {
+    const doc = gql("block_height", "")
+    const res: any = await query(doc, undefined, isMainnet)
+    // GraphQL returns an array, so we need to get the first element
+    return res.block_height && res.block_height.length > 0 ? res.block_height[0] : null
 }
