@@ -9838,10 +9838,10 @@ mobit-sdk@^2.1.0:
     "@rgbpp-sdk/service" "^0.7.0"
     rgbpp "^0.7.0"
 
-mobit-sdk@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-2.3.1.tgz#dd42ffa9cf0ccd9cbd7c20dd6e6d75ed93a57128"
-  integrity sha512-aZJjrRzHWt7gWPGoi9/VJQ1kjL5RYFf+yT19IdF4BNgEITogU/BE83nqI1YCU1b6t/G7Y2W1lmSP0be61B6/fQ==
+mobit-sdk@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-2.3.2.tgz#93057855cace77aea0136cd85e90ffe1deebc65d"
+  integrity sha512-JpRGB+08/3OsiC53UQiKJ3t6jPwDxYS0xzG3p6BvZXWsXxaSV/Eonu2xQLKCZHXXxOpdMF035EbrMQMS/6FlnA==
   dependencies:
     "@apollo/client" "^3.13.9"
     "@ckb-ccc/core" "^1.9.0"
