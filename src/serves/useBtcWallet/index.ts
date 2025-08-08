@@ -10,7 +10,7 @@ export default function useBtcWallet() {
     const feeRate = 10
 
     const isBtcWallet = useMemo<boolean>(() => {
-        const supportedWallets = ['UniSat', 'OKX Wallet', 'JoyID']
+        const supportedWallets = ['UniSat', 'OKX Wallet', 'JoyID', "JoyID Passkey"]
         return !!internalAddress
             && isBtcAddress(internalAddress, network === 'mainnet')
             && !!wallet
