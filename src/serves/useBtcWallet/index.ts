@@ -32,7 +32,7 @@ export default function useBtcWallet() {
 
         if (wallet.name === "UniSat") {
             return new UniSatWallet(opts)
-        } else if (wallet.name === "JoyID") {
+        } else if (wallet.name === "JoyID Passkey" || wallet.name === "JoyID") {
             return new JoyIDWallet(opts)
         } else if (wallet.name === "OKX Wallet") {
             return new OKXWallet(opts)
