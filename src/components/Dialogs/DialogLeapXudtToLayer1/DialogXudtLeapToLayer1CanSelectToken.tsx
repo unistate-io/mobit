@@ -26,7 +26,7 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
     children: ReactNode
     className?: string
 }) {
-    const {address, addresses, internalAddress, config, network} = useContext(CKBContext)
+    const {address, addresses, internalAddress, config, network, wallet} = useContext(CKBContext)
     const {lang} = useContext(LangContext)
     const {isBtcWallet, createUTXO, feeRate} = useBtcWallet()
     const {getUTXO, buildLeapTx, leap} = useLeapXudtToLayer1()
@@ -321,7 +321,7 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                             </>
                         )}
 
-                        {step === 2 && (
+                        {step === 2 && wallet?.name !== "JoyID Passkey" && (
                             <>
                                 <div className="font-semibold mb-1">{lang["Select_An_UTXO_To_Leap"]}</div>
                                 <div className="mb-2 flex flex-row items-center bg-orange-50 py-2 px-3 rounded-lg">
