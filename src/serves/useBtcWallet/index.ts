@@ -1,6 +1,6 @@
 import {useContext, useMemo} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {AbstractWallet, JoyIDWallet, OKXWallet, UniSatWallet} from 'mobit-wallet'
+import {AbstractWallet, JoyIDWallet, OKXWallet, UniSatWallet} from '@/libs/mobit_wallet'
 import {isBtcAddress} from "@/utils/common"
 import {NetworkConfig} from "mobit-wallet"
 

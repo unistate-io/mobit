@@ -2682,14 +2682,7 @@
   dependencies:
     "@joyid/common" "0.2.1"
 
-"@joyid/ckb@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@joyid/ckb/-/ckb-0.0.8.tgz#5e5766777a5df1a2fc89f3344ab4e2be5f8144f8"
-  integrity sha512-UdcWN0X1xsxkM+zB08x7LKqFgol9gDDHHHUzxnOWVtX//EKF4SezVxx0H6Ky1DCiXgQ4BTynzdP95lvTDPUmjA==
-  dependencies:
-    "@nervosnetwork/ckb-sdk-utils" "^0.109.1"
-
-"@joyid/ckb@^1.1.1":
+"@joyid/ckb@^1.1.1", "@joyid/ckb@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@joyid/ckb/-/ckb-1.1.2.tgz#f24c1fdb12f17cbca82f3722df8a40d5249e4664"
   integrity sha512-+e+ISF566zaKNhKNSSS5kBw8or4Kb5Xqxe/2jVkUXKkqVHSS02Trrqe0g4IjSyeN9bszzolr1XgStv2hz62tqA==
@@ -2817,7 +2810,7 @@
     axios "1.7.4"
     tslib "2.3.1"
 
-"@nervosnetwork/ckb-sdk-utils@0.109.3", "@nervosnetwork/ckb-sdk-utils@0.109.5", "@nervosnetwork/ckb-sdk-utils@^0.109.1", "@nervosnetwork/ckb-sdk-utils@^0.109.5":
+"@nervosnetwork/ckb-sdk-utils@0.109.3", "@nervosnetwork/ckb-sdk-utils@0.109.5", "@nervosnetwork/ckb-sdk-utils@^0.109.5":
   version "0.109.5"
   resolved "https://registry.yarnpkg.com/@nervosnetwork/ckb-sdk-utils/-/ckb-sdk-utils-0.109.5.tgz#5f760cf2a4ec8f76d5ee42ce7408c8859646073b"
   integrity sha512-Tx642hcJWbN8W3KzCIhIo49yzJ8LMqWopQCSBDKuRmwHesO/bvJqYojCVwfrOyROtFOPhgjyiGm5RXBuxm0KpQ==

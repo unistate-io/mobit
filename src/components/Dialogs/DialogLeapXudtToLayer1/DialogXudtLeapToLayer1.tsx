@@ -350,6 +350,7 @@ export default function DialogLeapXudtToLayer1({
                                                         className={`${isSelected ? "outline outline-2 outline-[#6cd7b2] outline-offset-[-2px]" : ""} cursor-pointer h-24 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2 overflow-hidden`}
                                                     >
                                                         <a
+                                                            rel="noreferrer"
                                                             href={`${config.btc_explorer}/tx/${uxto.txid}`}
                                                             onClick={e => e.stopPropagation()}
                                                             target={"_blank"}
