@@ -56,7 +56,7 @@ export default function useTransactions(address?: string, pageSize?: number) {
                     setError(e)
                 })
         }
-    }, [page])
+    }, [page, address])
 
     return {
         setPage,
