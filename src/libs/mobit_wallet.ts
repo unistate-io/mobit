@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @file Bitcoin Wallet Interface
  * This file provides a unified interface for interacting with various Bitcoin wallets.

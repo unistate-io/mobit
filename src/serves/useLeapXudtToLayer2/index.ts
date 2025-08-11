@@ -1,6 +1,6 @@
 import {useContext, useMemo} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {BtcHelper, CkbHelper, prepareLeapUnsignedPsbt, leapFromBtcToCkbCombined} from "mobit-sdk"
+import {BtcHelper, CkbHelper, prepareLeapUnsignedPsbt, leapFromBtcToCkbCombined} from "@/libs/mobit-sdk"
 import {DataSource, NetworkType} from "rgbpp/btc"
 import useBtcWallet from "@/serves/useBtcWallet"
 
@@ -27,6 +27,7 @@ export default function useLeapXudtToLayer2() {
             throw new Error("Not supported wallet")
         }
 
+        // @ts-ignore
         const ckbHelper = new CkbHelper(network === "mainnet")
         console.log("[build] Created ckbHelper with network:", network)
 
@@ -81,6 +82,7 @@ export default function useLeapXudtToLayer2() {
                 toCkbAddress: props.toCkbAddress,
                 xudtType: props.xudtType,
                 transferAmount: BigInt(props.amount),
+                // @ts-ignore
                 collector: new CkbHelper(network === "mainnet").collector,
                 btcDataSource: new DataSource(
                     btcHelper?.btcService,

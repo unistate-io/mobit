@@ -16,6 +16,7 @@ export default function useTransactions(address?: string, pageSize?: number) {
     useEffect(() => {
         setPage(1)
         setLoadAll(false)
+        console.log('btc address tx history: ', address)
     }, [address]);
 
     useEffect(() => {
