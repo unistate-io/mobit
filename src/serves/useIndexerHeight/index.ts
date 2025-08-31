@@ -17,6 +17,7 @@ export default function useIndexerHeight() {
             const height = await queryBlockHeight(isMainnet)
 
             if (height) {
+                if (historyRef.current !== network) return
                 setData(height)
                 setStatus("complete")
                 setError(undefined) // Clear any previous errors

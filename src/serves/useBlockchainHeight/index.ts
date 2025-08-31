@@ -3,7 +3,7 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {BlockHeight} from "@/utils/graphql/types"
 
 export default function useBlockchainHeight() {
-    const {config} = useContext(CKBContext)
+    const {config, network} = useContext(CKBContext)
     const [status, setStatus] = useState<"loading" | "complete" | "error">("loading")
     const [data, setData] = useState<BlockHeight | undefined>(undefined)
     const [error, setError] = useState<undefined | any>(undefined)
@@ -46,6 +46,7 @@ export default function useBlockchainHeight() {
                 height: decimalHeight.toString()
             }
 
+            if (historyRef.current !== config.ckb_rpc) return
             setData(height)
             setStatus("complete")
             setError(undefined) // Clear any previous errors
