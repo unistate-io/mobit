@@ -162,6 +162,20 @@ const langCN: LangConfig = {
     "LessThan": "小于",
     "Type Hash": "类型哈希",
     "Melted": "已销毁",
+    "Syncing": '同步中',
+    "Retrying":"重试中",
+    "Failed to fetch data":"获取数据失败",
+    "Fetching":"获取中",
+    "Synced":"已同步",
+    "Nearly Done": slotLang("接近同步 ({0}区块)"),
+    "Syncing ({0}%)": slotLang("同步中 ({0}区块)"),
+    "Indexer Height": "索引器高度",
+    "Block Height": "区块高度",
+    "Mainnet": "主网",
+    "Testnet": "测试网",
+    "Gap": "差距",
+    "Flesh": "刷新",
+    "Fleshing": "刷新中",
 }
 
 export default langCN

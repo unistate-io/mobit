@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState, useCallback} from "react"
 import useIndexerHeight from "@/serves/useIndexerHeight"
 import useBlockchainHeight from "@/serves/useBlockchainHeight"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 interface BlockHeightStatusProps {
     className?: string
@@ -11,6 +12,7 @@ const BlockHeightStatus: React.FC<BlockHeightStatusProps> = ({className = ""}) =
     const {network} = useContext(CKBContext)
     const indexerHeight = useIndexerHeight()
     const blockchainHeight = useBlockchainHeight()
+    const {lang} = useContext(LangContext)
 
     const [isExpanded, setIsExpanded] = useState(false)
     const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
@@ -82,24 +84,24 @@ const BlockHeightStatus: React.FC<BlockHeightStatusProps> = ({className = ""}) =
     }
 
     const getSyncStatus = () => {
-        if (isLoading && retryCount > 0) return {status: "retrying", text: "重试中..."}
-        if (isLoading) return {status: "syncing", text: "同步中..."}
-        if (hasError) return {status: "error", text: retryCount >= 3 ? "数据获取失败" : "正在重试"}
+        if (isLoading && retryCount > 0) return {status: "retrying", text: lang['Retrying']}
+        if (isLoading) return {status: "syncing", text: lang['Syncing']}
+        if (hasError) return {status: "error", text: retryCount >= 3 ? lang["Failed to fetch data"] : lang['Retrying']}
 
         const indexerNum = indexerHeight.data ? parseInt(indexerHeight.data.height) : 0
         const blockchainNum = blockchainHeight.data ? parseInt(blockchainHeight.data.height) : 0
 
         if (indexerNum === 0 || blockchainNum === 0) {
-            return {status: "unknown", text: "获取中..."}
+            return {status: "unknown", text: lang["Fetching"]}
         }
 
         const diff = blockchainNum - indexerNum
         if (diff === 0) {
-            return {status: "synced", text: "已同步"}
+            return {status: "synced", text: lang["Synced"]}
         } else if (diff <= 10) {
-            return {status: "near_sync", text: `接近同步 (${diff}区块)`}
+            return {status: "near_sync", text: lang['Nearly Done']([diff])}
         } else {
-            return {status: "syncing", text: `同步中 (${diff}区块)`}
+            return {status: "syncing", text: lang['Syncing ({0}%)']([diff])}
         }
     }
 
@@ -197,7 +199,7 @@ const BlockHeightStatus: React.FC<BlockHeightStatusProps> = ({className = ""}) =
                                 ? "text-gray-400 cursor-not-allowed"
                                 : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
                         }`}
-                        title="刷新区块高度"
+                        title=""
                     >
                         {isRetrying ? (
                             <svg
@@ -257,29 +259,29 @@ const BlockHeightStatus: React.FC<BlockHeightStatusProps> = ({className = ""}) =
 
                             <div className="grid grid-cols-2 gap-3 text-xs mb-3">
                                 <div>
-                                    <div className="text-gray-400 mb-1">索引器高度</div>
+                                    <div className="text-gray-400 mb-1">{lang["Indexer Height"]}</div>
                                     <div className="font-mono text-green-600">
                                         {isLoading && !indexerHeight.data
-                                            ? "加载中..."
+                                            ? "loading..."
                                             : formatHeight(indexerHeight.data?.height)}
                                     </div>
                                 </div>
                                 <div>
-                                    <div className="text-gray-400 mb-1">区块链高度</div>
+                                    <div className="text-gray-400 mb-1">{lang["Block Height"]}</div>
                                     <div className="font-mono text-blue-600">
                                         {isLoading && !blockchainHeight.data
-                                            ? "加载中..."
+                                            ? "loading..."
                                             : formatHeight(blockchainHeight.data?.height)}
                                     </div>
                                 </div>
                                 <div>
-                                    <div className="text-gray-400 mb-1">网络</div>
+                                    <div className="text-gray-400 mb-1">{lang['Network']}</div>
                                     <div className="font-mono text-purple-600">
-                                        {network === "mainnet" ? "主网" : "测试网"}
+                                        {network === "mainnet" ? lang['Mainnet'] : lang['Testnet']}
                                     </div>
                                 </div>
                                 <div>
-                                    <div className="text-gray-400 mb-1">同步差距</div>
+                                    <div className="text-gray-400 mb-1">{lang["Gap"]}</div>
                                     <div className={`font-mono ${getStatusColor()}`}>
                                         {indexerHeight.data && blockchainHeight.data && !isLoading
                                             ? Math.abs(
@@ -297,44 +299,17 @@ const BlockHeightStatus: React.FC<BlockHeightStatusProps> = ({className = ""}) =
                                         {retryCount >= 3 ? (
                                             <div className="flex items-center space-x-2">
                                                 <span>⚠️</span>
-                                                <span>数据获取失败，正在自动重试...</span>
+                                                <span></span>
                                             </div>
                                         ) : (
                                             <div className="flex items-center space-x-2">
                                                 <span>🔄</span>
-                                                <span>正在自动重试 ({retryCount}/3)...</span>
+                                                <span>{lang["Retrying"]} ({retryCount}/3)...</span>
                                             </div>
                                         )}
                                     </div>
                                 </div>
                             )}
-
-                            <button
-                                onClick={handleManualRefresh}
-                                disabled={isRetrying}
-                                className={`w-full px-3 py-1.5 rounded text-xs font-medium transition-colors flex items-center justify-center space-x-1 ${
-                                    isRetrying
-                                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                        : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                                }`}
-                            >
-                                <svg
-                                    width="12"
-                                    height="12"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                                <span>{isRetrying ? "刷新中..." : "刷新数据"}</span>
-                            </button>
                         </div>
                     )}
                 </div>
