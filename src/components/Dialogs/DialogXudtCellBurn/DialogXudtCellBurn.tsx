@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useMemo, useState} from "react"
+import {ReactNode, useContext, useEffect, useMemo, useState} from "react"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import * as Dialog from "@radix-ui/react-dialog"
 import useGetXudtCell from "@/serves/useGetXudtCell"
@@ -72,7 +72,7 @@ export default function DialogXudtCellBurn({
         ;(async () => {
             setSending(true)
             try {
-                const tx = await createBurnXudtCellTx(BigInt(amount), 1000)
+                const tx = await createBurnXudtCellTx(BigInt(amount), 2000)
                 console.log("tx: ", tx)
                 setRawTx(tx)
                 setStep(2)
