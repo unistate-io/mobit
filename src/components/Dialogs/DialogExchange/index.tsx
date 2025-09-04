@@ -2,9 +2,8 @@ import Input from '@/components/Form/Input/Input'
 import TokenIcon from '@/components/TokenIcon/TokenIcon'
 import { LangContext } from '@/providers/LangProvider/LangProvider'
 import * as Dialog from '@radix-ui/react-dialog'
-import { Token } from '@utxoswap/swap-sdk-js'
+import { Token } from '@/libs/swap-sdk-js/src'
 import { useContext, useMemo, useState } from "react"
-import {shortTransactionHash} from "@/utils/common"
 
 export interface SelectOption {
     label: string

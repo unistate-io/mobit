@@ -1,4 +1,4 @@
-import {Client, Collector, PoolInfo, Token} from "@utxoswap/swap-sdk-js"
+import {Client, Collector, PoolInfo, Token} from "@/libs/swap-sdk-js/src"
 import {useContext, useMemo, useState} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {useAsyncEffect} from "ahooks"

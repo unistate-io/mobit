@@ -1,5 +1,5 @@
 import { useUtxoSwap } from "@/serves/useUtxoSwap"
-import { Pool, Token } from "@utxoswap/swap-sdk-js"
+import { Pool, Token } from "@/libs/swap-sdk-js/src"
 import { useCallback, useContext, useEffect, useMemo, useState } from "react"
 import Input from "@/components/Form/Input/Input"
 import useCkbBalance from "@/serves/useCkbBalance"
