@@ -184,13 +184,12 @@ import {
       feeRate = 1,
     }: SendBitcoinParams): Promise<string> {
       return this.safeExecute(async () => {
-        const [from] = await this.getAccounts();
         const fromPubkey = await this.getPublicKey();
         if (!this.btcDataSource) {
           throw new Error("BTC data source not initialized");
         }
         const psbt = await sendBtc({
-          from,
+          from: address,
           fromPubkey,
           tos: [{ address, value: amount }],
           feeRate,
