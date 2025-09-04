@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useMemo} from "react"
+import React, {useContext, useEffect} from "react"
 import Input from "@/components/Form/Input/Input"
 import * as Dialog from "@radix-ui/react-dialog"
 import Button from "@/components/Form/Button/Button"
@@ -14,7 +14,6 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 
 import * as dayjsLib from "dayjs"
-import {helpers} from "@ckb-lumos/lumos"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import {ccc, useCcc} from "@ckb-ccc/connector-react"
 
@@ -50,7 +49,7 @@ export default function DialogXudtTransfer({
     })
 
     const [step, setStep] = React.useState<1 | 2 | 3>(1)
-    const [feeRate, setFeeRate] = React.useState<1000 | 2000 | 3000>(1000)
+    const [feeRate, setFeeRate] = React.useState<2000 | 3000 | 4000>(2000)
     const [sending, setSending] = React.useState(false)
     const [txHash, setTxHash] = React.useState<null | string>(null)
     const [tx, setTx] = React.useState<ccc.Transaction | null>(null)
@@ -108,7 +107,7 @@ export default function DialogXudtTransfer({
                     froms,
                     to: formData.to,
                     amount: amount.toString(),
-                    feeRate: 1000,
+                    feeRate: 2000,
                     tokenInfo: token
                 })
                 setTx(tx)
@@ -343,15 +342,15 @@ export default function DialogXudtTransfer({
                                     <div className="mb-2 font-semibold">{lang["Transaction fee"]}</div>
                                     <Select
                                         className={"bg-gray-100 py-2 px-4 rounded-lg text-sm"}
-                                        defaultValue={"1000"}
+                                        defaultValue={"2000"}
                                         value={feeRate + ""}
                                         options={[
-                                            {id: "1000", label: `${fee(1000)} CKB (Slow: 1000 shannons/KB)`},
-                                            {id: "2000", label: `${fee(2000)} CKB (Standard: 2000 shannons/KB)`},
-                                            {id: "3000", label: `${fee(3000)} CKB (Fast: 3000 shannons/KB)`}
+                                            {id: "2000", label: `${fee(2000)} CKB (Slow: 2000 shannons/KB)`},
+                                            {id: "3000", label: `${fee(3000)} CKB (Standard: 3000 shannons/KB)`},
+                                            {id: "4000", label: `${fee(4000)} CKB (Fast: 4000 shannons/KB)`}
                                         ]}
                                         onValueChange={value => {
-                                            setFeeRate(Number(value) as 1000 | 2000 | 3000)
+                                            setFeeRate(Number(value) as 2000 | 3000 | 4000)
                                         }}
                                     ></Select>
                                 </div>
