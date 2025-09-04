@@ -321,7 +321,8 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                             </>
                         )}
 
-                        {step === 2 && wallet?.name !== "JoyID Passkey" && (
+
+                        {step === 2 && (
                             <>
                                 <div className="font-semibold mb-1">{lang["Select_An_UTXO_To_Leap"]}</div>
                                 <div className="mb-2 flex flex-row items-center bg-orange-50 py-2 px-3 rounded-lg">
@@ -332,7 +333,7 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                                                 "It_Is_Recommended_To_Use_546_Satoshi_UTXO_To_Avoid_Being_Accidentally_Spent_And_wasted"
                                             ]
                                         }
-                                        {isBtcWallet && (
+                                        { isBtcWallet && (
                                             <span
                                                 className="cursor-pointer text-blue-500 ml-2 hover:underline"
                                                 onClick={e => {
@@ -609,6 +610,7 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                                 </div>
 
                                 <div>{lang["Create_An_UTXO_To_Leap_Assets"]}</div>
+                                <div className="text-sm text-gray-500 mb-4">The amount of UTXO is 10000 satoshi dute to the minimum amount of transferring BTC</div>
 
                                 <div className="flex flex-row flex-nowrap justify-between items-center mb-4 mt-8 text-sm">
                                     <div className="flex flex-row flex-nowrap items-center">
@@ -616,7 +618,7 @@ export default function DialogXudtLeapToLayer1CanSelectToken({
                                         BTC
                                     </div>
                                     <div>
-                                        {BigNumber(546)
+                                        {BigNumber(10000)
                                             .div(10 ** 8)
                                             .toFormat(8)}{" "}
                                         BTC

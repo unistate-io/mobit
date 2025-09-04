@@ -50,7 +50,7 @@ export default function useBtcWallet() {
 
         const txid = await wallet.sendBitcoin({
             address: props.btcAddress,
-            amount: 546,
+            amount: 10000,
             feeRate: props.feeRate
         })
 

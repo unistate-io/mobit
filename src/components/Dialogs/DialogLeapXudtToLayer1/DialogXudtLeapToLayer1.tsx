@@ -310,7 +310,7 @@ export default function DialogLeapXudtToLayer1({
                                                 "It_Is_Recommended_To_Use_546_Satoshi_UTXO_To_Avoid_Being_Accidentally_Spent_And_wasted"
                                                 ]
                                         }
-                                        {isBtcWallet && wallet?.name !== "JoyID Passkey" && (
+                                        {isBtcWallet && (
                                             <span
                                                 className="cursor-pointer text-blue-500 ml-2 hover:underline"
                                                 onClick={e => {
