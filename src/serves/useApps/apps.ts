@@ -74,15 +74,6 @@ const apps: CkbApp[] = [
         }
     },
     {
-        logo: 'https://ik.imagekit.io/soladata/zwzysaqq_-ReLqUcGT',
-        name: 'Cell Script',
-        url: 'https://cellscript.io',
-        description: {
-            zh: 'CKB上的智能合约语言。通过使用Cell Script，开发人员可以在几分钟内开始编写CKB智能合约',
-            en: 'The smart contract language on CKB. By using Cell Script, developers can start writing CKB smart contracts in minutes'
-        }
-    },
-    {
         logo: 'https://ik.imagekit.io/soladata/7floqz53_Ui8LEVZF1',
         name: 'Dobby',
         url: 'https://app.dobby.market',

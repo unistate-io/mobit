@@ -419,15 +419,17 @@ export default function SwapView({ className, sellToken }: { className?: string;
                         <div className="flex flex-row items-center px-5 justify-between">
                             <div className="flex-1 font-semibold text-base mr-2 min-w-[40%]">
                                 <Input
-                                    type="number"
                                     className="bg-[#fff] w-[100%] text-3xl sm:text-4xl"
                                     value={swapForm.amountX}
                                     style={{ backgroundColor: "#fff", fontFamily: "DIN Alternate" }}
                                     onChange={e => {
-                                        setSwapForm({
-                                            ...swapForm,
-                                            amountX: e.target.value
-                                        })
+                                        const value = e.target.value;
+                                        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                                            setSwapForm({
+                                                ...swapForm,
+                                                amountX: value
+                                            })
+                                        }
                                     }}
                                     placeholder={"0"}
                                 />
