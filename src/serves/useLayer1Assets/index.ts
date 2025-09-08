@@ -4,6 +4,7 @@ import {TokenBalance} from "@/components/ListToken/ListToken"
 import {SporesWithChainInfo} from "@/serves/useSpores"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ProcessedSporeAction, ProcessedXudtCell, RgbppSDK} from "@/libs/mobit-sdk"
+import {TokenInfo} from "@/utils/graphql/types"
 
 const queryAssets = async (
     btcAddress: string,
@@ -60,7 +61,17 @@ const queryAssets = async (
                 (acc: BigNumber, c: ProcessedXudtCell) => acc.plus(new BigNumber(c.amount.toString())),
                 new BigNumber(0)
             )
-            const info = cells[0].token_info
+            let info = cells[0].token_info
+            // process USDI xudt special case
+            if (cells[0].type_address_id === 'ckb1qzl6xk5u8zn8v6ptvkk73uptu9jdfp3j9q280cm03hp0g8meu44lcqw4j84ac6tzver7q4hpxdzlmqcv3wrkhvr25pa6vyz8n6mhz5l2nutl20za') {
+                info = {
+                        name: 'USDI',
+                        symbol: 'USDI',
+                        decimal: 6,
+                        defining_tx_hash: '',
+                        type_address_id: 'ckb1qzl6xk5u8zn8v6ptvkk73uptu9jdfp3j9q280cm03hp0g8meu44lcqw4j84ac6tzver7q4hpxdzlmqcv3wrkhvr25pa6vyz8n6mhz5l2nutl20za'
+                } as any
+            }
 
             list.xudts.push({
                 name: info?.name || "UNKNOWN ASSET",
