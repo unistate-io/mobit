@@ -27,7 +27,7 @@ export default function useTokenInfo(tokenId: string) {
                     "address_id": "ckb1qzl6xk5u8zn8v6ptvkk73uptu9jdfp3j9q280cm03hp0g8meu44lcqw4j84ac6tzver7q4hpxdzlmqcv3wrkhvr25pa6vyz8n6mhz5l2nutl20za",
                     "script_args": "\\xd591ebdc69626647e056e13345fd830c8b876bb06aa07ba610479eb77153ea9f",
                     "script_code_hash": "\\xbfa35a9c38a676682b65ade8f02be164d48632281477e36f8dc2f41f79e56bfc",
-                    "script_hash_type": 2
+                    "script_hash_type": 1
                 },
             })
             setStatus('complete')
