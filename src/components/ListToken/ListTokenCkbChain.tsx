@@ -1,23 +1,23 @@
 import TokenIcon from "../TokenIcon/TokenIcon"
-import {useCallback, useContext, useMemo, useState} from "react"
-import {toDisplay} from "@/utils/number_display"
+import { useCallback, useContext, useMemo, useState } from "react"
+import { toDisplay } from "@/utils/number_display"
 import DialogCkbTransfer from "@/components/Dialogs/DialogCkbTransfer/DialogCkbTransfer"
-import {TokenInfoWithAddress} from "@/utils/graphql/types"
+import { TokenInfoWithAddress } from "@/utils/graphql/types"
 import DialogXudtTransfer from "@/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer"
-import {LangContext} from "@/providers/LangProvider/LangProvider"
+import { LangContext } from "@/providers/LangProvider/LangProvider"
 import DialogXudtCellMerge from "@/components/Dialogs/DialogXudtCellMerge/DialogXudtCellMerge"
 import DialogXudtCellBurn from "@/components/Dialogs/DialogXudtCellBurn/DialogXudtCellBurn"
 import Dropdown from "@/components/Popover/Popover"
-import {scriptToHash} from "@nervosnetwork/ckb-sdk-utils"
-import {hashType} from "@/serves/useXudtTransfer/lib"
-import {useUtxoSwap} from "@/serves/useUtxoSwap"
+import { scriptToHash } from "@nervosnetwork/ckb-sdk-utils"
+import { hashType } from "@/serves/useXudtTransfer/lib"
+import { useUtxoSwap } from "@/serves/useUtxoSwap"
 import DialogXudtLeapToLayer1 from "@/components/Dialogs/DialogLeapXudtToLayer1/DialogXudtLeapToLayer1"
 import useBtcWallet from "@/serves/useBtcWallet"
-import {TooltipItem} from "@/components/Tooltip"
-import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
+import { TooltipItem } from "@/components/Tooltip"
+import { MarketContext } from "@/providers/MarketProvider/MarketProvider"
 import BigNumber from "bignumber.js"
-import {InternalTokenBalance} from "@/serves/useInternalAssets"
-import {useNavigate} from "react-router-dom"
+import { InternalTokenBalance } from "@/serves/useInternalAssets"
+import { useNavigate } from "react-router-dom"
 import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
 
 export interface TokenBalance extends TokenInfoWithAddress {
@@ -36,10 +36,10 @@ export default function ListToken({
     addresses?: string[]
 }) {
     const [compact, setCompact] = useState(true)
-    const {lang} = useContext(LangContext)
-    const {supportTokens} = useUtxoSwap()
-    const {isBtcWallet} = useBtcWallet()
-    const {prices, currCurrency, rates, currencySymbol} = useContext(MarketContext)
+    const { lang } = useContext(LangContext)
+    const { supportTokens } = useUtxoSwap()
+    const { isBtcWallet } = useBtcWallet()
+    const { prices, currCurrency, rates, currencySymbol } = useContext(MarketContext)
     const navigate = useNavigate()
     const { network } = useContext(CKBContext)
     const isSupportSwap = useCallback(
@@ -133,9 +133,8 @@ export default function ListToken({
 
                 {data.length !== 0 && status !== "loading" && (
                     <div
-                        className={`grid ${
-                            !!addresses ? "sm:grid-cols-5 grid-cols-3" : "sm:grid-cols-4 grid-cols-2"
-                        } px-2 md:px-4 py-3 text-xs box-border`}
+                        className={`grid ${!!addresses ? "sm:grid-cols-5 grid-cols-3" : "sm:grid-cols-4 grid-cols-2"
+                            } px-2 md:px-4 py-3 text-xs box-border`}
                     >
                         <div>{lang["Assets"]}</div>
                         <div className="hidden sm:block">{lang["Price"]}</div>
@@ -158,9 +157,8 @@ export default function ListToken({
                                     !!link && navigate(link)
                                 }}
                                 key={index}
-                                className={`whitespace-nowrap grid ${
-                                    !!addresses ? "sm:grid-cols-5 grid-cols-3" : "sm:grid-cols-4 grid-cols-2"
-                                } ${getLink(item) ? "cursor-pointer" : "!cursor-default"} px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100`}
+                                className={`whitespace-nowrap grid ${!!addresses ? "sm:grid-cols-5 grid-cols-3" : "sm:grid-cols-4 grid-cols-2"
+                                    } ${getLink(item) ? "cursor-pointer" : "!cursor-default"} px-2 md:px-4 py-3 text-xs box-border hover:bg-gray-100`}
                             >
                                 <div
                                     className="shrink-0 basis-1/3 md:basis-1/4 flex-row flex items-center"
@@ -181,16 +179,14 @@ export default function ListToken({
                                         {prices[item.symbol] ? calculatePrice(item) : "--"}
                                     </div>
                                     <div
-                                        className={`flex items-center ${
-                                            !!addresses ? "justify-start" : "justify-end sm:justify-start"
-                                        }`}
+                                        className={`flex items-center ${!!addresses ? "justify-start" : "justify-end sm:justify-start"
+                                            }`}
                                     >
                                         {toDisplay(item.amount, item.decimal!, true, 8)}
                                     </div>
                                     <div
-                                        className={`flex-row hidden items-center sm:flex ${
-                                            !!addresses ? "justify-start" : "justify-end"
-                                        }`}
+                                        className={`flex-row hidden items-center sm:flex ${!!addresses ? "justify-start" : "justify-end"
+                                            }`}
                                     >
                                         {prices[item.symbol] ? calculateValue(item) : "--"}
                                     </div>
@@ -258,7 +254,7 @@ export default function ListToken({
                                                                     <TooltipItem
                                                                         tip={
                                                                             lang[
-                                                                                "Use multiple cells to merge into a single cell and release capacity"
+                                                                            "Use multiple cells to merge into a single cell and release capacity"
                                                                             ]
                                                                         }
                                                                     >
@@ -304,18 +300,20 @@ export default function ListToken({
                                                 </>
                                             )}
 
-                                            {item.symbol === "CKB" && network === "mainnet" && (
+                                            {item.symbol === "CKB" && (
                                                 <>
-                                                    <TooltipItem tip={lang["Swap tokens via UTXO Swap"]}>
-                                                        <div
-                                                            onClick={() => {
-                                                                window.location.href = `/trade?sell-token=${typeHash}`
-                                                            }}
-                                                            className="tooltip cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1"
-                                                        >
-                                                            {lang["Swap"]}
-                                                        </div>
-                                                    </TooltipItem>
+                                                    {network === "mainnet" &&
+                                                        <TooltipItem tip={lang["Swap tokens via UTXO Swap"]}>
+                                                            <div
+                                                                onClick={() => {
+                                                                    window.location.href = `/trade?sell-token=${typeHash}`
+                                                                }}
+                                                                className="tooltip cursor-pointer px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex md:mr-2 mr-1"
+                                                            >
+                                                                {lang["Swap"]}
+                                                            </div>
+                                                        </TooltipItem>
+                                                    }
                                                     <DialogCkbTransfer froms={addresses}>
                                                         <TooltipItem tip={lang["Send CKB to Others"]}>
                                                             <div className="cursor-pointer whitespace-nowrap px-3 md:px-4 py-2 font-semibold text-xs bg-neutral-100 hover:bg-neutral-200 rounded-md shadow-sm justify-center items-center inline-flex">
