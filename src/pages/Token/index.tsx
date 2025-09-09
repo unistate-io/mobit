@@ -39,7 +39,7 @@ export default function TokenPage() {
 
     const rgbppBalance = useMemo(() => {
         if (!rgbppXudts || !tokenInfo) return '0'
-        const target = rgbppXudts.find(x => x.symbol === tokenInfo?.symbol)
+        const target = rgbppXudts.find(x => x.symbol.toLowerCase() === tokenInfo?.symbol.toLowerCase())
         return target?.amount || '0'
     }, [rgbppXudts, tokenInfo])
 
