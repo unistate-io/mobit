@@ -1,12 +1,12 @@
-import React, {ReactNode, useContext, useEffect, useState} from "react"
+import React, { ReactNode, useContext, useEffect, useState } from "react"
 import * as Dialog from "@radix-ui/react-dialog"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {LangContext} from "@/providers/LangProvider/LangProvider"
-import {TokenBalance} from "@/components/ListToken/ListToken"
-import useLeapXudtToLayer1, {BtcUtxo} from "@/serves/useLeapXudtToLayer1"
-import {toDisplay} from "@/utils/number_display"
+import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
+import { LangContext } from "@/providers/LangProvider/LangProvider"
+import { TokenBalance } from "@/components/ListToken/ListToken"
+import useLeapXudtToLayer1, { BtcUtxo } from "@/serves/useLeapXudtToLayer1"
+import { toDisplay } from "@/utils/number_display"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
-import {isBtcAddress, shortTransactionHash} from "@/utils/common"
+import { isBtcAddress, shortTransactionHash } from "@/utils/common"
 import Button from "@/components/Form/Button/Button"
 import Input from "@/components/Form/Input/Input"
 import BigNumber from "bignumber.js"
@@ -15,8 +15,8 @@ import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import dayjs from "dayjs"
 import CopyText from "@/components/CopyText/CopyText"
 import useBtcWallet from "@/serves/useBtcWallet"
-import {ccc, useCcc} from "@ckb-ccc/connector-react"
-import {tokenInfoToScript} from "@/utils/graphql/types"
+import { ccc, useCcc } from "@ckb-ccc/connector-react"
+import { tokenInfoToScript } from "@/utils/graphql/types"
 
 export default function DialogLeapXudtToLayer1({
     token,
@@ -27,10 +27,10 @@ export default function DialogLeapXudtToLayer1({
     children: ReactNode
     className?: string
 }) {
-    const {address, addresses, internalAddress, config, network, wallet} = useContext(CKBContext)
-    const {lang} = useContext(LangContext)
-    const {isBtcWallet, createUTXO, feeRate} = useBtcWallet()
-    const {getUTXO, buildLeapTx, leap} = useLeapXudtToLayer1()
+    const { address, addresses, internalAddress, config, network, wallet } = useContext(CKBContext)
+    const { lang } = useContext(LangContext)
+    const { isBtcWallet, createUTXO, feeRate } = useBtcWallet()
+    const { getUTXO, buildLeapTx, leap } = useLeapXudtToLayer1()
 
     const [step, setStep] = useState(1)
     const [open, setOpen] = useState(false)
@@ -48,10 +48,10 @@ export default function DialogLeapXudtToLayer1({
     const [txError, setTxError] = useState("")
     const [buildError, setBuildError] = useState("")
 
-    const {data: xudtBalance, status: xudtBalenceStatus} = useXudtBalance(addresses, token)
+    const { data: xudtBalance, status: xudtBalenceStatus } = useXudtBalance(addresses, token)
 
     useEffect(() => {
-        ;(async () => {
+        ; (async () => {
             if (step !== 2 || !isBtcWallet || !toBtcAddress) {
                 setUtxos([])
                 return
@@ -59,7 +59,7 @@ export default function DialogLeapXudtToLayer1({
 
             setBusy(true)
             try {
-                const utxos = await getUTXO({btcAddress: toBtcAddress})
+                const utxos = await getUTXO({ btcAddress: toBtcAddress })
                 setUtxos(utxos)
             } finally {
                 setBusy(false)
@@ -110,9 +110,10 @@ export default function DialogLeapXudtToLayer1({
             setBuildError('')
             setTx(tx)
             setStep(3)
-        } catch (e:any) {
+        } catch (e: any) {
             console.error(e)
-            setBuildError(e.message)
+            const message = e.message.includes("The address has no empty cells") ? "Insufficient ckb balance" : e.message
+            setBuildError(message)
         } finally {
             setBusy(false)
         }
@@ -187,7 +188,7 @@ export default function DialogLeapXudtToLayer1({
     }
 
     const [fee, setFee] = useState("0")
-    const {client} = useCcc()
+    const { client } = useCcc()
     useEffect(() => {
         const calculateFee = async () => {
             if (!tx) return
@@ -229,7 +230,7 @@ export default function DialogLeapXudtToLayer1({
                                         }}
                                         className="flex flex-row items-center justify-center text-xl cursor-pointer h-[24px] w-[24px] rounded-full bg-gray-100"
                                     >
-                                        <i className="uil-times text-gray-500"/>
+                                        <i className="uil-times text-gray-500" />
                                     </div>
                                 </div>
                                 <div
@@ -303,12 +304,12 @@ export default function DialogLeapXudtToLayer1({
                             <>
                                 <div className="font-semibold mb-1">{lang["Select_An_UTXO_To_Leap"]}</div>
                                 <div className="mb-2 flex flex-row items-center bg-orange-50 py-2 px-3 rounded-lg">
-                                    <i className="uil-info-circle mr-2 text-2xl align-middle text-orange-300"/>
+                                    <i className="uil-info-circle mr-2 text-2xl align-middle text-orange-300" />
                                     <div className="text-xs">
                                         {
                                             lang[
-                                                "It_Is_Recommended_To_Use_546_Satoshi_UTXO_To_Avoid_Being_Accidentally_Spent_And_wasted"
-                                                ]
+                                            "It_Is_Recommended_To_Use_546_Satoshi_UTXO_To_Avoid_Being_Accidentally_Spent_And_wasted"
+                                            ]
                                         }
                                         {isBtcWallet && (
                                             <span
@@ -318,7 +319,7 @@ export default function DialogLeapXudtToLayer1({
                                                 }}
                                             >
                                                 {lang["Create_A_New_UTXO"]}
-                                                <i className="uil-arrow-right"/>
+                                                <i className="uil-arrow-right" />
                                             </span>
                                         )}
                                     </div>
@@ -327,9 +328,9 @@ export default function DialogLeapXudtToLayer1({
                                     <div
                                         className="flex flex-row w-full flex-wrap mb-4 child h-[104px] [&>*:nth-child(2n)]:mr-0">
                                         <div
-                                            className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
+                                            className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
                                         <div
-                                            className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2"/>
+                                            className="loading-bg h-24 my-1 grow-0 rounded w-[calc(50%-4px)] my-1 border mr-2" />
                                     </div>
                                 )}
 
@@ -359,7 +360,7 @@ export default function DialogLeapXudtToLayer1({
                                                             Tx: {shortTransactionHash(uxto.txid)}
                                                         </a>
                                                         <div className="flex flex-row items-center p-2">
-                                                            <TokenIcon size={28} symbol={"BTC"}/>
+                                                            <TokenIcon size={28} symbol={"BTC"} />
                                                             <div className="text-sm">
                                                                 <div>BTC</div>
                                                                 <div className="font-semibold">
