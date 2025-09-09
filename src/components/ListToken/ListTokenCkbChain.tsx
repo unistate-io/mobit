@@ -18,6 +18,7 @@ import {MarketContext} from "@/providers/MarketProvider/MarketProvider"
 import BigNumber from "bignumber.js"
 import {InternalTokenBalance} from "@/serves/useInternalAssets"
 import {useNavigate} from "react-router-dom"
+import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
 
 export interface TokenBalance extends TokenInfoWithAddress {
     amount: string
@@ -40,6 +41,7 @@ export default function ListToken({
     const {isBtcWallet} = useBtcWallet()
     const {prices, currCurrency, rates, currencySymbol} = useContext(MarketContext)
     const navigate = useNavigate()
+    const { network } = useContext(CKBContext)
     const isSupportSwap = useCallback(
         (token: TokenBalance) => {
             if (token.chain === "btc" || token.chain === "evm") return ""
@@ -219,7 +221,7 @@ export default function ListToken({
                                                         content={close => {
                                                             return (
                                                                 <div className="flex flex-col">
-                                                                    {!!typeHash && (
+                                                                    {!!typeHash && network === "mainnet" && (
                                                                         <TooltipItem
                                                                             tip={lang["Swap tokens via UTXO Swap"]}
                                                                         >
@@ -302,7 +304,7 @@ export default function ListToken({
                                                 </>
                                             )}
 
-                                            {item.symbol === "CKB" && (
+                                            {item.symbol === "CKB" && network === "mainnet" && (
                                                 <>
                                                     <TooltipItem tip={lang["Swap tokens via UTXO Swap"]}>
                                                         <div
