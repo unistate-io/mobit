@@ -34,7 +34,7 @@ export default function TokenPage() {
     const {data: tokenInfo, status: infoStatus} = useTokenInfo(tokenid!)
     const {data: xudtBalance, status: xudtBalanceStatus} = useXudtBalance(addresses, tokenInfo || undefined)
     const {data: historyData, status: historyDataStatus} = useTokenTransactions(tokenInfo, address, 10)
-    const {data: rgbppHistory, status: rgbppHistoryStatus} = useTransactionsHistory(btcAddress)
+    const {data: rgbppHistory, status: rgbppHistoryStatus} = useTransactionsHistory(btcAddress, 20)
     const {xudts: rgbppXudts, status: rgbppXudtsStatus} = useLayer1Assets(btcAddress)
 
     const rgbppBalance = useMemo(() => {
@@ -42,6 +42,20 @@ export default function TokenPage() {
         const target = rgbppXudts.find(x => x.symbol === tokenInfo?.symbol)
         return target?.amount || '0'
     }, [rgbppXudts, tokenInfo])
+
+    const filteredRgbppHistory = useMemo(() => {
+        const list = rgbppHistory.filter(item => {
+            return item.attributes.display_inputs.some(input => {
+                return input.extra_info?.symbol === tokenInfo?.symbol
+                || input.xudt_info?.symbol === tokenInfo?.symbol
+            })
+            || item.attributes.display_outputs.some(output => {
+                return output.extra_info?.symbol === tokenInfo?.symbol
+                || output.xudt_info?.symbol === tokenInfo?.symbol
+            })
+        })
+        return list.slice(0, 5)
+    }, [rgbppHistory, tokenInfo])
 
     useEffect(() => {
         if (!btcAddress) {
@@ -186,7 +200,7 @@ export default function TokenPage() {
             }
 
             {!!btcAddress && activeTab === 'rgbpp' &&
-                <ListTokenHistory data={rgbppHistory} status={rgbppHistoryStatus} address={address!}/>
+                <ListTokenHistory data={filteredRgbppHistory} status={rgbppHistoryStatus} address={btcAddress!}/>
             }
         </div>
     </div>
