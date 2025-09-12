@@ -18,6 +18,7 @@ export const TokenIcons:IconsUrl = {
     'USDT': 'https://ik.imagekit.io/soladata/041vywlb_vTdQI2CLS',
     'USDC': 'https://ik.imagekit.io/soladata/57yobknk_WoLp8Wvot',
     'USDI': '/images/usdi_logo.svg',
+    'RUSD': 'https://ik.imagekit.io/soladata/dtmij02t__UmkjT8YP',
 }
 
 export const ChainIcons:IconsUrl = {

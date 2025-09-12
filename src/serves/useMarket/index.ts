@@ -61,8 +61,20 @@ export default function useMarket() {
                     inserted_at: '',
                     updated_at: ''
                 }
+
+                const rusd = {
+                    id: 0,
+                    symbol: 'RUSD',
+                    price: 1,
+                    market_cap: 0,
+                    change_1h: 0,
+                    change_24h: 0,
+                    change_7d: 0,
+                    inserted_at: '',
+                    updated_at: ''
+                }
                 
-                setData([...deduplication, usdi]
+                setData([...deduplication, usdi, rusd]
                 )
                 setStatus("complete")
             })
