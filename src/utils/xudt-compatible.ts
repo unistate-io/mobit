@@ -36,11 +36,32 @@ export const RUSD_INFO_MAINNET = {
     }
 }
 
+export const RUSD_INFO_TESTNET = {
+    "block_number": "",
+    decimal: 8,
+    "defining_output_index": 1,
+    "defining_tx_hash": "",
+    "name": "RUSD",
+    "symbol": "RUSD",
+    "tx_timestamp": "",
+    "type_address_id":
+        "ckt1qqg5ya26q39l9m343jaf7tdpsl8f9ry3e4xus6fda5pn0maxwlfp5qv83lxx78cg6j8g0wcu8v74pqlj879rn3w4caj0y5a4twvc2fjrnvjru948",
+    "address_by_type_address_id": {
+        "address_id":
+            "ckt1qqg5ya26q39l9m343jaf7tdpsl8f9ry3e4xus6fda5pn0maxwlfp5qv83lxx78cg6j8g0wcu8v74pqlj879rn3w4caj0y5a4twvc2fjrnvjru948",
+        "script_args": "\\x878fcc6f1f08d48e87bb1c3b3d5083f23f8a39c5d5c764f253b55b998526439b",
+        "script_code_hash": "\\x1142755a044bf2ee358cba9f2da187ce928c91cd4dc8692ded0337efa677d21a",
+        "script_hash_type": 1
+    }
+}
+
 export const getXudtCompatibleInfo = (typeAddressId: string) => {
     if (typeAddressId === USDI_INFO_MAINNET.type_address_id) {
         return USDI_INFO_MAINNET
     } else if (typeAddressId === RUSD_INFO_MAINNET.type_address_id) {
         return RUSD_INFO_MAINNET
+    } else if (typeAddressId === RUSD_INFO_TESTNET.type_address_id) {
+        return RUSD_INFO_TESTNET
     } else {
         return null
     }
