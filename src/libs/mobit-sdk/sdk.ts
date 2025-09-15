@@ -599,45 +599,47 @@ export class RgbppSDK {
       successfulQueries++;
 
       // Process XUDT cells (expecting 0 or 1 from the query by PK)
-      for (const rawCell of response.xudt_cells) {
-        try {
-          const processedCell = this.processRawXudtCell(rawCell);
-          processedXudtCells.push(processedCell);
-          processedCellsCount++;
-        } catch (processingError) {
-          console.error(
-            `[RgbppSDK] Error processing XUDT Cell ${parseHexFromGraphQL(
-              rawCell.tx_hash,
-            )}:${rawCell.output_index}:`,
-            processingError,
-          );
-        }
-      }
-
-      // Process Spore actions (potentially multiple per tx)
-      for (const rawAction of response.spore_actions) {
-        try {
-          const processedAction = this.processRawSporeAction(rawAction);
-
-          // Create a unique key using combination of tx_hash and action-specific identifiers
-          // This allows multiple actions per transaction as documented in the schema
-          const sporeId = parseHexFromGraphQL(rawAction.spore_id);
-          const clusterId = parseHexFromGraphQL(rawAction.cluster_id);
-          const actionType = rawAction.action_type;
-
-          // Use a combination that uniquely identifies each action within a transaction
-          const uniqueKey = `${processedAction.tx_hash}:${actionType}:${sporeId || "null"}:${clusterId || "null"}`;
-
-          if (!processedSporeActionsMap.has(uniqueKey)) {
-            processedSporeActionsMap.set(uniqueKey, processedAction);
-            processedActionsCount++;
+      if (response.spore_actions.length === 0) {
+        for (const rawCell of response.xudt_cells) {
+          try {
+            const processedCell = this.processRawXudtCell(rawCell);
+            processedXudtCells.push(processedCell);
+            processedCellsCount++;
+          } catch (processingError) {
+            console.error(
+              `[RgbppSDK] Error processing XUDT Cell ${parseHexFromGraphQL(
+                rawCell.tx_hash,
+              )}:${rawCell.output_index}:`,
+              processingError,
+            );
           }
-        } catch (processingError) {
-          const actionTxHash = parseHexFromGraphQL(rawAction.tx_hash);
-          console.error(
-            `[RgbppSDK] Error processing Spore Action from tx ${actionTxHash}:`,
-            processingError,
-          );
+        }
+      } else {
+        // Process Spore actions (potentially multiple per tx)
+        for (const rawAction of response.spore_actions) {
+          try {
+            const processedAction = this.processRawSporeAction(rawAction);
+
+            // Create a unique key using combination of tx_hash and action-specific identifiers
+            // This allows multiple actions per transaction as documented in the schema
+            const sporeId = parseHexFromGraphQL(rawAction.spore_id);
+            const clusterId = parseHexFromGraphQL(rawAction.cluster_id);
+            const actionType = rawAction.action_type;
+
+            // Use a combination that uniquely identifies each action within a transaction
+            const uniqueKey = `${processedAction.tx_hash}:${actionType}:${sporeId || "null"}:${clusterId || "null"}`;
+
+            if (!processedSporeActionsMap.has(uniqueKey)) {
+              processedSporeActionsMap.set(uniqueKey, processedAction);
+              processedActionsCount++;
+            }
+          } catch (processingError) {
+            const actionTxHash = parseHexFromGraphQL(rawAction.tx_hash);
+            console.error(
+              `[RgbppSDK] Error processing Spore Action from tx ${actionTxHash}:`,
+              processingError,
+            );
+          }
         }
       }
     }
