@@ -75,8 +75,8 @@ const queryAssets = async (
             }
             
             list.xudts.push({
-                name: info?.name || "UNKNOWN ASSET",
-                symbol: info?.symbol || "",
+                name: info?.name || "",
+                symbol: info?.symbol || "UNKNOWN ASSET",
                 decimal: info?.decimal || 0,
                 type_address_id: cells[0].type_address_id,
                 amount: balance.toString(),

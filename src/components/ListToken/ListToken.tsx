@@ -1,5 +1,5 @@
 import TokenIcon from "../TokenIcon/TokenIcon"
-import {useCallback, useContext, useState} from "react"
+import {useCallback, useContext, useMemo, useState} from "react"
 import {toDisplay} from "@/utils/number_display"
 import DialogCkbTransfer from "@/components/Dialogs/DialogCkbTransfer/DialogCkbTransfer"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
@@ -48,6 +48,12 @@ export default function ListToken({
     const {isBtcWallet} = useBtcWallet()
     const {prices, currCurrency, rates, currencySymbol} = useContext(MarketContext)
     const navigate = useNavigate()
+
+    const displayData = useMemo(() => {
+        const unknownAsset = data.filter(item => item.symbol === "UNKNOWN ASSET")
+        const otherAssets = data.filter(item => item.symbol !== "UNKNOWN ASSET")
+        return [...otherAssets, ...unknownAsset, ]
+    }, [data])
 
     const isSupportSwap = useCallback(
         (token: TokenBalance) => {
@@ -158,7 +164,7 @@ export default function ListToken({
                 )}
 
                 {status !== "loading" &&
-                    list.map((item, index) => {
+                    displayData.map((item, index) => {
                         const typeHash = isSupportSwap(item)
 
                         return (
