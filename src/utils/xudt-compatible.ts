@@ -17,6 +17,25 @@ export const USDI_INFO_MAINNET = {
     }
 }
 
+export const USDI_INFO_TESTNET = {
+    "block_number": "",
+    decimal: 6,
+    "defining_output_index": 1,
+    "defining_tx_hash": "",
+    "name": "USDI",
+    "symbol": "USDI",
+    "tx_timestamp": "",
+    "type_address_id":
+        "ckt1qrxfmse77g6wzj783rzr5jzg2449lvtyqxsyvchu2hdehvspnpcrwqt3l5vctv5hr2vs8exca5x4nen3q9nfs5shegrgzsmcswphhpsk9u9cl3cr",
+    "address_by_type_address_id": {
+        "address_id":
+            "ckt1qrxfmse77g6wzj783rzr5jzg2449lvtyqxsyvchu2hdehvspnpcrwqt3l5vctv5hr2vs8exca5x4nen3q9nfs5shegrgzsmcswphhpsk9u9cl3cr",
+        "script_args": "\\x71fd1985b2971a9903e4d8ed0d59e6710166985217ca0681437883837b86162f",
+        "script_code_hash": "\\xcc9dc33ef234e14bc788c43a4848556a5fb16401a04662fc55db9bb201987037",
+        "script_hash_type": 1
+    }
+}
+
 export const RUSD_INFO_MAINNET = {
     "block_number": "",
     decimal: 8,
@@ -62,6 +81,8 @@ export const getXudtCompatibleInfo = (typeAddressId: string) => {
         return RUSD_INFO_MAINNET
     } else if (typeAddressId === RUSD_INFO_TESTNET.type_address_id) {
         return RUSD_INFO_TESTNET
+    } else if (typeAddressId === USDI_INFO_TESTNET.type_address_id) {
+        return USDI_INFO_TESTNET
     } else {
         return null
     }
