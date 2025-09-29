@@ -76,7 +76,7 @@ export default function MarketPage() {
                                 </div>
                             </td>
                             <td className="py-4 text-center px-4 text-lg">${item.price}</td>
-                            <td className="py-4 text-lg">${toDisplay(item.market_cap + '', 0, true, 0)}</td>
+                            <td className="py-4 text-lg">{item.market_cap ? '$' + toDisplay(item.market_cap + '', 0, true, 0) : '--'}</td>
                             <td className="py-4 text-right text-lg"><DisPlayChange change={item.change_24h}/></td>
                         </tr>
                     })}
@@ -101,7 +101,7 @@ export default function MarketPage() {
 
                         <div>
                             <div className="text-sm">{lang['MarketCap']}</div>
-                            <div className="text-lg font-semibold">${toDisplay(item.market_cap + '', 0, true, 0)}</div>
+                            <div className="text-lg font-semibold">{item.market_cap ? '$' + toDisplay(item.market_cap + '', 0, true, 0) : '--'}</div>
                         </div>
                     </div>
                     <div className="flex flex-row items-center">
