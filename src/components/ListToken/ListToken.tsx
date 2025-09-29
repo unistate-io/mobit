@@ -119,7 +119,7 @@ export default function ListToken({
 
     const calculatePrice = (token: TokenBalance) => {
         let value = toDisplay(
-            BigNumber("1").times(prices[token.symbol].toString()).times(rates[currCurrency.toUpperCase()]).toString(),
+            BigNumber("1").times(prices[token.symbol.toUpperCase()].toString()).times(rates[currCurrency.toUpperCase()]).toString(),
             0,
             true,
             4

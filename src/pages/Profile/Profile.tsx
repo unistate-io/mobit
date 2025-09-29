@@ -1,27 +1,27 @@
-import { UserContext } from "@/providers/UserProvider/UserProvider"
-import { useContext, useEffect, useMemo, useState } from "react"
+import {UserContext} from "@/providers/UserProvider/UserProvider"
+import {useContext, useEffect, useMemo, useState} from "react"
 import Background from "@/components/Background/Background"
 import Avatar from "@/components/Avatar/Avatar"
-import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
-import { TokenBalance } from "@/components/ListToken/ListToken"
+import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import {TokenBalance} from "@/components/ListToken/ListToken"
 import useAllXudtBalance from "@/serves/useAllXudtBalance"
 import useCkbBalance from "@/serves/useCkbBalance"
-import { ToastContext, ToastType } from "@/providers/ToastProvider/ToastProvider"
+import {ToastContext, ToastType} from "@/providers/ToastProvider/ToastProvider"
 import useTransactions from "@/serves/useTransactionsHistory"
 import useTransactionsHistory from "@/serves/useTransactionsHistory"
 import ListHistory from "@/components/ListHistory/ListHistory"
 import useSpores from "@/serves/useSpores"
 import ListDOBs from "@/components/ListDOBs/ListDOBs"
-import { LangContext } from "@/providers/LangProvider/LangProvider"
+import {LangContext} from "@/providers/LangProvider/LangProvider"
 import useLayer1Assets from "@/serves/useLayer1Assets"
 import ProfileAddresses from "@/components/ProfileAddresses/ProfileAddresses"
 import useBtcTransactionsHistory from "@/serves/useBtcTransactionsHistory"
 import ListBtcHistory from "@/components/ListBtcHistory/ListBtcHistory"
-import { isBtcAddress } from "@/utils/common"
+import {isBtcAddress} from "@/utils/common"
 import useDotbit from "@/serves/useDotbit"
 import ListDotBit from "@/components/ListDotBit/ListDotBit"
 import DialogReceive from "@/components/Dialogs/DialogReceive/DialogReceive"
-import { Link } from "react-router-dom"
+import {Link} from "react-router-dom"
 import NetWorth from "@/components/NetWorth"
 import Button from "@/components/Form/Button/Button"
 import useInternalAssets from "@/serves/useInternalAssets"
@@ -30,10 +30,10 @@ import BabylonBalance from "@/components/BabylonBalance/BabylonBalance"
 import ListTokenNew from "@/components/ListToken"
 
 export default function Profile() {
-    const { address, isOwner, theme } = useContext(UserContext)
-    const { internalAddress, addresses, network } = useContext(CKBContext)
-    const { showToast } = useContext(ToastContext)
-    const { lang } = useContext(LangContext)
+    const {address, isOwner, theme} = useContext(UserContext)
+    const {internalAddress, addresses, network} = useContext(CKBContext)
+    const {showToast} = useContext(ToastContext)
+    const {lang} = useContext(LangContext)
 
     // ui state
     const [selectedAddress, setSelectedAddress] = useState<string | undefined>(address)
@@ -65,8 +65,8 @@ export default function Profile() {
         return !!addresses && addresses.includes(address!) ? addresses : [address!]
     }, [addresses, address])
 
-    const { data: xudtData, status: xudtDataStatus, error: xudtDataErr } = useAllXudtBalance(queryAddress)
-    const { data: ckbData, status: ckbDataStatus, error: ckbDataErr } = useCkbBalance(queryAddress)
+    const {data: xudtData, status: xudtDataStatus, error: xudtDataErr} = useAllXudtBalance(queryAddress)
+    const {data: ckbData, status: ckbDataStatus, error: ckbDataErr} = useCkbBalance(queryAddress)
     const {
         data: historyData,
         status: historyDataStatus,
@@ -88,7 +88,7 @@ export default function Profile() {
         error: layer1DataErr
     } = useLayer1Assets(btcAddress, true)
 
-    const { data: btcHistory, status: btcHistoryStatus } = useBtcTransactionsHistory(btcAddress)
+    const {data: btcHistory, status: btcHistoryStatus} = useBtcTransactionsHistory(btcAddress)
 
     const {
         data: rgbppHistory,
@@ -98,11 +98,11 @@ export default function Profile() {
         loadAll: rgbppHistoryLoadAll
     } = useTransactionsHistory(btcAddress)
 
-    const { status: internalAssetsDataStatus, data: internalAssetsData } = useInternalAssets(
+    const {status: internalAssetsDataStatus, data: internalAssetsData} = useInternalAssets(
         isOwner ? internalAddress : undefined
     )
 
-    const { domains, status: domainStatus } = useDotbit(address)
+    const {domains, status: domainStatus} = useDotbit(address)
 
     const tokensStatus = useMemo(() => {
         if (
@@ -244,11 +244,11 @@ export default function Profile() {
                     <div className="absolute right-3 top-[12px]">
                         {network === "mainnet" && (
                             <Link
-                                to="/trade"
-                                className="mr-4 border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex"
-                            >
-                                {lang["Swap"]}
-                            </Link>
+                            to="/trade"
+                            className="mr-4 border rounded-3xl z-10 cursor-pointer px-6 py-1 font-semibold bg-neutral-100 hover:bg-neutral-200 shadow-sm justify-center items-center inline-flex"
+                        >
+                            {lang["Swap"]}
+                        </Link>
                         )}
                         <DialogReceive
                             addresses={

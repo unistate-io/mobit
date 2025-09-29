@@ -94,7 +94,7 @@ export default function ListToken({
             currencySymbol +
             toDisplay(
                 BigNumber(toDisplay(token.amount, token.decimal!))
-                    .times(prices[token.symbol].toString())
+                    .times(prices[token.symbol.toUpperCase()].toString())
                     .times(rates[currCurrency.toUpperCase()])
                     .toString(),
                 0,
@@ -106,7 +106,7 @@ export default function ListToken({
 
     const calculatePrice = (token: TokenBalance) => {
         let value = toDisplay(
-            BigNumber("1").times(prices[token.symbol].toString()).times(rates[currCurrency.toUpperCase()]).toString(),
+            BigNumber("1").times(prices[token.symbol.toUpperCase()].toString()).times(rates[currCurrency.toUpperCase()]).toString(),
             0,
             true,
             4
@@ -176,7 +176,7 @@ export default function ListToken({
                                 </div>
                                 <>
                                     <div className="flex-row hidden items-center sm:flex">
-                                        {prices[item.symbol] ? calculatePrice(item) : "--"}
+                                        {prices[item.symbol.toUpperCase()] ? calculatePrice(item) : "--"}
                                     </div>
                                     <div
                                         className={`flex items-center ${!!addresses ? "justify-start" : "justify-end sm:justify-start"
@@ -188,7 +188,7 @@ export default function ListToken({
                                         className={`flex-row hidden items-center sm:flex ${!!addresses ? "justify-start" : "justify-end"
                                             }`}
                                     >
-                                        {prices[item.symbol] ? calculateValue(item) : "--"}
+                                        {prices[item.symbol.toUpperCase()] ? calculateValue(item) : "--"}
                                     </div>
                                     {!!addresses && addresses.length && (
                                         <div
