@@ -89,6 +89,7 @@ export default function DialogEvmTransfer({children, className, network}: { chil
             hasError = true
         } else {
             setAmountError('')
+            setFormData({...formData, amount: Number(formData.amount).toString()})
         }
 
         if (formData.network === '') {
@@ -203,10 +204,22 @@ export default function DialogEvmTransfer({children, className, network}: { chil
                                         </div>
                                     </div>
                                     <Input value={formData.amount}
-                                           type={"number"}
+                                           type={"text"}
                                            placeholder={lang['Transfer amount']}
                                            onChange={e => {
-                                               setFormData({...formData, amount: e.target.value})
+                                            let value = e.target.value
+                                            value = value.replace(/[^0-9.]/g, '')
+                                            // 防止连续的小数点
+                                            value = value.replace(/\.{2,}/g, '.')
+                                            // 只允许一个小数点，如果有多个小数点，只保留第一个
+                                            const parts = value.split('.')
+                                            if (parts.length > 2) {
+                                                value = parts[0] + '.' + parts.slice(1).join('')
+                                            }
+                                            if (value.startsWith('.')) {
+                                                value = '0' + value
+                                            }
+                                               setFormData({...formData, amount: value})
                                            }}
                                            endIcon={<div className="cursor-pointer text-[#6CD7B2]"
                                                          onClick={setMaxAmount}>Max</div>}

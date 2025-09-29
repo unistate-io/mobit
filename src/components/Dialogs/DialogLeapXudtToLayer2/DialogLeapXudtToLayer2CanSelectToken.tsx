@@ -108,6 +108,7 @@ export default function DialogLeapXudtToLayer2CanSelectToken({children, classNam
             setAmountError('Please enter a valid amount')
             return
         } else {
+            setFormData({...formData, amount: Number(formData.amount).toString()})
             setAmountError('')
         }
 
@@ -140,6 +141,11 @@ export default function DialogLeapXudtToLayer2CanSelectToken({children, classNam
     const handleLeap = async () => {
         setBusy(true)
         setTransactionError('')
+        if (btcFeeRate === 0) {
+            setTransactionError("Please enter a valid fee rate")
+            setBusy(false)
+            return
+        }
         try {
             const xudtType = tokenInfoToScript(token!)
             if (!xudtType) {
@@ -255,10 +261,22 @@ export default function DialogLeapXudtToLayer2CanSelectToken({children, classNam
                                     </div>
                                     <Input
                                         value={formData.amount}
-                                        type={"number"}
+                                        type={"text"}
                                         placeholder={lang["Transfer amount"]}
                                         onChange={e => {
-                                            setFormData({...formData, amount: e.target.value})
+                                            let value = e.target.value
+                                            value = value.replace(/[^0-9.]/g, '')
+                                            // 防止连续的小数点
+                                            value = value.replace(/\.{2,}/g, '.')
+                                            // 只允许一个小数点，如果有多个小数点，只保留第一个
+                                            const parts = value.split('.')
+                                            if (parts.length > 2) {
+                                                value = parts[0] + '.' + parts.slice(1).join('')
+                                            }
+                                            if (value.startsWith('.')) {
+                                                value = '0' + value
+                                            }
+                                            setFormData({...formData, amount: value})
                                         }}
                                         endIcon={
                                             <div className="cursor-pointer text-[#6CD7B2]" onClick={setMaxAmount}>
@@ -333,10 +351,22 @@ export default function DialogLeapXudtToLayer2CanSelectToken({children, classNam
                                             <Input
                                                 value={btcFeeRate}
                                                 className={"w-[100px] text-center font-semibold"}
-                                                type={"number"}
+                                                type={"text"}
                                                 placeholder={lang["fee rate"]}
                                                 onChange={e => {
-                                                    setBtcFeeRate(Number(e.target.value))
+                                                    let value = e.target.value
+                                                    value = value.replace(/[^0-9.]/g, '')
+                                                    // 防止连续的小数点
+                                                    value = value.replace(/\.{2,}/g, '.')
+                                                    // 只允许一个小数点，如果有多个小数点，只保留第一个
+                                                    const parts = value.split('.')
+                                                    if (parts.length > 2) {
+                                                        value = parts[0] + '.' + parts.slice(1).join('')
+                                                    }
+                                                    if (value.startsWith('.')) {
+                                                        value = '0' + value
+                                                    }
+                                                    setBtcFeeRate(Number(value))
                                                 }}
                                             />
                                             <span className="ml-2">Sat/vB</span>

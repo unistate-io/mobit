@@ -54,19 +54,15 @@ export default function DialogLeapXudtToLayer2({
     const [amountError, setAmountError] = React.useState<string>("")
     const [transactionError, setTransactionError] = React.useState<string>("")
 
-    const {xudts: xudtsBalance, status: xudtsBalanceStatus} = useLayer1Assets(open ? internalAddress : undefined)
+    const {status: xudtsBalanceStatus} = useLayer1Assets(open ? internalAddress : undefined)
 
     const balance = useMemo(() => {
         if (xudtsBalanceStatus !== "complete") {
             return "0"
         }
 
-        const targetToken = xudtsBalance.find(
-            t =>
-                t.defining_tx_hash === token.defining_tx_hash && t.defining_output_index === token.defining_output_index
-        )
         return !!token ? token.amount : "0"
-    }, [xudtsBalance, xudtsBalanceStatus, token])
+    }, [xudtsBalanceStatus, token])
 
     useEffect(() => {
         if (open) {
@@ -117,6 +113,7 @@ export default function DialogLeapXudtToLayer2({
             return
         } else {
             setAmountError("")
+            setFormData({...formData, amount: Number(formData.amount).toString()})
         }
 
         setBusy(true)
@@ -148,6 +145,11 @@ export default function DialogLeapXudtToLayer2({
     const handleLeap = async () => {
         setBusy(true)
         setTransactionError("")
+        if (btcFeeRate === 0) {
+            setTransactionError("Please enter a valid fee rate")
+            setBusy(false)
+            return
+        }
         try {
             const xudtType = tokenInfoToScript(token)
             if (!xudtType) {
@@ -238,10 +240,22 @@ export default function DialogLeapXudtToLayer2({
                                     </div>
                                     <Input
                                         value={formData.amount}
-                                        type={"number"}
+                                        type={"text"}
                                         placeholder={lang["Transfer amount"]}
                                         onChange={e => {
-                                            setFormData({...formData, amount: e.target.value})
+                                            let value = e.target.value
+                                            value = value.replace(/[^0-9.]/g, '')
+                                            // 防止连续的小数点
+                                            value = value.replace(/\.{2,}/g, '.')
+                                            // 处理多个小数点，只保留第一个小数点
+                                            const parts = value.split('.')
+                                            if (parts.length > 2) {
+                                                value = parts[0] + '.' + parts.slice(1).join('')
+                                            }
+                                            if (value.startsWith('.')) {
+                                                value = '0' + value
+                                            }
+                                            setFormData({...formData, amount: value})
                                         }}
                                         endIcon={
                                             <div className="cursor-pointer text-[#6CD7B2]" onClick={setMaxAmount}>
@@ -316,10 +330,22 @@ export default function DialogLeapXudtToLayer2({
                                             <Input
                                                 value={btcFeeRate}
                                                 className={"w-[100px] text-center font-semibold"}
-                                                type={"number"}
+                                                type={"text"}
                                                 placeholder={lang["fee rate"]}
                                                 onChange={e => {
-                                                    setBtcFeeRate(Number(e.target.value))
+                                                    let value = e.target.value
+                                                    value = value.replace(/[^0-9.]/g, '')
+                                                    // 防止连续的小数点
+                                                    value = value.replace(/\.{2,}/g, '.')
+                                                    // 处理多个小数点，只保留第一个小数点
+                                                    const parts = value.split('.')
+                                                    if (parts.length > 2) {
+                                                        value = parts[0] + '.' + parts.slice(1).join('')
+                                                    }
+                                                    if (value.startsWith('.')) {
+                                                        value = '0' + value
+                                                    }
+                                                    setBtcFeeRate(Number(value))
                                                 }}
                                             />
                                             <span className="ml-2">Sat/vB</span>

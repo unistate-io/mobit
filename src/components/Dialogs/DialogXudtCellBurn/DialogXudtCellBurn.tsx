@@ -64,7 +64,7 @@ export default function DialogXudtCellBurn({
             return
         }
 
-        if (Number(balance) * 10 ** xudt!.decimal < Number(amount)) {
+        if (Number(balance) / (10 ** xudt!.decimal) < Number(amount)) {
             setAmountError("Insufficient balance")
             return
         }
@@ -72,7 +72,7 @@ export default function DialogXudtCellBurn({
         ;(async () => {
             setSending(true)
             try {
-                const tx = await createBurnXudtCellTx(BigInt(amount), 2000)
+                const tx = await createBurnXudtCellTx(BigInt(amount) * BigInt(10 ** xudt!.decimal), 2000)
                 console.log("tx: ", tx)
                 setRawTx(tx)
                 setStep(2)
@@ -164,10 +164,22 @@ export default function DialogXudtCellBurn({
                                     {lang["Input"]} {lang["Amount"]}
                                 </div>
                                 <Input
-                                    value={Number(amount) / 10 ** xudt!.decimal}
-                                    type={"number"}
+                                    value={amount}
+                                    type={"text"}
                                     onChange={e => {
-                                        setAmount((Number(e.target.value) * 10 ** xudt!.decimal).toString())
+                                        let value = e.target.value
+                                        value = value.replace(/[^0-9.]/g, '')
+                                        // 防止连续的小数点
+                                        value = value.replace(/\.{2,}/g, '.')
+                                        // 只允许一个小数点，如果有多个小数点，只保留第一个
+                                        const parts = value.split('.')
+                                        if (parts.length > 2) {
+                                            value = parts[0] + '.' + parts.slice(1).join('')
+                                        }
+                                        if (value.startsWith('.')) {
+                                            value = '0' + value
+                                        }
+                                        setAmount(value)
                                     }}
                                     endIcon={
                                         <div
@@ -175,7 +187,7 @@ export default function DialogXudtCellBurn({
                                             onClick={e => {
                                                 if (status === "complete") {
                                                     console.log(Number(balance), xudt!.decimal)
-                                                    setAmount(balance)
+                                                    setAmount((Number(balance) / 10 ** xudt!.decimal).toString())
                                                 }
                                             }}
                                         >

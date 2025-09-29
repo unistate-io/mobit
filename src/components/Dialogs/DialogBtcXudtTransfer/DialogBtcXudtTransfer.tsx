@@ -1,21 +1,21 @@
-import React, {ReactNode, useContext, useEffect, useMemo, useState} from "react"
+import React, { ReactNode, useContext, useEffect, useMemo, useState } from "react"
 import Input from "@/components/Form/Input/Input"
 import * as Dialog from "@radix-ui/react-dialog"
 import Button from "@/components/Form/Button/Button"
-import {isBtcAddress, shortTransactionHash} from "@/utils/common"
+import { isBtcAddress, shortTransactionHash } from "@/utils/common"
 import BigNumber from "bignumber.js"
-import {toDisplay} from "@/utils/number_display"
+import { toDisplay } from "@/utils/number_display"
 import CopyText from "@/components/CopyText/CopyText"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
-import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
+import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
 import useBtcXudtTransfer from "@/serves/useBtcXudtTransfer"
 import useBtcWallet from "@/serves/useBtcWallet"
-import {LangContext} from "@/providers/LangProvider/LangProvider"
+import { LangContext } from "@/providers/LangProvider/LangProvider"
 
 import * as dayjsLib from "dayjs"
-import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
+import { tokenInfoToScript, TokenInfoWithAddress } from "@/utils/graphql/types"
 import useLayer1Assets from "@/serves/useLayer1Assets"
-import {TokenBalance} from "@/components/ListToken/ListToken"
+import { TokenBalance } from "@/components/ListToken/ListToken"
 
 const dayjs: any = dayjsLib
 
@@ -34,21 +34,21 @@ export default function DialogBtcXudtTransfer({
     token: TokenInfoWithAddress
     className?: string
 }) {
-    const {signAndSend} = useBtcXudtTransfer()
-    const {config, internalAddress, network} = useContext(CKBContext)
+    const { signAndSend } = useBtcXudtTransfer()
+    const { config, internalAddress, network } = useContext(CKBContext)
     const [open, setOpen] = useState(false)
-    const {feeRate} = useBtcWallet()
-    const {lang} = useContext(LangContext)
+    const { feeRate } = useBtcWallet()
+    const { lang } = useContext(LangContext)
 
     const btcAddress = useMemo(() => {
         if (!internalAddress) return undefined
         return isBtcAddress(internalAddress, network === "mainnet") ? internalAddress : undefined
     }, [internalAddress])
 
-    const {xudts, status} = useLayer1Assets(open && !!btcAddress ? btcAddress : undefined)
+    const { xudts, status } = useLayer1Assets(open && !!btcAddress ? btcAddress : undefined)
 
     const xudtBalance = useMemo<TokenBalance>(() => {
-        const target = xudts?.find(x => x.symbol === token.symbol)
+        const target = xudts?.find(x => x.symbol.toLowerCase() === token.symbol.toLowerCase())
         return (
             target || {
                 ...token,
@@ -87,6 +87,7 @@ export default function DialogBtcXudtTransfer({
             hasError = true
         } else {
             setFromError("")
+            setFormData({ ...formData, amount: Number(formData.amount).toString() })
         }
 
         if (formData.to === "") {
@@ -124,8 +125,8 @@ export default function DialogBtcXudtTransfer({
             ...formData,
             amount: xudtBalance
                 ? BigNumber(xudtBalance.amount)
-                      .dividedBy(10 ** token.decimal)
-                      .toString()
+                    .dividedBy(10 ** token.decimal)
+                    .toString()
                 : "0"
         })
     }
@@ -217,7 +218,7 @@ export default function DialogBtcXudtTransfer({
                                         placeholder={lang["Recipient address"]}
                                         type={"text"}
                                         onChange={e => {
-                                            setFormData({...formData, to: e.target.value})
+                                            setFormData({ ...formData, to: e.target.value })
                                         }}
                                     />
                                     <div className="font-normal text-red-400 mt-1 break-words">{toError}</div>
@@ -246,9 +247,21 @@ export default function DialogBtcXudtTransfer({
                                     <Input
                                         value={formData.amount}
                                         placeholder={lang["Transfer amount"]}
-                                        type={"number"}
+                                        type={"text"}
                                         onChange={e => {
-                                            setFormData({...formData, amount: e.target.value})
+                                            let value = e.target.value
+                                            value = value.replace(/[^0-9.]/g, '')
+                                            // 防止连续的小数点
+                                            value = value.replace(/\.{2,}/g, '.')
+                                            // 只允许一个小数点，如果有多个小数点，只保留第一个
+                                            const parts = value.split('.')
+                                            if (parts.length > 2) {
+                                                value = parts[0] + '.' + parts.slice(1).join('')
+                                            }
+                                            if (value.startsWith('.')) {
+                                                value = '0' + value
+                                            }
+                                            setFormData({ ...formData, amount: value })
                                         }}
                                         endIcon={
                                             <div className="cursor-pointer text-[#6CD7B2]" onClick={setMaxAmount}>
@@ -317,10 +330,22 @@ export default function DialogBtcXudtTransfer({
                                             <Input
                                                 value={btcFeeRate}
                                                 className={"w-[100px] text-center font-semibold"}
-                                                type={"number"}
+                                                type={"text"}
                                                 placeholder={lang["fee rate"]}
                                                 onChange={e => {
-                                                    setBtcFeeRate(Number(e.target.value))
+                                                    let value = e.target.value
+                                                    value = value.replace(/[^0-9.]/g, '')
+                                                    // 防止连续的小数点
+                                                    value = value.replace(/\.{2,}/g, '.')
+                                                    // 只允许一个小数点，如果有多个小数点，只保留第一个
+                                                    const parts = value.split('.')
+                                                    if (parts.length > 2) {
+                                                        value = parts[0] + '.' + parts.slice(1).join('')
+                                                    }
+                                                    if (value.startsWith('.')) {
+                                                        value = '0' + value
+                                                    }
+                                                    setBtcFeeRate(Number(value))
                                                 }}
                                             />
                                             <span className="ml-2">Sat/vB</span>
