@@ -2,7 +2,7 @@ import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import useMarket from "@/serves/useMarket"
 import {toDisplay} from "@/utils/number_display"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
-import {useContext, useEffect, useState} from "react"
+import {useContext, useEffect, useState, useMemo} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import HomeActions from "@/components/HomeActions"
 
@@ -25,6 +25,13 @@ export default function MarketPage() {
             window.removeEventListener('resize', checkWindowSize)
         }
     }, []);
+
+    const marketToDisplay = useMemo(() => {
+        return data.filter((item) => {
+            console.log("item.symbol", item.symbol)
+            return item.symbol !== 'MATIC'
+        })
+    }, [data])
 
     return <div className="max-w-[--page-with] mx-auto px-3 mt-4 md:mt-10 mb-10">
         <div className="py-9 mb-4 px-4 flex flex-col justify-center items-center shadow rounded-lg overflow-hidden"
@@ -55,7 +62,7 @@ export default function MarketPage() {
             </>
         }
 
-        { data.length !== 0 && status !== 'loading' && showTable &&
+        { marketToDisplay.length !== 0 && status !== 'loading' && showTable &&
             <div className="shadow bg-white my-3 p-4 rounded-lg">
                 <table className="table w-full">
                     <thead>
@@ -67,7 +74,7 @@ export default function MarketPage() {
                     </tr>
                     </thead>
                     <tbody>
-                    {data?.map((item, index) => {
+                    {marketToDisplay?.map((item, index) => {
                         return <tr key={index}>
                             <td className="py-4 text-lg">
                                 <div className="flex flex-row items-center">
@@ -85,8 +92,8 @@ export default function MarketPage() {
             </div>
         }
 
-        {data.length !== 0 && status !== 'loading' && !showTable &&
-            data?.map((item, index) => {
+        {marketToDisplay.length !== 0 && status !== 'loading' && !showTable &&
+            marketToDisplay?.map((item, index) => {
                 return <div className="flex flex-col p-4 shadow rounded-lg bg-white mb-3" key={index}>
                     <div className="flex flex-row items-center mb-5">
                         <TokenIcon symbol={item.symbol} size={20}/>
@@ -119,7 +126,11 @@ export default function MarketPage() {
     </div>
 }
 
-export function DisPlayChange (props: {change: number, className?: string}) {
+export function DisPlayChange (props: {change?: number, className?: string}) {
+    if (!props.change) {
+        return <span className={`${props.className}`}>--</span>
+    }
+    
     const color = props.change > 0 ? 'text-green-500' : 'text-red-500'
     const text = props.change > 0 ? `+${(props.change).toFixed(2)}%` : `${(props.change).toFixed(2)}%`
 
