@@ -3108,7 +3108,7 @@
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.21.0.tgz#c65ae4262bdcfe415dbd4f64ec87676e4a56e2b5"
   integrity sha512-xfSkCAchbdG5PnbrKqFWwia4Bi61nH+wm8wLEqfHDyp7Y3dZzgqS2itV8i4gAq9pC2HsTpwyBC6Ds8VHZ96JlA==
 
-"@rgbpp-sdk/btc@0.7.0", "@rgbpp-sdk/btc@^0.7.0", "@rgbpp-sdk/btc@^0.7.1":
+"@rgbpp-sdk/btc@0.7.0", "@rgbpp-sdk/btc@0.7.3", "@rgbpp-sdk/btc@^0.7.0", "@rgbpp-sdk/btc@^0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@rgbpp-sdk/btc/-/btc-0.7.1.tgz#62a8ef57213dfee9a8b34b575c06f5aeb1912e57"
   integrity sha512-2P/ONSsUQdcTRZHBaxoAUYOaxySxdPeGEaYElQEl1+De49lvJp8QYm5b0aK/U+Qigz5adMfTKw2gZVSrTGLJ8A==
@@ -3124,7 +3124,7 @@
     lodash "^4.17.21"
     p-limit "^3.1.0"
 
-"@rgbpp-sdk/ckb@0.6.0", "@rgbpp-sdk/ckb@0.7.0", "@rgbpp-sdk/ckb@^0.7.0", "@rgbpp-sdk/ckb@^0.7.1":
+"@rgbpp-sdk/ckb@0.6.0", "@rgbpp-sdk/ckb@0.7.0", "@rgbpp-sdk/ckb@0.7.3", "@rgbpp-sdk/ckb@^0.7.0", "@rgbpp-sdk/ckb@^0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@rgbpp-sdk/ckb/-/ckb-0.7.1.tgz#3586fb4e852bf80e7912ffedb22d6cd502c977ac"
   integrity sha512-DsJImTdKNaR2jafacsJp+TVt1UbnIyG9NHqUZNMO8Jg/w66pg7Xk3PovBVL56ohlF0JahuVkbrzVDJZy9+A37g==
@@ -3141,7 +3141,7 @@
     camelcase-keys "^7.0.2"
     js-sha256 "^0.11.0"
 
-"@rgbpp-sdk/service@0.7.0", "@rgbpp-sdk/service@^0.7.0", "@rgbpp-sdk/service@^0.7.1":
+"@rgbpp-sdk/service@0.7.0", "@rgbpp-sdk/service@0.7.3", "@rgbpp-sdk/service@^0.7.0", "@rgbpp-sdk/service@^0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@rgbpp-sdk/service/-/service-0.7.1.tgz#d7bf9f2558417831587bf3f129509fd33f1be38c"
   integrity sha512-R8yBt8bFbCoHOX4Y0mxsscm+crquL9y6ZQjKkKQql8GYLdB5+HZlLmvK5rm0eH40LIijpX7oykABJJcrGRxFgA==
@@ -11489,6 +11489,18 @@ rgbpp@^0.7.0:
     "@rgbpp-sdk/btc" "0.7.0"
     "@rgbpp-sdk/ckb" "0.7.0"
     "@rgbpp-sdk/service" "0.7.0"
+
+rgbpp@^0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/rgbpp/-/rgbpp-0.7.3.tgz#3869d23311ac2c676ea45d8f837bc488911b9b23"
+  integrity sha512-AgjEZj5xoM3YOS2bDvINIEgUbMnEqosF5sl3Updm6oocJbkcripgZUJVOJFlzKbHFSIh4N4tPBHMJSBT7Ha1+Q==
+  dependencies:
+    "@ckb-lumos/base" "^0.22.2"
+    "@ckb-lumos/codec" "^0.22.2"
+    "@nervosnetwork/ckb-sdk-utils" "0.109.5"
+    "@rgbpp-sdk/btc" "0.7.3"
+    "@rgbpp-sdk/ckb" "0.7.3"
+    "@rgbpp-sdk/service" "0.7.3"
 
 rimraf@^3.0.0, rimraf@^3.0.2:
   version "3.0.2"
