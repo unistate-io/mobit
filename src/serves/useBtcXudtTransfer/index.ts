@@ -1,4 +1,4 @@
-import {BtcHelper, CkbHelper, transferCombined} from "mobit-sdk"
+import {BtcHelper, CkbHelper, transferCombined} from "@/libs/mobit-sdk"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {useContext} from "react"
 import useBtcWallet from "@/serves/useBtcWallet"

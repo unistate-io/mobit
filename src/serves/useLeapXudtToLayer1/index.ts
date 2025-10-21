@@ -1,4 +1,4 @@
-import {BtcHelper, CkbHelper, convertToTransaction, leapFromCkbToBtcTransaction} from "mobit-sdk"
+import {BtcHelper, CkbHelper, convertToTransaction, leapFromCkbToBtcTransaction} from "@/libs/mobit-sdk"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {useContext, useMemo} from "react"
 import {BtcApiUtxo} from "@rgbpp-sdk/service"

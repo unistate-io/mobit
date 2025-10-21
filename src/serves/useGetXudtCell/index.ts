@@ -3,7 +3,7 @@ import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
 import {Cell, config as lumosConfig, helpers, Indexer} from "@ckb-lumos/lumos"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {hashType} from "@/serves/useXudtTransfer/lib"
-import {CkbHelper, convertToTransaction, createMergeXudtTransaction, createBurnXudtTransaction} from "mobit-sdk"
+import {CkbHelper, convertToTransaction, createMergeXudtTransaction, createBurnXudtTransaction} from "@/libs/mobit-sdk"
 import {ccc} from "@ckb-ccc/connector-react"
 
 export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, addresses?: string[]) {

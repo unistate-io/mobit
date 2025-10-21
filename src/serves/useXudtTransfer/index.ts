@@ -2,7 +2,7 @@ import {useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {ccc} from "@ckb-ccc/connector-react"
 import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
-import {CkbHelper, convertToTransaction, createTransferXudtTransaction} from "mobit-sdk"
+import {CkbHelper, convertToTransaction, createTransferXudtTransaction} from "@/libs/mobit-sdk"
 
 export default function useXudtTransfer() {
     const {signer, network} = useContext(CKBContext)
