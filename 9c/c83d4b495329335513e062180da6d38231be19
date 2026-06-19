@@ -1,0 +1,20 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "9cc83d4b495329335513e062180da6d38231be19",
+  "prompts": {
+    "221989ef61991892": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fb5eb171-f289-4109-af3d-770f6fa417a2",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "jiangplus <jiang.plus.times@gmail.com>",
+      "total_additions": 438,
+      "total_deletions": 0,
+      "accepted_lines": 438,
+      "overriden_lines": 0
+    }
+  }
+}
