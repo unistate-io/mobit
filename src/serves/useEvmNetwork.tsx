@@ -7,7 +7,6 @@ export const SupportedChainMetadata = [
         name: "Ethereum",
         tokenSymbol: "ETH",
         chainId: "0x1",
-        rpcUrl: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://etherscan.io"]
     },
@@ -16,7 +15,6 @@ export const SupportedChainMetadata = [
         tokenSymbol: "ETH",
         name: "Base",
         chainId: "0x2105",
-        rpcUrl: `https://base-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://basescan.org"]
     },
@@ -25,7 +23,6 @@ export const SupportedChainMetadata = [
         tokenSymbol: "MATIC",
         name: "Matic",
         chainId: "0x89",
-        rpcUrl: `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
         blockExplorerUrls: ["https://polygonscan.com"]
     },
@@ -34,7 +31,6 @@ export const SupportedChainMetadata = [
         tokenSymbol: "ARB",
         name: "Arbitrum",
         chainId: "0xa4b1",
-        rpcUrl: `https://arbitrum-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://arbiscan.io"]
     },
@@ -43,7 +39,6 @@ export const SupportedChainMetadata = [
         tokenSymbol: "OP",
         name: "Optimism",
         chainId: "0xa",
-        rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://optimistic.etherscan.io"]
     }
@@ -55,7 +50,6 @@ export const SupportedTestnetChainMetadata = [
         name: "Ethereum",
         tokenSymbol: "ETH",
         chainId: "0xaa36a7",
-        rpcUrl: `https://sepolia.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://sepolia.etherscan.io/"]
     },
@@ -64,7 +58,6 @@ export const SupportedTestnetChainMetadata = [
         name: "Base",
         tokenSymbol: "ETH",
         chainId: "0x14a33",
-        rpcUrl: `https://base-sepolia.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://sepolia.basescan.org/"]
     },
@@ -73,7 +66,6 @@ export const SupportedTestnetChainMetadata = [
         name: "Matic",
         tokenSymbol: "MATIC",
         chainId: "0x13881",
-        rpcUrl: `https://polygon-amoy.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
         blockExplorerUrls: ["https://mumbai.polygonscan.com"]
     },
@@ -82,7 +74,6 @@ export const SupportedTestnetChainMetadata = [
         name: "Arbitrum",
         tokenSymbol: "ARB",
         chainId: "0x66eee",
-        rpcUrl: `https://arbitrum-sepolia.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://sepolia.arbiscan.io/"]
     },
@@ -91,21 +82,23 @@ export const SupportedTestnetChainMetadata = [
         name: "Optimism",
         tokenSymbol: "OP",
         chainId: "0x1a4",
-        rpcUrl: `https://optimism-sepolia.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://sepolia-optimism.etherscan.io"]
     }
 ]
 
+// The `chain` field doubles as the Alchemy network slug, so the RPC URL handed
+// to the wallet (via wallet_addEthereumChain) is derived rather than hardcoded.
+const alchemyRpcUrl = (chain: string) =>
+    `https://${chain}.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`
+
 export default function useEvmNetwork() {
     const {network} = useContext(CKBContext)
    const SupportedEvmChainMetadata = useMemo(() => {
-    if (network !== "mainnet") {
-        return SupportedTestnetChainMetadata
-    }
-    return SupportedChainMetadata  
+    const chains = network !== "mainnet" ? SupportedTestnetChainMetadata : SupportedChainMetadata
+    return chains.map(c => ({...c, rpcUrl: alchemyRpcUrl(c.chain)}))
    }, [network])
 
-   
+
    return SupportedEvmChainMetadata
 }

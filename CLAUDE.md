@@ -29,9 +29,7 @@ Env vars are CRA-style `REACT_APP_*`, read from `.env` / `.env.local` (the latte
 - `REACT_APP_MARKET_API` — base URL of the Mobit Market API (EVM balances, DOB price, Babylon status)
 - `REACT_APP_COINGECKO_API_KEY` — CoinGecko price data
 - `REACT_APP_UTXO_SWAP_KEY` — UTXO Swap (CKB DEX) auth
-- `REACT_APP_INFURA_API_KEY` — Infura key used to build all EVM RPC URLs in `src/serves/useEvmNetwork.tsx`. **Deployment note:** this must be set in the Vercel project envs; the previously-deployed env only had a misspelled `INFUFA` key (now corrected in code), so EVM RPC needs a real Infura key under the correct name.
-
-Note: a `REACT_APP_ALCHEMY_API_KEY` may appear in pulled env files but is **not referenced** in this codebase (Alchemy is used server-side by the Market API, a separate project).
+- `REACT_APP_ALCHEMY_API_KEY` — Alchemy key. Used to derive the per-chain RPC URL passed to the wallet via `wallet_addEthereumChain` in `src/serves/useEvmNetwork.tsx` (the `chain` field doubles as the Alchemy network slug). The Market API (separate project) also uses an Alchemy key server-side for the actual EVM data. Frontend no longer uses Infura.
 
 ## Architecture
 
