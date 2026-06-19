@@ -2988,7 +2988,7 @@
     rpc-websockets "^9.0.2"
     superstruct "^2.0.2"
 
-"@spore-sdk/core@^0.2.0-beta.6":
+"@spore-sdk/core@^0.2.0-beta.6", "@spore-sdk/core@^0.2.1":
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/@spore-sdk/core/-/core-0.2.1.tgz#726d39045f8b778b4bd80339dbea7f4fef783899"
   integrity sha512-mNUxoQu4h6H4DIEwBxUzntFf6HFG5xXOsSwnN9jF0+oL+fIjOTNt4erwZeeJo1H7H6AS4S9OkDFikykYVIzZSg==
