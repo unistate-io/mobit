@@ -32,7 +32,7 @@ export default function useMarket() {
             {
                 method: "GET",
                 headers: {
-                    "x-cg-demo-api-key": process.env.REACT_APP_COINGECKO_API_KEY!
+                    "x-cg-demo-api-key": import.meta.env.VITE_COINGECKO_API_KEY!
                 }
             }
         )

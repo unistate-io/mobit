@@ -45,7 +45,7 @@ export default function DialogEvmTransfer({children, className, network}: { chil
         if (!formData.network) return
         setLoadingBalance(true)
         try {
-            const res = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/balance`, {
+            const res = await fetch(`${import.meta.env.VITE_MARKET_API}/api/evm/balance`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

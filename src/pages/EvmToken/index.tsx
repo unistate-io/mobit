@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react"
-import { type TokenMetadataResponse } from 'alchemy-sdk';
+import { type TokenMetadataResponse } from '@/types/evm';
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
 import Button from "@/components/Form/Button/Button"
@@ -66,7 +66,7 @@ export default function EvmTokenPage() {
     const getTokenMetadata = async () => {
         setLoadingMetadata(true)
         try {
-            const res = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/token`, {
+            const res = await fetch(`${import.meta.env.VITE_MARKET_API}/api/evm/token`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -97,7 +97,7 @@ export default function EvmTokenPage() {
         }
 
         try {
-            const res = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/transactions`, {
+            const res = await fetch(`${import.meta.env.VITE_MARKET_API}/api/evm/transactions`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -128,7 +128,7 @@ export default function EvmTokenPage() {
         }
 
         try {
-            const res = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/token_balance`, {
+            const res = await fetch(`${import.meta.env.VITE_MARKET_API}/api/evm/token_balance`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

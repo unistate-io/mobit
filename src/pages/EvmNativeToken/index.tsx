@@ -76,7 +76,7 @@ export default function EvmNativeTokenPage() {
         if (!internalAddress) return
         setLoadingBalance(true)
         try {
-            const res = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/balance`, {
+            const res = await fetch(`${import.meta.env.VITE_MARKET_API}/api/evm/balance`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -100,7 +100,7 @@ export default function EvmNativeTokenPage() {
         if (!metadata) return
         setLoadingMetadata(true)
         try {
-            const res = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/token/price_history`, {
+            const res = await fetch(`${import.meta.env.VITE_MARKET_API}/api/evm/token/price_history`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -125,7 +125,7 @@ export default function EvmNativeTokenPage() {
 
         setLoadingMetadata(true)
         try {
-            const res = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/transactions`, {
+            const res = await fetch(`${import.meta.env.VITE_MARKET_API}/api/evm/transactions`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

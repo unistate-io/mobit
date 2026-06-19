@@ -300,7 +300,7 @@ export interface SporeDataView {
 }
 
 export const getDobPrice = async (type_hash: string): Promise<number> => {
-    const response = await fetch(`${process.env.REACT_APP_MARKET_API}/api/dob/price?type_hash=${type_hash}`)
+    const response = await fetch(`${import.meta.env.VITE_MARKET_API}/api/dob/price?type_hash=${type_hash}`)
     const data = await response.json()
     return data.usd_price as number
 }
