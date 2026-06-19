@@ -1,0 +1,63 @@
+index.html
+  s_d6500f116d56de::t_8f18ba0996de7d 1-22
+src/types/evm.ts
+  s_d6500f116d56de::t_8ab184d389283c 1-9
+src/serves/useEvmNetwork.tsx
+  s_d6500f116d56de::t_f3812944c96ab4 93
+CLAUDE.md
+  s_d6500f116d56de::t_75fffa5015e2b2 11,14-18,21,25
+  s_d6500f116d56de::t_65688291485a81 27-30
+src/components/Dialogs/DialogEvmTransfer/DialogEvmTransfer.tsx
+  s_d6500f116d56de::t_f3812944c96ab4 48
+src/styles/tailwind.css
+  s_d6500f116d56de::t_6ac91082e40a79 1
+src/vite-env.d.ts
+  s_d6500f116d56de::t_a55125400c7ff4 1-12
+vite.config.ts
+  s_d6500f116d56de::t_1becade5ad553b 1-26
+vercel.json
+  s_d6500f116d56de::t_91e364b53bb078 1-6
+src/utils/spore.ts
+  s_d6500f116d56de::t_f3812944c96ab4 303
+.gitignore
+  s_d6500f116d56de::t_492ccbee3b67b0 30-32
+src/serves/useInternalAssets.tsx
+  s_d6500f116d56de::t_f3812944c96ab4 30,89,147
+src/serves/useUtxoSwap/index.ts
+  s_d6500f116d56de::t_f3812944c96ab4 6
+src/serves/useBtcWallet/index.ts
+  s_d6500f116d56de::t_e77a14164528c7 3
+package.json
+  s_d6500f116d56de::t_428eea23a963b6 56
+  s_d6500f116d56de::t_de76ec3017c658 59-61
+  s_d6500f116d56de::t_f6f04a186f2f10 50,52,68-69
+  s_d6500f116d56de::t_0edc225fd9bd0b 70,72-74
+src/pages/EvmNativeToken/index.tsx
+  s_d6500f116d56de::t_f3812944c96ab4 79,103,128
+src/index.tsx
+  s_d6500f116d56de::t_7ffbe294249236 3
+src/components/Dialogs/DialogEvmTokenTransfer/DialogEvmTokenTransfer.tsx
+  s_d6500f116d56de::t_f3812944c96ab4 80
+  s_d6500f116d56de::t_13d7949f115350 14
+src/pages/EvmToken/index.tsx
+  s_d6500f116d56de::t_fae4919184221f 2
+  s_d6500f116d56de::t_f3812944c96ab4 69,100,131
+src/serves/useMarket/index.ts
+  s_d6500f116d56de::t_f3812944c96ab4 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "3d4a7c0f9ded3fe6172da4f5fd46553b22f388b1",
+  "prompts": {},
+  "sessions": {
+    "s_d6500f116d56de": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c29c15c1-83a3-4d32-8ebb-f337adaa3600",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jiangplus <jiang.plus.times@gmail.com>"
+    }
+  }
+}
