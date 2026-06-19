@@ -1,0 +1,24 @@
+.env
+  s_d6500f116d56de::t_5ab93ce0ba145b 3
+src/serves/useEvmNetwork.tsx
+  s_d6500f116d56de::t_5ab93ce0ba145b 10,19,28,37,46,58,67,76,85,94
+CLAUDE.md
+  s_d6500f116d56de::t_cd0d6c7fe5de67 54-62
+  s_d6500f116d56de::t_9aad17b4d3f1b4 32,34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "96781eb79cde63f3260cc7234c17d6060c1b232d",
+  "prompts": {},
+  "sessions": {
+    "s_d6500f116d56de": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c29c15c1-83a3-4d32-8ebb-f337adaa3600",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jiangplus <jiang.plus.times@gmail.com>"
+    }
+  }
+}
