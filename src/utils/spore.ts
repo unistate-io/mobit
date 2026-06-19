@@ -8,7 +8,7 @@ import { hashType } from "@/serves/useXudtTransfer/lib"
 
 
 export function extractBracketContent(str: string, index?: number) {
-    const regex = /^\(%[^)]+\):\[(['"][^\]\[]*['"](?:,\s*['"][^\]\[]*['"])*)\]/;
+    const regex = /^\(%[^)]+\):\[(['"][^\][]*['"](?:,\s*['"][^\][]*['"])*)\]/;
     const match = str.match(regex);
 
     if (match && index !== undefined) {
