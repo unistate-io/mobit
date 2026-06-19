@@ -1,0 +1,20 @@
+package.json
+  s_d6500f116d56de::t_5db24a203c83c3 20-24
+  s_d6500f116d56de::t_ab528fc0fd0387 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "ae65c09604a6a97a87a5a67d88f6d42ae865df01",
+  "prompts": {},
+  "sessions": {
+    "s_d6500f116d56de": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c29c15c1-83a3-4d32-8ebb-f337adaa3600",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jiangplus <jiang.plus.times@gmail.com>"
+    }
+  }
+}
