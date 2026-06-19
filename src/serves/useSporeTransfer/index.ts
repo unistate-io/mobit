@@ -1,20 +1,18 @@
 import {transferSpore} from "@ckb-ccc/spore"
 import {useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {config as lumosConfig, helpers} from "@ckb-lumos/lumos"
 import {ccc} from "@ckb-ccc/connector-react"
 import {Spores} from "@/utils/graphql/types"
 
 export default function useSporeTransfer() {
-    const {signer, network} = useContext(CKBContext)
+    const {signer} = useContext(CKBContext)
 
     const build = async ({to, spore, feeRate}: {to: string; spore: Spores; feeRate: ccc.NumLike}) => {
         if (!signer) {
             throw new Error("please set signer")
         }
 
-        const scriptConfig = network === "testnet" ? lumosConfig.TESTNET : lumosConfig.MAINNET
-        const toLock = helpers.addressToScript(to, {config: scriptConfig})
+        const toLock = (await ccc.Address.fromString(to, signer.client)).script
 
         const {tx} = await transferSpore({
             to: toLock,
