@@ -20,6 +20,14 @@ export default defineConfig({
             "@": fileURLToPath(new URL("./src", import.meta.url))
         }
     },
+    build: {
+        // Several CKB/BTC deps (and lodash) mix ESM `import` with CJS `require`;
+        // without this Rollup leaves the `require` calls intact and they throw
+        // "require is not defined" at runtime in the browser.
+        commonjsOptions: {
+            transformMixedEsModules: true
+        }
+    },
     server: {
         port: 3000
     }
