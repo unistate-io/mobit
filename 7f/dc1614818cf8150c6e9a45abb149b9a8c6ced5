@@ -1,0 +1,29 @@
+src/components/ListHistory/ListHistory.tsx
+  s_d6500f116d56de::t_3d263d42ed854d 4-5
+src/components/ListEvmTokenHistory.tsx
+  s_d6500f116d56de::t_3d263d42ed854d 4-5
+src/components/ListTokenHistory/ListTokenHistory.tsx
+  s_d6500f116d56de::t_3d263d42ed854d 4-5
+vite.config.ts
+  s_d6500f116d56de::t_692587a512e91a 23-30
+src/components/ListBtcHistory/ListBtcHistory.tsx
+  s_d6500f116d56de::t_3d263d42ed854d 2-3
+src/components/ListBtcTokenHistory/ListBtcTokenHistory.tsx
+  s_d6500f116d56de::t_3d263d42ed854d 4-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "7fdc1614818cf8150c6e9a45abb149b9a8c6ced5",
+  "prompts": {},
+  "sessions": {
+    "s_d6500f116d56de": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c29c15c1-83a3-4d32-8ebb-f337adaa3600",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jiangplus <jiang.plus.times@gmail.com>"
+    }
+  }
+}
