@@ -5,7 +5,7 @@ import Input from "@/components/Form/Input/Input"
 import useCkbBalance from "@/serves/useCkbBalance"
 import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
 import { getXudtBalance } from "@/serves/useXudtBalance"
-import { Collector } from "@/libs/rgnpp_collector/index"
+import { Collector } from "@utxoswap/swap-sdk-js"
 import { toDisplay } from "@/utils/number_display"
 import Button from "@/components/Form/Button/Button"
 import BigNumber from "bignumber.js"
@@ -153,7 +153,6 @@ export default function SwapView({ className, sellToken }: { className?: string;
             try {
                 setBusy(true)
                 const collector = new Collector({
-                    ckbNodeUrl: config.ckb_rpc,
                     ckbIndexerUrl: config.ckb_indexer!
                 })
                 const type = swapForm.selectedX?.typeScript!
@@ -176,7 +175,6 @@ export default function SwapView({ className, sellToken }: { className?: string;
             try {
                 setBusy(true)
                 const collector = new Collector({
-                    ckbNodeUrl: config.ckb_rpc,
                     ckbIndexerUrl: config.ckb_indexer!
                 })
                 const type = swapForm.selectedY?.typeScript!

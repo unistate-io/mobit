@@ -26,7 +26,6 @@
         "@joyid/bitcoin": "^0.1.6",
         "@joyid/ckb": "^1.1.2",
         "@nervina-labs/dob-render": "^0.2.3",
-        "@nervosnetwork/ckb-sdk-core": "0.109.5",
         "@noble/hashes": "^1.4.0",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
         "@radix-ui/react-dialog": "^1.0.5",

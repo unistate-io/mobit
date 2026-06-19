@@ -5,7 +5,7 @@ import {TokenBalance} from "@/components/ListToken/ListToken"
 import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 
-import {Collector} from "@/libs/rgnpp_collector"
+import {Collector} from "@utxoswap/swap-sdk-js"
 import {leToU128} from "@rgbpp-sdk/ckb"
 import {addressToScript} from "@nervosnetwork/ckb-sdk-utils"
 
@@ -37,7 +37,7 @@ export const getXudtBalance = async (addresses: string[], tokenType: CKBComponen
             type: tokenType
         })
 
-        _sum += xudtCells.reduce((prev, current) => {
+        _sum += (xudtCells ?? []).reduce((prev, current) => {
             return prev + leToU128(current.outputData)
         }, BigInt(0))
     }
@@ -62,7 +62,6 @@ export default function useXudtBalance(addresses?: string[], token?: TokenInfoWi
         setStatus("loading")
 
         const collector = new Collector({
-            ckbNodeUrl: config.ckb_rpc,
             ckbIndexerUrl: config.ckb_indexer!
         })
 
