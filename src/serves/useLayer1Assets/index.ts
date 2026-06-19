@@ -3,7 +3,7 @@ import {useEffect, useState, useContext} from "react"
 import {TokenBalance} from "@/components/ListToken/ListToken"
 import {SporesWithChainInfo} from "@/serves/useSpores"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {ProcessedSporeAction, ProcessedXudtCell, RgbppSDK} from "@/libs/mobit-sdk"
+import {ProcessedSporeAction, ProcessedXudtCell, RgbppSDK} from "mobit-sdk"
 import {getXudtCompatibleInfo} from "@/utils/xudt-compatible"
 
 const queryAssets = async (

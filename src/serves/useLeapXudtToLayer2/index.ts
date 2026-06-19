@@ -1,6 +1,6 @@
 import {useContext, useMemo} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {BtcHelper, CkbHelper, prepareLeapUnsignedPsbt, leapFromBtcToCkbCombined} from "@/libs/mobit-sdk"
+import {BtcHelper, CkbHelper, prepareLeapUnsignedPsbt, leapFromBtcToCkbCombined} from "mobit-sdk"
 import {DataSource, NetworkType} from "rgbpp/btc"
 import useBtcWallet from "@/serves/useBtcWallet"
 

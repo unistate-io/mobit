@@ -12,7 +12,7 @@ import {
     signPsbt as joyidSignPsbt,
   } from "@joyid/bitcoin";
   import { DataSource, NetworkType, sendBtc } from "@rgbpp-sdk/btc";
-  import { createBtcService } from "@/libs/mobit-sdk";
+  import { createBtcService } from "mobit-sdk";
   
   /** Bitcoin testnet types */
   export type BTCTestnetType = "Testnet3" | "Signet";

@@ -2,7 +2,7 @@ import Input from '@/components/Form/Input/Input'
 import TokenIcon from '@/components/TokenIcon/TokenIcon'
 import { LangContext } from '@/providers/LangProvider/LangProvider'
 import * as Dialog from '@radix-ui/react-dialog'
-import { Token } from '@/libs/swap-sdk-js/src'
+import { Token } from '@utxoswap/swap-sdk-js'
 import { useContext, useMemo, useState } from "react"
 
 export interface SelectOption {

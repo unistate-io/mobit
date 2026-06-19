@@ -1,5 +1,5 @@
 import {useEffect, useState, useContext} from "react"
-import {RgbppSDK} from "@/libs/mobit-sdk"
+import {RgbppSDK} from "mobit-sdk"
 import {BtcApiTransaction} from "@rgbpp-sdk/service"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 

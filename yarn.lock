@@ -9603,7 +9603,7 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-mobit-sdk@^2.1.0:
+mobit-sdk@^2.1.0, mobit-sdk@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/mobit-sdk/-/mobit-sdk-2.3.2.tgz#93057855cace77aea0136cd85e90ffe1deebc65d"
   integrity sha512-JpRGB+08/3OsiC53UQiKJ3t6jPwDxYS0xzG3p6BvZXWsXxaSV/Eonu2xQLKCZHXXxOpdMF035EbrMQMS/6FlnA==

@@ -1,3 +1,0 @@
-import '@nervosnetwork/ckb-types';
-
-
