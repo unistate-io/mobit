@@ -29,9 +29,9 @@ Env vars are CRA-style `REACT_APP_*`, read from `.env` / `.env.local` (the latte
 - `REACT_APP_MARKET_API` — base URL of the Mobit Market API (EVM balances, DOB price, Babylon status)
 - `REACT_APP_COINGECKO_API_KEY` — CoinGecko price data
 - `REACT_APP_UTXO_SWAP_KEY` — UTXO Swap (CKB DEX) auth
-- `REACT_APP_INFUFA_API_KEY` — **(sic, note the misspelling)** Infura key used to build all EVM RPC URLs in `src/serves/useEvmNetwork.tsx`
+- `REACT_APP_INFURA_API_KEY` — Infura key used to build all EVM RPC URLs in `src/serves/useEvmNetwork.tsx`. **Deployment note:** this must be set in the Vercel project envs; the previously-deployed env only had a misspelled `INFUFA` key (now corrected in code), so EVM RPC needs a real Infura key under the correct name.
 
-Note: a `REACT_APP_ALCHEMY_API_KEY` may appear in pulled env files but is **not referenced** in this codebase (Alchemy is used server-side by the Market API, not here).
+Note: a `REACT_APP_ALCHEMY_API_KEY` may appear in pulled env files but is **not referenced** in this codebase (Alchemy is used server-side by the Market API, a separate project).
 
 ## Architecture
 
@@ -51,12 +51,15 @@ This is the most important directory to understand. Each subfolder is a **custom
 
 `src/pages/` are route-level screens (Market, Profile, Token, CkbToken, BtcToken, EvmToken, Trade, Apps, Dob, DotBit). `src/components/` holds shared UI (Radix primitives + custom dialogs like transfer/leap flows).
 
-### `src/libs/` — vendored SDKs
-Some blockchain SDKs are **vendored into the repo** rather than installed, and are imported via the `@/libs/...` path alias:
-- `mobit-sdk/` — CKB/RGB++ transaction helpers; `helper.ts` holds RGB++ service endpoints (note: contains embedded JWT tokens).
-- `swap-sdk-js/` — UTXO Swap client (endpoints in `constant/common.ts`).
-- `rgnpp_collector/`, `mobit_wallet.ts`, `coin_types.ts`.
-Prefer editing these in-tree; they are part of the build.
+### `src/libs/`
+Local modules imported via the `@/libs/...` path alias:
+- `mobit_wallet.ts` — Bitcoin wallet abstraction (JoyID / UniSat / OKX) consumed by `useBtcWallet`.
+- `coin_types.ts` — coin/derivation constants.
+
+The CKB/RGB++ transaction SDK (`mobit-sdk@2.3.2`) and the UTXO Swap client
+(`@utxoswap/swap-sdk-js`) are now installed npm packages, not vendored — the
+old `src/libs/{mobit-sdk,swap-sdk-js,rgnpp_collector}` forks were deleted in
+favour of them. Cell collection uses `@utxoswap/swap-sdk-js`'s `Collector`.
 
 ### Path alias
 `@/` → `src/` (configured in tsconfig + webpack). Use it for all intra-`src` imports.

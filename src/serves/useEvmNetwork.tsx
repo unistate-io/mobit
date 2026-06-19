@@ -7,7 +7,7 @@ export const SupportedChainMetadata = [
         name: "Ethereum",
         tokenSymbol: "ETH",
         chainId: "0x1",
-        rpcUrl: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
+        rpcUrl: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://etherscan.io"]
     },
@@ -16,7 +16,7 @@ export const SupportedChainMetadata = [
         tokenSymbol: "ETH",
         name: "Base",
         chainId: "0x2105",
-        rpcUrl: `https://base-mainnet.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
+        rpcUrl: `https://base-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://basescan.org"]
     },
@@ -25,7 +25,7 @@ export const SupportedChainMetadata = [
         tokenSymbol: "MATIC",
         name: "Matic",
         chainId: "0x89",
-        rpcUrl: `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
+        rpcUrl: `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
         blockExplorerUrls: ["https://polygonscan.com"]
     },
@@ -34,7 +34,7 @@ export const SupportedChainMetadata = [
         tokenSymbol: "ARB",
         name: "Arbitrum",
         chainId: "0xa4b1",
-        rpcUrl: `https://arbitrum-mainnet.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
+        rpcUrl: `https://arbitrum-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://arbiscan.io"]
     },
@@ -43,7 +43,7 @@ export const SupportedChainMetadata = [
         tokenSymbol: "OP",
         name: "Optimism",
         chainId: "0xa",
-        rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
+        rpcUrl: `https://optimism-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://optimistic.etherscan.io"]
     }
@@ -55,7 +55,7 @@ export const SupportedTestnetChainMetadata = [
         name: "Ethereum",
         tokenSymbol: "ETH",
         chainId: "0xaa36a7",
-        rpcUrl: `https://sepolia.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
+        rpcUrl: `https://sepolia.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://sepolia.etherscan.io/"]
     },
@@ -64,7 +64,7 @@ export const SupportedTestnetChainMetadata = [
         name: "Base",
         tokenSymbol: "ETH",
         chainId: "0x14a33",
-        rpcUrl: `https://base-sepolia.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
+        rpcUrl: `https://base-sepolia.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://sepolia.basescan.org/"]
     },
@@ -73,7 +73,7 @@ export const SupportedTestnetChainMetadata = [
         name: "Matic",
         tokenSymbol: "MATIC",
         chainId: "0x13881",
-        rpcUrl: `https://polygon-amoy.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
+        rpcUrl: `https://polygon-amoy.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
         blockExplorerUrls: ["https://mumbai.polygonscan.com"]
     },
@@ -82,7 +82,7 @@ export const SupportedTestnetChainMetadata = [
         name: "Arbitrum",
         tokenSymbol: "ARB",
         chainId: "0x66eee",
-        rpcUrl: `https://arbitrum-sepolia.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
+        rpcUrl: `https://arbitrum-sepolia.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://sepolia.arbiscan.io/"]
     },
@@ -91,7 +91,7 @@ export const SupportedTestnetChainMetadata = [
         name: "Optimism",
         tokenSymbol: "OP",
         chainId: "0x1a4",
-        rpcUrl: `https://optimism-sepolia.infura.io/v3/${process.env.REACT_APP_INFUFA_API_KEY}`,
+        rpcUrl: `https://optimism-sepolia.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`,
         nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
         blockExplorerUrls: ["https://sepolia-optimism.etherscan.io"]
     }
