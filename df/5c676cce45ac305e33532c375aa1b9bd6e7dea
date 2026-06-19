@@ -1,0 +1,30 @@
+src/components/Dialogs/DialogXudtCellMerge/DialogXudtCellMerge.tsx
+  s_d6500f116d56de::t_18a1dfd92e158d 7
+  s_d6500f116d56de::t_3853b1e61464da 167
+  s_d6500f116d56de::t_ce5543152bd748 222
+src/components/Dialogs/DialogXudtCellBurn/DialogXudtCellBurn.tsx
+  s_d6500f116d56de::t_125ded29a689a6 272
+  s_d6500f116d56de::t_b9589524b09141 326
+src/serves/useXudtTransfer/lib.ts
+  s_d6500f116d56de::t_6d53627e03ee7f 1-3
+  s_d6500f116d56de::t_1961c4f07fbca4 4
+src/serves/useTokenTransactionsHistory/index.ts
+  s_d6500f116d56de::t_ff3f7410eb935d 5
+  s_d6500f116d56de::t_5c9fb1dc510b72 25,29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "df5c676cce45ac305e33532c375aa1b9bd6e7dea",
+  "prompts": {},
+  "sessions": {
+    "s_d6500f116d56de": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c29c15c1-83a3-4d32-8ebb-f337adaa3600",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jiangplus <jiang.plus.times@gmail.com>"
+    }
+  }
+}
