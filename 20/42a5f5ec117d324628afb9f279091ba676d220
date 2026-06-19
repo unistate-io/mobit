@@ -1,0 +1,24 @@
+src/serves/useXudtBalance/index.ts
+  s_d6500f116d56de::t_9d7668b4d6f28b 40
+  s_d6500f116d56de::t_fd680f1e79c767 8
+src/components/Dialogs/DialogSwap/DialogSwap.tsx
+  s_d6500f116d56de::t_b25bda348251c8 11
+src/pages/Trade/SwapView.tsx
+  s_d6500f116d56de::t_d3d6b414d41423 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "2042a5f5ec117d324628afb9f279091ba676d220",
+  "prompts": {},
+  "sessions": {
+    "s_d6500f116d56de": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c29c15c1-83a3-4d32-8ebb-f337adaa3600",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jiangplus <jiang.plus.times@gmail.com>"
+    }
+  }
+}
