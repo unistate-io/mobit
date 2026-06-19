@@ -1133,41 +1133,41 @@
   dependencies:
     "@noble/curves" "^1.7.0"
 
-"@ckb-ccc/ccc@1.1.21":
-  version "1.1.21"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/ccc/-/ccc-1.1.21.tgz#42f339d613fa4442b14a0b245ce6cca72888b257"
-  integrity sha512-OOm4wjXxqanujyGaqVVX8XFtkjebbVkN2X78lkSjkm2ZmOn3ye5PSfLY2HfS/tbPVQBW7TXWmkNn7M6vVipn4A==
+"@ckb-ccc/ccc@1.1.25":
+  version "1.1.25"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/ccc/-/ccc-1.1.25.tgz#5b63e4a49ff14d4605cb41f0786cbcf22ff1cf81"
+  integrity sha512-WcaW3yP7q8FzvicekP8y3tikSOy/NMfYdmViQev5v0zLrBfAygH/L6ZxsWHu1XFMgxlAzXm6m0Av0lqVwbNE6Q==
   dependencies:
-    "@ckb-ccc/eip6963" "1.0.29"
-    "@ckb-ccc/joy-id" "1.0.29"
-    "@ckb-ccc/nip07" "1.0.29"
-    "@ckb-ccc/okx" "1.0.29"
-    "@ckb-ccc/rei" "1.0.29"
-    "@ckb-ccc/shell" "1.1.21"
-    "@ckb-ccc/uni-sat" "1.0.29"
-    "@ckb-ccc/utxo-global" "1.0.29"
-    "@ckb-ccc/xverse" "1.0.29"
+    "@ckb-ccc/eip6963" "1.0.32"
+    "@ckb-ccc/joy-id" "1.0.32"
+    "@ckb-ccc/nip07" "1.0.32"
+    "@ckb-ccc/okx" "1.0.32"
+    "@ckb-ccc/rei" "1.0.32"
+    "@ckb-ccc/shell" "1.1.25"
+    "@ckb-ccc/uni-sat" "1.0.32"
+    "@ckb-ccc/utxo-global" "1.0.32"
+    "@ckb-ccc/xverse" "1.0.32"
 
-"@ckb-ccc/connector-react@^1.0.25":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/connector-react/-/connector-react-1.0.29.tgz#f75b3a5fe4f98f09057ce9d42b6b4f1dac2f593c"
-  integrity sha512-bAuWZb0fKpYi225Kt508Le2bomAxIHyUcoo0suKx7q/HxhbF1V4xIIjJe8CSb7l4fZvXTKdzsiqqIFPBjSq5Kw==
+"@ckb-ccc/connector-react@^1.0.35":
+  version "1.0.35"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/connector-react/-/connector-react-1.0.35.tgz#791bcfd0f3c386e0d65e32ce2607ba66508d7de1"
+  integrity sha512-2ovfbbyqxhvLB/ORPy1ORkspq80mwdhApm1hRVmKq4ZTzch3168zJJiGPXSaQWlSRTzX12YHM3BtrZNyiip/aA==
   dependencies:
-    "@ckb-ccc/connector" "1.0.29"
+    "@ckb-ccc/connector" "1.0.33"
     "@lit/react" "^1.0.8"
 
-"@ckb-ccc/connector@1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/connector/-/connector-1.0.29.tgz#953177e2dd0212899484a2bd1ede0cb4c668acdc"
-  integrity sha512-ZXetaIJfzZkH2w2hs6SW7j7+UbpnG9Xq9oa+X5+NQoPGCb4GwT1Sq9gCiioUfeve8DHCwKFJgUtGB+NQqm8fCQ==
+"@ckb-ccc/connector@1.0.33":
+  version "1.0.33"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/connector/-/connector-1.0.33.tgz#5cf2dcb97a6ec8015d110af9c66dcff63ff04796"
+  integrity sha512-B8BQ9LcW1fBAIsW32GhJdm7MY3+Rd/rQWCLiBqTML9enOHGUU/nbgt8oE7AO3g7seTEAoddCx8HyChMNW1OF/w==
   dependencies:
-    "@ckb-ccc/ccc" "1.1.21"
+    "@ckb-ccc/ccc" "1.1.25"
     lit "^3.3.1"
 
-"@ckb-ccc/core@1.12.2", "@ckb-ccc/core@^1.11.4", "@ckb-ccc/core@^1.9.0":
-  version "1.12.2"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/core/-/core-1.12.2.tgz#f747f03e25de057312cc87c6ba508750752d1c14"
-  integrity sha512-fiDn2ox4CWUF5hxTYxPDITnstbyZaPGK93OlO+Jlz7w0/zw64b9Y8tz+A0G29Q5s50nr9zT+aapEE4AbV01tuA==
+"@ckb-ccc/core@1.12.2", "@ckb-ccc/core@1.12.5", "@ckb-ccc/core@^1.12.5", "@ckb-ccc/core@^1.9.0":
+  version "1.12.5"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/core/-/core-1.12.5.tgz#fe384d0e3d0d02915a783c89c1e38ba6ddbd7df5"
+  integrity sha512-iJxv/R9O2xrcyOpZZbfxMlokl6rI9o7iz+4wdB4L0kqW8nEuXgsTqJxJgpM2uECBUlOfRZb7ljpW/7i6CBs4eQ==
   dependencies:
     "@joyid/ckb" "^1.1.2"
     "@noble/ciphers" "^0.5.3"
@@ -1180,56 +1180,64 @@
     isomorphic-ws "^5.0.0"
     ws "^8.18.3"
 
-"@ckb-ccc/eip6963@1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/eip6963/-/eip6963-1.0.29.tgz#2695375481af73ee75a0ce77653c2be2d51f5937"
-  integrity sha512-S0kOugfyhnyQXRusNQ95JsotR8BmGUVQyLWYpxCMK4UgypESWjB8O08f3SVi0Jm1dwAGRk+MQPrqORUVNn0qGA==
+"@ckb-ccc/eip6963@1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/eip6963/-/eip6963-1.0.32.tgz#bd98800475751e66b253ed82cabd3fc3646cf6a9"
+  integrity sha512-vOpZrL69Z2WVcuXgSpcc/4aAJp0K8KklrkgQmUxMI0UtWkUWgdF40Uv/MsfJiR87vXArkeP6UYtO30dmdq31uQ==
   dependencies:
-    "@ckb-ccc/core" "1.12.2"
+    "@ckb-ccc/core" "1.12.5"
 
-"@ckb-ccc/joy-id@1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/joy-id/-/joy-id-1.0.29.tgz#a508661a6e2ac8ebcba6c9c14a79a4fbf91bfa1e"
-  integrity sha512-hEd3+gIXK7MazIVbZlVCHEKFj8ilZDVrjecW2anP6ilScVO2yW+zyEuPdWj2/OeLfKdv5zEA0QhDAsp3AxvkGg==
+"@ckb-ccc/joy-id@1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/joy-id/-/joy-id-1.0.32.tgz#61116345bc56f7da3a547ffdabd9c0e0c825c90d"
+  integrity sha512-7yBU7qnQVCeR8jRZLpxtUqRRcBHw8FwEiAwwdpeYWN50BRZjBtSck+N+rC2qkI+XeKxtluVjpLpObzWJ2XhKbA==
   dependencies:
-    "@ckb-ccc/core" "1.12.2"
+    "@ckb-ccc/core" "1.12.5"
     "@joyid/ckb" "^1.1.2"
     "@joyid/common" "^0.2.1"
 
-"@ckb-ccc/nip07@1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/nip07/-/nip07-1.0.29.tgz#0442b9498b16c0ff02b74994c9fc7b9bfffeb68c"
-  integrity sha512-D3g9aVKPDOkhahNT7QbdZF74l8wfDJKUD2E+KSZ/9Tfgv37fdWHiW1UfC3pxC3zAms+0Bl4ZGNaJQgJHFwhbhA==
+"@ckb-ccc/nip07@1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/nip07/-/nip07-1.0.32.tgz#8e3e4fb518e507fc195c7b3192bf331c963f8191"
+  integrity sha512-D+CUra4FfOXu98pLyRsBcgjAE1LC1BBj2yBDDECcsb+oCALX2I8tWFDZGOTQ795WFyP8f4OU5D2hswnF82kANw==
   dependencies:
-    "@ckb-ccc/core" "1.12.2"
+    "@ckb-ccc/core" "1.12.5"
 
-"@ckb-ccc/okx@1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/okx/-/okx-1.0.29.tgz#852baf9f3e201a0797c07acde436fc9f1e989da8"
-  integrity sha512-aXpWO1nsra1Cms8MBCDL8oVhYs5SbJZdVufwCz89OiWBGEqVCBP6DNMYmJ0T/vLuose9b2oNJal1hR3zBfuFwA==
+"@ckb-ccc/okx@1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/okx/-/okx-1.0.32.tgz#22fb8561f2fd62c52a4e6cd4aa803f3211815dbd"
+  integrity sha512-iRX1hYQ8biHAZtw5zfSWGhYYcBoTxqDnvi01Feosb/acMnT3kfnHnZiIvsJ7sO+oBCk1zQm9Jtlxl00VuTiotg==
   dependencies:
-    "@ckb-ccc/core" "1.12.2"
-    "@ckb-ccc/nip07" "1.0.29"
-    "@ckb-ccc/uni-sat" "1.0.29"
+    "@ckb-ccc/core" "1.12.5"
+    "@ckb-ccc/nip07" "1.0.32"
+    "@ckb-ccc/uni-sat" "1.0.32"
 
-"@ckb-ccc/rei@1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/rei/-/rei-1.0.29.tgz#dc0da30bef04eba86e39b9f24f9af43bf5f817bc"
-  integrity sha512-VCiXB6bMy0zq94GgwUOKmThFuzywGyRUPqRpLL0B8FIA13EMs4U4cKP7gG2J+lZZiSIk2uQSa5qKndsAnMA7vw==
+"@ckb-ccc/rei@1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/rei/-/rei-1.0.32.tgz#f72c73382fbb9676d2866e9e7da348a37ffd79c7"
+  integrity sha512-ZZDTsTewaYtFUS5dBy+Sq4lTd81RTq6JgLH/yzVgY39r/aNzjZujOKmz7KHqAznwdmMFMWqzz3S7BGkPT6clcg==
   dependencies:
-    "@ckb-ccc/core" "1.12.2"
+    "@ckb-ccc/core" "1.12.5"
 
-"@ckb-ccc/shell@1.1.21":
-  version "1.1.21"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/shell/-/shell-1.1.21.tgz#3570429ddb999c1735957bc33870c44a4c45ad94"
-  integrity sha512-WlGHAYo1mUd11Y6dSW8IgY9OECMI0/L/rroWxLfS9F7cp0oM/PmEMhFDMw1+tIUlX/7/5vhrZ7T7UVGLQWeDqA==
+"@ckb-ccc/shell@1.1.25":
+  version "1.1.25"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/shell/-/shell-1.1.25.tgz#637b5a7f437a1e6165f47da78a8234ad0d36d321"
+  integrity sha512-Wf3l0gifasRzB9HJjtPt0kIUmWTqMx+cbNQjw/cGaTUxcEJ6JzEebXDZ/2+a+Xr/5cFKMN8A1PzlLNM2j+we+w==
   dependencies:
-    "@ckb-ccc/core" "1.12.2"
-    "@ckb-ccc/spore" "1.5.13"
-    "@ckb-ccc/ssri" "0.2.19"
-    "@ckb-ccc/udt" "0.1.21"
+    "@ckb-ccc/core" "1.12.5"
+    "@ckb-ccc/spore" "1.5.17"
+    "@ckb-ccc/ssri" "0.2.22"
+    "@ckb-ccc/udt" "0.1.24"
 
-"@ckb-ccc/spore@1.5.13", "@ckb-ccc/spore@^1.5.2", "@ckb-ccc/spore@^1.5.9":
+"@ckb-ccc/spore@1.5.17", "@ckb-ccc/spore@^1.5.17":
+  version "1.5.17"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/spore/-/spore-1.5.17.tgz#be9573bb6642c395a435c4031afcfdff4d5283f2"
+  integrity sha512-VaZG2DoyBytHMkN6eNiD6xBVhzgUxcV5lL8KMGyNLcvzcPAVccXzLA62LIDXWPCCKdTAZu70ydn11jTOwFuKqA==
+  dependencies:
+    "@ckb-ccc/core" "1.12.5"
+    axios "^1.11.0"
+
+"@ckb-ccc/spore@^1.5.2":
   version "1.5.13"
   resolved "https://registry.yarnpkg.com/@ckb-ccc/spore/-/spore-1.5.13.tgz#ef769d9a1ac7a4ca1fede7382a452f81d7eaa9f3"
   integrity sha512-bymlOc/ebn227NzV/cI2ayTDTYk65Y7p/SB91HiEnWHdsMWBXFE50PBLCOAyAfOhZAtbsxjQ3T8hhppr75fcJQ==
@@ -1237,41 +1245,41 @@
     "@ckb-ccc/core" "1.12.2"
     axios "^1.11.0"
 
-"@ckb-ccc/ssri@0.2.19":
-  version "0.2.19"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/ssri/-/ssri-0.2.19.tgz#0969752487835c9bc39a20f49b91a96f6e2e6a16"
-  integrity sha512-qvV0zkT81xLHMdKqc8OJzcxfFmhU32tpoa1bAhlzzekj06bt+5KuQ8fyekK7QOByAsnR6doY6sFO8SlDP1M24w==
+"@ckb-ccc/ssri@0.2.22", "@ckb-ccc/ssri@^0.2.22":
+  version "0.2.22"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/ssri/-/ssri-0.2.22.tgz#6161a01622c4ea13f135b3b88116c48d38d353e7"
+  integrity sha512-E0+OWY14ZhteSI6R2ilCoSFiclq3B5x7svrzhKSi4ePa5Zl3nk4Ioc7BXqciFAUzuFEce2M6eCJu5T9aTHMFLw==
   dependencies:
-    "@ckb-ccc/core" "1.12.2"
+    "@ckb-ccc/core" "1.12.5"
 
-"@ckb-ccc/udt@0.1.21":
-  version "0.1.21"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/udt/-/udt-0.1.21.tgz#6bb5b89dc98c45b1c244e0ee616330eb372652dd"
-  integrity sha512-raecL1cgxrSkiVmv/XAUTFOr7vBGytKQ9+QlJBmiNDkXviVUHL7FXRVE1xA2nd33ZyolypTv/wk5Hwhfc8+6Sg==
+"@ckb-ccc/udt@0.1.24", "@ckb-ccc/udt@^0.1.24":
+  version "0.1.24"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/udt/-/udt-0.1.24.tgz#ba960e3b630cb55840312f61bf7c6034defcf999"
+  integrity sha512-XeyfB5gD6XdFVV8GL8IeS2S8NbEhom+Jhkae0nq4K3CyRbh9+4OgLaI+/0/7+BoxxOawHQPxI6MAj4h2P02MBg==
   dependencies:
-    "@ckb-ccc/core" "1.12.2"
-    "@ckb-ccc/ssri" "0.2.19"
+    "@ckb-ccc/core" "1.12.5"
+    "@ckb-ccc/ssri" "0.2.22"
 
-"@ckb-ccc/uni-sat@1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/uni-sat/-/uni-sat-1.0.29.tgz#6bcea2f37f63c11e45fa3ec0efc80af0126e71c1"
-  integrity sha512-FCWF/ZSNbIPHomxNghAI9m/pe8akV+nP/AHsR+Q5SCX8YCc4zq5TPSPzJuYTw2syLMfvSo8aLRGaz25Ae9kk9Q==
+"@ckb-ccc/uni-sat@1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/uni-sat/-/uni-sat-1.0.32.tgz#87b992184194ee4ff03dbf25a8b17548c1816bf6"
+  integrity sha512-vcxbwr3hwBGE+Aa8IfCr5SCff2x5XDmSwaxxh/SuC21E6kt0prx6RPs8fAdkIAMG1EP5DpWoSvk3P43Pz0PnWw==
   dependencies:
-    "@ckb-ccc/core" "1.12.2"
+    "@ckb-ccc/core" "1.12.5"
 
-"@ckb-ccc/utxo-global@1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/utxo-global/-/utxo-global-1.0.29.tgz#32385bebade41b873353f5bc7d01daad428a356f"
-  integrity sha512-K127GCepA26C5GlodnnfLBqauYPhyCN/Hrfks471AwpNWbp9TeHe7bGXzlXQ+/z+89w+1kRQtWg26fKUzurIrA==
+"@ckb-ccc/utxo-global@1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/utxo-global/-/utxo-global-1.0.32.tgz#d809980dda30a4dfdb8f237af63e0aeb9926500a"
+  integrity sha512-GlkcmSG60IHh2NyrQxKkMc/NDv4SH7/zIz9YW+BdQklctJJ+aZSM7Menf9cKhriddO38nKUF/V5nmVjUB4FBoA==
   dependencies:
-    "@ckb-ccc/core" "1.12.2"
+    "@ckb-ccc/core" "1.12.5"
 
-"@ckb-ccc/xverse@1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@ckb-ccc/xverse/-/xverse-1.0.29.tgz#93f4477b7d528d9781901fd9a84b4bf9d4f1ae83"
-  integrity sha512-z6yFo7WzAlQx7j3yOmyuFSpfa6fsJXkaZIer4WECh1HoBSmd3dPddbqLrZrpGjKZNmMM+C468jMIDFmK6H6xFQ==
+"@ckb-ccc/xverse@1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@ckb-ccc/xverse/-/xverse-1.0.32.tgz#21b33d80c3eabe8da4303fd35682f878f5c60129"
+  integrity sha512-B8L/6y8dq5U5y+TDaV2n0LWXuJViiMJrUkIvQvodA8LcVFuXT/nOtKKNRHxUJ5tiz82eTYq3NBR9vhsBiohAQQ==
   dependencies:
-    "@ckb-ccc/core" "1.12.2"
+    "@ckb-ccc/core" "1.12.5"
     valibot "^1.1.0"
 
 "@ckb-lumos/base@0.0.0-canary-d279b87-20240624101315":
