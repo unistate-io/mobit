@@ -26,7 +26,6 @@ import NetWorth from "@/components/NetWorth"
 import Button from "@/components/Form/Button/Button"
 import useInternalAssets from "@/serves/useInternalAssets"
 import NervdaoBalance from "@/components/NervdaoBalance/NervdaoBalance"
-import BabylonBalance from "@/components/BabylonBalance/BabylonBalance"
 import ListTokenNew from "@/components/ListToken"
 
 export default function Profile() {
@@ -331,12 +330,6 @@ export default function Profile() {
                         {!isOwner && !!address && (
                             <div className={`mt-4 ${currtab === "All" || currtab === "Staking" ? "block" : "hidden"}`}>
                                 <NervdaoBalance walletAddresses={[address]} />
-                            </div>
-                        )}
-
-                        {!!internalAddress && isBtcAddress(internalAddress, network === "mainnet") && (
-                            <div className={`mt-4 ${currtab === "All" || currtab === "Staking" ? "block" : "hidden"}`}>
-                                <BabylonBalance walletAddress={internalAddress} />
                             </div>
                         )}
 
