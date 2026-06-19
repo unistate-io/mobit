@@ -4,7 +4,6 @@ import * as Dialog from "@radix-ui/react-dialog"
 import useGetXudtCell from "@/serves/useGetXudtCell"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import {toDisplay} from "@/utils/number_display"
-import {number} from "@ckb-lumos/codec"
 import Button from "@/components/Form/Button/Button"
 import {shortTransactionHash} from "@/utils/common"
 import CopyText from "@/components/CopyText/CopyText"
@@ -270,9 +269,7 @@ export default function DialogXudtCellBurn({
                                                                     <div>{xudt?.symbol}</div>
                                                                     <div className="font-semibold">
                                                                         {toDisplay(
-                                                                            number.Uint128LE.unpack(
-                                                                                (cell as any).outputData
-                                                                            ).toString(),
+                                                                            leToU128((cell as any).outputData).toString(),
                                                                             xudt?.decimal || 0,
                                                                             true
                                                                         )}
@@ -326,9 +323,7 @@ export default function DialogXudtCellBurn({
                                                                     <div>{xudt?.symbol}</div>
                                                                     <div className="font-semibold">
                                                                         {toDisplay(
-                                                                            number.Uint128LE.unpack(
-                                                                                (rawTx! as any).outputsData[index]
-                                                                            ).toString(),
+                                                                            leToU128((rawTx! as any).outputsData[index]).toString(),
                                                                             xudt?.decimal || 0,
                                                                             true
                                                                         )}

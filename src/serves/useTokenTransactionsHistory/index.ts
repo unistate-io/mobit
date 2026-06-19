@@ -2,7 +2,7 @@ import {useEffect, useState, useContext} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {TransactionHistory} from "@/components/ListHistory/ListHistory"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
-import {utils} from "@ckb-lumos/lumos"
+import {ccc} from "@ckb-ccc/connector-react"
 import {hashType} from "@/serves/useXudtTransfer/lib"
 
 export default function useTokenTransactions(token?: TokenInfoWithAddress | null, address?: string, pageSize?: number) {
@@ -22,11 +22,11 @@ export default function useTokenTransactions(token?: TokenInfoWithAddress | null
         } else {
             setStatus("loading")
             setData([])
-            const typeScriptHash = utils.computeScriptHash({
+            const typeScriptHash = ccc.Script.from({
                 codeHash: token.address_by_type_address_id?.script_code_hash.replace("\\", "0") || "",
                 hashType: hashType[token.address_by_type_address_id?.script_hash_type || 0],
                 args: token.address_by_type_address_id?.script_args.replace("\\", "0") || ""
-            })
+            }).hash()
 
             fetch(
                 `${config.explorer_api}/udt_transactions/${typeScriptHash}?page=${page}&page_size=${size}&address_hash=${address!}&sort=time.desc`,
