@@ -1,0 +1,19 @@
+src/utils/spore.ts
+  s_d6500f116d56de::t_4e266d8efb2be1 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "c8b65d302e0a01c6d5bd6683dd1ad338d91e6b0a",
+  "prompts": {},
+  "sessions": {
+    "s_d6500f116d56de": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c29c15c1-83a3-4d32-8ebb-f337adaa3600",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jiangplus <jiang.plus.times@gmail.com>"
+    }
+  }
+}
