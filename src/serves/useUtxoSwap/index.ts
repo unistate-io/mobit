@@ -3,7 +3,7 @@ import {useContext, useMemo, useState} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {useAsyncEffect} from "ahooks"
 
-const apiKey = import.meta.env.VITE_UTXO_SWAP_KEY
+const apiKey = process.env.REACT_APP_UTXO_SWAP_KEY
 
 export function useUtxoSwap() {
     const {config, network} = useContext(CKBContext)

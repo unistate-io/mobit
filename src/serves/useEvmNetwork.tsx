@@ -90,7 +90,7 @@ export const SupportedTestnetChainMetadata = [
 // The `chain` field doubles as the Alchemy network slug, so the RPC URL handed
 // to the wallet (via wallet_addEthereumChain) is derived rather than hardcoded.
 const alchemyRpcUrl = (chain: string) =>
-    `https://${chain}.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_API_KEY}`
+    `https://${chain}.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`
 
 export default function useEvmNetwork() {
     const {network} = useContext(CKBContext)

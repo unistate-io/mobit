@@ -11,7 +11,7 @@ import CopyText from "@/components/CopyText/CopyText"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import useEvmNetwork from "@/serves/useEvmNetwork"
-import { type TokenMetadataResponse } from '@/types/evm';
+import { type TokenMetadataResponse } from 'alchemy-sdk';
 import TokenIcon from '@/components/TokenIcon/TokenIcon'
 
 import * as dayjsLib from "dayjs"
@@ -77,7 +77,7 @@ export default function DialogEvmTokenTransfer({
         if (!formData.network || !formData.tokenContract || !internalAddress) return
         setLoadingBalance(true)
         try {
-            const res = await fetch(`${import.meta.env.VITE_MARKET_API}/api/evm/token_balance`, {
+            const res = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/token_balance`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

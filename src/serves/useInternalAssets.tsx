@@ -27,7 +27,7 @@ export default function useInternalAssets(walletAddress?: string) {
         markets: {[index: string]: any}
     }> => {
         if (chain === "evm") {
-            const data = await fetch(`${import.meta.env.VITE_MARKET_API}/api/evm/tokens_balance`, {
+            const data = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/tokens_balance`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -86,7 +86,7 @@ export default function useInternalAssets(walletAddress?: string) {
     const getInternalBalance = async (chain: string) => {
         if (chain !== "evm") return []
 
-        const data = await fetch(`${import.meta.env.VITE_MARKET_API}/api/evm/balance`, {
+        const data = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/balance`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -144,7 +144,7 @@ export default function useInternalAssets(walletAddress?: string) {
         if (chain !== "evm") return {}
         if (network === "testnet") return {}
 
-        const res = await fetch(`${import.meta.env.VITE_MARKET_API}/api/evm/market`, {
+        const res = await fetch(`${process.env.REACT_APP_MARKET_API}/api/evm/market`, {
             method: "POST",
             headers: {accept: "application/json"},
             body: JSON.stringify({

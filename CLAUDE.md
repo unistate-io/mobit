@@ -8,26 +8,28 @@ Mobit is a multi-chain wallet/explorer web app for the **CKB (Nervos) + Bitcoin 
 
 ## Commands
 
-This is a **Vite 7 + React 19** app, installed with **Bun** (`bun.lock`). The build is `@vitejs/plugin-react-swc` (no Babel), with Tailwind v4 via `@tailwindcss/vite` (no PostCSS) and `vite-plugin-node-polyfills` (the CKB/BTC/RGB++ SDKs need Node globals/builtins). Config is `vite.config.ts`.
+This is an **ejected Create React App** (webpack/Babel configs live in `config/`, runner scripts in `scripts/`). There is no `eject` step left to do.
 
 ```bash
-bun install               # install deps
-bun run dev               # dev server on http://localhost:3000
-bun run build             # production build → dist/ (Vite/Rollup)
-bun run preview           # serve the production build locally
-npx tsc --noEmit          # typecheck (the swc build does NOT typecheck)
+npm start                 # dev server on http://localhost:3000 (scripts/start.js)
+npm run start_ssl         # dev server over HTTPS
+npm run build             # production build → build/ (scripts/build.js)
+npm test                  # jest in interactive watch mode (scripts/test.js)
+CI=true npm test          # run all tests once, non-interactive
+npm test -- src/path/to/File.test.tsx   # run a single test file
+npm test -- -t "name"     # run tests matching a name
 ```
 
-The build does **not** run ESLint or type-checking (swc transpiles only), so always run `npx tsc --noEmit` to catch type errors. There are no tests.
+There is **no lint/typecheck npm script**. ESLint (`eslint-config-react-app`) runs inline during `npm start`/`build` via webpack and surfaces warnings in the console. TypeScript is compiled by Babel (no type-checking at build time) — run `npx tsc --noEmit` if you need real type checking.
 
 ## Environment
 
-Env vars are **Vite-style `VITE_*`**, accessed via `import.meta.env.VITE_*`, read from `.env` / `.env.local` (the latter git-ignored, pulled from Vercel). Vercel project vars use the `VITE_` names. Referenced in code:
+Env vars are CRA-style `REACT_APP_*`, read from `.env` / `.env.local` (the latter is git-ignored and typically pulled from Vercel). Referenced in code:
 
-- `VITE_MARKET_API` — base URL of the Mobit Market API (EVM balances, DOB price)
-- `VITE_COINGECKO_API_KEY` — CoinGecko price data
-- `VITE_UTXO_SWAP_KEY` — UTXO Swap (CKB DEX) auth
-- `VITE_ALCHEMY_API_KEY` — Alchemy key. Used to derive the per-chain RPC URL passed to the wallet via `wallet_addEthereumChain` in `src/serves/useEvmNetwork.tsx` (the `chain` field doubles as the Alchemy network slug). The Market API (separate project) also uses an Alchemy key server-side for the actual EVM data. Frontend no longer uses Infura.
+- `REACT_APP_MARKET_API` — base URL of the Mobit Market API (EVM balances, DOB price, Babylon status)
+- `REACT_APP_COINGECKO_API_KEY` — CoinGecko price data
+- `REACT_APP_UTXO_SWAP_KEY` — UTXO Swap (CKB DEX) auth
+- `REACT_APP_ALCHEMY_API_KEY` — Alchemy key. Used to derive the per-chain RPC URL passed to the wallet via `wallet_addEthereumChain` in `src/serves/useEvmNetwork.tsx` (the `chain` field doubles as the Alchemy network slug). The Market API (separate project) also uses an Alchemy key server-side for the actual EVM data. Frontend no longer uses Infura.
 
 ## Architecture
 

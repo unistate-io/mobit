@@ -27,6 +27,3 @@ yarn-error.log*
 
 *.diff
 .env*.local
-
-# Vite build output
-/dist

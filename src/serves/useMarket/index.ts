@@ -13,18 +13,6 @@ export interface TokenMarket {
     updated_at: string
 }
 
-const stable = (symbol: string): TokenMarket => ({
-    id: 0,
-    symbol,
-    price: 1,
-    market_cap: 0,
-    change_1h: 0,
-    change_24h: 0,
-    change_7d: 0,
-    inserted_at: "",
-    updated_at: ""
-})
-
 export default function useMarket() {
     const [status, setStatus] = useState<"loading" | "complete" | "error">("loading")
     const [data, setData] = useState<TokenMarket[]>([])
@@ -39,25 +27,68 @@ export default function useMarket() {
         }
 
         setStatus("loading")
-        fetch(`${import.meta.env.VITE_MARKET_API}/api/market`)
+        fetch(
+            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=seal-2%2Cbitcoin%2Cnervos-network%2Cethereum%2Cmatic-network%2Coptimism",
+            {
+                method: "GET",
+                headers: {
+                    "x-cg-demo-api-key": process.env.REACT_APP_COINGECKO_API_KEY!
+                }
+            }
+        )
             .then(res => res.json())
             .then(res => {
-                const marketData: TokenMarket[] = (res.data ?? [])
-                    .slice()
-                    .sort((a: TokenMarket, b: TokenMarket) => (a.symbol < b.symbol ? -1 : 1))
+                const data = res
+                    .map((item: any) => {
+                        return {
+                            id: item.symbol,
+                            symbol: item.symbol.toUpperCase(),
+                            price: item.current_price,
+                            market_cap: item.market_cap,
+                            change_1h: 0,
+                            change_24h: item.price_change_percentage_24h,
+                            change_7d: 0,
+                            inserted_at: "",
+                            updated_at: ""
+                        }
+                    })
+                    .sort((a: TokenMarket, b: TokenMarket) => {
+                        return a.symbol < b.symbol ? -1 : 1
+                    })
+                const usdi = {
+                    id: 0,
+                    symbol: "USDI",
+                    price: 1,
+                    market_cap: 0,
+                    change_1h: 0,
+                    change_24h: 0,
+                    change_7d: 0,
+                    inserted_at: "",
+                    updated_at: ""
+                }
 
-                const deduplication = marketData.filter(
-                    (item, index, self) => index === self.findIndex(t => t.symbol === item.symbol)
-                )
+                const rusd = {
+                    id: 0,
+                    symbol: "RUSD",
+                    price: 1,
+                    market_cap: 0,
+                    change_1h: 0,
+                    change_24h: 0,
+                    change_7d: 0,
+                    inserted_at: "",
+                    updated_at: ""
+                }
 
-                setData([...deduplication, stable("USDI"), stable("RUSD")])
+                const _data = [...data, usdi, rusd]
+                console.log("_data", _data)
+                setData(_data)
                 setStatus("complete")
             })
             .catch((e: any) => {
                 setError(e)
                 setStatus("error")
             })
-    }, [network])
+    }, [])
 
     const appendMarkets = (markets: TokenMarket[]) => {
         if (network === "testnet") return

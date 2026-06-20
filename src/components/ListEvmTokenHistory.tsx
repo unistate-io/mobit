@@ -1,15 +1,15 @@
 import {Link} from "react-router-dom"
 import {shortTransactionHash} from "@/utils/number_display"
 import * as dayjsLib from "dayjs"
-import relativeTime from "dayjs/plugin/relativeTime"
-import "dayjs/locale/zh-cn"
 import CopyText from "@/components/CopyText/CopyText"
 import {useContext} from "react"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import { EvmTokenTransaction } from "@/pages/EvmToken"
 
 const dayjs: any = dayjsLib
+const relativeTime = require('dayjs/plugin/relativeTime')
 dayjsLib.extend(relativeTime)
+require('dayjs/locale/zh-cn')
 
 export const EvmExplorer = {
     'base-mainnet': 'https://basescan.org',
