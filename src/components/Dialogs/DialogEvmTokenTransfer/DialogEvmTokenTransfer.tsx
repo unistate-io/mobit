@@ -11,7 +11,7 @@ import CopyText from "@/components/CopyText/CopyText"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import useEvmNetwork from "@/serves/useEvmNetwork"
-import { type TokenMetadataResponse } from 'alchemy-sdk';
+import { type TokenMetadataResponse } from '@/types/evm';
 import TokenIcon from '@/components/TokenIcon/TokenIcon'
 
 import * as dayjsLib from "dayjs"

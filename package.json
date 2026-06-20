@@ -39,7 +39,6 @@
         "@svgr/webpack": "^5.5.0",
         "@utxoswap/swap-sdk-js": "^0.1.14",
         "ahooks": "^3.8.4",
-        "alchemy-sdk": "^3.5.6",
         "babel-jest": "^27.4.2",
         "babel-loader": "^8.2.3",
         "babel-plugin-named-asset-import": "^0.3.8",

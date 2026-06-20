@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react"
-import { type TokenMetadataResponse } from 'alchemy-sdk';
+import { type TokenMetadataResponse } from '@/types/evm';
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
 import Button from "@/components/Form/Button/Button"
