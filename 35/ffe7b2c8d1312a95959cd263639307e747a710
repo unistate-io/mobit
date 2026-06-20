@@ -1,0 +1,71 @@
+.gitignore
+  s_d6500f116d56de::t_007bef89efbf73 30-32
+postcss.config.js
+  s_d6500f116d56de::t_a964949cfd399e 1-6
+src/components/ListHistory/ListHistory.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 3
+  s_d6500f116d56de::t_dc8acb98d9630a 4-5
+src/components/Dialogs/DialogEvmTokenTransfer/DialogEvmTokenTransfer.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 17
+src/components/Dialogs/DialogBtcXudtTransfer/DialogBtcXudtTransfer.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 15
+src/vite-env.d.ts
+  s_d6500f116d56de::t_4857bcebe15793 1
+src/components/Dialogs/DialogEvmTransfer/DialogEvmTransfer.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 16
+index.html
+  s_d6500f116d56de::t_6fda403853aa29 1-22
+src/components/Dialogs/DialogCkbTransfer/DialogCkbTransfer.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 17
+src/components/Dialogs/DialogSporeTransfer/DialogSporeTransfer.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 12
+vercel.json
+  s_d6500f116d56de::t_007bef89efbf73 1-6
+src/components/Dialogs/DialogSporeCreate/DialogSporeCreate.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 6
+src/components/ListTokenHistory/ListTokenHistory.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 3
+  s_d6500f116d56de::t_dc8acb98d9630a 4-5
+src/components/Dialogs/DialogLeapXudtToLayer2/DialogLeapXudtToLayer2.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 17
+src/pages/Trade/SwapView.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 16
+src/components/Dialogs/DialogLeapXudtToLayer2/DialogLeapXudtToLayer2CanSelectToken.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 16
+src/components/ListEvmTokenHistory.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 3
+  s_d6500f116d56de::t_dc8acb98d9630a 4-5
+src/components/ListBtcHistory/ListBtcHistory.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 1
+  s_d6500f116d56de::t_dc8acb98d9630a 2-3
+src/components/Dialogs/DialogSporeMelt/DialogSporeMelt.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 6
+src/components/Dialogs/DialogSwap/DialogSwap.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 21
+src/components/Dialogs/DialogXudtTransfer/DialogXudtTransfer.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 16
+src/components/ListBtcTokenHistory/ListBtcTokenHistory.tsx
+  s_d6500f116d56de::t_fd15b06f654f8d 3
+  s_d6500f116d56de::t_dc8acb98d9630a 4-5
+package.json
+  s_d6500f116d56de::t_61acfdbb2d8f1f 55,58-60,68-70,73-75
+vite.config.ts
+  s_d6500f116d56de::t_14a46c3facfbff 1-21,23-47
+  s_d6500f116d56de::t_592f83ef21bccd 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "35ffe7b2c8d1312a95959cd263639307e747a710",
+  "prompts": {},
+  "sessions": {
+    "s_d6500f116d56de": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c29c15c1-83a3-4d32-8ebb-f337adaa3600",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jiangplus <jiang.plus.times@gmail.com>"
+    }
+  }
+}
