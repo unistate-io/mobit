@@ -1,6 +1,8 @@
 import {Link} from "react-router-dom"
 import {shortTransactionHash} from "@/utils/number_display"
-import * as dayjsLib from "dayjs"
+import dayjsLib from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+import "dayjs/locale/zh-cn"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {useContext, useMemo} from "react"
@@ -8,9 +10,7 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import Button from "@/components/Form/Button/Button";
 
 const dayjs: any = dayjsLib
-const relativeTime = require('dayjs/plugin/relativeTime')
 dayjsLib.extend(relativeTime)
-require('dayjs/locale/zh-cn')
 
 export interface ListHistoryProps {
     data: TransactionHistory[],

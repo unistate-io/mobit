@@ -14,7 +14,7 @@ import useEvmNetwork from "@/serves/useEvmNetwork"
 import { type TokenMetadataResponse } from '@/types/evm';
 import TokenIcon from '@/components/TokenIcon/TokenIcon'
 
-import * as dayjsLib from "dayjs"
+import dayjsLib from "dayjs"
 const dayjs: any = dayjsLib
 
 // 定义新的 formData 状态接口，使用 metadata 和 tokenContract

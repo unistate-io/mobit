@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom"
 import { shortTransactionHash, toDisplay } from "@/utils/number_display"
-import * as dayjsLib from "dayjs"
+import dayjsLib from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+import "dayjs/locale/zh-cn"
 import CopyText from "@/components/CopyText/CopyText"
 import { CKBContext } from "@/providers/CKBProvider/CKBProvider"
 import { useContext } from "react"
 import { LangContext } from "@/providers/LangProvider/LangProvider"
 
 const dayjs: any = dayjsLib
-const relativeTime = require('dayjs/plugin/relativeTime')
 dayjsLib.extend(relativeTime)
-require('dayjs/locale/zh-cn')
 
 export default function ListTokenHistory({
     data,

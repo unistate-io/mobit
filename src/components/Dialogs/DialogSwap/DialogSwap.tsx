@@ -18,7 +18,7 @@ import {shortTransactionHash} from "@/utils/common"
 import CopyText from "@/components/CopyText/CopyText"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 
-import * as dayjsLib from "dayjs"
+import dayjsLib from "dayjs"
 
 const dayjs: any = dayjsLib
 

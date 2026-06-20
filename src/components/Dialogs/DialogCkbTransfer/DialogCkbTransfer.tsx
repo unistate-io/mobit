@@ -14,7 +14,7 @@ import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 import {ccc} from '@ckb-ccc/connector-react'
 
-import * as dayjsLib from "dayjs"
+import dayjsLib from "dayjs"
 const dayjs: any = dayjsLib
 
 export interface XudtTransferProps {

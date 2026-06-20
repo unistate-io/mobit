@@ -9,7 +9,7 @@ import CopyText from "@/components/CopyText/CopyText"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 
-import * as dayjsLib from "dayjs"
+import dayjsLib from "dayjs"
 import useSporeTransfer from "@/serves/useSporeTransfer"
 import {Spores} from "@/utils/graphql/types"
 import {ccc, useCcc} from "@ckb-ccc/connector-react"

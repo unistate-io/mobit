@@ -13,7 +13,7 @@ import {LangContext} from "@/providers/LangProvider/LangProvider"
 import useEvmNetwork from "@/serves/useEvmNetwork"
 import TokenIcon from "@/components/TokenIcon/TokenIcon"
 
-import * as dayjsLib from "dayjs"
+import dayjsLib from "dayjs"
 const dayjs: any = dayjsLib
 
 

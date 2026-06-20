@@ -12,7 +12,7 @@ import useBtcXudtTransfer from "@/serves/useBtcXudtTransfer"
 import useBtcWallet from "@/serves/useBtcWallet"
 import { LangContext } from "@/providers/LangProvider/LangProvider"
 
-import * as dayjsLib from "dayjs"
+import dayjsLib from "dayjs"
 import { tokenInfoToScript, TokenInfoWithAddress } from "@/utils/graphql/types"
 import useLayer1Assets from "@/serves/useLayer1Assets"
 import { TokenBalance } from "@/components/ListToken/ListToken"

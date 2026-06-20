@@ -13,7 +13,7 @@ import { Transaction as CCCTransaction } from "@ckb-ccc/connector-react"
 import { append0x } from "@rgbpp-sdk/ckb"
 import { LangContext } from "@/providers/LangProvider/LangProvider"
 
-import * as dayjsLib from "dayjs"
+import dayjsLib from "dayjs"
 import { DialogExchange, SelectOption } from "@/components/Dialogs/DialogExchange"
 import { SwapSuccess } from "@/components/Dialogs/DialogSwapSuccess"
 

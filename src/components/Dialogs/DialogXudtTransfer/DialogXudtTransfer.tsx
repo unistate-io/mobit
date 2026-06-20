@@ -13,7 +13,7 @@ import TokenIcon from "@/components/TokenIcon/TokenIcon"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {LangContext} from "@/providers/LangProvider/LangProvider"
 
-import * as dayjsLib from "dayjs"
+import dayjsLib from "dayjs"
 import {TokenInfoWithAddress} from "@/utils/graphql/types"
 import {ccc, useCcc} from "@ckb-ccc/connector-react"
 
