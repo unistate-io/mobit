@@ -1,0 +1,24 @@
+src/serves/useGetXudtCell/index.ts
+  s_d6500f116d56de::t_224005d7ddb3cd 35-36,44,48-56
+  s_d6500f116d56de::t_c1aecea5f764ef 20
+  s_d6500f116d56de::t_2afe3deb0ea281 3-4,10-16
+src/utils/common.ts
+  s_d6500f116d56de::t_1674ef8d5371ad 1
+  s_d6500f116d56de::t_4fb1641a67cd2b 34-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "9f2abd9ffb21958528f305a5d18eab05b11932b7",
+  "prompts": {},
+  "sessions": {
+    "s_d6500f116d56de": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c29c15c1-83a3-4d32-8ebb-f337adaa3600",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jiangplus <jiang.plus.times@gmail.com>"
+    }
+  }
+}
