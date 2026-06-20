@@ -1,4 +1,4 @@
-import {helpers, config as lumosConfig} from "@ckb-lumos/lumos"
+import {addressToScript} from "@nervosnetwork/ckb-sdk-utils"
 import {ccc} from "@ckb-ccc/connector-react"
 import {getBtcTransactionsHistory} from "@/serves/useBtcTransactionsHistory"
 import {ripemd160} from '@noble/hashes/ripemd160'
@@ -31,8 +31,11 @@ export enum KnownScript {
 
 export const checksumCkbAddress = (address: string, network: 'mainnet' | 'testnet'): boolean => {
     try {
-        helpers.addressToScript(address, {config: network === 'mainnet' ? lumosConfig.MAINNET : lumosConfig.TESTNET})
-        return true
+        // Validate the address decodes, then check it belongs to the expected
+        // network (mainnet -> "ckb1", testnet -> "ckt1"), matching the previous
+        // lumos behaviour of validating against the network's script config.
+        addressToScript(address)
+        return address.startsWith(network === 'mainnet' ? 'ckb1' : 'ckt1')
     } catch (e: any) {
         console.log(e)
         return false

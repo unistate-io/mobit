@@ -1,14 +1,23 @@
 import {useContext, useEffect, useState} from "react"
 import {tokenInfoToScript, TokenInfoWithAddress} from "@/utils/graphql/types"
-import {Cell, config as lumosConfig, helpers, Indexer} from "@ckb-lumos/lumos"
+import {addressToScript} from "@nervosnetwork/ckb-sdk-utils"
+import {Collector} from "@utxoswap/swap-sdk-js"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
 import {hashType} from "@/serves/useXudtTransfer/lib"
 import {CkbHelper, convertToTransaction, createMergeXudtTransaction, createBurnXudtTransaction} from "mobit-sdk"
 import {ccc} from "@ckb-ccc/connector-react"
 
+// Lumos-Cell-compatible shape the Merge/Burn dialogs consume (cell.data + cell.cellOutput).
+interface XudtCell {
+    cellOutput: CKBComponents.CellOutput
+    data: string
+    outPoint: CKBComponents.OutPoint
+    blockNumber: string
+}
+
 export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, addresses?: string[]) {
     const {config, network, signer} = useContext(CKBContext)
-    const [data, setData] = useState<Cell[]>([])
+    const [data, setData] = useState<XudtCell[]>([])
     const [status, setStatus] = useState<"loading" | "error" | "complete">("loading")
     const [error, setError] = useState<any | null>(null)
 
@@ -23,11 +32,8 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
         ;(async () => {
             setStatus("loading")
 
-            const indexer = new Indexer(config.ckb_indexer, config.ckb_rpc)
-            const scriptConfig = network === "mainnet" ? lumosConfig.MAINNET : lumosConfig.TESTNET
-            const senderLocks = addresses.map(address => {
-                return helpers.addressToScript(address, {config: scriptConfig})
-            })
+            const collector = new Collector({ckbIndexerUrl: config.ckb_indexer})
+            const senderLocks = addresses.map(address => addressToScript(address))
 
             const typeScript: any = {
                 codeHash: tokenInfo.address_by_type_address_id?.script_code_hash.replace("\\", "0") ?? "",
@@ -35,14 +41,19 @@ export default function useGetXudtCell(tokenInfo?: TokenInfoWithAddress, address
                 args: tokenInfo.address_by_type_address_id?.script_args.replace("\\", "0") ?? ""
             }
 
-            let collected: Cell[] = []
+            let collected: XudtCell[] = []
 
             try {
                 for (const lock of senderLocks) {
-                    const collector = indexer.collector({lock: lock, type: typeScript})
-                    for await (const cell of collector.collect()) {
-                        collected.push(cell)
-                    }
+                    const cells = await collector.getCells({lock, type: typeScript})
+                    ;(cells ?? []).forEach(c => {
+                        collected.push({
+                            cellOutput: c.output,
+                            data: c.outputData,
+                            outPoint: c.outPoint,
+                            blockNumber: c.blockNumber
+                        })
+                    })
                 }
 
                 setData(collected)
