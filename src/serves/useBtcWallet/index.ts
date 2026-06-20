@@ -1,8 +1,7 @@
 import {useContext, useMemo} from "react"
 import {CKBContext} from "@/providers/CKBProvider/CKBProvider"
-import {AbstractWallet, JoyIDWallet, OKXWallet, UniSatWallet} from '@/libs/mobit_wallet'
+import {AbstractWallet, JoyIDWallet, NetworkConfig, OKXWallet, UniSatWallet} from '@/libs/mobit_wallet'
 import {isBtcAddress} from "@/utils/common"
-import {NetworkConfig} from "mobit-wallet"
 
 
 export default function useBtcWallet() {
