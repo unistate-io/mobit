@@ -1,0 +1,23 @@
+src/types/evm.ts
+  s_d6500f116d56de::t_ab4e55d015ce91 1-9
+src/components/Dialogs/DialogEvmTokenTransfer/DialogEvmTokenTransfer.tsx
+  s_d6500f116d56de::t_cc6c42d6ebe70d 14
+src/pages/EvmToken/index.tsx
+  s_d6500f116d56de::t_cc6c42d6ebe70d 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "ddf294e20843021d7569da5970029fdbe168d73f",
+  "prompts": {},
+  "sessions": {
+    "s_d6500f116d56de": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c29c15c1-83a3-4d32-8ebb-f337adaa3600",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jiangplus <jiang.plus.times@gmail.com>"
+    }
+  }
+}
